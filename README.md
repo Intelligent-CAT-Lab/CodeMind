@@ -62,18 +62,25 @@ python predict.py {PATH_TO_CONFIG}
         "model_id": "codellama/CodeLlama-13b-Instruct-hf",
         "chache_dir": "/CACHE/DIR",
         "use_auth_token": "",
-        "max_new_tokens": 1024
+        "max_new_tokens": 1024,
+        "sep_token": "",
+        "code_start_token": "```python\n",
+        "code_end_token":  "```"
     },
     "include_test": "False",
     "under_test_directory": "PATH/TO/CODE/UNDERTEST",
     "test_result_directory": "PATH/TO/TEST/RESULTS",
-    "passed_test_directory": "PATH/TO/CODE/PASSING/TESTS"
+    "passed_test_directory": "PATH/TO/CODE/PASSING/TESTS",
+    "dataset_path": "/PATH/TO/DATASET/HumanEval.jsonl"
 }
-
 ```
+
 ```under_test_directory```: the synthesized code is going to be written into files under this directory.   
 ```test_result_directory```: testing results on synthesized code is goning to be written into json files under this directory.  
-```passed_test_directory```: path to the code that can pass the test.
+```passed_test_directory```: path to the code that can pass the test. 
+```dataset_path```: points to the json/jsonl file of MBPP-sanitized or HumanEval   
+```sep_token```: prompt specific, the token which separates the reponse and the question.  
+```code_start_token``` and ```code_end_token```: prompt specific, which enclose the generated code.
 
 #### How to run:
 ```
