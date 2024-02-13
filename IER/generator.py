@@ -46,6 +46,6 @@ def huggingface_generator(model, prompt, max_new_tokens):
         device = "cuda:0"
         hf_model, hf_tokenizer = model
         model_inputs = hf_tokenizer([prompt], return_tensors="pt").to(device)
-        generated_ids = hf_model.generate(**model_inputs, max_new_tokens)
+        generated_ids = hf_model.generate(**model_inputs, max_new_tokens=max_new_tokens)
         generated_text = hf_tokenizer.batch_decode(generated_ids)[0]
         return generated_text

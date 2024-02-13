@@ -14,7 +14,7 @@ from WizardCoder import WizardCoder_Java_CodeNet, WizardCoder_Python_CodeNet, Wi
 from CodeLlama import CodeLlama_Java_CodeNet, CodeLlama_Python_CodeNet, CodeLlama_Python_MBPP, CodeLlama_Python_CruxEval
 from StarCoder import StarCoder_Java_CodeNet, StarCoder_Python_CodeNet, StarCoder_Python_MBPP, StarCoder_Python_CruxEval
 from Mistral import Mistral_Java_CodeNet, Mistral_Python_CodeNet, Mistral_Python_MBPP, Mistral_Python_CruxEval
-from DeepSeek import DeepSeek_Java_CodeNet, DeepSeek_Python_CodeNet, DeepSeek_Python_MBPP, DeepSeek_Python_CruxEval
+from DeepSeekCoder import DeepSeek_Java_CodeNet, DeepSeek_Python_CodeNet, DeepSeek_Python_MBPP, DeepSeek_Python_CruxEval
 from tqdm import tqdm
 
 
