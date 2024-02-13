@@ -4,14 +4,15 @@
 Dependencies required in our project can be found in ```requirements.txt```  
 Installlation: ```pip install -r requirements.txt```
 
-### Dataset / Results
+### Dataset
 Dataset we used in our study can be found in the following link:
-https://drive.google.com/file/d/1ZWGUqOHoZLMnoYQJEM0emKKqXeCkxmxh/view?usp=drive_link
 
+https://drive.google.com/file/d/17VAhbkL8j36HzBjGfO0ZWIr54hte0qcU/view?usp=sharing
+<!-- 
 Raw results can be found in the following links:
 https://drive.google.com/file/d/10wFkf4tA0QgWRjHxWiLGxtjIke9-PTSn/view?usp=drive_link
 
-https://drive.google.com/file/d/1ghPqckTxBY_JgLF61G9mwoUrRJBMCZdg/view?usp=drive_link
+https://drive.google.com/file/d/1ghPqckTxBY_JgLF61G9mwoUrRJBMCZdg/view?usp=drive_link -->
 
 ### IER (Independent Execution Reasoning)
 
