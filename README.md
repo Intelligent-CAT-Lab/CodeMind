@@ -13,6 +13,26 @@ Raw results can be found in the following links:
 https://drive.google.com/file/d/10wFkf4tA0QgWRjHxWiLGxtjIke9-PTSn/view?usp=drive_link
 
 https://drive.google.com/file/d/1ghPqckTxBY_JgLF61G9mwoUrRJBMCZdg/view?usp=drive_link -->
+```
++--avatar: Avatar(Python)
+| |
+| +--atcoder_ABC042_A
+|    |
+|    +--input.txt: input of the code/function
+|    +--main.py: code
+|    +--output.txt: ground truth output
+|
++--avatar-java: Avatar(Java)
++--CodeNet_single_input_Java: CodeNet(Java)
++--CodeNet_sigle_input_Python: CodeNet(Python)
++--cruxeval: CruxEval(Python)
++--humaneval: HumanEval(Python)
++--mbpp: MBPP(Python)
+|
+|
++--HumanEval.jsonl: raw dataset of HumanEval(used in DER & SR)
++--sanitized-mbpp.json: raw dataset of MBPP (used in DER & SR)
+```
 
 ### IER (Independent Execution Reasoning)
 
@@ -106,3 +126,6 @@ The configuration is very similar to thoes in DER, the modifications are show be
 cd SR
 bash run.sh {PATH/TO/CONFIG}
 ```
+
+### Evaluate
+under ```/Evaluate/parse_results.py``` there are some functions that can be helpful to parse the output of LLMs on the reasoning task.
