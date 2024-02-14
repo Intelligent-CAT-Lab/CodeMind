@@ -3,34 +3,6 @@ import os
 import json
 import sys
 
-def load_tests(dataset_path, dataset_name):
-    test_data = {}
-    if "HumanEval" in dataset_name:
-        with open(dataset_path, 'r') as f:
-            for item in jsonlines.Reader(f):
-                code_id = item["task_id"].replace("/","_")
-                # prompt = item["prompt"]
-                fname = item["entry_point"]
-                tests = item["test"]
-                test_lines = tests.split("\n")
-                assertions = []
-                for line in test_lines:
-                    if "assert" in line:
-                        line = line.lstrip()
-                        line = line.replace("candidate", fname)
-                        assertions.append(line)
-                test_data[code_id] = "\n".join(assertions)
-        return test_data
-    elif "MBPP" in dataset_name:
-        with open(dataset_path, 'r') as f:
-            raw_data = json.load(f)
-            for d in raw_data:
-                code_id = d["task_id"]
-                assertions = "\n".join(d["test_list"])
-                test_data[str(code_id)] = assertions
-        return test_data
-
-
 def parse_code(jsonl_path, mid_token, code_start_token, code_end_token, dataset_path, dataset_name, write_root):
     if  "mutate" in jsonl_path:
         write_root = f"{write_root}/mutate"
@@ -45,7 +17,7 @@ def parse_code(jsonl_path, mid_token, code_start_token, code_end_token, dataset_
     if not os.path.exists(write_subfolder):
         os.mkdir(write_subfolder)
     
-    test_data = load_tests(dataset_path, dataset_name)
+    # test_data = load_tests(dataset_path, dataset_name)
     
     
     with open(jsonl_path, 'r') as f:
@@ -72,8 +44,11 @@ def parse_code(jsonl_path, mid_token, code_start_token, code_end_token, dataset_
                 screened_lines.append(line)
             code = '\n'.join(screened_lines)
             
-            # if item["assertion"]:
-            code_with_test = code + "\n" + test_data[code_id]
+            if item["assertion"]:
+                code_with_test = code + "\n" + item["assertion"]
+            else:
+                print(item)
+                continue
             code_folder = os.path.join(write_subfolder, code_id)
             path_code = os.path.join(code_folder, 'main.py')
             path_code_with_test = os.path.join(code_folder, 'main_under_test.py')

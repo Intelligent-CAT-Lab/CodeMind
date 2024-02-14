@@ -29,7 +29,7 @@ class CodeGenerationPipeline:
         self.generation_config = self.config['generation_config']
         # self.include_test = self.config['include_test']
         self.mutate = self.config['mutate'] if 'mutate' in self.config else False
-        self.output_dir = os.path.join(self.output_root, self.model_name, self.dataset_name) if not self.mutate else os.path.join(self.output_root, self.model_name, self.dataset_name, "mutate")
+        self.output_dir = os.path.join(self.output_root, self.model_name, self.dataset_name)
         self.prompt_builder = PromptBuilder(Model(self.model_name), Dataset(self.dataset_name))
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir, exist_ok=True)
@@ -160,13 +160,6 @@ class CodeGenerationPipeline:
             return False
         else:
             return True
-        
-        
-
-# # Example usage
-# config_file = '/home/changshu/LLM_REASONING/pipeline/config/humaneval_GPT4.json'
-# pipeline = CodeGenerationPipeline(config_file)
-# pipeline.run()
 
 if __name__ == "__main__":
     pipeline = CodeGenerationPipeline(sys.argv[1])
