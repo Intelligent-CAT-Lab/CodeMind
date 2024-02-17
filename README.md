@@ -1,4 +1,3 @@
-
 <div align='center'>
 <img src="https://github.com/CodeMindICML/CodeMindICML/blob/main/CodeMind-Logo.jpg" width="25%" height="25%" />
   <br>
@@ -8,6 +7,9 @@ Solely relying on test passing to evaluate Large Language Models (LLMs) for code
 
 ### Paper
 Interested to read more about CodeMind, the code reasoning tasks, and a grounded-theory study evaluating LLMs for code reasoning across five benchmarks and two programming languages? Please read the pre-print on Arxiv: https://arxiv.org/pdf/2402.09664.pdf
+
+### Contributing to CodeMind
+CodeMind is an open-source project to promote the proper evaluation of LLMs for code-related tasks. If you are interested in building on top of CodeMind and adding more code reasoning tasks, please send an email to {cl144,reyhaneh}@illinois.edu.
 
 ## CodeMind Framework
 
@@ -45,4 +47,3 @@ CodeMind currently supports three inductive code reasoning tasks: (1) Independen
 
 ### Results of the Grounded-Theory Study
 You can find the raw results of our study under ```Results```. Please use CodeMind and try to reproduce our results!
-
