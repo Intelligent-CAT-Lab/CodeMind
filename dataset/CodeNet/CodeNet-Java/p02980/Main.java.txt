@@ -1,0 +1,106 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.StringTokenizer;
+6 import java.io.IOException;
+7 import java.io.BufferedReader;
+8 import java.io.InputStreamReader;
+9 import java.io.InputStream;
+10 
+11 /**
+12  * Built using CHelper plug-in
+13  * Actual solution is at the top
+14  */
+15 public class Main {
+16     public static void main(String[] args) {
+17         InputStream inputStream = System.in;
+18         OutputStream outputStream = System.out;
+19         InputReader in = new InputReader(inputStream);
+20         PrintWriter out = new PrintWriter(outputStream);
+21         TaskF solver = new TaskF();
+22         solver.solve(1, in, out);
+23         out.close();
+24     }
+25 
+26     static class TaskF {
+27         static final long MODULO = 998244353;
+28         static long[] invs;
+29         static long[] facts;
+30         static long[] invfacts;
+31 
+32         static {
+33             int k = (int) 5e5;
+34             invs = new long[k + 2];
+35             invs[1] = 1;
+36             for (int i = 2; i <= k + 1; ++i) {
+37                 invs[i] = ((MODULO - (MODULO / i) * (long) invs[(int) (MODULO % i)] % MODULO) % MODULO);
+38             }
+39             facts = new long[k + 2];
+40             invfacts = new long[k + 2];
+41             facts[0] = 1;
+42             invfacts[0] = 1;
+43             for (int i = 1; i <= k + 1; ++i) {
+44                 facts[i] = (facts[i - 1] * (long) i % MODULO);
+45                 invfacts[i] = (invfacts[i - 1] * (long) invs[i] % MODULO);
+46             }
+47         }
+48 
+49         public void solve(int testNumber, InputReader in, PrintWriter out) {
+50             int height = in.nextInt();
+51             int width = in.nextInt();
+52             long[] ph = new long[width + 1];
+53             ph[0] = 1;
+54             for (int i = 1; i < ph.length; ++i) {
+55                 ph[i] = ph[i - 1] * (height + 1) % MODULO;
+56             }
+57             long[] pw = new long[height + 1];
+58             pw[0] = 1;
+59             for (int i = 1; i < pw.length; ++i) {
+60                 pw[i] = pw[i - 1] * (width + 1) % MODULO;
+61             }
+62             long res = 0;
+63             for (int common = 0; common <= height && common <= width; ++common) {
+64                 long ways = facts[height] * invfacts[common] % MODULO * invfacts[height - common] % MODULO
+65                         * facts[width] % MODULO * invfacts[width - common] % MODULO
+66                         * ph[width - common] % MODULO * pw[height - common] % MODULO;
+67                 if (common % 2 == 0) {
+68                     res += ways;
+69                 } else {
+70                     res -= ways;
+71                 }
+72             }
+73             res %= MODULO;
+74             if (res < 0) res += MODULO;
+75             out.println(res);
+76         }
+77 
+78     }
+79 
+80     static class InputReader {
+81         public BufferedReader reader;
+82         public StringTokenizer tokenizer;
+83 
+84         public InputReader(InputStream stream) {
+85             reader = new BufferedReader(new InputStreamReader(stream), 32768);
+86             tokenizer = null;
+87         }
+88 
+89         public String next() {
+90             while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+91                 try {
+92                     tokenizer = new StringTokenizer(reader.readLine());
+93                 } catch (IOException e) {
+94                     throw new RuntimeException(e);
+95                 }
+96             }
+97             return tokenizer.nextToken();
+98         }
+99 
+100         public int nextInt() {
+101             return Integer.parseInt(next());
+102         }
+103 
+104     }
+105 }
+106 

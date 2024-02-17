@@ -1,0 +1,137 @@
+1 
+2 import java.io.BufferedReader;
+3 import java.io.IOException;
+4 import java.io.InputStreamReader;
+5 
+6 public class Main {
+7 	public static void main(String[] args) {
+8 		Scanner sc = new Scanner();
+9 		int n = sc.nextInt();
+10 		long x = sc.nextLong();
+11 
+12 		System.out.println(calc(n, x));
+13 	}
+14 
+15 
+16 	static long calc(int n, long x){
+17 		if(n == 0)
+18 			return 1;
+19 		long sum = 0;
+20 		x--;
+21 		long length = length(n-1);
+22 		long p = p(n-1);
+23 		if(x > 0){
+24 			if(length <= x)
+25 				sum += p;
+26 			else
+27 				sum += calc(n-1, x);
+28 			x -= length;
+29 		}
+30 		if(x > 0){
+31 			x--;
+32 			sum++;
+33 		}
+34 		if(x > 0){
+35 			if(length <= x)
+36 				sum += p;
+37 			else
+38 				sum += calc(n-1, x);
+39 		}
+40 
+41 		return sum;
+42 	}
+43 
+44 	static long length(int n){
+45 		return 1 + 4 * ((long)Math.pow(2, n) -1);
+46 	}
+47 
+48 	static long p(int n){
+49 		return 1 +2 * ((long)Math.pow(2, n) -1);
+50 	}
+51 }
+52 
+53 class Scanner {
+54 	private static final int SPACE = (int)' ';
+55 	private static final int LINE_END_0 = 13;
+56 	private static final int LINE_END_1 = 10;
+57 	private static final int BEFORE = -1;
+58 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+59 	
+60 	public String next(){
+61 		StringBuilder sb = new StringBuilder();
+62 		
+63 		int length = BEFORE;
+64 		readLoop: while(true) {
+65 			try {
+66 				int value = br.read();
+67 				switch(value) {
+68 				case LINE_END_1:
+69 					if(length == BEFORE)
+70 						break;
+71 					
+72 					if((int)sb.charAt(length) == LINE_END_0)
+73 						sb.deleteCharAt(length);
+74 				case SPACE:
+75 					break readLoop;
+76 				}
+77 				sb.append((char)value);
+78 				length++;
+79 
+80 			} catch (IOException e) {
+81 				// TODO Auto-generated catch block
+82 				e.printStackTrace();
+83 			}
+84 		}
+85 		return sb.toString();
+86 	}
+87 	
+88 	public String[] nextArray(int length) {
+89 		String[] array = new String[length];
+90 		for(int i = 0; i < length; i++)
+91 			array[i] = next();
+92 		return array;
+93 	}
+94 	
+95 	public double nextDouble() {
+96 		return Double.parseDouble(next());
+97 	}
+98 	
+99 	public double[] nextDoubleArray(int length) {
+100 		double[] array = new double[length];
+101 		for(int i = 0; i < length; i++)
+102 			array[i] = nextDouble();
+103 		return array;
+104 	}
+105 	
+106 	public int nextInt() {
+107 		return Integer.parseInt(next());
+108 	}
+109 	
+110 	public int[] nextIntArray(int length) {
+111 		int[] array = new int[length];
+112 		for(int i = 0; i < length; i++)
+113 			array[i] = nextInt();
+114 		return array;
+115 	}
+116 	
+117 	public long nextLong() {
+118 		return Long.parseLong(next());
+119 	}
+120 	
+121 	public long[] nextLongArray(int length) {
+122 		long[] array = new long[length];
+123 		for(int i = 0; i < length; i++)
+124 			array[i] = nextLong();
+125 		return array;
+126 	}
+127 	
+128 	public boolean ready() {
+129 		try {
+130 			return br.ready();
+131 		} catch (IOException e) {
+132 			// TODO Auto-generated catch block
+133 			e.printStackTrace();
+134 		}
+135 		return false;
+136 	}
+137 }

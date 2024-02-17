@@ -1,0 +1,140 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.util.NoSuchElementException;
+4 
+5 class FastScanner {
+6     private final InputStream in = System.in;
+7     private final byte[] buffer = new byte[1024];
+8     private int ptr = 0;
+9     private int buflen = 0;
+10 
+11     private boolean hasNextByte() {
+12         if (ptr < buflen) {
+13             return true;
+14         } else {
+15             ptr = 0;
+16             try {
+17                 buflen = in.read(buffer);
+18             } catch (IOException e) {
+19                 e.printStackTrace();
+20             }
+21             if (buflen <= 0) {
+22                 return false;
+23             }
+24         }
+25         return true;
+26     }
+27 
+28     private int readByte() {
+29         if (hasNextByte())
+30             return buffer[ptr++];
+31         else
+32             return -1;
+33     }
+34 
+35     private static boolean isPrintableChar(int c) {
+36         return 33 <= c && c <= 126;
+37     }
+38 
+39     public boolean hasNext() {
+40         while (hasNextByte() && !isPrintableChar(buffer[ptr]))
+41             ptr++;
+42         return hasNextByte();
+43     }
+44 
+45     public String next() {
+46         if (!hasNext())
+47             throw new NoSuchElementException();
+48         StringBuilder sb = new StringBuilder();
+49         int b = readByte();
+50         while (isPrintableChar(b)) {
+51             sb.appendCodePoint(b);
+52             b = readByte();
+53         }
+54         return sb.toString();
+55     }
+56 
+57     public long nextLong() {
+58         if (!hasNext())
+59             throw new NoSuchElementException();
+60         long n = 0;
+61         boolean minus = false;
+62         int b = readByte();
+63         if (b == '-') {
+64             minus = true;
+65             b = readByte();
+66         }
+67         if (b < '0' || '9' < b) {
+68             throw new NumberFormatException();
+69         }
+70         while (true) {
+71             if ('0' <= b && b <= '9') {
+72                 n *= 10;
+73                 n += b - '0';
+74             } else if (b == -1 || !isPrintableChar(b)) {
+75                 return minus ? -n : n;
+76             } else {
+77                 throw new NumberFormatException();
+78             }
+79             b = readByte();
+80         }
+81     }
+82 
+83     public int nextInt() {
+84         long nl = nextLong();
+85         if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE)
+86             throw new NumberFormatException();
+87         return (int) nl;
+88     }
+89 
+90     public double nextDouble() {
+91         return Double.parseDouble(next());
+92     }
+93 }
+94 
+95 public class Main {
+96     static int MOD = 1000000007;
+97 
+98     public static class Mas {
+99         int x;
+100         int y;
+101         int step;
+102 
+103         Mas(int x, int y, int step) {
+104             this.x = x;
+105             this.y = y;
+106             this.step = step;
+107         }
+108     }
+109 
+110     static long pow(long l, long i) {
+111         if (i == 0)
+112             return 1;
+113         else {
+114             if (i % 2 == 0) {
+115                 long val = pow(l, i / 2);
+116                 return val * val % 2019;
+117             } else {
+118                 return pow(l, i - 1) * l % 2019;
+119             }
+120         }
+121     }
+122 
+123     private static final int[] vX = { 1, 0, 0, -1 };
+124     private static final int[] vY = { 0, 1, -1, 0 };
+125 
+126     public static void main(String[] args) {
+127 
+128         FastScanner fs = new FastScanner();
+129         long n = fs.nextInt();
+130         long k = fs.nextInt();
+131         long ans = 0;
+132         for (long i = k; i <= n + 1; i++) {
+133             long f = i * (i - 1) / 2;
+134             long l = (n * 2 - i + 1) * i / 2;
+135             long add = l - f + 1;
+136             ans = (ans + add) % MOD;
+137         }
+138         System.out.println(ans);
+139     }
+140 }

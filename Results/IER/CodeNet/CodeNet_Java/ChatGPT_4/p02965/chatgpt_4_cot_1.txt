@@ -1,0 +1,41 @@
+<<<Analysis>>>
+The input provided is `2 2`, which means `n = 2` and `m = 2`.
+
+The code defines several static methods for modular arithmetic operations, such as addition, subtraction, multiplication, exponentiation, and inversion, all under a modulus `MOD = 998244353`.
+
+The `solve()` method is where the main logic resides. It starts by initializing `facts` and `factsInv` arrays, which will store factorial values and their modular inverses, respectively. The size of these arrays is determined by `n + 3 * m / 2 + 1`.
+
+The factorial values are computed in a loop and stored in `facts`. Then, the modular inverses of these factorials are computed in reverse order and stored in `factsInv`.
+
+The variable `ans` is initialized to 0, which will hold the final answer.
+
+A loop iterates over possible values of `nOdd`, starting from `m % 2` and incrementing by 2, as long as `nOdd` is less than or equal to `m` and `n`. For each `nOdd`, it calculates three values `cans`, `cans1`, and `cans2` using the combination formula and the previously computed factorial values and their inverses.
+
+`cans` is the combination of `nOdd` and `n - nOdd`.
+`cans1` is the combination of `(3 * m - nOdd) / 2` and `n - 1`.
+`cans2` is a product of `nOdd` and the combination of `(m - nOdd) / 2` and `n - 1`. If `nOdd` is less than `m`, `cans2` is incremented by the product of `n - nOdd` and the combination of `(m - nOdd) / 2 - 1` and `n - 1`.
+
+The final answer `ans` is the sum of the product of `cans` and the difference between `cans1` and `cans2`, for each iteration.
+
+Given `n = 2` and `m = 2`, the loop will run for `nOdd = 0` and `nOdd = 2`.
+
+For `nOdd = 0`:
+- `cans = c(0, 2) = 1` (since `facts[2] = 2` and `factsInv[0] = 1`, `factsInv[2] = inv(2)`)
+- `cans1 = c(3, 1) = 3` (since `facts[4] = 24` and `factsInv[3] = inv(6)`, `factsInv[1] = inv(1)`)
+- `cans2 = mul(0, c(1, 1)) = 0` (since `c(1, 1) = 1` and `mul(0, 1) = 0`)
+- `ans = add(ans, mul(cans, sub(cans1, cans2))) = add(0, mul(1, sub(3, 0))) = add(0, mul(1, 3)) = add(0, 3) = 3`
+
+For `nOdd = 2`:
+- `cans = c(2, 0) = 1` (since `facts[2] = 2` and `factsInv[2] = inv(2)`, `factsInv[0] = 1`)
+- `cans1 = c(1, 1) = 1` (since `facts[2] = 2` and `factsInv[1] = inv(1)`, `factsInv[1] = inv(1)`)
+- `cans2 = mul(2, c(0, 1)) = 2` (since `c(0, 1) = 1` and `mul(2, 1) = 2`)
+- `ans = add(ans, mul(cans, sub(cans1, cans2))) = add(3, mul(1, sub(1, 2))) = add(3, mul(1, 998244352)) = add(3, 998244352) = 998244355`
+
+Since `998244355` is greater than `MOD`, we subtract `MOD` from it to get the final answer.
+`ans = 998244355 - 998244353 = 2`
+
+The final output is the value of `ans`, which is `2`.
+
+<<<Output>>>
+2
+[END-OF-RESPONSE]

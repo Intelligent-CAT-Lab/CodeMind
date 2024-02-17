@@ -1,0 +1,41 @@
+1 import java.util.Arrays;
+2 import java.util.PriorityQueue;
+3 import java.util.Scanner;
+4 
+5 class Main{
+6     public static void main(String[] args){
+7         Scanner scan = new Scanner(System.in);
+8         int K = scan.nextInt();
+9         int[] dp = new int[K];
+10         Arrays.fill(dp,Integer.MAX_VALUE);
+11 
+12         class Node{
+13             int to,cost;
+14             Node(int to,int cost){
+15                 this.to=to;
+16                 this.cost=cost;
+17             }
+18         }
+19 
+20         PriorityQueue<Node> que = new PriorityQueue<>((a,b) -> a.cost-b.cost);
+21         for(int i=1;i<Math.min(10,K);++i){
+22             dp[i]=i;
+23             que.add(new Node(i,i));
+24         }
+25         while(!que.isEmpty()){
+26             Node node = que.poll();
+27             int v = node.to;
+28             int c = node.cost;
+29             if(c > dp[v])continue;
+30             for(int i=0;i<10;++i){
+31                 int nextv = (v*10+i)%K;
+32                 int nextc = c+i;
+33                 if(dp[nextv] > nextc){
+34                     dp[nextv]=nextc;
+35                     que.add(new Node(nextv,nextc));
+36                 }
+37             }
+38         }
+39         System.out.println(dp[0]);
+40     }
+41 }

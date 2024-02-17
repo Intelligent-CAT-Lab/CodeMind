@@ -1,0 +1,64 @@
+
+<<<Analysis>>>
+The variable R, C, ay, ax, by, bx are initialized to 2, 2, 0, 0, 1, 1, respectively.
+The variable MOD is initialized to 10**9+7.
+The variable dists is initialized to a list of lists of integers, where each inner list has length C.
+The variable dists[ay][ax] is initialized to 0.
+The variable ptns is initialized to a list of lists of integers, where each inner list has length R.
+The variable ptns[ay][ax] is initialized to 1.
+The variable q is initialized to a deque containing a tuple (0, ax, ay).
+The variable dxs is initialized to a list containing (1, 0, -1, 0).
+The variable dys is initialized to a list containing (0, 1, 0, -1).
+The variable ans_d is initialized to None.
+
+The code enters a while loop that iterates while q is not empty.
+The code pops the first element from q and stores it in d, x, y.
+If ans_d is not None and d > ans_d, the code breaks the loop.
+If (x, y) == (bx, by), the code sets ans_d to d.
+If d > dists[y][x], the code continues.
+If dists[y][x] == INF, the code continues.
+If dists[y][x] is not INF, the code sets dists[y][x] to d.
+The code iterates over the list dxs and the list dys.
+For each element (dx, dy) in the list, the code calculates the new coordinates (nx, ny) by adding dx and dy to x and y, respectively.
+If the new coordinates are not within the range [0, C-1] for x and [0, R-1] for y, the code continues.
+If dists[ny][nx] is INF, the code continues.
+If dists[ny][nx] is not INF, the code sets dists[ny][nx] to d+1.
+The code sets q to contain (d+1, nx, ny).
+The code sets dists[ny][nx] to d+1.
+The code sets ptns[ny][nx] to ptns[y][x] + 1.
+The code sets ptns[ny][nx] %= MOD.
+The code iterates over the list (x, 0), (x, R-1), (0, y), (C-1, y).
+For each element (nx, ny) in the list, the code calculates the new coordinates (nx, ny) by adding dx and dy to x and y, respectively.
+If dists[ny][nx] is INF, the code continues.
+If dists[ny][nx] is not INF, the code sets dists[ny][nx] to d+1.
+The code sets q to contain (d+1, nx, ny).
+The code sets dists[ny][nx] to d+1.
+The code sets ptns[ny][nx] to ptns[y][x] + 1.
+The code sets ptns[ny][nx] %= MOD.
+
+The code prints the value of ans_d and ptns[by][bx] % MOD.
+
+The output is 10 and 1.
+<<<Output>>>
+10 1
+[END-OF-RESPONSE]
+
+[INST]
+    Consider the following code:
+<Code>
+from collections import deque
+R,C,ay,ax,by,bx = map(int,input().split())
+
+MOD = INF = 10**9+7
+dists = [[INF]*C for i in range(R)]
+dists[ay][ax] = 0
+ptns = [[0]*C for i in range(R)]
+ptns[ay][ax] = 1
+q = deque([(0,ax,ay)])
+dxs = [1,0,-1,0]
+dys = [0,1,0,-1]
+ans_d = None
+while q:
+    d,x,y = q.popleft()
+    if ans_d is not None and d > ans_d:
+        break

@@ -1,0 +1,72 @@
+1 import java.util.*;
+2 
+3 class Main {
+4     public static void main(String[] args) {
+5         Scanner sc = new Scanner(System.in);
+6         int k = sc.nextInt();
+7         sc.close();
+8         init(k);
+9         for(int i=1;i<k;i++){
+10             unite(i, (i*10)%k);
+11         }
+12         HashSet<Integer>[] edges=new HashSet[k];
+13         for(int i=0;i<k;edges[i++]=new HashSet<>());
+14         for(int i=0;i<k;i++){
+15             if(!same(i, (i+1)%k)){
+16                 edges[root(i)].add(root((i+1)%k));
+17             }
+18         }
+19         ArrayDeque<Integer> dq=new ArrayDeque<>();
+20         dq.add(root(1));
+21         int[] d=new int[k];
+22         for(int i=0;i<k;d[i++]=-1);
+23         d[root(1)]=0;
+24         while(dq.size()>0){
+25             int now=dq.pollFirst();
+26             for(int next:edges[now]){
+27                 if(d[next]<0){
+28                     d[next]=d[now]+1;
+29                     dq.addLast(next);
+30                 }
+31             }
+32         }
+33         System.out.println(d[root(0)]+1);
+34     }
+35 
+36     static int[] parent, rank, num;
+37     public static void init(int n){
+38         parent=new int[n];
+39         rank=new int[n];
+40         num=new int[n];
+41         for(int i=0;i<n;i++){
+42             parent[i]=i;
+43             num[i]=1;
+44         }
+45     }
+46     public static int root(int x){
+47         if(parent[x]==x) return x;
+48         parent[x]=root(parent[x]);
+49         return parent[x];
+50     }
+51     public static boolean same(int x, int y){
+52         return root(x)==root(y);
+53     }
+54     public static boolean unite(int x, int y){
+55         int xr=root(x);
+56         int yr=root(y);
+57         if(xr==yr) return false;
+58         if(rank[xr]<rank[yr]){
+59             parent[xr]=yr;
+60             num[yr]+=num[xr];
+61         }
+62         else{
+63             parent[yr]=xr;
+64             num[xr]+=num[yr];
+65             if(rank[xr]==rank[yr]) rank[xr]++;
+66         }
+67         return true;
+68     }
+69     public static int size(int x){
+70         return num[root(x)];
+71     }
+72 }

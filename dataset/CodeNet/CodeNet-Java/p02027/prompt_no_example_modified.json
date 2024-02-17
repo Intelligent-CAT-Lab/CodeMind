@@ -1,0 +1,7 @@
+{
+    "0": {
+        "prompt": "Consider the following code:\nimport java.util.*;\n\npublic class Main {\n    static HashMap<Integer, HashMap<Integer, Long>> dp = new HashMap<>();\n     public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int k = sc.nextInt();\n        long total = 0;\n        for (int i = 1; i * Math.pow(2, k - 1) <= n; i++) {\n            total += search(i, k - 1, n);\n        } \n        System.out.println(total);\n    }\n    \n    static long search(int num, int count, int max) {\n        if (count == 0) {\n            return 1;\n        }\n        if (dp.containsKey(num)) {\n            if (dp.get(num).containsKey(count)) {\n                return dp.get(num).get(count);\n            }\n        }\n        long total = 0;\n        for (int i = 2; num * i * Math.pow(2, count - 1) <= max; i++) {\n            total += search(num * i, count - 1, max);\n        }\n        if (dp.containsKey(num)) {\n            dp.get(num).put(count, total);\n        } else {\n            HashMap<Integer, Long> map = new HashMap<>();\n            map.put(count, total);\n            dp.put(num, map);\n        }\n        return total;\n    }\n}\n\nWhat would be the output of the code execution given the following input:\n6 3\n \nPrint the answer and end your response with \"END-OF-OUTPUT\":",
+        "status": "NAN",
+        "gorund_truth": "3\n"
+    }
+}

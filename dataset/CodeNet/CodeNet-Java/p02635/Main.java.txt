@@ -1,0 +1,227 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.IOException;
+6 import java.io.InputStreamReader;
+7 import java.util.ArrayList;
+8 import java.io.BufferedOutputStream;
+9 import java.io.UncheckedIOException;
+10 import java.util.List;
+11 import java.nio.charset.Charset;
+12 import java.util.StringTokenizer;
+13 import java.io.Writer;
+14 import java.io.OutputStreamWriter;
+15 import java.io.BufferedReader;
+16 import java.io.InputStream;
+17 
+18 /**
+19  * Built using CHelper plug-in
+20  * Actual solution is at the top
+21  *
+22  * @author mikit
+23  */
+24 public class Main {
+25     public static void main(String[] args) {
+26         InputStream inputStream = System.in;
+27         OutputStream outputStream = System.out;
+28         LightScanner in = new LightScanner(inputStream);
+29         LightWriter out = new LightWriter(outputStream);
+30         CShift solver = new CShift();
+31         solver.solve(1, in, out);
+32         out.close();
+33     }
+34 
+35     static class CShift {
+36         private static final int MOD = 998244353;
+37 
+38         public void solve(int testNumber, LightScanner in, LightWriter out) {
+39             char[] str = in.chars();
+40             int k = in.ints();
+41             int[] a;
+42             int n;
+43             {
+44                 List<Integer> rlc = new ArrayList<>();
+45                 int count = 0;
+46                 for (int i = str.length - 1; i >= 0; i--) {
+47                     if (str[i] == '0') {
+48                         rlc.add(count);
+49                         count = 0;
+50                     } else count++;
+51                 }
+52                 rlc.add(count);
+53                 n = rlc.size();
+54                 a = new int[n];
+55                 for (int i = 0; i < n; i++) a[i] = rlc.get(i);
+56             }
+57             int ones = n - 1, zeros = str.length - ones;
+58             if (ones == 0 || zeros == 0) {
+59                 out.ans(1).ln();
+60                 return;
+61             }
+62 
+63             long[][][] dp = new long[n + 1][zeros + 1][zeros + 1];
+64             long[][] sum0 = new long[zeros + 1][zeros + 1], sum1 = new long[zeros + 1][zeros + 1];
+65             dp[0][0][0] = 1;
+66             for (int i = 0; i < n; i++) {
+67                 // sum0
+68                 for (int total = 0; total <= zeros; total++) {
+69                     sum0[total][0] = dp[i][total][0];
+70                     for (int now = 1; now <= zeros; now++) {
+71                         sum0[total][now] = (sum0[total][now - 1] + dp[i][total][now]) % MOD;
+72                     }
+73                 }
+74                 // sum1
+75                 for (int total = 0; total <= zeros; total++) {
+76                     for (int now = 0; now <= zeros; now++) {
+77                         sum1[total][now] = dp[i][total][now];
+78                         if (total > 0 && now > 0) {
+79                             sum1[total][now] += sum1[total - 1][now - 1];
+80                             sum1[total][now] %= MOD;
+81                         }
+82                     }
+83                 }
+84 
+85                 // thru
+86                 for (int total = 0; total <= zeros; total++) {
+87                     System.arraycopy(dp[i][total], 0, dp[i + 1][total], 0, zeros + 1);
+88                 }
+89 
+90                 // put
+91                 for (int total = 0; total <= zeros; total++) {
+92                     for (int now = 0; now <= total; now++) {
+93                         dp[i + 1][total][now] += (sum0[total][total] - sum0[total][now] + MOD);
+94                         dp[i + 1][total][now] %= MOD;
+95                     }
+96                 }
+97 
+98                 // take
+99                 for (int total = 1; total <= zeros; total++) {
+100                     for (int now = 1; now <= total; now++) {
+101                         int min = Math.min(total, Math.min(now, a[i]));
+102                         for (int take = 1; take <= min; take++) {
+103                             dp[i + 1][total][now] += dp[i][total - take][now - take];
+104                         }
+105                         //dp[i + 1][total][now] += sum1[total - 1][now - 1];
+106                         //if (now - min - 1 >= 0) dp[i + 1][total][now] += MOD - sum1[total - min - 1][now - min - 1];
+107                         dp[i + 1][total][now] %= MOD;
+108                     }
+109                 }
+110             }
+111 
+112             long ans = 0;
+113             for (int i = 0; i <= Math.min(k, zeros); i++) ans += dp[n][i][0];
+114             out.ans(ans % MOD).ln();
+115         }
+116 
+117     }
+118 
+119     static class LightWriter implements AutoCloseable {
+120         private final Writer out;
+121         private boolean autoflush = false;
+122         private boolean breaked = true;
+123 
+124         public LightWriter(Writer out) {
+125             this.out = out;
+126         }
+127 
+128         public LightWriter(OutputStream out) {
+129             this(new OutputStreamWriter(new BufferedOutputStream(out), Charset.defaultCharset()));
+130         }
+131 
+132         public LightWriter print(char c) {
+133             try {
+134                 out.write(c);
+135                 breaked = false;
+136             } catch (IOException ex) {
+137                 throw new UncheckedIOException(ex);
+138             }
+139             return this;
+140         }
+141 
+142         public LightWriter print(String s) {
+143             try {
+144                 out.write(s, 0, s.length());
+145                 breaked = false;
+146             } catch (IOException ex) {
+147                 throw new UncheckedIOException(ex);
+148             }
+149             return this;
+150         }
+151 
+152         public LightWriter ans(String s) {
+153             if (!breaked) {
+154                 print(' ');
+155             }
+156             return print(s);
+157         }
+158 
+159         public LightWriter ans(long l) {
+160             return ans(Long.toString(l));
+161         }
+162 
+163         public LightWriter ans(int i) {
+164             return ans(Integer.toString(i));
+165         }
+166 
+167         public LightWriter ln() {
+168             print(System.lineSeparator());
+169             breaked = true;
+170             if (autoflush) {
+171                 try {
+172                     out.flush();
+173                 } catch (IOException ex) {
+174                     throw new UncheckedIOException(ex);
+175                 }
+176             }
+177             return this;
+178         }
+179 
+180         public void close() {
+181             try {
+182                 out.close();
+183             } catch (IOException ex) {
+184                 throw new UncheckedIOException(ex);
+185             }
+186         }
+187 
+188     }
+189 
+190     static class LightScanner implements AutoCloseable {
+191         private BufferedReader reader = null;
+192         private StringTokenizer tokenizer = null;
+193 
+194         public LightScanner(InputStream in) {
+195             reader = new BufferedReader(new InputStreamReader(in));
+196         }
+197 
+198         public String string() {
+199             while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+200                 try {
+201                     tokenizer = new StringTokenizer(reader.readLine());
+202                 } catch (IOException e) {
+203                     throw new UncheckedIOException(e);
+204                 }
+205             }
+206             return tokenizer.nextToken();
+207         }
+208 
+209         public char[] chars() {
+210             return string().toCharArray();
+211         }
+212 
+213         public int ints() {
+214             return Integer.parseInt(string());
+215         }
+216 
+217         public void close() {
+218             try {
+219                 this.reader.close();
+220             } catch (IOException ex) {
+221                 throw new UncheckedIOException(ex);
+222             }
+223         }
+224 
+225     }
+226 }
+227 

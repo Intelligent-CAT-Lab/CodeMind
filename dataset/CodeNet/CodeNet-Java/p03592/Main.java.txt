@@ -1,0 +1,176 @@
+1 import java.io.BufferedInputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.util.Arrays;
+5 
+6 public class Main {
+7 
+8 	public static void main(String[] args) throws Exception {
+9 		Scanner sc = new Scanner(System.in);
+10 		int N = sc.nextInt();
+11 		int M = sc.nextInt();
+12 		int K = sc.nextInt();
+13 
+14 		for (int i = 0; i <= N; i++) {
+15 			for (int j = 0; j <= M; j++) {
+16 				long sum = M * i + N * j - (i * j * 2);
+17 				if (sum == K) {
+18 					System.out.println("Yes");
+19 					return;
+20 				}
+21 			}
+22 		}
+23 		System.out.println("No");
+24 	}
+25 
+26 	public static class Pair implements Comparable<Pair> {
+27 		private double key;
+28 		private int value;
+29 
+30 		public Pair(double key, int value) {
+31 			super();
+32 			this.key = key;
+33 			this.value = value;
+34 		}
+35 
+36 		public double getKey() {
+37 			return key;
+38 		}
+39 
+40 		public int getValue() {
+41 			return value;
+42 		}
+43 
+44 		@Override
+45 		public String toString() {
+46 			return "{" + key + ", " + value + "}";
+47 		}
+48 
+49 		@Override
+50 		public int compareTo(Pair other) {
+51 			double t = this.value / this.key;
+52 			double o = other.value / other.key;
+53 			if (t < o) {
+54 				return -1;
+55 			} else if (t > o) {
+56 				return 1;
+57 			} else {
+58 				return 0;
+59 			}
+60 		}
+61 	}
+62 
+63 	private static boolean isDebug = System.getProperty("sun.desktop") != null;
+64 
+65 	private static void debug(Object... o) {
+66 		if (isDebug) {
+67 			System.err.println(Arrays.deepToString(o));
+68 		}
+69 	}
+70 
+71 	public static class Scanner {
+72 		private BufferedInputStream inputStream;
+73 		private StringBuilder buffer = new StringBuilder();
+74 
+75 		public Scanner(InputStream in) {
+76 			inputStream = new BufferedInputStream(in);
+77 		}
+78 
+79 		public int nextInt() throws IOException {
+80 			int num = 0;
+81 			int sign = 1;
+82 
+83 			int read = skip();
+84 			if (read == '-') {
+85 				sign = -1;
+86 				read = inputStream.read();
+87 			}
+88 
+89 			do {
+90 				num = num * 10 + sign * (read - 0x30);
+91 			} while ((read = inputStream.read()) > 0x20);
+92 
+93 			return num;
+94 		}
+95 
+96 		public void fill(int[] a) throws IOException {
+97 			for (int i = 0; i < a.length; i++) {
+98 				a[i] = nextInt();
+99 			}
+100 		}
+101 
+102 		public void fill(int[] a, int[] b) throws IOException {
+103 			if (a.length != b.length) {
+104 				throw new IllegalArgumentException();
+105 			}
+106 
+107 			for (int i = 0; i < a.length; i++) {
+108 				a[i] = nextInt();
+109 				b[i] = nextInt();
+110 			}
+111 		}
+112 
+113 		public long nextLong() throws IOException {
+114 			long num = 0;
+115 			int sign = 1;
+116 
+117 			int read = skip();
+118 			if (read == '-') {
+119 				sign = -1;
+120 				read = inputStream.read();
+121 			}
+122 
+123 			do {
+124 				num = num * 10 + sign * (read - 0x30);
+125 			} while ((read = inputStream.read()) > 0x20);
+126 
+127 			return num;
+128 		}
+129 
+130 		public void fill(long[] a) throws IOException {
+131 			for (int i = 0; i < a.length; i++) {
+132 				a[i] = nextLong();
+133 			}
+134 		}
+135 
+136 		public void fill(long[] a, long[] b) throws IOException {
+137 			if (a.length != b.length) {
+138 				throw new IllegalArgumentException();
+139 			}
+140 
+141 			for (int i = 0; i < a.length; i++) {
+142 				a[i] = nextLong();
+143 				b[i] = nextLong();
+144 			}
+145 		}
+146 
+147 		public long[] nextLong(int n) throws IOException {
+148 			long[] array = new long[n];
+149 			for (int i = 0; i < n; i++) {
+150 				array[i] = nextLong();
+151 			}
+152 
+153 			return array;
+154 		}
+155 
+156 		public String next() throws IOException {
+157 			int read = skip();
+158 			do {
+159 				buffer.append((char) read);
+160 			} while ((read = inputStream.read()) > 0x20);
+161 
+162 			String text = buffer.toString();
+163 			buffer.delete(0, buffer.length());
+164 
+165 			return text;
+166 		}
+167 
+168 		private int skip() throws IOException {
+169 			int read;
+170 			while ((read = inputStream.read()) <= 0x20)
+171 				;
+172 
+173 			return read;
+174 		}
+175 	}
+176 }

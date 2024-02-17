@@ -1,0 +1,192 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStreamReader;
+4 import java.io.PrintWriter;
+5 import java.util.Set;
+6 import java.util.TreeSet;
+7 
+8 public class Main {
+9 	final int _intMax = Integer.MAX_VALUE; // =2147483647>10^9
+10 	final int _intMin = Integer.MIN_VALUE;
+11 	final long _longMax = Long.MAX_VALUE; // =9223372036854775807L>10^18
+12 	final long _longMin = Long.MIN_VALUE;
+13 
+14 	void solve() {
+15 		Set<Character> set = new TreeSet<>();
+16 		for (char ch = 'a'; ch <= 'z'; ch++)
+17 			set.add(ch);
+18 		String line = readLine();
+19 		for (int i = 0; i < line.length(); i++) {
+20 			char ch = line.charAt(i);
+21 			set.remove(ch);
+22 		}
+23 		if (set.size() > 0) {
+24 			StringBuilder sb = new StringBuilder();
+25 			sb.append(line);
+26 			sb.append(set.iterator().next());
+27 			pln(sb.toString());
+28 			return;
+29 		}
+30 		if ("zyxwvutsrqponmlkjihgfedcba".equals(line)) {
+31 			pln(-1);
+32 			return;
+33 		}
+34 		next(line, "");
+35 	}
+36 
+37 	boolean next(String line, String cur) {
+38 		if (line.substring(0, cur.length()).compareTo(cur) > 0)
+39 			return false;
+40 		if (line.length() == cur.length()) {
+41 			if (line.compareTo(cur) < 0) {
+42 				for (int i = 0; i < line.length(); i++) {
+43 					p(cur.charAt(i));
+44 					if (line.charAt(i) != cur.charAt(i)) {
+45 						break;
+46 					}
+47 				}
+48 				pln("");
+49 				return true;
+50 			} else
+51 				return false;
+52 		}
+53 		for (char ch = 'a'; ch <= 'z'; ch++) {
+54 			if (cur.indexOf(ch) < 0) {
+55 				if (next(line, cur + String.valueOf(ch)))
+56 					return true;
+57 			}
+58 		}
+59 		return false;
+60 	}
+61 
+62 	// -----------------------------------------------------
+63 	// 2018/04/26 r2
+64 	// -----------------------------------------------------
+65 	int abs(int a) {
+66 		return (a >= 0) ? a : -a;
+67 	}
+68 
+69 	long abs(long a) {
+70 		return (a >= 0) ? a : -a;
+71 	}
+72 
+73 	int max(int a, int b) {
+74 		return (a > b) ? a : b;
+75 	}
+76 
+77 	long max(long a, long b) {
+78 		return (a > b) ? a : b;
+79 	}
+80 
+81 	int min(int a, int b) {
+82 		return (a < b) ? a : b;
+83 	}
+84 
+85 	long min(long a, long b) {
+86 		return (a < b) ? a : b;
+87 	}
+88 
+89 	int pint(String s) {
+90 		return Integer.parseInt(s);
+91 	}
+92 
+93 	long plong(String s) {
+94 		return Long.parseLong(s);
+95 	}
+96 
+97 	String readLine() {
+98 		try {
+99 			return _in.readLine();
+100 		} catch (IOException e) {
+101 			throw new RuntimeException(e);
+102 		}
+103 	}
+104 
+105 	int readNum() {
+106 		String line = readLine();
+107 		return pint(line);
+108 	}
+109 
+110 	long readLong() {
+111 		String line = readLine();
+112 		return plong(line);
+113 	}
+114 
+115 	String[] readFlds() {
+116 		String line = readLine();
+117 		return line.split(" ");
+118 	}
+119 
+120 	int[] readNums() {
+121 		String[] flds = readFlds();
+122 		int[] nums = new int[flds.length];
+123 		for (int i = 0; i < flds.length; i++)
+124 			nums[i] = pint(flds[i]);
+125 		return nums;
+126 	}
+127 
+128 	long[] readLongs() {
+129 		String[] flds = readFlds();
+130 		long[] nums = new long[flds.length];
+131 		for (int i = 0; i < flds.length; i++)
+132 			nums[i] = plong(flds[i]);
+133 		return nums;
+134 	}
+135 
+136 	void p(char c) {
+137 		_out.print(c);
+138 	}
+139 
+140 	void pln(char c) {
+141 		_out.println(c);
+142 	}
+143 
+144 	void p(double d) {
+145 		_out.print(d);
+146 	}
+147 
+148 	void pln(double d) {
+149 		_out.println(d);
+150 	}
+151 
+152 	void p(long l) {
+153 		_out.print(l);
+154 	}
+155 
+156 	void pln(long l) {
+157 		_out.println(l);
+158 	}
+159 
+160 	void p(String s) {
+161 		_out.print(s);
+162 	}
+163 
+164 	void pln(String s) {
+165 		_out.println(s);
+166 	}
+167 
+168 	void pln(int[] ia) {
+169 		for (int i = 0; i < ia.length; i++)
+170 			pln(ia[i]);
+171 	}
+172 
+173 	void pln(long[] la) {
+174 		for (int i = 0; i < la.length; i++)
+175 			pln(la[i]);
+176 	}
+177 
+178 	static BufferedReader _in;
+179 	static PrintWriter _out;
+180 	static boolean _bElapsed = false;
+181 
+182 	public static void main(String[] args) {
+183 		long start = System.currentTimeMillis();
+184 		_in = new BufferedReader(new InputStreamReader(System.in));
+185 		_out = new PrintWriter(System.out);
+186 		new Main().solve();
+187 		_out.flush();
+188 		long end = System.currentTimeMillis();
+189 		if (_bElapsed)
+190 			System.err.println((end - start) + "ms");
+191 	}
+192 }

@@ -1,0 +1,49 @@
+1 import java.util.*;
+2 import java.lang.*;
+3 
+4 class Main {
+5         public static void main(String args[]) {
+6                 Scanner sc = new Scanner(System.in);
+7                 String S = sc.next();
+8                 if (saiki(S)) {
+9                         System.out.println("Cat");
+10                 } else {
+11                         System.out.println("Rabbit");
+12                 }
+13         }
+14 
+15         public static boolean saiki(String S){
+16                 if (S.equals("")) {
+17                         return true;
+18                 }
+19                 if (S.charAt(0) != 'm') {
+20                         return false;
+21                 }
+22                 int en = 1;
+23                 int i;
+24                 for (i = 1; i < S.length() && en != 0; i++) {
+25                         if (S.charAt(i) == 'm') {
+26                                 en++;
+27                         } else if(S.charAt(i) == 'e'){
+28                                 en--;
+29                         }
+30                 }
+31                 if (i == S.length()) {
+32                         return false;
+33                 }
+34                 int eindex = i;
+35                 int mn = 1;
+36                 i++;
+37                 for (; i < S.length() && mn != 0; i++) {
+38                         if (S.charAt(i) == 'e') {
+39                                 mn++;
+40                         } else if(S.charAt(i) == 'w'){
+41                                 mn--;
+42                         }
+43                 }
+44                 if (i != S.length()) {
+45                         return false;
+46                 }
+47                 return saiki(S.substring(1, eindex - 1)) && saiki(S.substring(eindex, S.length() - 1));
+48         }
+49 }

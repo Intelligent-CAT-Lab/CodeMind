@@ -1,0 +1,201 @@
+1 import java.io.*;
+2 import java.util.*;
+3 import java.math.*;
+4 // import java.awt.Point;
+5  
+6 public class Main {
+7     InputStream is;
+8     PrintWriter out;
+9     String INPUT = "";
+10  
+11     // static int mod = 1_000_000_007;
+12     int mod = 998244353;
+13     // long inf = Long.MAX_VALUE/2;
+14     int inf = Integer.MAX_VALUE/2;
+15 
+16  
+17     void solve(){
+18         int n = ni();
+19         int m = ni();
+20         int k = ni();
+21         int mod = 1000000007;
+22         int[][] fif = enumFIF(1000000, mod);
+23 
+24         long xsum = 0;
+25         long ysum = 0;
+26 
+27         long xa = C(n*m-2,k-2,mod,fif) * fif[0][k-2] % mod;
+28         long xb = 0;
+29         for(int i = 0; i <= m-1; i++){
+30             long tmp = (long)i * (m-i) % mod * n % mod * n % mod * 2 % mod;
+31             xb += tmp;
+32             xb %= mod;
+33         }
+34         long xc = xa * xb % mod * C(k,2,mod,fif) % mod;
+35         xsum = xc * fif[1][k] % mod;
+36         // out.println(xa+" "+xb+" "+xc);
+37         // out.println(xsum);
+38 
+39         long ya = C(n*m-2,k-2,mod,fif) * fif[0][k-2] % mod;
+40         long yb = 0;
+41         for(int i = 0; i <= n-1; i++){
+42             long tmp = (long)i * (n-i) % mod * m % mod * m % mod * 2 % mod;
+43             yb += tmp;
+44             yb %= mod;
+45         }
+46         long yc = ya * yb % mod * C(k,2,mod,fif) % mod;
+47         ysum = yc * fif[1][k] % mod;
+48 
+49         // out.println(ysum);
+50 
+51         out.println((xsum+ysum)%mod);
+52 
+53     }
+54 
+55     public static long C(int n, int r, int mod, int[][] fif) {
+56         if (n < 0 || r < 0 || r > n)
+57             return 0;
+58         return (long) fif[0][n] * fif[1][r] % mod * fif[1][n - r] % mod;
+59     }
+60 
+61     
+62     public static int[][] enumFIF(int n, int mod) {
+63         int[] f = new int[n + 1];
+64         int[] invf = new int[n + 1];
+65         f[0] = 1;
+66         for (int i = 1; i <= n; i++) {
+67             f[i] = (int) ((long) f[i - 1] * i % mod);
+68         }
+69         long a = f[n];
+70         long b = mod;
+71         long p = 1, q = 0;
+72         while (b > 0) {
+73             long c = a / b;
+74             long d;
+75             d = a;
+76             a = b;
+77             b = d % b;
+78             d = p;
+79             p = q;
+80             q = d - c * q;
+81         }
+82         invf[n] = (int) (p < 0 ? p + mod : p);
+83         for (int i = n - 1; i >= 0; i--) {
+84             invf[i] = (int) ((long) invf[i + 1] * (i + 1) % mod);
+85         }
+86         return new int[][] { f, invf };
+87     }
+88 
+89 
+90     void run() throws Exception
+91     {
+92         is = INPUT.isEmpty() ? System.in : new ByteArrayInputStream(INPUT.getBytes());
+93         out = new PrintWriter(System.out);
+94         long s = System.currentTimeMillis();
+95         solve();
+96         out.flush();
+97         if(!INPUT.isEmpty())tr(System.currentTimeMillis()-s+"ms");
+98     }
+99     
+100     public static void main(String[] args) throws Exception { new Main().run(); }
+101     
+102     private byte[] inbuf = new byte[1024];
+103     private int lenbuf = 0, ptrbuf = 0;
+104     
+105     private int readByte()
+106     {
+107         if(lenbuf == -1)throw new InputMismatchException();
+108         if(ptrbuf >= lenbuf){
+109             ptrbuf = 0;
+110             try { lenbuf = is.read(inbuf); } catch (IOException e) { throw new InputMismatchException(); }
+111             if(lenbuf <= 0)return -1;
+112         }
+113         return inbuf[ptrbuf++];
+114     }
+115     
+116     private boolean isSpaceChar(int c) { return !(c >= 33 && c <= 126); }
+117     private int skip() { int b; while((b = readByte()) != -1 && isSpaceChar(b)); return b; }
+118     
+119     private double nd() { return Double.parseDouble(ns()); }
+120     private char nc() { return (char)skip(); }
+121     
+122     private String ns()
+123     {
+124         int b = skip();
+125         StringBuilder sb = new StringBuilder();
+126         while(!(isSpaceChar(b) && b != ' ')){
+127             sb.appendCodePoint(b);
+128             b = readByte();
+129         }
+130         return sb.toString();
+131     }
+132     
+133     private char[] ns(int n)
+134     {
+135         char[] buf = new char[n];
+136         int b = skip(), p = 0;
+137         while(p < n && !(isSpaceChar(b))){
+138             buf[p++] = (char)b;
+139             b = readByte();
+140         }
+141         return n == p ? buf : Arrays.copyOf(buf, p);
+142     }
+143     
+144     private char[][] nm(int n, int m)
+145     {
+146         char[][] map = new char[n][];
+147         for(int i = 0;i < n;i++)map[i] = ns(m);
+148         return map;
+149     }
+150     
+151     private int[] na(int n)
+152     {
+153         int[] a = new int[n];
+154         for(int i = 0;i < n;i++)a[i] = ni();
+155         return a;
+156     }
+157     
+158     private int ni()
+159     {
+160         int num = 0, b;
+161         boolean minus = false;
+162         while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+163         if(b == '-'){
+164             minus = true;
+165             b = readByte();
+166         }
+167         
+168         while(true){
+169             if(b >= '0' && b <= '9'){
+170                 num = num * 10 + (b - '0');
+171             }else{
+172                 return minus ? -num : num;
+173             }
+174             b = readByte();
+175         }
+176     }
+177     
+178     private long nl()
+179     {
+180         long num = 0;
+181         int b;
+182         boolean minus = false;
+183         while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+184         if(b == '-'){
+185             minus = true;
+186             b = readByte();
+187         }
+188         
+189         while(true){
+190             if(b >= '0' && b <= '9'){
+191                 num = num * 10 + (b - '0');
+192             }else{
+193                 return minus ? -num : num;
+194             }
+195             b = readByte();
+196         }
+197     }
+198     
+199     private static void tr(Object... o) { System.out.println(Arrays.deepToString(o)); }
+200  
+201 }

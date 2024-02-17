@@ -1,0 +1,48 @@
+he variable rand is initialized with the input.
+It enters a for loop and it iterates from 0 to the length of the string rand. The value of variable i is also passed to variable c.
+Inside the for loop, it checks if the current character c is either \ or /.
+If it is \, it pushes the current value of i to the stack down.
+If it is /, it checks if the stack down is empty. If it is not empty, it pops the top value of stack down and assigns it to variable j.
+Then it checks if the deque s is empty. If it is, it adds a new Pool object with j and i - j as parameters.
+If it is not empty, it removes all the Pool objects from the deque s whose j is less than j.
+Then it adds a new Pool object with j and i - j as parameters.
+After the loop finishes, it print the fianl value of variable sum as output, which is 2.
+Then it prints the size of deque s as the first line of output.
+Then it prints the values of the s parameters of all the Pool objects in deque s in the following lines.
+<<<Output>>>
+2
+1 2
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.util.Scanner;
+ 
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+ 
+        String s = sc.next();
+        int n = s.length();
+        int[] arr = new int[n];
+        int[] dp = new int[n];
+        int max = 0;
+        for(int i = 0; i < n; i++) {
+            arr[i] = s.charAt(i) - '0';
+        }
+        for(int i = 0; i < n; i++) {
+            if(i == 0) {
+                dp[i] = arr[i];
+            }else {
+                if(arr[i] == 0) {
+                    dp[i] = 0;
+                }else {
+                    dp[i] = Math.max(dp[i - 1], dp[i - 2] + arr[i]);
+                }
+            }
+            max = Math.max(max, dp[i]);
+        }
+        System.out

@@ -1,0 +1,163 @@
+1 import java.io.*;
+2 import java.util.*;
+3 import java.math.*;
+4 // import java.awt.Point;
+5  
+6 public class Main {
+7     InputStream is;
+8     PrintWriter out;
+9     String INPUT = "";
+10  
+11     long MOD = 1_000_000_007;
+12     int inf = Integer.MAX_VALUE/2;
+13 
+14 
+15     void solve(){
+16         int n = ni();
+17         int x = ni();
+18         int y = ni();
+19         int z = ni();
+20         int sum = x+y+z+1;
+21         int mask = 1<<sum;
+22         mask--;
+23         long[][] dp = new long[n+1][mask+1];
+24         int ng = 0;
+25         ng |= 1<<z;
+26         ng |= 1<<(y+z);
+27         ng |= 1<<(x+y+z);
+28         dp[0][1] = 1;
+29         for(int i = 0; i < n; i++){
+30             for(int state = 0; state <= mask; state++){
+31                 for(int j = 1; j <= 10; j++){
+32                     int res = ((state<<j)&mask) + 1;
+33                     if((res&ng)==ng) continue;
+34                     dp[i+1][res] += dp[i][state];
+35                     dp[i+1][res] %= MOD;
+36                 }
+37             }
+38         }
+39         long ans = 1;
+40         for(int i = 0; i < n; i++){
+41             ans *= 10;
+42             ans %= MOD;
+43         }
+44         for(int i = 0; i <= mask; i++){
+45             ans -= dp[n][i];
+46             ans %= MOD;
+47         }
+48         out.println((ans+MOD)%MOD);
+49     }
+50     
+51 
+52     void run() throws Exception
+53     {
+54         is = INPUT.isEmpty() ? System.in : new ByteArrayInputStream(INPUT.getBytes());
+55         out = new PrintWriter(System.out);
+56         long s = System.currentTimeMillis();
+57         solve();
+58         out.flush();
+59         if(!INPUT.isEmpty())tr(System.currentTimeMillis()-s+"ms");
+60     }
+61     
+62     public static void main(String[] args) throws Exception { new Main().run(); }
+63     
+64     private byte[] inbuf = new byte[1024];
+65     private int lenbuf = 0, ptrbuf = 0;
+66     
+67     private int readByte()
+68     {
+69         if(lenbuf == -1)throw new InputMismatchException();
+70         if(ptrbuf >= lenbuf){
+71             ptrbuf = 0;
+72             try { lenbuf = is.read(inbuf); } catch (IOException e) { throw new InputMismatchException(); }
+73             if(lenbuf <= 0)return -1;
+74         }
+75         return inbuf[ptrbuf++];
+76     }
+77     
+78     private boolean isSpaceChar(int c) { return !(c >= 33 && c <= 126); }
+79     private int skip() { int b; while((b = readByte()) != -1 && isSpaceChar(b)); return b; }
+80     
+81     private double nd() { return Double.parseDouble(ns()); }
+82     private char nc() { return (char)skip(); }
+83     
+84     private String ns()
+85     {
+86         int b = skip();
+87         StringBuilder sb = new StringBuilder();
+88         while(!(isSpaceChar(b) && b != ' ')){
+89             sb.appendCodePoint(b);
+90             b = readByte();
+91         }
+92         return sb.toString();
+93     }
+94     
+95     private char[] ns(int n)
+96     {
+97         char[] buf = new char[n];
+98         int b = skip(), p = 0;
+99         while(p < n && !(isSpaceChar(b))){
+100             buf[p++] = (char)b;
+101             b = readByte();
+102         }
+103         return n == p ? buf : Arrays.copyOf(buf, p);
+104     }
+105     
+106     private char[][] nm(int n, int m)
+107     {
+108         char[][] map = new char[n][];
+109         for(int i = 0;i < n;i++)map[i] = ns(m);
+110         return map;
+111     }
+112     
+113     private int[] na(int n)
+114     {
+115         int[] a = new int[n];
+116         for(int i = 0;i < n;i++)a[i] = ni();
+117         return a;
+118     }
+119     
+120     private int ni()
+121     {
+122         int num = 0, b;
+123         boolean minus = false;
+124         while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+125         if(b == '-'){
+126             minus = true;
+127             b = readByte();
+128         }
+129         
+130         while(true){
+131             if(b >= '0' && b <= '9'){
+132                 num = num * 10 + (b - '0');
+133             }else{
+134                 return minus ? -num : num;
+135             }
+136             b = readByte();
+137         }
+138     }
+139     
+140     private long nl()
+141     {
+142         long num = 0;
+143         int b;
+144         boolean minus = false;
+145         while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+146         if(b == '-'){
+147             minus = true;
+148             b = readByte();
+149         }
+150         
+151         while(true){
+152             if(b >= '0' && b <= '9'){
+153                 num = num * 10 + (b - '0');
+154             }else{
+155                 return minus ? -num : num;
+156             }
+157             b = readByte();
+158         }
+159     }
+160     
+161     private static void tr(Object... o) { System.out.println(Arrays.deepToString(o)); }
+162  
+163 }

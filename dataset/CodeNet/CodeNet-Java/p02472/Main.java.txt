@@ -1,0 +1,138 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.BufferedWriter;
+6 import java.io.IOException;
+7 import java.io.InputStreamReader;
+8 import java.io.UncheckedIOException;
+9 import java.nio.charset.Charset;
+10 import java.util.StringTokenizer;
+11 import java.io.Writer;
+12 import java.io.OutputStreamWriter;
+13 import java.math.BigInteger;
+14 import java.io.BufferedReader;
+15 import java.io.InputStream;
+16 
+17 /**
+18  * Built using CHelper plug-in
+19  * Actual solution is at the top
+20  *
+21  * @author mikit
+22  */
+23 public class Main {
+24     public static void main(String[] args) {
+25         InputStream inputStream = System.in;
+26         OutputStream outputStream = System.out;
+27         LightScanner in = new LightScanner(inputStream);
+28         LightWriter out = new LightWriter(outputStream);
+29         NTL_2_A solver = new NTL_2_A();
+30         solver.solve(1, in, out);
+31         out.close();
+32     }
+33 
+34     static class NTL_2_A {
+35         public void solve(int testNumber, LightScanner in, LightWriter out) {
+36             // out.setBoolLabel(LightWriter.BoolLabel.YES_NO_FIRST_UP);
+37             out.ansln(in.bigints().add(in.bigints()).toString());
+38         }
+39 
+40     }
+41 
+42     static class LightWriter implements AutoCloseable {
+43         private final Writer out;
+44         private boolean autoflush = false;
+45         private boolean breaked = true;
+46 
+47         public LightWriter(Writer out) {
+48             this.out = out;
+49         }
+50 
+51         public LightWriter(OutputStream out) {
+52             this(new BufferedWriter(new OutputStreamWriter(out, Charset.defaultCharset())));
+53         }
+54 
+55         public LightWriter print(char c) {
+56             try {
+57                 out.write(c);
+58                 breaked = false;
+59             } catch (IOException ex) {
+60                 throw new UncheckedIOException(ex);
+61             }
+62             return this;
+63         }
+64 
+65         public LightWriter print(String s) {
+66             try {
+67                 out.write(s, 0, s.length());
+68                 breaked = false;
+69             } catch (IOException ex) {
+70                 throw new UncheckedIOException(ex);
+71             }
+72             return this;
+73         }
+74 
+75         public LightWriter ans(String s) {
+76             if (!breaked) {
+77                 print(' ');
+78             }
+79             return print(s);
+80         }
+81 
+82         public LightWriter ansln(String... n) {
+83             for (String n1 : n) {
+84                 ans(n1).ln();
+85             }
+86             return this;
+87         }
+88 
+89         public LightWriter ln() {
+90             print(System.lineSeparator());
+91             breaked = true;
+92             if (autoflush) {
+93                 try {
+94                     out.flush();
+95                 } catch (IOException ex) {
+96                     throw new UncheckedIOException(ex);
+97                 }
+98             }
+99             return this;
+100         }
+101 
+102         public void close() {
+103             try {
+104                 out.close();
+105             } catch (IOException ex) {
+106                 throw new UncheckedIOException(ex);
+107             }
+108         }
+109 
+110     }
+111 
+112     static class LightScanner {
+113         private BufferedReader reader = null;
+114         private StringTokenizer tokenizer = null;
+115 
+116         public LightScanner(InputStream in) {
+117             reader = new BufferedReader(new InputStreamReader(in));
+118         }
+119 
+120         public String string() {
+121             if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+122                 try {
+123                     tokenizer = new StringTokenizer(reader.readLine());
+124                 } catch (IOException e) {
+125                     throw new UncheckedIOException(e);
+126                 }
+127             }
+128             return tokenizer.nextToken();
+129         }
+130 
+131         public BigInteger bigints() {
+132             return new BigInteger(string());
+133         }
+134 
+135     }
+136 }
+137 
+138 

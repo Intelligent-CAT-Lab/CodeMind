@@ -1,0 +1,51 @@
+
+The given Java code is a recursive function that calculates the number of ways to split a number into two or more parts. It uses memoization to store the results of previous calculations, which can be reused to speed up the program.
+
+The input to the program is a single long integer n. The program calculates the number of ways to split n into two or more parts and prints the result.
+
+Let's analyze the code with the input `3`:
+
+```java
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class Main {
+	public static long MOD = 1000000007;
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		long n = sc.nextLong();
+		System.out.println(f(n+1));
+	}
+	static HashMap<Long, Long> mb = new HashMap<>();
+	public static long f(long n) {
+		Long memo = mb.get(n);
+		if (memo != null) return memo;
+		if (n <= 2) {
+			return n;
+		}
+		long res = f(n/2) + f((n-1)/2) + f((n+1)/2);
+		res %= MOD;
+		mb.put(n, res);
+		return res;
+	}
+}
+```
+
+The input `3` is passed to the `main` method. This value is then passed to the `f` method, which calculates the number of ways to split the number. The result is then printed to the console.
+
+The `f` method uses a HashMap to store previously calculated values. If the value has already been calculated, it is returned immediately. If not, the method calculates the value and stores it in the HashMap before returning it.
+
+The calculation is based on the following rules:
+
+- If `n` is 2 or less, the number of ways is `n` itself.
+- If `n` is greater than 2, the number of ways is the sum of the number of ways to split `n/2`, `(n-1)/2`, and `(n+1)/2`.
+
+The result is then taken modulo `MOD` (1000000007) to prevent overflow.
+
+So, for the input `3`, the output would be `4`.
+
+Here is the output:
+
+```
+>>>Output
+4

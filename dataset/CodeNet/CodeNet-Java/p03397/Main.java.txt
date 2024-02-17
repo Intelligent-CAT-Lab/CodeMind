@@ -1,0 +1,144 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 public class Main {
+5     FastScanner in;
+6     PrintWriter out;
+7 
+8     final int mod = (int) 1e9 + 7;
+9 
+10     int add(int x, int y) {
+11         x += y;
+12         if (x >= mod) {
+13             x -= mod;
+14         }
+15         return x;
+16     }
+17 
+18     void solve() {
+19         char[] s = in.next().toCharArray();
+20         int[][] go = new int[][]{{0, 0}, {2, 2}, {1, 3}, {2, 0}, {5, 5}, {4, 6}, {5, 3}, {8, 8}, {7, 9}, {8, 6}};
+21         int start = go.length - 1;
+22         String win = "W?W?L?W?L?";
+23         int states = win.length();
+24         int[] dp = new int[states];
+25         dp[start] = 1;
+26         int[] ndp = new int[states];
+27         for (char c : s) {
+28             Arrays.fill(ndp, 0);
+29             for (int st = 0; st < states; st++) {
+30                 if (c == '0' || c == '?') {
+31                     int next = go[st][0];
+32                     ndp[next] = add(ndp[next], dp[st]);
+33                 }
+34                 if (c == '1' || c == '?') {
+35                     int next = go[st][1];
+36                     ndp[next] = add(ndp[next], dp[st]);
+37                 }
+38             }
+39             int[] tmp = dp;
+40             dp = ndp;
+41             ndp = tmp;
+42         }
+43         long res = 0;
+44         for (int i = 0; i < states; i++) {
+45             if (dp[i] == 0) {
+46                 continue;
+47             }
+48             char w = win.charAt(i);
+49             if (w == '?') {
+50                 throw new AssertionError();
+51             }
+52             if (w == 'W') {
+53                 res += dp[i];
+54             }
+55         }
+56         out.println(res % mod);
+57     }
+58 
+59     void run() {
+60         try {
+61             in = new FastScanner(new File("Main.in"));
+62             out = new PrintWriter(new File("Main.out"));
+63 
+64             solve();
+65 
+66             out.close();
+67         } catch (FileNotFoundException e) {
+68             e.printStackTrace();
+69         }
+70     }
+71 
+72     void runIO() {
+73 
+74         in = new FastScanner(System.in);
+75         out = new PrintWriter(System.out);
+76 
+77         solve();
+78 
+79         out.close();
+80     }
+81 
+82     class FastScanner {
+83         BufferedReader br;
+84         StringTokenizer st;
+85 
+86         public FastScanner(File f) {
+87             try {
+88                 br = new BufferedReader(new FileReader(f));
+89             } catch (FileNotFoundException e) {
+90                 e.printStackTrace();
+91             }
+92         }
+93 
+94         public FastScanner(InputStream f) {
+95             br = new BufferedReader(new InputStreamReader(f));
+96         }
+97 
+98         String next() {
+99             while (st == null || !st.hasMoreTokens()) {
+100                 String s = null;
+101                 try {
+102                     s = br.readLine();
+103                 } catch (IOException e) {
+104                     e.printStackTrace();
+105                 }
+106                 if (s == null)
+107                     return null;
+108                 st = new StringTokenizer(s);
+109             }
+110             return st.nextToken();
+111         }
+112 
+113         boolean hasMoreTokens() {
+114             while (st == null || !st.hasMoreTokens()) {
+115                 String s = null;
+116                 try {
+117                     s = br.readLine();
+118                 } catch (IOException e) {
+119                     e.printStackTrace();
+120                 }
+121                 if (s == null)
+122                     return false;
+123                 st = new StringTokenizer(s);
+124             }
+125             return true;
+126         }
+127 
+128         int nextInt() {
+129             return Integer.parseInt(next());
+130         }
+131 
+132         long nextLong() {
+133             return Long.parseLong(next());
+134         }
+135 
+136         double nextDouble() {
+137             return Double.parseDouble(next());
+138         }
+139     }
+140 
+141     public static void main(String[] args) {
+142         new Main().runIO();
+143     }
+144 }

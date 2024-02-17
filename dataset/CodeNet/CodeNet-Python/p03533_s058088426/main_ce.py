@@ -1,0 +1,1 @@
+import re;print(['NO','YES'][re.match('A?KIHA?BA?RA?$',"KIHBR")!=None])

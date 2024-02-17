@@ -1,0 +1,77 @@
+1 import java.util.Arrays;
+2 import java.util.Scanner;
+3 
+4 public class Main{
+5 	public static void main(String[] args) {
+6 		new Main().solver();
+7 	}
+8 
+9 	static long MOD = 1_000_000_000 + 7;
+10 
+11 	void solver() {
+12 		Scanner sc = new Scanner(System.in);
+13 		int n = sc.nextInt();
+14 		int m = sc.nextInt();
+15 		int k = sc.nextInt();
+16 
+17 		fact = new long[n + m + 2 * k + 1];
+18 		fact[0] = 1;
+19 		fact[1] = 1;
+20 		for (int i = 1; i <= n + m + 2 * k; i++) {
+21 			fact[i] = (i % MOD * fact[i - 1]) % MOD;
+22 		}
+23 		long ans = 0;
+24 		for (int i = 0; i <= k; i++) {
+25 			long a = 1, b = 1;
+26 			int j = k - i;
+27 			if (i >= 1)
+28 				a = (nCk(n + 2 * i, i) + MOD - nCk(n + 2 * i, i - 1)) % MOD;
+29 			if (j >= 1)
+30 				b = (nCk(m + 2 * j, j) + MOD - nCk(m + 2 * j, j - 1)) % MOD;
+31 			ans += nCk(n + m + 2 * k, n + 2 * i) % MOD * a % MOD * b % MOD;
+32 			ans %= MOD;
+33 		}
+34 
+35 		while (ans < 0)
+36 			ans += MOD;
+37 		System.out.println(ans);
+38 
+39 	}
+40 
+41 	static long[] fact;
+42 	static long[] inv_fact;
+43 
+44 	// 1~n?????°?????????k????????????????????°
+45 	static long nCk(int n, int k) {
+46 		if (n < k)
+47 			return 0;
+48 		else {
+49 			return fact[n] % MOD * inv(fact[n - k], MOD) % MOD * inv(fact[k], MOD) % MOD;
+50 		}
+51 	}
+52 
+53 	static long inv(long a, long mod) {
+54 		a = a % mod;
+55 		long b = mod;
+56 		long p = 1, q = 0;
+57 
+58 		while (b > 1) {
+59 			long c = b / a;
+60 			b = b % a;
+61 			q = q - p * c;
+62 			long d = b;
+63 			b = a;
+64 			a = d;
+65 			d = p;
+66 			p = q;
+67 			q = d;
+68 		}
+69 		while (q < 0)
+70 			q += mod;
+71 		return q % MOD;
+72 	}
+73 
+74 	static void tr(Object... o) {
+75 		System.out.println(Arrays.deepToString(o));
+76 	}
+77 }

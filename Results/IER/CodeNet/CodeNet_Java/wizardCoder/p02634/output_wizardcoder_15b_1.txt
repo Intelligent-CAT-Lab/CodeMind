@@ -1,0 +1,138 @@
+Below is an instruction that describes a task, paired with an input that
+provides further context.  Write a response that appropriately completes
+the request.
+
+### Instruction:
+Below is an example:
+[[[Example Start]]]
+I want to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the output of the code.
+Consider the following code:
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class Main {
+
+    public static void main(String[] args) {
+        try {
+            InputStreamReader isr = new InputStreamReader(System.in);
+            BufferedReader br = new BufferedReader(isr);
+            String strArr[] = br.readLine().split(" ");
+
+            int n = Integer.parseInt(strArr[0]);
+            int a = Integer.parseInt(strArr[1]);
+            int b = Integer.parseInt(strArr[2]);
+            int answer = 0;
+
+            for (int i = 1; i < n + 1; i++) {
+                int num = i;
+                int sum = 0;
+
+                while (num!= 0) {
+                        sum += num % 10;
+                        num /= 10;
+                }
+
+                if (sum >= a && sum <= b ) {
+                        answer = answer + i;
+                }
+            }
+            System.out.println(answer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+<<Question>>
+What would be the output of code executiion given the following input:
+20 2 5
+Only print the output of code execution and end your response with "END-OF-OUTPUT":
+<<Answer>>
+84
+END-OF-OUTPUT
+[[[Example End]]]
+
+
+Consider the following code: 
+import java.util.*;
+import java.util.stream.Collectors;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+
+public class Main {
+	public static void main(String[] args) throws IOException {
+		InputStreamReader reader = new InputStreamReader(System.in, StandardCharsets.UTF_8);
+		BufferedReader in = new BufferedReader(reader);
+		Main ins = new Main(in);
+		ins.calc();
+		ins.showResult();
+	}
+
+	int A, B, C, D;
+	long MOD = 998244353L;
+	long[][] cell;
+
+	Main(BufferedReader in) throws IOException {
+		String[] tokens = in.readLine().split(" ");
+		A = Integer.parseInt(tokens[0]);
+		B = Integer.parseInt(tokens[1]);
+		C = Integer.parseInt(tokens[2]);
+		D = Integer.parseInt(tokens[3]);
+		cell = new long[C][D];
+		for (int i = 0; i < C; ++i) {
+			Arrays.fill(cell[i], 0L);
+		}
+		cell[A - 1][B - 1] = 1L;
+		for (int i = A; i < C; ++i) {
+			cell[i][B - 1] = cell[i - 1][B - 1] * B % MOD;
+		}
+		for (int i = B; i < D; ++i) {
+			cell[A - 1][i] = cell[A - 1][i - 1] * A % MOD;
+		}
+	}
+
+	void calc() {
+		for (int i = A; i < C; ++i) {
+			for (int j = B; j < D; ++j) {
+				// このマスが白の場合: 例えば，左のパターン * 下一列のいずれかが黒
+				cell[i][j] = cell[i - 1][j] * (long) j;
+				cell[i][j] %= MOD;
+				cell[i][j] += cell[i][j - 1] * (long) i;
+				cell[i][j] %= MOD;
+				long val = cell[i - 1][j - 1] * (long) i;
+				val %= MOD;
+				val *= (long) j;
+				val %= MOD;
+				cell[i][j] -= val;
+				cell[i][j] += MOD;
+				cell[i][j] %= MOD;
+				cell[i][j] += cell[i - 1][j];
+				cell[i][j] %= MOD;
+				cell[i][j] += cell[i][j - 1];
+				cell[i][j] %= MOD;
+			}
+		}
+	}
+
+	void showCell() {
+		for (int i = 0; i < C; ++i) {
+			for (int j = 0; j < D; ++j) {
+				System.out.print(cell[i][j] + " ");
+			}
+			System.out.println("");
+		}
+	}
+
+	void showResult() {
+		System.out.println(cell[C - 1][D - 1]);
+		// showCell();
+	}
+}
+<<Question>>
+What would be the output of code executiion given the following input:
+1 1 2 2
+
+Only print the output of code execution and end your response with "END-OF-OUTPUT":\<<Answer>>
+### Response:
+1
+END-OF-OUTPUT

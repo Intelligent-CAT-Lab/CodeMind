@@ -1,0 +1,84 @@
+1 
+2 import java.io.BufferedReader;
+3 import java.io.IOException;
+4 import java.io.InputStream;
+5 import java.io.InputStreamReader;
+6 import java.util.HashSet;
+7 import java.util.StringTokenizer;
+8 
+9 public class Main {
+10 
+11 
+12     public static void main(String[] args) throws IOException {
+13         Scanner s = new Scanner(System.in);
+14         String word = s.next();
+15         boolean flag = false;
+16         for(int i=0;i<word.length()-1;i++){
+17             if(word.charAt(i)==word.charAt(i+1)){
+18                 flag = true;
+19                 break;
+20             }
+21         }
+22         if(flag) System.out.println("Bad");
+23         else System.out.println("Good");
+24     }
+25 
+26 
+27 
+28 
+29 }
+30 
+31 
+32 class Scanner
+33 {
+34     StringTokenizer st;
+35     BufferedReader br;
+36 
+37     public Scanner(InputStream s){	br = new BufferedReader(new InputStreamReader(s));}
+38 
+39     public String next() throws IOException
+40     {
+41         while (st == null || !st.hasMoreTokens())
+42             st = new StringTokenizer(br.readLine());
+43         return st.nextToken();
+44     }
+45 
+46     public int nextInt() throws IOException {return Integer.parseInt(next());}
+47 
+48     public long nextLong() throws IOException {return Long.parseLong(next());}
+49 
+50     public String nextLine() throws IOException {return br.readLine();}
+51 
+52     public double nextDouble() throws IOException
+53     {
+54         String x = next();
+55         StringBuilder sb = new StringBuilder("0");
+56         double res = 0, f = 1;
+57         boolean dec = false, neg = false;
+58         int start = 0;
+59         if(x.charAt(0) == '-')
+60         {
+61             neg = true;
+62             start++;
+63         }
+64         for(int i = start; i < x.length(); i++)
+65             if(x.charAt(i) == '.')
+66             {
+67                 res = Long.parseLong(sb.toString());
+68                 sb = new StringBuilder("0");
+69                 dec = true;
+70             }
+71             else
+72             {
+73                 sb.append(x.charAt(i));
+74                 if(dec)
+75                     f *= 10;
+76             }
+77         res += Long.parseLong(sb.toString()) / f;
+78         return res * (neg?-1:1);
+79     }
+80 
+81     public boolean ready() throws IOException {return br.ready();}
+82 
+83 
+84 }

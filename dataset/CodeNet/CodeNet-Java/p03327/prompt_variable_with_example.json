@@ -1,0 +1,158 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6    public static void main(String[] args) {\n7\t\t try {\n7\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nQuestion: What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the sataes and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.io.*;\n2 import java.util.*;\n3 class Main{\n4 \tstatic final long MOD = 1_000_000_007; // 10^9+7\n5     static final int MAX = 2_147_483_646; // intMax \n6     static final int INF = 1_000_000_000; // 10^9  \n7     public static void main(String[] args) throws Exception {\n8 \t\thayami saori = new hayami();\n9 \t\tint n = saori.saori_hayami();\n10 \t\tif(n < 1000){\n11 \t\t\tSystem.out.println(\"ABC\");\n12 \t\t} else {\n13 \t\t\tSystem.out.println(\"ABD\");\n14 \t\t}\n15 \t\t\n16 \t\tsaori.close();\n17     }\n18 }\n19 \n20 class hayami implements Closeable {\n21 \tprivate final InputStream in = System.in;\n22 \tprivate final byte[] hayami = new byte[1024];\n23 \tprivate int Hayami = 0;\n24 \tprivate int saori = 0;\n25 \tprivate boolean HayamiSaori() {\n26 \t\tif (Hayami < saori) {\n27 \t\t\treturn true;\n28 \t\t}else{\n29 \t\t\tHayami = 0;\n30 \t\t\ttry {\n31 \t\t\t\tsaori = in.read(hayami);\n32 \t\t\t} catch (IOException e) {\n33 \t\t\t\te.printStackTrace();\n34 \t\t\t}\n35 \t\t\tif (saori <= 0) {\n36 \t\t\t\treturn false;\n37 \t\t\t}\n38 \t\t}\n39 \t\treturn true;\n40 \t}\n41 \tprivate int SaoriHayami() { \n42 \t\tif (HayamiSaori()) {\n43             return hayami[Hayami++];\n44          }else{\n45              return -1;\n46          }\n47 \t}\n48 \tprivate static boolean hayami_saori(int hayami) { \n49 \t\treturn 33 <= hayami && hayami <= 126;\n50 \t}\n51 \tpublic boolean hayamisaori() { \n52 \t\twhile(HayamiSaori() && !hayami_saori(hayami[Hayami])) Hayami++; return HayamiSaori();\n53 \t}\n54 \tpublic String nextHayami() {\n55 \t\tif (!hayamisaori()) throw new NoSuchElementException();\n56 \t\tStringBuilder hayamin = new StringBuilder();\n57 \t\tint saori = SaoriHayami();\n58 \t\twhile(hayami_saori(saori)) {\n59 \t\t\thayamin.appendCodePoint(saori);\n60 \t\t\tsaori = SaoriHayami();\n61 \t\t}\n62 \t\treturn hayamin.toString();\n63 \t}\n64 \tpublic long saorihayami() {//nextLong\n65 \t\tif (!hayamisaori()) throw new NoSuchElementException();\n66 \t\tlong hayami = 0;\n67 \t\tboolean misao = false;\n68 \t\tint saori = SaoriHayami();\n69 \t\tif (saori == '-') {\n70 \t\t\tmisao = true;\n71 \t\t\tsaori = SaoriHayami();\n72 \t\t}\n73 \t\tif (saori < '0' || '9' < saori) {\n74 \t\t\tthrow new NumberFormatException();\n75 \t\t}\n76 \t\twhile(true){\n77 \t\t\tif ('0' <= saori && saori <= '9') {\n78 \t\t\t\thayami *= 10;\n79 \t\t\t\thayami += saori - '0';\n80 \t\t\t}else if(saori == -1 || !hayami_saori(saori)){\n81 \t\t\t\treturn misao ? -hayami : hayami;\n82 \t\t\t}else{\n83 \t\t\t\tthrow new NumberFormatException();\n84 \t\t\t}\n85 \t\t\tsaori = SaoriHayami();\n86 \t\t}\n87 \t}\n88 \tpublic int saori_hayami() {//nextInt\n89 \t\tlong hayami = saorihayami();\n90 \t\tif (hayami < Integer.MIN_VALUE || hayami > Integer.MAX_VALUE) throw new NumberFormatException();\n91 \t\treturn (int) hayami;\n92 \t}\n93 \tpublic double Hayamin() { //nextDouble\n94 \t\treturn Double.parseDouble(nextHayami());\n95 \t}\n96 \tpublic void close() {\n97 \t\ttry {\n98 \t\t\tin.close();\n99 \t\t} catch (IOException e) {\n100 \t\t}\n101     }\n102     \n103 }\nGiven the following input:\n999\n\n\nQuestion:\n What would be the states of variable hayami in line 66? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "hayami",
+        "line": "66"
+    },
+    "2": {
+        "prompt": "Question:\n What would be the states of variable misao in line 67? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "false"
+        ],
+        "variable": "misao",
+        "line": "67"
+    },
+    "3": {
+        "prompt": "Question:\n What would be the states of variable hayami in line 43? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "9",
+            "99",
+            "999"
+        ],
+        "variable": "hayami",
+        "line": "43"
+    },
+    "4": {
+        "prompt": "Question:\n What would be the states of variable saori in line 68? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "57"
+        ],
+        "variable": "saori",
+        "line": "68"
+    },
+    "5": {
+        "prompt": "Question:\n What would be the states of variable saori in line 69? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "57"
+        ],
+        "variable": "saori",
+        "line": "69"
+    },
+    "6": {
+        "prompt": "Question:\n What would be the states of variable saori in line 73? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "57"
+        ],
+        "variable": "saori",
+        "line": "73"
+    },
+    "7": {
+        "prompt": "Question:\n What would be the states of variable saori in line 77? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "57",
+            "57",
+            "57",
+            "10"
+        ],
+        "variable": "saori",
+        "line": "77"
+    },
+    "8": {
+        "prompt": "Question:\n What would be the states of variable hayami in line 78? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "90",
+            "990"
+        ],
+        "variable": "hayami",
+        "line": "78"
+    },
+    "9": {
+        "prompt": "Question:\n What would be the states of variable hayami in line 79? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "9",
+            "99",
+            "999"
+        ],
+        "variable": "hayami",
+        "line": "79"
+    },
+    "10": {
+        "prompt": "Question:\n What would be the states of variable saori in line 79? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "57",
+            "57",
+            "57"
+        ],
+        "variable": "saori",
+        "line": "79"
+    },
+    "11": {
+        "prompt": "Question:\n What would be the states of variable saori in line 85? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "57",
+            "57",
+            "10"
+        ],
+        "variable": "saori",
+        "line": "85"
+    },
+    "12": {
+        "prompt": "Question:\n What would be the states of variable hayami in line 49? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "999"
+        ],
+        "variable": "hayami",
+        "line": "49"
+    },
+    "13": {
+        "prompt": "Question:\n What would be the states of variable saori in line 80? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "10"
+        ],
+        "variable": "saori",
+        "line": "80"
+    },
+    "14": {
+        "prompt": "Question:\n What would be the states of variable hayami in line 89? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "999"
+        ],
+        "variable": "hayami",
+        "line": "89"
+    },
+    "15": {
+        "prompt": "Question:\n What would be the states of variable hayami in line 90? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "999"
+        ],
+        "variable": "hayami",
+        "line": "90"
+    },
+    "16": {
+        "prompt": "Question:\n What would be the states of variable n in line 9? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "999"
+        ],
+        "variable": "n",
+        "line": "9"
+    },
+    "17": {
+        "prompt": "Question:\n What would be the states of variable n in line 10? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "999"
+        ],
+        "variable": "n",
+        "line": "10"
+    }
+}

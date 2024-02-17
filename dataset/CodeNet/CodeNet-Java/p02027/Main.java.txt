@@ -1,0 +1,38 @@
+1 import java.util.*;
+2 
+3 public class Main {
+4     static HashMap<Integer, HashMap<Integer, Long>> dp = new HashMap<>();
+5      public static void main(String[] args) {
+6         Scanner sc = new Scanner(System.in);
+7         int n = sc.nextInt();
+8         int k = sc.nextInt();
+9         long total = 0;
+10         for (int i = 1; i * Math.pow(2, k - 1) <= n; i++) {
+11             total += search(i, k - 1, n);
+12         } 
+13         System.out.println(total);
+14     }
+15     
+16     static long search(int num, int count, int max) {
+17         if (count == 0) {
+18             return 1;
+19         }
+20         if (dp.containsKey(num)) {
+21             if (dp.get(num).containsKey(count)) {
+22                 return dp.get(num).get(count);
+23             }
+24         }
+25         long total = 0;
+26         for (int i = 2; num * i * Math.pow(2, count - 1) <= max; i++) {
+27             total += search(num * i, count - 1, max);
+28         }
+29         if (dp.containsKey(num)) {
+30             dp.get(num).put(count, total);
+31         } else {
+32             HashMap<Integer, Long> map = new HashMap<>();
+33             map.put(count, total);
+34             dp.put(num, map);
+35         }
+36         return total;
+37     }
+38 }

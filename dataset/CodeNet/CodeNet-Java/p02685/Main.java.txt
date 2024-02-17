@@ -1,0 +1,235 @@
+1 import java.io.*;
+2         import java.math.*;
+3         import java.util.*;
+4         import java.lang.*;
+5 
+6 public class Main implements Runnable {
+7     static class InputReader {
+8         private InputStream stream;
+9         private byte[] buf = new byte[1024];
+10         private int curChar;
+11         private int numChars;
+12         private SpaceCharFilter filter;
+13         private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+14 
+15         public InputReader(InputStream stream) {
+16             this.stream = stream;
+17         }
+18 
+19         public int read() {
+20             if (numChars == -1)
+21                 throw new InputMismatchException();
+22 
+23             if (curChar >= numChars) {
+24                 curChar = 0;
+25                 try {
+26                     numChars = stream.read(buf);
+27                 } catch (IOException e) {
+28                     throw new InputMismatchException();
+29                 }
+30 
+31                 if (numChars <= 0)
+32                     return -1;
+33             }
+34             return buf[curChar++];
+35         }
+36 
+37         public String nextLine() {
+38             String str = "";
+39             try {
+40                 str = br.readLine();
+41             } catch (IOException e) {
+42                 e.printStackTrace();
+43             }
+44             return str;
+45         }
+46 
+47         public int nextInt() {
+48             int c = read();
+49 
+50             while (isSpaceChar(c))
+51                 c = read();
+52 
+53             int sgn = 1;
+54 
+55             if (c == '-') {
+56                 sgn = -1;
+57                 c = read();
+58             }
+59 
+60             int res = 0;
+61             do {
+62                 if (c < '0' || c > '9')
+63                     throw new InputMismatchException();
+64                 res *= 10;
+65                 res += c - '0';
+66                 c = read();
+67             }
+68             while (!isSpaceChar(c));
+69 
+70             return res * sgn;
+71         }
+72 
+73         public long nextLong() {
+74             int c = read();
+75             while (isSpaceChar(c))
+76                 c = read();
+77             int sgn = 1;
+78             if (c == '-') {
+79                 sgn = -1;
+80                 c = read();
+81             }
+82             long res = 0;
+83 
+84             do {
+85                 if (c < '0' || c > '9')
+86                     throw new InputMismatchException();
+87                 res *= 10;
+88                 res += c - '0';
+89                 c = read();
+90             }
+91             while (!isSpaceChar(c));
+92             return res * sgn;
+93         }
+94 
+95         public double nextDouble() {
+96             int c = read();
+97             while (isSpaceChar(c))
+98                 c = read();
+99             int sgn = 1;
+100             if (c == '-') {
+101                 sgn = -1;
+102                 c = read();
+103             }
+104             double res = 0;
+105             while (!isSpaceChar(c) && c != '.') {
+106                 if (c == 'e' || c == 'E')
+107                     return res * Math.pow(10, nextInt());
+108                 if (c < '0' || c > '9')
+109                     throw new InputMismatchException();
+110                 res *= 10;
+111                 res += c - '0';
+112                 c = read();
+113             }
+114             if (c == '.') {
+115                 c = read();
+116                 double m = 1;
+117                 while (!isSpaceChar(c)) {
+118                     if (c == 'e' || c == 'E')
+119                         return res * Math.pow(10, nextInt());
+120                     if (c < '0' || c > '9')
+121                         throw new InputMismatchException();
+122                     m /= 10;
+123                     res += (c - '0') * m;
+124                     c = read();
+125                 }
+126             }
+127             return res * sgn;
+128         }
+129 
+130         public String readString() {
+131             int c = read();
+132             while (isSpaceChar(c))
+133                 c = read();
+134             StringBuilder res = new StringBuilder();
+135             do {
+136                 res.appendCodePoint(c);
+137                 c = read();
+138             }
+139             while (!isSpaceChar(c));
+140 
+141             return res.toString();
+142         }
+143 
+144         public boolean isSpaceChar(int c) {
+145             if (filter != null)
+146                 return filter.isSpaceChar(c);
+147             return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+148         }
+149 
+150         public String next() {
+151             return readString();
+152         }
+153 
+154         public interface SpaceCharFilter {
+155             public boolean isSpaceChar(int ch);
+156         }
+157     }
+158 
+159     public static void main(String args[]) throws Exception {
+160         new Thread(null, new Main(), "Main", 1 << 26).start();
+161     }
+162 
+163     long modPow(long a, long p, long m) {
+164         if (a == 1) return 1;
+165         long ans = 1;
+166         while (p > 0) {
+167             if (p % 2 == 1) ans = (ans * a) % m;
+168             a = (a * a) % m;
+169             p >>= 1;
+170         }
+171         return ans;
+172     }
+173 
+174     long modInv(long a, long m) {
+175         return modPow(a, m - 2, m);
+176     }
+177 
+178 
+179 
+180     PrintWriter out;
+181     InputReader sc;
+182 
+183     public void run() {
+184         sc = new InputReader(System.in);
+185         // Scanner sc=new Scanner(System.in);
+186         //  Random sc=new Random();
+187         out = new PrintWriter(System.out);
+188 
+189         // credit goes to Stefan Dascalescu
+190         // https://www.youtube.com/watch?v=iYS8l9_A-vY
+191 
+192         int n=sc.nextInt();
+193         long m=sc.nextLong();
+194         long k=sc.nextLong();
+195         long ans=0;
+196         fact=new long[n+1];
+197         ifact=new long[n+1];
+198         fact[0]=fact[1]=ifact[0]=ifact[1]=1;
+199         for (int i = 1; i <=n ; i++) {
+200             fact[i]=mul(fact[i-1],i);
+201             ifact[i]=modInv(fact[i],mod);
+202         }
+203         for (int i = 0; i <=k ; i++) {
+204             ans=add(ans,mul(m,mul(modPow(m-1,n-(i+1),mod),NcR(n-1,i))));
+205         }
+206         out.println(ans);
+207 
+208 
+209         out.close();
+210     }
+211     long NcR(int n,int r){
+212         return mul(fact[n],mul(ifact[r],ifact[n-r]));
+213     }
+214     long fact[],ifact[];
+215     long mod=998244353;
+216 
+217     long sub(long a,long b){
+218         a%=mod;
+219         b%=mod;
+220         return ((a-b)%mod+mod)%mod;
+221     }
+222 
+223     long mul(long a,long b){
+224         a%=mod;
+225         b%=mod;
+226         return (a*b)%mod;
+227     }
+228 
+229     long add(long a,long b){
+230         a%=mod;
+231         b%=mod;
+232         return (a+b)%mod;
+233     }
+234 
+235 }

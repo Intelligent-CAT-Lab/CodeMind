@@ -1,0 +1,62 @@
+1 import java.util.ArrayList;
+2 import java.util.Arrays;
+3 import java.util.BitSet;
+4 import java.util.Scanner;
+5 
+6 public class Main {
+7 	static Scanner sc = new Scanner(System.in);
+8 
+9 	static ArrayList<Integer> primes(int N) {
+10 		ArrayList<Integer> ret = new ArrayList<Integer>();
+11 		BitSet bs = new BitSet(N + 1);
+12 		for (int i = 2; i <= N; i = bs.nextClearBit(i + 1)) {
+13 			ret.add(i);
+14 			for (int j = i * 2; j <= N; j += i) {
+15 				bs.set(j);
+16 			}
+17 		}
+18 		return ret;
+19 	}
+20 
+21 	static int ans = 0;
+22 	static ArrayList<Integer> primes;
+23 	static long L, H;
+24 
+25 	public static void main(String[] args) throws Exception {
+26 		long A = sc.nextLong();
+27 		long B = sc.nextLong();
+28 		L = Math.max(A - B, 2);
+29 		H = A + B;
+30 		primes = primes((int) (Math.sqrt(H) + 1));
+31 		int[] count = new int[(int) (H - L + 1)];
+32 		boolean[] ok = new boolean[(int) (H - L + 1)];
+33 		Arrays.fill(ok, true);
+34 		for (int i = primes.size() - 1; i >= 0; --i) {
+35 			int p = primes.get(i);
+36 			long div = (L + (p - 1)) / p;
+37 //			System.out.println(p + " " + div + " " + (div * p));
+38 			for (long pos = div * p; pos <= H; pos += p, ++div) {
+39 				int cc = 1;
+40 				long v = div;
+41 				while (v % p == 0) {
+42 					++cc;
+43 					v /= p;
+44 				}
+45 //				System.out.println(p + " " + div + " " + cc + " " + count[(int) (pos - L)]);
+46 				if (count[(int) (pos - L)] > cc) {
+47 					ok[(int) (pos - L)] = false;
+48 				}
+49 				count[(int) (pos - L)] = cc;
+50 			}
+51 		}
+52 
+53 		int ret = 0;
+54 		for (int i = 0; i < ok.length; ++i) {
+55 			if (ok[i]) {
+56 //				System.out.println(i + L);
+57 				++ret;
+58 			}
+59 		}
+60 		System.out.println(ret);
+61 	}
+62 }

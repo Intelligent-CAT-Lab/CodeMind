@@ -1,0 +1,221 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.PrintWriter;
+4 import java.text.DecimalFormat;
+5 import java.util.Comparator;
+6 import java.util.PriorityQueue;
+7 
+8 public class Main {
+9 	static boolean debug = true;
+10 
+11 	public static void main(String[] args) throws IOException {
+12 
+13 		UserScanner scan = new UserScanner(System.in);
+14 		PrintWriter pwriter = new PrintWriter(System.out);
+15 
+16 		int w = scan.nextInt();
+17 		int h = scan.nextInt();
+18 		int v = scan.nextInt();
+19 		int t = scan.nextInt();
+20 		int x = scan.nextInt();
+21 		int y = scan.nextInt();
+22 		int p = scan.nextInt();
+23 		int q = scan.nextInt();
+24 		Wave wave = new Wave(w, h, v, t, x, y, p, q);
+25 		pwriter.println(wave.attack());
+26 
+27 		pwriter.flush();
+28 
+29 		scan.close();
+30 		System.exit(0);
+31 	}
+32 }
+33 
+34 class Wave {
+35 	int w, h, v, t, x, y, p, q;
+36 
+37 	public Wave(int w, int h, int v, int t, int x, int y, int p, int q) {
+38 		this.w = w;
+39 		this.h = h;
+40 		this.v = v;
+41 		this.t = t;
+42 		this.x = x;
+43 		this.y = y;
+44 		this.p = p;
+45 		this.q = q;
+46 	}
+47 
+48 	public long attack() {
+49 		int maxW, maxH;
+50 
+51 		double maxDist = v * t;
+52 		maxDist = maxDist * maxDist;
+53 
+54 		for (maxW = 0; getPowDistance(maxW, 0) <= maxDist; maxW++)
+55 			;
+56 		if (maxW == 0)
+57 			return 0;
+58 
+59 		long ans = maxW;
+60 		int w = maxW - 1;
+61 		for (int h = 1; w >= 0; h++)
+62 			if (getPowDistance(w, h) <= maxDist)
+63 				ans += (w + 1);
+64 			else
+65 				for (w = w - 1; w >= 0; w--)
+66 					if (getPowDistance(w, h) <= maxDist) {
+67 						ans += (w + 1);
+68 						break;
+69 					}
+70 
+71 		w = maxW - 1;
+72 		for (int h = -1; w >= 0; h--)
+73 			if (getPowDistance(w, h) <= maxDist)
+74 				ans += (w + 1);
+75 			else
+76 				for (w = w - 1; w >= 0; w--)
+77 					if (getPowDistance(w, h) <= maxDist) {
+78 						ans += (w + 1);
+79 						break;
+80 					}
+81 
+82 		w = -maxW;
+83 		for (int h = 0; w < 0; h++)
+84 			if (getPowDistance(w, h) <= maxDist)
+85 				ans -= w;
+86 			else
+87 				for (w = w + 1; w < 0; w++)
+88 					if (getPowDistance(w, h) <= maxDist) {
+89 						ans -= w;
+90 						break;
+91 					}
+92 		
+93 		w = -maxW;
+94 		for (int h = -1; w < 0; h--)
+95 			if (getPowDistance(w, h) <= maxDist)
+96 				ans -= w;
+97 			else
+98 				for (w = w + 1; w < 0; w++)
+99 					if (getPowDistance(w, h) <= maxDist) {
+100 						ans -= w;
+101 						break;
+102 					}
+103 		return ans;
+104 	}
+105 
+106 	private double getPowDistance(int mx, int my) {
+107 		// get reflected wave distance as powered
+108 		//
+109 		// mx=0,my=0 direct
+110 		// mx=1,my=0 reflect right wall at once
+111 		// ... equal to the distance between (2w-p,q) and (x,y)
+112 		// mx=2,my=0 reflect right wall at once and left wall at once
+113 		// ... equal to the distance between (2w+p,q) and (x,y)
+114 		// mx=3,my=0 reflect right,left,right
+115 		// ... equal to the distance between (4w-p,q) and (x,y)
+116 		// mx=k,my=0 if k is even (k*w + p, q) else (k*w + w - p, q)
+117 		// ... it can apply to negative k
+118 		//
+119 		// mx=0,my=l if l is even (p, l*h + q) else (p, l*h + h - q)
+120 		// ... mx=k,my=l if k and l are even (k*w + p, l*h + q) ...
+121 		double wp = 0, wq = 0;
+122 
+123 		if (mx % 2 == 0)
+124 			wp = mx * w + p;
+125 		else
+126 			wp = mx * w + w - p;
+127 
+128 		if (my % 2 == 0)
+129 			wq = my * h + q;
+130 		else
+131 			wq = my * h + h - q;
+132 
+133 		wp -= x;
+134 		wq -= y;
+135 		return wp * wp + wq * wq;
+136 	}
+137 
+138 }
+139 
+140 class UserScanner {
+141 	private InputStream in;
+142 	private final byte[] buffer = new byte[1024];
+143 	private int ptr = 0;
+144 	private int buflen = 0;
+145 
+146 	public UserScanner(InputStream inStream) {
+147 		in = inStream;
+148 	}
+149 
+150 	private void read() {
+151 		ptr = 0;
+152 		try {
+153 			buflen = in.read(buffer);
+154 		} catch (IOException e) {
+155 			e.printStackTrace();
+156 			System.exit(9);
+157 		}
+158 	}
+159 
+160 	private byte getByte() {
+161 		if (ptr >= buflen)
+162 			read();
+163 		if (buflen < 0 || isCtlSpace(buffer[ptr])) {
+164 			return -1;
+165 		} else
+166 			return buffer[ptr++];
+167 	}
+168 
+169 	private void skipCtlSpace() {
+170 		for (; ptr < buflen; ptr++)
+171 			if (!isCtlSpace(buffer[ptr]))
+172 				return;
+173 		read();
+174 		skipCtlSpace();
+175 	}
+176 
+177 	private boolean isCtlSpace(byte b) {
+178 		if (b <= ' ' || b > '~')
+179 			return true;
+180 		else
+181 			return false;
+182 	}
+183 
+184 	public void close() {
+185 		try {
+186 			in.close();
+187 		} catch (IOException e) {
+188 			e.printStackTrace();
+189 			System.exit(9);
+190 		}
+191 	}
+192 
+193 	public String next() {
+194 		skipCtlSpace();
+195 		StringBuilder sb = new StringBuilder();
+196 		byte b;
+197 		while ((b = getByte()) != -1) {
+198 			sb.appendCodePoint(b);
+199 		}
+200 		return sb.toString();
+201 	}
+202 
+203 	public int nextInt() {
+204 		skipCtlSpace();
+205 		int n = 0;
+206 		boolean minus = false;
+207 		byte b;
+208 		while ((b = getByte()) != -1) {
+209 			if (b == '-')
+210 				minus = true;
+211 			else {
+212 				n *= 10;
+213 				n += (b - '0');
+214 			}
+215 		}
+216 		if (minus)
+217 			return n * -1;
+218 		else
+219 			return n;
+220 	}
+221 }

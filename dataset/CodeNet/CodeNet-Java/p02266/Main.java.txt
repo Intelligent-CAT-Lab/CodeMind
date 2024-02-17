@@ -1,0 +1,68 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStreamReader;
+4 import java.util.Iterator;
+5 import java.util.Stack;
+6 
+7 public class Main {
+8 
+9 	public static void main(String[] args) throws IOException {
+10 		
+11 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));		
+12 		String profile = reader.readLine();
+13 		
+14 		Stack<Integer> stackDown = new Stack<Integer>();
+15 		Stack<Integer> stackArea = new Stack<Integer>();
+16 		Stack<Integer> stackEdge = new Stack<Integer>();
+17 		int totalArea = 0;
+18 		int pos = 0;
+19 		int lv = 0;
+20 		
+21 		for (char c : profile.toCharArray()) {
+22 			if (c == '\\') {
+23 				lv--;
+24 				stackDown.push(pos);
+25 			} else if (c == '/') {
+26 				lv++;
+27 				if (!stackDown.empty()) {
+28 					int start = stackDown.pop();
+29 					int tempArea = pos - start;
+30 					totalArea += tempArea;
+31 					if (stackArea.empty()) {
+32 						stackArea.push(tempArea);
+33 						stackEdge.push(lv);
+34 					} else {
+35 						int lastArea = 0;
+36 						while (!stackEdge.empty() && stackEdge.peek() < lv) {
+37 							lastArea += stackArea.pop();
+38 							stackEdge.pop();
+39 						}
+40 						stackArea.push(lastArea + tempArea);
+41 						stackEdge.push(lv);
+42 					}
+43 				} else {
+44 					if (!stackArea.empty()) {
+45 						stackEdge.pop();
+46 						stackEdge.push(lv);
+47 					}
+48 				}
+49 			}
+50 			pos++;
+51 		}
+52 
+53 		System.out.println(totalArea);
+54 		System.out.print(stackArea.size());
+55 		if (stackArea.size() != 0) {
+56 			System.out.print(" ");
+57 		}
+58 		Iterator<Integer> itr = stackArea.iterator();
+59 		while (itr.hasNext()) {
+60 			System.out.print(itr.next());
+61 			if (itr.hasNext()) {
+62 				System.out.print(" ");
+63 			}
+64 		}
+65 		System.out.println("");
+66 	}
+67 }
+68 

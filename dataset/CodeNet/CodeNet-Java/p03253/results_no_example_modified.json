@@ -1,0 +1,8 @@
+{
+    "0": {
+        "prompt": "Consider the following code:\nimport java.util.*;\npublic class Main {\n    static long MOD = 1000000007;\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int m = sc.nextInt();\n        int res = m;\n        long ans = 1;\n        for (int i = 2; i * i <= res; i++) {\n            int cnt = 0;\n            while (res % i == 0) {\n                cnt++;\n                res /= i;\n            }\n            ans *= calcComb(cnt + n - 1, n - 1);\n            ans %= MOD;\n        }\n        if (res != 1) {\n            ans *= calcComb(n, 1);\n            ans %= MOD;\n        }\n        System.out.println(ans);\n    }\n    public static long calcComb(int n, int k) {\n        if (k > n - k) {\n            return calcComb(n, n - k);\n        }\n        long ansMul = 1;\n        long ansDiv = 1;\n        for (int i = 0; i < k; i++) {\n            ansMul *= (long) (n - i);\n            ansDiv *= (long) (i + 1);\n            ansMul %= MOD;\n            ansDiv %= MOD;\n        }\n        long ans = ansMul * pow(ansDiv, MOD - 2);\n        ans %= MOD;\n        return ans;\n    }\n    public static long pow(long x, long n) {\n        long ans = 1;\n        while (n > 0) {\n            if ((n & 1) == 1) {\n                ans = ans * x % MOD;\n            }\n            x = x * x % MOD;\n            n >>= 1;\n        }\n        return ans;\n    }\n}\n\nWhat would be the output of the code execution given the following input:\n2 6\n \nPrint the answer and end your response with \"END-OF-OUTPUT\":",
+        "status": "NAN",
+        "gorund_truth": "4\n",
+        "predict": "The output of the code execution would be:\n720\nEND-OF-OUTPUT"
+    }
+}

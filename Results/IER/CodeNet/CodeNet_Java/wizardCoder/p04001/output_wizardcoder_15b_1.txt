@@ -1,0 +1,114 @@
+Below is an instruction that describes a task, paired with an input that
+provides further context.  Write a response that appropriately completes
+the request.
+
+### Instruction:
+Below is an example:
+[[[Example Start]]]
+I want to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the output of the code.
+Consider the following code:
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class Main {
+
+    public static void main(String[] args) {
+        try {
+            InputStreamReader isr = new InputStreamReader(System.in);
+            BufferedReader br = new BufferedReader(isr);
+            String strArr[] = br.readLine().split(" ");
+
+            int n = Integer.parseInt(strArr[0]);
+            int a = Integer.parseInt(strArr[1]);
+            int b = Integer.parseInt(strArr[2]);
+            int answer = 0;
+
+            for (int i = 1; i < n + 1; i++) {
+                int num = i;
+                int sum = 0;
+
+                while (num!= 0) {
+                        sum += num % 10;
+                        num /= 10;
+                }
+
+                if (sum >= a && sum <= b ) {
+                        answer = answer + i;
+                }
+            }
+            System.out.println(answer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+<<Question>>
+What would be the output of code executiion given the following input:
+20 2 5
+Only print the output of code execution and end your response with "END-OF-OUTPUT":
+<<Answer>>
+84
+END-OF-OUTPUT
+[[[Example End]]]
+
+
+Consider the following code: 
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		String S = scan.nextLine();
+		if(S.length()==1) {
+			System.out.println(S);
+			System.exit(0);
+		}
+		int[] N = new int[S.length()];
+
+		int patternCount = 1;
+		String tmpBit = "";
+		for(int i=0; i<N.length; i++) {
+			N[i] = Integer.parseInt(String.valueOf(S.charAt(i)));
+			if(i>0) {
+				patternCount*=2;
+				tmpBit = tmpBit + "1";
+			}
+		}
+
+		long sum=0;
+		for(int i=0; i<patternCount; i++) {
+			String bin = Integer.toBinaryString(i);
+			while(bin.length()<tmpBit.length()) {
+				bin = "0" + bin;
+			}
+			String add = String.valueOf(N[0]);
+			for(int j=0; j<bin.length(); j++) {
+				if(bin.charAt(j)=='1') {
+					sum+=Integer.parseInt(add);
+					add = "";
+				}
+				add = add + N[j+1];
+			}
+			if(add.length()>0) {
+				//System.out.printf("sum:%d + add:%s = ",sum, add);
+				sum+=Long.parseLong(add);
+				//System.out.println(sum);
+			}
+		}
+		System.out.println(sum);
+
+	}
+
+}
+
+<<Question>>
+What would be the output of code executiion given the following input:
+125
+
+Only print the output of code execution and end your response with "END-OF-OUTPUT":\<<Answer>>
+### Response:
+The output of the code execution would be:
+
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

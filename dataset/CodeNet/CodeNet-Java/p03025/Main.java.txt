@@ -1,0 +1,1064 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.PrintWriter;
+4 import java.math.BigDecimal;
+5 import java.util.ArrayDeque;
+6 import java.util.ArrayList;
+7 import java.util.Arrays;
+8 import java.util.HashMap;
+9 import java.util.Map.Entry;
+10 import java.util.NoSuchElementException;
+11 import java.util.TreeMap;
+12 import java.util.TreeSet;
+13 
+14 public class Main {
+15 	private static void solve() {
+16 		int n = nei();
+17 		long a = nei();
+18 		long b = nei();
+19 		long c = nei();
+20 		long na = 100 - a;
+21 		long nb = 100 - b;
+22 		long M = 1000000007;
+23 		long inv100 = modinv(100, M);
+24 		a = a * inv100 % M;
+25 		b = b * inv100 % M;
+26 		c = c * inv100 % M;
+27 		na = na * inv100 % M;
+28 		nb = nb * inv100 % M;
+29 		long[] fa = new long[2 * n];
+30 		long[] fai = new long[2 * n];
+31 		fa[0] = 1;
+32 		fai[0] = 1;
+33 		for (int i = 1; i < 2 * n; i++) {
+34 			fa[i] = fa[i - 1] * i % M;
+35 			fai[i] = modinv(fa[i], M);
+36 		}
+37 		long ans = 0;
+38 		
+39 		long scale=modinv((a+b)%M,M);
+40 
+41 		long a2=a*scale%M;
+42 		long b2=b*scale%M;
+43 		for (int k = n; k < 2 * n; k++) {
+44 			long ak = modpow(a2, n, M) * modpow(b2, k - n, M) % M * modcomb(k - 1, n - 1, fa, fai, M) % M;
+45 			long bk = modpow(b2, n, M) * modpow(a2, k - n, M) % M * modcomb(k - 1, n - 1, fa, fai, M) % M;
+46 			ans = (ans + ak * k % M) % M;
+47 			ans = (ans + bk * k % M) % M;
+48 		}
+49 		ans = ans * modinv((a + b) % M, M) % M;
+50 		out(ans);
+51 	}
+52 
+53 	// returns (x, y, d) s.t. ax + by = d
+54 	static long[] exgcd(long a, long b) {
+55 		int sa = a < 0 ? -1 : 1;
+56 		int sb = b < 0 ? -1 : 1;
+57 		a *= sa;
+58 		b *= sb;
+59 		long x = 1;
+60 		long y = 0;
+61 		long z = 0;
+62 		long w = 1;
+63 		while (b > 0) {
+64 			long q = a / b;
+65 			long t = z;
+66 			z = x - q * z;
+67 			x = t;
+68 			t = w;
+69 			w = y - q * w;
+70 			y = t;
+71 			t = b;
+72 			b = a - q * b;
+73 			a = t;
+74 		}
+75 		return new long[] { x * sa, y * sb, a };
+76 	}
+77 
+78 	static int[] lis(int[] s) {
+79 		int n = s.length;
+80 		int[] dp = new int[n];
+81 		int[] ids = new int[n];
+82 		int[] pids = new int[n];
+83 		dp[0] = s[0];
+84 		int len = 1;
+85 		int lidx = 0;
+86 		for (int i = 1; i < n; i++) {
+87 			int idx = bs(s[i], dp, 0, len);
+88 			dp[idx] = s[i];
+89 			ids[idx] = i;
+90 			if (idx == len) {
+91 				lidx = i;
+92 				len++;
+93 			}
+94 			if (idx > 0)
+95 				pids[i] = ids[idx - 1];
+96 		}
+97 		int[] lis = new int[len];
+98 		lis[len - 1] = s[lidx];
+99 		for (int i = len - 1; i >= 0; i--) {
+100 			lis[i] = s[lidx];
+101 			lidx = pids[lidx];
+102 		}
+103 		return lis;
+104 	}
+105 
+106 	static int bs(int a, int[] as, int from, int num) {
+107 		int min = from;
+108 		int max = from + num - 1;
+109 		while (min < max) {
+110 			int mid = min + max >> 1;
+111 			if (as[mid] < a)
+112 				min = mid + 1;
+113 			else if (as[mid] > a)
+114 				max = mid;
+115 			else
+116 				return mid;
+117 		}
+118 		return as[min] < a ? min + 1 : min;
+119 	}
+120 
+121 	static int gcd(int x, int y) {
+122 		x = (x ^ x >> 31) - (x >> 31);
+123 		y = (y ^ y >> 31) - (y >> 31);
+124 		if (x < y) {
+125 			x ^= y;
+126 			y ^= x;
+127 			x ^= y;
+128 		}
+129 		int z = x % y;
+130 		if (z == 0)
+131 			return y;
+132 		return gcd(y, z);
+133 	}
+134 
+135 	static long gcd(long x, long y) {
+136 		x = (x ^ x >> 63) - (x >> 63);
+137 		y = (y ^ y >> 63) - (y >> 63);
+138 		if (x < y) {
+139 			x ^= y;
+140 			y ^= x;
+141 			x ^= y;
+142 		}
+143 		long z = x % y;
+144 		if (z == 0)
+145 			return y;
+146 		return gcd(y, z);
+147 	}
+148 
+149 	static long modinv(long a, long mod) {
+150 		return modpow(a, mod - 2, mod);
+151 	}
+152 
+153 	static long modpow(long a, long b, long mod) {
+154 		if (b == 0)
+155 			return 1;
+156 		if ((b & 1) == 0) {
+157 			long sqrt = modpow(a, b >> 1, mod);
+158 			return sqrt * sqrt % mod;
+159 		}
+160 		return a * modpow(a, b - 1, mod) % mod;
+161 	}
+162 
+163 	static long fact(long n) {
+164 		if (n <= 1)
+165 			return 1;
+166 		long res = 2;
+167 		for (long i = 3; i <= n; i++) {
+168 			res *= i;
+169 		}
+170 		return res;
+171 	}
+172 
+173 	static long modfact(long n, long mod) {
+174 		if (n <= 1)
+175 			return 1 % mod;
+176 		long res = 2;
+177 		for (long i = 3; i <= n; i++) {
+178 			res *= i;
+179 			res %= mod;
+180 		}
+181 		return res % mod;
+182 	}
+183 
+184 	// returns facts([0]) and invfacts([1])
+185 	static long[][] enumfacts(int n, long mod) {
+186 		int num = n + 10;
+187 		long[][] res = new long[2][num];
+188 		long[] facts = res[0];
+189 		long[] invfacts = res[1];
+190 		for (int i = 0; i < num; i++) {
+191 			if (i <= 1) {
+192 				facts[i] = 1;
+193 				invfacts[i] = 1;
+194 			} else {
+195 				facts[i] = facts[i - 1] * i % mod;
+196 				invfacts[i] = modinv(facts[i], mod);
+197 			}
+198 		}
+199 		return res;
+200 	}
+201 
+202 	static long modcomb(long n, long m, long mod) {
+203 		if (m > n)
+204 			return 0;
+205 		if (m > n - m) {
+206 			m = n - m;
+207 		}
+208 		long numer = 1;
+209 		for (int i = 0; i < m; i++) {
+210 			numer = numer * (n - i) % mod;
+211 		}
+212 		long denom = modfact(m, mod);
+213 		return numer * modinv(denom, mod) % mod;
+214 	}
+215 
+216 	static long modcomb(int n, int m, long[] facts, long[] invfacts, long mod) {
+217 		if (m > n)
+218 			return 0;
+219 		long numer = facts[n];
+220 		long denom = invfacts[m] * invfacts[n - m] % mod;
+221 		return numer * denom % mod;
+222 	}
+223 
+224 	// res[i][0]: prime factor, res[i][1]: exponent
+225 	static int[][] factorize(int n) {
+226 		int[][] pfs = new int[32][2];
+227 		int num = 0;
+228 		for (int i = 2; i * i <= n; i++) {
+229 			int count = 0;
+230 			while (n % i == 0) {
+231 				n /= i;
+232 				count++;
+233 			}
+234 			if (count > 0) {
+235 				pfs[num][0] = i;
+236 				pfs[num][1] = count;
+237 				num++;
+238 			}
+239 		}
+240 		if (n > 1) {
+241 			pfs[num][0] = n;
+242 			pfs[num][1] = 1;
+243 			num++;
+244 		}
+245 		int[][] res = new int[num][2];
+246 		for (int i = 0; i < num; i++) {
+247 			res[i][0] = pfs[i][0];
+248 			res[i][1] = pfs[i][1];
+249 		}
+250 		return res;
+251 	}
+252 
+253 	static long lcm(long x, long y) {
+254 		x = (x ^ x >> 63) - (x >> 63);
+255 		y = (y ^ y >> 63) - (y >> 63);
+256 		return x / gcd(x, y) * y;
+257 	}
+258 
+259 	static int abs(int x) {
+260 		return x < 0 ? -x : x;
+261 	}
+262 
+263 	static long abs(long x) {
+264 		return x < 0 ? -x : x;
+265 	}
+266 
+267 	static int min(int a, int b) {
+268 		return a < b ? a : b;
+269 	}
+270 
+271 	static long min(long a, long b) {
+272 		return a < b ? a : b;
+273 	}
+274 
+275 	static int max(int a, int b) {
+276 		return a > b ? a : b;
+277 	}
+278 
+279 	static long max(long a, long b) {
+280 		return a > b ? a : b;
+281 	}
+282 
+283 	static int clamp(int a, int min, int max) {
+284 		return a < min ? min : a > max ? max : a;
+285 	}
+286 
+287 	static long clamp(long a, long min, long max) {
+288 		return a < min ? min : a > max ? max : a;
+289 	}
+290 
+291 	static double clamp(double a, double min, double max) {
+292 		return a < min ? min : a > max ? max : a;
+293 	}
+294 
+295 	static void out(String val) {
+296 		IO.out(val);
+297 	}
+298 
+299 	static void out(Object val) {
+300 		IO.out(String.valueOf(val));
+301 	}
+302 
+303 	static void out(int val) {
+304 		IO.out(String.valueOf(val));
+305 	}
+306 
+307 	static void out(long val) {
+308 		IO.out(String.valueOf(val));
+309 	}
+310 
+311 	static void out(char val) {
+312 		IO.out(String.valueOf(val));
+313 	}
+314 
+315 	static void out(double val) {
+316 		IO.out(Double.isFinite(val) ? BigDecimal.valueOf(val).toPlainString() : String.valueOf(val));
+317 	}
+318 
+319 	static void out(boolean val) {
+320 		IO.out(val ? "true" : "false");
+321 	}
+322 
+323 	static void kil(String val) {
+324 		IO.out(val);
+325 		IO.flush();
+326 		System.exit(0);
+327 	}
+328 
+329 	static void kil(Object val) {
+330 		IO.out(String.valueOf(val));
+331 		IO.flush();
+332 		System.exit(0);
+333 	}
+334 
+335 	static void kil(int val) {
+336 		IO.out(String.valueOf(val));
+337 		IO.flush();
+338 		System.exit(0);
+339 	}
+340 
+341 	static void kil(long val) {
+342 		IO.out(String.valueOf(val));
+343 		IO.flush();
+344 		System.exit(0);
+345 	}
+346 
+347 	static void kil(char val) {
+348 		IO.out(String.valueOf(val));
+349 		IO.flush();
+350 		System.exit(0);
+351 	}
+352 
+353 	static void kil(double val) {
+354 		IO.out(Double.isFinite(val) ? BigDecimal.valueOf(val).toPlainString() : String.valueOf(val));
+355 		IO.flush();
+356 		System.exit(0);
+357 	}
+358 
+359 	static void kil(boolean val) {
+360 		IO.out(val ? "true" : "false");
+361 		IO.flush();
+362 		System.exit(0);
+363 	}
+364 
+365 	static String nes() {
+366 		return IO.next();
+367 	}
+368 
+369 	static int nei() {
+370 		return IO.nextInt();
+371 	}
+372 
+373 	static long nel() {
+374 		return IO.nextLong();
+375 	}
+376 
+377 	static double ned() {
+378 		return IO.nextDouble();
+379 	}
+380 
+381 	static char nec() {
+382 		return IO.nextChar();
+383 	}
+384 
+385 	static String[] nss(int n) {
+386 		String[] as = new String[n];
+387 		for (int i = 0; i < n; i++) {
+388 			as[i] = IO.next();
+389 		}
+390 		return as;
+391 	}
+392 
+393 	static int[] nis(int n) {
+394 		int[] as = new int[n];
+395 		for (int i = 0; i < n; i++) {
+396 			as[i] = IO.nextInt();
+397 		}
+398 		return as;
+399 	}
+400 
+401 	static long[] nls(int n) {
+402 		long[] as = new long[n];
+403 		for (int i = 0; i < n; i++) {
+404 			as[i] = IO.nextLong();
+405 		}
+406 		return as;
+407 	}
+408 
+409 	static double[] nds(int n) {
+410 		double[] as = new double[n];
+411 		for (int i = 0; i < n; i++) {
+412 			as[i] = IO.nextDouble();
+413 		}
+414 		return as;
+415 	}
+416 
+417 	static char[] ncs(int n) {
+418 		char[] as = new char[n];
+419 		for (int i = 0; i < n; i++) {
+420 			as[i] = IO.nextChar();
+421 		}
+422 		return as;
+423 	}
+424 
+425 	static String[][] nss2(int n, int m) {
+426 		String[][] as = new String[n][m];
+427 		for (int i = 0; i < n; i++) {
+428 			for (int j = 0; j < m; j++) {
+429 				as[i][j] = IO.next();
+430 			}
+431 		}
+432 		return as;
+433 	}
+434 
+435 	static int[][] nis2(int n, int m) {
+436 		int[][] as = new int[n][m];
+437 		for (int i = 0; i < n; i++) {
+438 			for (int j = 0; j < m; j++) {
+439 				as[i][j] = IO.nextInt();
+440 			}
+441 		}
+442 		return as;
+443 	}
+444 
+445 	static long[][] nls2(int n, int m) {
+446 		long[][] as = new long[n][m];
+447 		for (int i = 0; i < n; i++) {
+448 			for (int j = 0; j < m; j++) {
+449 				as[i][j] = IO.nextLong();
+450 			}
+451 		}
+452 		return as;
+453 	}
+454 
+455 	static double[][] nds2(int n, int m) {
+456 		double[][] as = new double[n][m];
+457 		for (int i = 0; i < n; i++) {
+458 			for (int j = 0; j < m; j++) {
+459 				as[i][j] = IO.nextDouble();
+460 			}
+461 		}
+462 		return as;
+463 	}
+464 
+465 	static char[][] ncs2(int n, int m) {
+466 		char[][] as = new char[n][m];
+467 		for (int i = 0; i < n; i++) {
+468 			for (int j = 0; j < m; j++) {
+469 				as[i][j] = IO.nextChar();
+470 			}
+471 		}
+472 		return as;
+473 	}
+474 
+475 	static int parseInt(String val) {
+476 		return Integer.parseInt(val);
+477 	}
+478 
+479 	static int parseInt(char val) {
+480 		return Integer.parseInt(String.valueOf(val));
+481 	}
+482 
+483 	static long parseLong(String val) {
+484 		return Long.parseLong(val);
+485 	}
+486 
+487 	public static void main(String[] args) {
+488 		try {
+489 			solve();
+490 			IO.flush();
+491 		} catch (NumberFormatException e) {
+492 			e.printStackTrace();
+493 		}
+494 	}
+495 }
+496 
+497 final class IO {
+498 	private static final InputStream in = System.in;
+499 	private static final PrintWriter out = new PrintWriter(System.out, false);
+500 	private static final byte[] buffer = new byte[1024];
+501 	private static int ptr = 0;
+502 	private static int len = 0;
+503 
+504 	private static boolean hasNextByte() {
+505 		if (ptr < len)
+506 			return true;
+507 		ptr = 0;
+508 		try {
+509 			len = in.read(buffer);
+510 		} catch (IOException e) {
+511 			e.printStackTrace();
+512 		}
+513 		return len > 0;
+514 	}
+515 
+516 	private static int readByte() {
+517 		if (hasNextByte())
+518 			return buffer[ptr++];
+519 		else
+520 			return -1;
+521 	}
+522 
+523 	static boolean hasNext() {
+524 		byte c;
+525 		while (hasNextByte() && ((c = buffer[ptr]) < '!' || c > '~'))
+526 			ptr++;
+527 		return hasNextByte();
+528 	}
+529 
+530 	static String next() {
+531 		if (!hasNext())
+532 			throw new NoSuchElementException();
+533 		StringBuilder sb = new StringBuilder();
+534 		int b = readByte();
+535 		while (b >= '!' && b <= '~') {
+536 			sb.append((char) b);
+537 			b = readByte();
+538 		}
+539 		return sb.toString();
+540 	}
+541 
+542 	static char nextChar() {
+543 		if (!hasNext())
+544 			throw new NoSuchElementException();
+545 		return (char) readByte();
+546 	}
+547 
+548 	static long nextLong() {
+549 		if (!hasNext())
+550 			throw new NoSuchElementException();
+551 		long n = 0;
+552 		int sign = 1;
+553 		int b = readByte();
+554 		if (b == '-') {
+555 			sign = -1;
+556 			b = readByte();
+557 		}
+558 		if (b < '0' || '9' < b)
+559 			throw new NumberFormatException();
+560 		while (true) {
+561 			if ('0' <= b && b <= '9')
+562 				n = n * 10 + b - '0';
+563 			else if (b == -1 || b < '!' || b > '~')
+564 				return n * sign;
+565 			else
+566 				throw new NumberFormatException();
+567 			b = readByte();
+568 		}
+569 	}
+570 
+571 	static int nextInt() {
+572 		if (!hasNext())
+573 			throw new NoSuchElementException();
+574 		int n = 0;
+575 		int sign = 1;
+576 		int b = readByte();
+577 		if (b == '-') {
+578 			sign = -1;
+579 			b = readByte();
+580 		}
+581 		if (b < '0' || '9' < b)
+582 			throw new NumberFormatException();
+583 		while (true) {
+584 			if ('0' <= b && b <= '9')
+585 				n = n * 10 + b - '0';
+586 			else if (b == -1 || b < '!' || b > '~')
+587 				return n * sign;
+588 			else
+589 				throw new NumberFormatException();
+590 			b = readByte();
+591 		}
+592 	}
+593 
+594 	static double nextDouble() {
+595 		return Double.parseDouble(next());
+596 	}
+597 
+598 	static void out(String val) {
+599 		out.println(val);
+600 	}
+601 
+602 	static void flush() {
+603 		out.flush();
+604 	}
+605 }
+606 
+607 class Rev<A extends Comparable<A>> implements Comparable<Rev<A>> {
+608 	A a;
+609 
+610 	Rev(A a) {
+611 		this.a = a;
+612 	}
+613 
+614 	static <A extends Comparable<A>> Rev<A> make(A a) {
+615 		return new Rev<A>(a);
+616 	}
+617 
+618 	public boolean equals(Object o) {
+619 		if (o == this)
+620 			return true;
+621 		if (!(o instanceof Rev))
+622 			return false;
+623 		Rev<?> r = (Rev<?>) o;
+624 		return a == null ? r.a == null : a.equals(r.a);
+625 	}
+626 
+627 	public int compareTo(Rev<A> o) {
+628 		return -a.compareTo(o.a);
+629 	}
+630 
+631 	public String toString() {
+632 		return "-(" + a.toString() + ")";
+633 	}
+634 }
+635 
+636 class Flat<A> implements Comparable<Flat<A>> {
+637 	A a;
+638 
+639 	Flat(A a) {
+640 		this.a = a;
+641 	}
+642 
+643 	static <A> Flat<A> make(A a) {
+644 		return new Flat<A>(a);
+645 	}
+646 
+647 	public boolean equals(Object o) {
+648 		if (o == this)
+649 			return true;
+650 		if (!(o instanceof Flat))
+651 			return false;
+652 		Flat<?> r = (Flat<?>) o;
+653 		return a == null ? r.a == null : a.equals(r.a);
+654 	}
+655 
+656 	public int compareTo(Flat<A> o) {
+657 		return 0;
+658 	}
+659 
+660 	public String toString() {
+661 		return "0(" + a.toString() + ")";
+662 	}
+663 }
+664 
+665 class UP<A, B> { // Unordered Pair
+666 	A a;
+667 	B b;
+668 
+669 	UP(A a, B b) {
+670 		this.a = a;
+671 		this.b = b;
+672 	}
+673 
+674 	static <A, B> UP<A, B> make(A a, B b) {
+675 		return new UP<A, B>(a, b);
+676 	}
+677 
+678 	public boolean equals(Object o) {
+679 		if (o == this)
+680 			return true;
+681 		if (!(o instanceof UP))
+682 			return false;
+683 		UP<?, ?> p = (UP<?, ?>) o;
+684 		boolean aok = a == null ? p.a == null : a.equals(p.a);
+685 		boolean bok = b == null ? p.b == null : b.equals(p.b);
+686 		return aok && bok;
+687 	}
+688 
+689 	public String toString() {
+690 		return "(" + a.toString() + ", " + b.toString() + ")";
+691 	}
+692 }
+693 
+694 class P<A extends Comparable<A>, B extends Comparable<B>> extends UP<A, B> implements Comparable<P<A, B>> { // Pair
+695 	P(A a, B b) {
+696 		super(a, b);
+697 	}
+698 
+699 	static <A extends Comparable<A>, B extends Comparable<B>> P<A, B> make(A a, B b) {
+700 		return new P<A, B>(a, b);
+701 	}
+702 
+703 	public int compareTo(P<A, B> o) {
+704 		int sa = a.compareTo(o.a);
+705 		int sb = b.compareTo(o.b);
+706 		return sa != 0 ? sa : sb;
+707 	}
+708 }
+709 
+710 class UT<A, B, C> { // Unordered Tuple
+711 	A a;
+712 	B b;
+713 	C c;
+714 
+715 	UT(A a, B b, C c) {
+716 		this.a = a;
+717 		this.b = b;
+718 		this.c = c;
+719 	}
+720 
+721 	static <A, B, C> UT<A, B, C> make(A a, B b, C c) {
+722 		return new UT<A, B, C>(a, b, c);
+723 	}
+724 
+725 	public boolean equals(Object o) {
+726 		if (o == this)
+727 			return true;
+728 		if (!(o instanceof UT))
+729 			return false;
+730 		UT<?, ?, ?> t = (UT<?, ?, ?>) o;
+731 		boolean aok = a == null ? t.a == null : a.equals(t.a);
+732 		boolean bok = b == null ? t.b == null : b.equals(t.b);
+733 		boolean cok = c == null ? t.c == null : c.equals(t.c);
+734 		return aok && bok && cok;
+735 	}
+736 
+737 	public String toString() {
+738 		return "(" + a.toString() + ", " + b.toString() + ", " + c.toString() + ")";
+739 	}
+740 }
+741 
+742 class T<A extends Comparable<A>, B extends Comparable<B>, C extends Comparable<C>> extends UT<A, B, C> implements
+743 		Comparable<T<A, B, C>> { // Tuple
+744 	T(A a, B b, C c) {
+745 		super(a, b, c);
+746 	}
+747 
+748 	static <A extends Comparable<A>, B extends Comparable<B>, C extends Comparable<C>> T<A, B, C> make(A a, B b, C c) {
+749 		return new T<A, B, C>(a, b, c);
+750 	}
+751 
+752 	public int compareTo(T<A, B, C> o) {
+753 		int sa = a.compareTo(o.a);
+754 		int sb = b.compareTo(o.b);
+755 		int sc = c.compareTo(o.c);
+756 		return sa != 0 ? sa : sb != 0 ? sb : sc;
+757 	}
+758 }
+759 
+760 interface F1<A> {
+761 	A f();
+762 }
+763 
+764 interface F2<A, B> {
+765 	B f(A a);
+766 }
+767 
+768 interface F3<A, B, C> {
+769 	C f(A a, B b);
+770 }
+771 
+772 interface F4<A, B, C, D> {
+773 	D f(A a, B b, C c);
+774 }
+775 
+776 interface F5<A, B, C, D, E> {
+777 	E f(A a, B b, C c, D d);
+778 }
+779 
+780 interface F1V<A> {
+781 	void f(A a);
+782 }
+783 
+784 interface F2V<A, B> {
+785 	void f(A a, B b);
+786 }
+787 
+788 interface F3V<A, B, C> {
+789 	void f(A a, B b, C c);
+790 }
+791 
+792 interface F4V<A, B, C, D> {
+793 	void f(A a, B b, C c, D d);
+794 }
+795 
+796 interface F5V<A, B, C, D, E> {
+797 	void f(A a, B b, C c, D d, E e);
+798 }
+799 
+800 class U { // Utilities
+801 	static <A> ArrayList<A> make(int n, F2<Integer, A> maker) {
+802 		ArrayList<A> res = new ArrayList<A>();
+803 		for (int i = 0; i < n; i++)
+804 			res.add(maker.f(i));
+805 		return res;
+806 	}
+807 
+808 	static <A> ArrayList<A> filter(ArrayList<A> as, F2<A, Boolean> pred) {
+809 		ArrayList<A> res = new ArrayList<A>();
+810 		for (A a : as)
+811 			if (pred.f(a))
+812 				res.add(a);
+813 		return res;
+814 	}
+815 
+816 	static <A> int count(ArrayList<A> as, F2<A, Boolean> pred) {
+817 		int res = 0;
+818 		for (A a : as)
+819 			if (pred.f(a))
+820 				res++;
+821 		return res;
+822 	}
+823 
+824 	static <A> ArrayList<A> concat(ArrayList<A> as, ArrayList<A> bs) {
+825 		ArrayList<A> res = new ArrayList<A>();
+826 		res.addAll(as);
+827 		res.addAll(bs);
+828 		return res;
+829 	}
+830 
+831 	static <A> boolean any(ArrayList<A> as, F2<A, Boolean> pred) {
+832 		for (A a : as)
+833 			if (pred.f(a))
+834 				return true;
+835 		return false;
+836 	}
+837 
+838 	static <A> boolean all(ArrayList<A> as, F2<A, Boolean> pred) {
+839 		for (A a : as)
+840 			if (!pred.f(a))
+841 				return false;
+842 		return true;
+843 	}
+844 
+845 	static <A> ArrayList<A> flatten(ArrayList<ArrayList<A>> ass) {
+846 		ArrayList<A> res = new ArrayList<A>();
+847 		for (ArrayList<A> as : ass)
+848 			res.addAll(as);
+849 		return res;
+850 	}
+851 
+852 	static <A, B> B foldl(ArrayList<A> as, F3<B, A, B> f, B e) {
+853 		B res = e;
+854 		for (A a : as)
+855 			res = f.f(res, a);
+856 		return res;
+857 	}
+858 
+859 	static <A, B> B foldr(ArrayList<A> as, F3<A, B, B> f, B e) {
+860 		B res = e;
+861 		for (int i = as.size() - 1; i >= 0; i--)
+862 			res = f.f(as.get(i), res);
+863 		return res;
+864 	}
+865 
+866 	static <A> ArrayList<A> reverse(ArrayList<A> as) {
+867 		int size = as.size();
+868 		return make(size, i -> as.get(size - 1 - i));
+869 	}
+870 
+871 	static <A> void forEach(ArrayList<A> as, F1V<A> f) {
+872 		for (A a : as)
+873 			f.f(a);
+874 	}
+875 
+876 	static <A extends Comparable<A>> UP<TreeMap<A, Integer>, ArrayList<A>> compress(ArrayList<A> as) {
+877 		TreeSet<A> set = new TreeSet<A>(as);
+878 		TreeMap<A, Integer> map = new TreeMap<A, Integer>();
+879 		ArrayList<A> imap = new ArrayList<A>();
+880 		int i = 0;
+881 		for (A a : set) {
+882 			map.put(a, i++);
+883 			imap.add(a);
+884 		}
+885 		return UP.make(map, imap);
+886 	}
+887 
+888 	static <A, B> ArrayList<B> map(ArrayList<A> as, F2<A, B> f) {
+889 		return make(as.size(), (i) -> f.f(as.get(i)));
+890 	}
+891 
+892 	static <A, B> ArrayList<UP<A, B>> zip(ArrayList<A> as, ArrayList<B> bs) {
+893 		return make(min(as.size(), bs.size()), (i) -> UP.make(as.get(i), bs.get(i)));
+894 	}
+895 
+896 	static <A extends Comparable<A>> A min(A a, A b) {
+897 		return a.compareTo(b) < 0 ? a : b;
+898 	}
+899 
+900 	static <A extends Comparable<A>> A max(A a, A b) {
+901 		return a.compareTo(b) > 0 ? a : b;
+902 	}
+903 
+904 	static <A extends Comparable<A>> A clamp(A a, A min, A max) {
+905 		return a.compareTo(min) < 0 ? min : a.compareTo(max) > 0 ? max : a;
+906 	}
+907 
+908 	static <A> A[] doubleSize(A[] as) {
+909 		return Arrays.copyOf(as, as.length << 1);
+910 	}
+911 }
+912 
+913 @SuppressWarnings("unchecked")
+914 class G<V, E> { // Graph
+915 	private int vSize;
+916 	private Object[] vs; // V
+917 	private Object[] esFrom; // EdgeSet
+918 	private Object[] esTo; // EdgeSet
+919 	private Object[] pool; // UP<Object, Integer>
+920 	private Integer[] ints;
+921 	private int poolCounter;
+922 
+923 	private class EdgeSet {
+924 		HashMap<Integer, E> map;
+925 		Integer[] is;
+926 		Object[] es;
+927 		int size;
+928 
+929 		EdgeSet() {
+930 			is = new Integer[2];
+931 			es = new Object[2];
+932 			size = 0;
+933 		}
+934 
+935 		void add(Integer i, E e) {
+936 			if (size > 16) {
+937 				map.put(i, e);
+938 				size++;
+939 				return;
+940 			}
+941 			if (size == is.length) {
+942 				is = Arrays.copyOf(is, size << 1);
+943 				es = Arrays.copyOf(es, size << 1);
+944 			}
+945 			is[size] = i;
+946 			es[size] = e;
+947 			if (++size > 16) {
+948 				map = new HashMap<Integer, E>();
+949 				for (int j = 0; j < size; j++) {
+950 					map.put(is[j], (E) es[j]);
+951 				}
+952 				is = null;
+953 				es = null;
+954 			}
+955 		}
+956 
+957 		void iter(F2V<Integer, E> f) {
+958 			if (map == null)
+959 				for (int i = 0; i < size; i++)
+960 					f.f(is[i], (E) es[i]);
+961 			else
+962 				for (Entry<Integer, E> e : map.entrySet())
+963 					f.f(e.getKey(), e.getValue());
+964 		}
+965 	}
+966 
+967 	G() {
+968 		vs = new Object[64];
+969 		esFrom = new Object[64];
+970 		esTo = new Object[64];
+971 		pool = new Object[64];
+972 		ints = new Integer[64];
+973 		vSize = 0;
+974 	}
+975 
+976 	V getV(int i) {
+977 		return i < 0 || i >= vs.length ? null : (V) vs[i];
+978 	}
+979 
+980 	ArrayList<V> getSortedVs() {
+981 		ArrayList<V> res = new ArrayList<V>();
+982 		for (int i = 0; i < vs.length; i++) {
+983 			if (vs[i] != null)
+984 				res.add((V) vs[i]);
+985 		}
+986 		return res;
+987 	}
+988 
+989 	void addV(int i, V v) {
+990 		if (getV(i) != null)
+991 			throw new RuntimeException("duplicate vtx: " + i);
+992 		while (vs.length <= i) {
+993 			vs = U.doubleSize(vs);
+994 			ints = U.doubleSize(ints);
+995 			esFrom = U.doubleSize(esFrom);
+996 			esTo = U.doubleSize(esTo);
+997 			pool = U.doubleSize(pool);
+998 		}
+999 		vSize = U.max(vSize, i + 1);
+1000 		vs[i] = v;
+1001 		ints[i] = Integer.valueOf(i);
+1002 		esFrom[i] = new EdgeSet();
+1003 		esTo[i] = new EdgeSet();
+1004 		pool[i] = UP.make(null, 0);
+1005 	}
+1006 
+1007 	void setV(int i, V v) {
+1008 		if (getV(i) == null)
+1009 			throw new RuntimeException("no such vtx: " + i);
+1010 		vs[i] = v;
+1011 	}
+1012 
+1013 	void addE(int from, int to, E e) {
+1014 		((EdgeSet) esFrom[from]).add(ints[to], e);
+1015 		((EdgeSet) esTo[to]).add(ints[from], e);
+1016 	}
+1017 
+1018 	void addUE(int i, int j, E e) {
+1019 		addE(i, j, e);
+1020 		addE(j, i, e);
+1021 	}
+1022 
+1023 	<State> void dfs(int firstIdx, State firstS, F5<State, Integer, Integer, E, State> nextState,
+1024 			F3V<State, Integer, ArrayList<Integer>> visit) {
+1025 		ArrayDeque<UP<Object, Integer>> deque = new ArrayDeque<UP<Object, Integer>>();
+1026 		search(firstIdx, firstS, nextState, visit, deque::push, deque::pop, deque::isEmpty);
+1027 	}
+1028 
+1029 	<State> void bfs(int firstIdx, State firstS, F5<State, Integer, Integer, E, State> nextState,
+1030 			F3V<State, Integer, ArrayList<Integer>> visit) {
+1031 		ArrayDeque<UP<Object, Integer>> deque = new ArrayDeque<UP<Object, Integer>>();
+1032 		search(firstIdx, firstS, nextState, visit, deque::addLast, deque::pollFirst, deque::isEmpty);
+1033 	}
+1034 
+1035 	private <State> void search(int firstIdx, State firstS, F5<State, Integer, Integer, E, State> nextState,
+1036 			F3V<State, Integer, ArrayList<Integer>> visit, F1V<UP<Object, Integer>> push, F1<UP<Object, Integer>> pop,
+1037 			F1<Boolean> isEmpty) {
+1038 		boolean[] visited = new boolean[vSize];
+1039 		ArrayList<Integer> movedTo = new ArrayList<Integer>();
+1040 		push.f(UP.make(firstS, firstIdx));
+1041 		visited[firstIdx] = true;
+1042 		while (!isEmpty.f()) {
+1043 			UP<Object, Integer> si = pop.f();
+1044 			State s = (State) si.a;
+1045 			Integer i = si.b;
+1046 			movedTo.clear();
+1047 			((EdgeSet) esFrom[i]).iter((j, e) -> {
+1048 				if (visited[j])
+1049 					return;
+1050 				State ns = nextState.f(s, i, j, e);
+1051 				if (ns != null) {
+1052 					movedTo.add(j);
+1053 					push.f(pick(ns, j));
+1054 					visited[j] = true;
+1055 				}
+1056 			});
+1057 			visit.f(s, i, movedTo);
+1058 		}
+1059 	}
+1060 
+1061 	private UP<Object, Integer> pick(Object o, Integer i) {
+1062 		return UP.make(o, i);
+1063 	}
+1064 }

@@ -1,0 +1,131 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.InputMismatchException;
+6 import java.io.IOException;
+7 import java.io.InputStream;
+8 
+9 /**
+10  * Built using CHelper plug-in
+11  * Actual solution is at the top
+12  *
+13  * @author Sparsh Sanchorawala
+14  */
+15 public class Main {
+16     public static void main(String[] args) {
+17         InputStream inputStream = System.in;
+18         OutputStream outputStream = System.out;
+19         InputReader in = new InputReader(inputStream);
+20         PrintWriter out = new PrintWriter(outputStream);
+21         DIrohaAndAGrid solver = new DIrohaAndAGrid();
+22         solver.solve(1, in, out);
+23         out.close();
+24     }
+25 
+26     static class DIrohaAndAGrid {
+27         long modExp(long x, long y, long mod) {
+28             if (y == 0)
+29                 return 1 % mod;
+30             long ret = modExp(x, y >> 1, mod);
+31             ret = ret * ret % mod;
+32             if ((y & 1) == 1)
+33                 ret = ret * (x % mod) % mod;
+34             return ret;
+35         }
+36 
+37         public void solve(int testNumber, InputReader s, PrintWriter w) {
+38             int r = s.nextInt(), c = s.nextInt();
+39             int a = s.nextInt(), b = s.nextInt();
+40             long mod = (long) 1e9 + 7;
+41             long[] fact = new long[r + c];
+42             long[] ifact = new long[r + c];
+43             fact[0] = 1;
+44             ifact[0] = 1;
+45             for (int i = 1; i < r + c; i++) {
+46                 fact[i] = fact[i - 1] * i % mod;
+47                 ifact[i] = ifact[i - 1] * modExp(i, mod - 2, mod) % mod;
+48             }
+49             long res = fact[r - 1 + c - 1] * ifact[r - 1] % mod * ifact[c - 1] % mod;
+50             long sub = 0;
+51             for (int x = 0; x < b; x++) {
+52                 long v1 = fact[r - a - 1 + x] * ifact[r - a - 1] % mod * ifact[x] % mod;
+53                 long v2 = fact[a - 1 + c - 1 - x] * ifact[a - 1] % mod * ifact[c - 1 - x] % mod;
+54                 sub = (sub + v1 * v2 % mod) % mod;
+55             }
+56             res = (res - sub + mod) % mod;
+57             w.println(res);
+58         }
+59 
+60     }
+61 
+62     static class InputReader {
+63         private InputStream stream;
+64         private byte[] buf = new byte[1024];
+65         private int curChar;
+66         private int numChars;
+67         private InputReader.SpaceCharFilter filter;
+68 
+69         public InputReader(InputStream stream) {
+70             this.stream = stream;
+71         }
+72 
+73         public int read() {
+74             if (numChars == -1) {
+75                 throw new InputMismatchException();
+76             }
+77             if (curChar >= numChars) {
+78                 curChar = 0;
+79                 try {
+80                     numChars = stream.read(buf);
+81                 } catch (IOException e) {
+82                     throw new InputMismatchException();
+83                 }
+84                 if (numChars <= 0) {
+85                     return -1;
+86                 }
+87             }
+88             return buf[curChar++];
+89         }
+90 
+91         public int nextInt() {
+92             int c = read();
+93             while (isSpaceChar(c)) {
+94                 c = read();
+95             }
+96             int sgn = 1;
+97             if (c == '-') {
+98                 sgn = -1;
+99                 c = read();
+100             }
+101             int res = 0;
+102             do {
+103                 if (c < '0' || c > '9') {
+104                     throw new InputMismatchException();
+105                 }
+106                 res *= 10;
+107                 res += c - '0';
+108                 c = read();
+109             } while (!isSpaceChar(c));
+110             return res * sgn;
+111         }
+112 
+113         public boolean isSpaceChar(int c) {
+114             if (filter != null) {
+115                 return filter.isSpaceChar(c);
+116             }
+117             return isWhitespace(c);
+118         }
+119 
+120         public static boolean isWhitespace(int c) {
+121             return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+122         }
+123 
+124         public interface SpaceCharFilter {
+125             public boolean isSpaceChar(int ch);
+126 
+127         }
+128 
+129     }
+130 }
+131 

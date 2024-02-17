@@ -1,0 +1,110 @@
+{
+    "0": {
+        "prompt": "Instruction: You will be given a piece of Java code and input to the function. \nYou will need to answer questions related to variable states.\nBelow is an example.\n[[[Example Start ]]]\nConsider the following code:\n<<Code>>\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6        public static void main(String[] args) {\n7                try {\n8                        InputStreamReader isr = new InputStreamReader(System.in);\n9                        BufferedReader br = new BufferedReader(isr);\n10                       String strArr[] = br.readLine().split(\" \");\n11 \n12                       int n = Integer.parseInt(strArr[0]);\n13                       int a = Integer.parseInt(strArr[1]);\n14                       int b = Integer.parseInt(strArr[2]);\n15                       int answer = 0;\n16 \n17                       for (int i = 1; i < n + 1; i++) {\n18                               int num = i;\n19                               int sum = 0;\n20 \n21                               while (num != 0) {\n22                                       sum += num % 10;\n23                                       num /= 10;\n24                               }\n25 \n26                               if (sum >= a && sum <= b ) {\n27                                       answer = answer + i;\n28                               }\n29                       }\n30                       System.out.println(answer);\n31               } catch (Exception e) {\n32                       e.printStackTrace();\n33               }\n34       }\n35 \n36 }\n\n<<Input>>\n20 2 5\n\n<<Round 1>>\n[Question]\nWhat would be the states of variable `n` in line 12? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n20\nEND-OF-STATE\n\n<<Round 2>>\n[Question]\nWhat would be the states of variable `a` in line 13? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n2\nEND-OF-STATE\n\n<<Round 3>>\n[Question]\nWhat would be the states of variable `num` in line 18? Print all the states and end your response with \\\"END-OF-STATE\\\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\n<<Round 4>>\n[Question]\nWhat would be the states of variable `sum` in line 26? Print all the states and end your response with \\\"END-OF-STATE\\\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n2\n3\n4\n5\n2\n3\n4\n5\n2\nEND-OF-STATE\n[[[Example End]]]",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN",
+        "predict": "Consider the following code:\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\n\npublic class Main {\n\n       public static void main(String[] args) {\n               try {\n                       InputStreamReader isr = new InputStreamReader(System.in);\n                       BufferedReader br = new BufferedReader(isr);\n                       String strArr[] = br.readLine().split(\" \");\n\n                       int n = Integer.parseInt(strArr[0]);\n                       int a = Integer.parseInt(strArr[1]);\n                       int b = Integer.parseInt(strArr[2]);\n                       int answer = 0;\n\n                       for (int i = 1; i < n + 1; i++) {\n                               int num = i;\n                               int sum = 0;\n\n                               while (num != 0) {\n                                       sum += num % 10;\n                                       num /= 10;\n                               }\n\n                               if (sum >= a && sum <= b ) {\n                                       answer = answer + i;\n                               }\n                       }\n                       System.out.println(answer);\n               } catch (Exception e) {\n                       e.printStackTrace();\n               }\n       }\n\n}\n\nInput\n20 2 5\n\nRound 1\n[Question]\nWhat would be the states of variable `n` in line 12? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n20\nEND-OF-STATE\n\nRound 2\n[Question]\nWhat would be the states of variable `a` in line 13? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n2\nEND-OF-STATE\n\nRound 3\n[Question]\nWhat would be the states of variable `num` in line 18? Print all the states and end your response with \"END-OF-STATE\".\n**Note:"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n<<Code>>\n1 import java.util.*;\n2 \n3 public class Main {\n4     static HashMap<Integer, HashMap<Integer, Long>> dp = new HashMap<>();\n5      public static void main(String[] args) {\n6         Scanner sc = new Scanner(System.in);\n7         int n = sc.nextInt();\n8         int k = sc.nextInt();\n9         long total = 0;\n10         for (int i = 1; i * Math.pow(2, k - 1) <= n; i++) {\n11             total += search(i, k - 1, n);\n12         } \n13         System.out.println(total);\n14     }\n15     \n16     static long search(int num, int count, int max) {\n17         if (count == 0) {\n18             return 1;\n19         }\n20         if (dp.containsKey(num)) {\n21             if (dp.get(num).containsKey(count)) {\n22                 return dp.get(num).get(count);\n23             }\n24         }\n25         long total = 0;\n26         for (int i = 2; num * i * Math.pow(2, count - 1) <= max; i++) {\n27             total += search(num * i, count - 1, max);\n28         }\n29         if (dp.containsKey(num)) {\n30             dp.get(num).put(count, total);\n31         } else {\n32             HashMap<Integer, Long> map = new HashMap<>();\n33             map.put(count, total);\n34             dp.put(num, map);\n35         }\n36         return total;\n37     }\n38 }\n\n\n<<Input>>\n6 3\n\n\n<<Round 1>>\nWhat would be the states of variable `total` in line 9? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "0"
+        ],
+        "variable": "total",
+        "line": 9,
+        "predict": "0\nEND-OF-STATE"
+    },
+    "2": {
+        "prompt": "<<Round 2>>\nWhat would be the states of variable `n` in line 10? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "6",
+            "6"
+        ],
+        "variable": "n",
+        "line": 10,
+        "predict": "6\nEND-OF-STATE"
+    },
+    "3": {
+        "prompt": "<<Round 3>>\nWhat would be the states of variable `k` in line 10? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "3",
+            "3"
+        ],
+        "variable": "k",
+        "line": 10,
+        "predict": "3\nEND-OF-STATE"
+    },
+    "4": {
+        "prompt": "<<Round 4>>\nWhat would be the states of variable `total` in line 25? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "0",
+            "0",
+            "0"
+        ],
+        "variable": "total",
+        "line": 25,
+        "predict": "0\nEND-OF-STATE"
+    },
+    "5": {
+        "prompt": "<<Round 5>>\nWhat would be the states of variable `i` in line 26? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "2",
+            "2",
+            "3",
+            "3",
+            "2"
+        ],
+        "variable": "i",
+        "line": 26,
+        "predict": "2\nEND-OF-STATE"
+    },
+    "6": {
+        "prompt": "<<Round 6>>\nWhat would be the states of variable `i` in line 27? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "2",
+            "3",
+            "2",
+            "2",
+            "3"
+        ],
+        "variable": "i",
+        "line": 27,
+        "predict": "2\nEND-OF-STATE"
+    },
+    "7": {
+        "prompt": "<<Round 7>>\nWhat would be the states of variable `total` in line 27? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "1",
+            "2",
+            "2",
+            "1",
+            "3"
+        ],
+        "variable": "total",
+        "line": 27,
+        "predict": "1\nEND-OF-STATE"
+    },
+    "8": {
+        "prompt": "<<Round 8>>\nWhat would be the states of variable `total` in line 33? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "2",
+            "1",
+            "3"
+        ],
+        "variable": "total",
+        "line": 33,
+        "predict": "1\nEND-OF-STATE"
+    },
+    "9": {
+        "prompt": "<<Round 9>>\nWhat would be the states of variable `total` in line 36? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "0",
+            "2",
+            "0"
+        ],
+        "variable": "total",
+        "line": 36,
+        "predict": "1\nEND-OF-STATE"
+    }
+}

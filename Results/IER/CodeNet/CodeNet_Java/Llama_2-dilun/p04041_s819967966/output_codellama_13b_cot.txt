@@ -1,0 +1,77 @@
+
+<<<Analysis>>>
+The variable n, variable a and variable b are initialized with 3, 5 and 7 respectively according to the input. And variable sum is initialized with 0.
+It enters a for loop and it iterates from 1 to 3 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [5, 7]. If it does, it adds the current interger i to variable answer. The condition is met when i is 5 and 7.
+After the loop finishes, it print the fianl value of variable answer as output, which is 12.
+<<<Output>>>
+12
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.InputMismatchException;
+
+public class Main {
+	static InputStream is;
+	static PrintWriter out;
+	static String INPUT = "";
+	
+	static void solve()
+	{
+		int n = ni(), x = ni(), y = ni(), z = ni();
+		int mod = 1000000007;
+		long[][] dp = new long[n+1][1<<x+y+z];
+		long[] ep = new long[n+1];
+		dp[0][0] = 1;
+		for(int i = 0;i < n;i++){
+			for(int j = 0;j < 1<<x+y+z;j++){
+				for(int k = 1;k <= 10;k++){
+					int nj = (j<<k|1<<k-1)&(1<<x+y+z)-1;
+					if(nj<<~(z-1)<0 && nj<<~(y+z-1)<0 && nj<<~(x+y+z-1)<0){
+						ep[i+1] += dp[i][j];
+						if(ep[i+1] >= mod)ep[i+1] -= mod;
+					}else{
+						dp[i+1][nj] += dp[i][j];
+						if(dp[i+1][nj] >= mod)dp[i+1][nj] -= mod;
+					}
+				}
+			}
+			ep[i+1] += ep[i] * 10;
+			ep[i+1] %= mod;
+		}
+		out.println(ep[n]);
+	}
+	
+	public static void main(String[] args) throws Exception
+	{
+		long S = System.currentTimeMillis();
+		is = INPUT.isEmpty()? System.in : new ByteArrayInputStream(INPUT.getBytes());
+		out = new PrintWriter(System.out);
+		
+		solve();
+		out.flush();
+		long G = System.currentTimeMillis();
+		tr(G-S+"ms");
+	}
+	
+	private static boolean eof()
+	{
+		if(lenbuf == -1)return true;
+		int lptr = ptrbuf;
+		while(lptr < lenbuf)if(!isSpaceChar(inbuf[lptr++]))return false;
+		
+		try {
+			is.mark(1000);
+			while(true){
+				int b = is.read();
+				if(b == -1){
+					is.reset();
+					return true;
+				}else if(!isSpace

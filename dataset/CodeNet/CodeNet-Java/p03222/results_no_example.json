@@ -1,0 +1,8 @@
+{
+    "0": {
+        "prompt": "Consider the following code:\nimport java.util.*;\npublic class Main {\n\t\n\tstatic int mod = (int)1e9+7;\n\tstatic int memo[] = new int[9];\n\tpublic static void main(String[] args) {\t\t\n\t\tScanner sc = new Scanner(System.in);\n\t\tint H = sc.nextInt();\n\t\tint W = sc.nextInt();\n\t\tint K = sc.nextInt();\n\t\tsc.close();\n\n\t\tmakeMemo();\n\t\t\n\t\tlong dp[][] = new long[H+1][W];\n\t\tdp[0][0]=1;\n\t\tfor(int h=0;h<H;h++) {\n\t\t\tfor(int w=0;w<W;w++) {\n\t\t\t\t//\u53f3\n\t\t\t\tif(w+1<W) {\n\t\t\t\t\tdp[h+1][w+1]+=dp[h][w]*memo[w]%mod*memo[(W-1)-(w+1)]%mod;\n\t\t\t\t\tdp[h+1][w+1]%=mod;\n\t\t\t\t}\n\t\t\t\t//\u5de6\n\t\t\t\tif(w-1>=0) {\n\t\t\t\t\tdp[h+1][w-1]+=dp[h][w]*memo[w-1]%mod*memo[(W-1)-w]%mod;\n\t\t\t\t\tdp[h+1][w-1]%=mod;\n\t\t\t\t}\n\t\t\t\t//\u4e0b\n\t\t\t\tdp[h+1][w] += dp[h][w]*memo[w]%mod*memo[(W-1)-w]%mod;\n\t\t\t\tdp[h+1][w]%=mod;\n\t\t\t\t\n\t\t\t}\n\t\t}\n\t\tlong ans = dp[H][K-1];\n\t\tSystem.out.println(ans);\n\t}\n\t//\u7e26\u68d2\u306e\u6570\u3092\u5f15\u6570\u306b\u3059\u308b\n\tstatic void makeMemo(){\t\n\t\tmemo[0]=1;\n\t\tmemo[1]=1;\n\t\tfor(int i=2;i<9;i++) {\n\t\t\tfor(int bit = 0;bit<2<<(i-2);bit++) {\n\t\t\t\tint before = 0;\n\t\t\t\tfor(int j=0;j<9;j++) {\n\t\t\t\t\tint now = (bit>>j&1);\n\t\t\t\t\tif(before==1&&now==1) break;\n\t\t\t\t\tbefore = now;\n\t\t\t\t\tif(j==8)memo[i]++;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\t\n\t\t\n\t}\n}Gicen the following input:\n1 3 2\nPrint only the output of the code, ends with \"END-OF-OUTPUT\":",
+        "status": "NAN",
+        "gorund_truth": "1\n",
+        "predict": "2\nEND-OF-OUTPUT"
+    }
+}

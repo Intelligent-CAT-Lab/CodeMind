@@ -1,0 +1,219 @@
+1 import java.io.ByteArrayInputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.*;
+6 
+7 public class Main {
+8     static InputStream is;
+9     static PrintWriter out;
+10     static String INPUT = "";
+11 
+12     static void solve()
+13     {
+14         long x = nl();
+15         long answer = x / 11 * 2;
+16         long mod = x % 11;
+17         long step = x / 11;
+18         if (mod > 0) {
+19             if (mod <= 6 - step % 2) {
+20                 answer++;
+21             } else {
+22                 answer += 2;
+23             }
+24         }
+25         out.println(answer);
+26     }
+27 
+28     public static void main(String[] args) throws Exception
+29     {
+30         long S = System.currentTimeMillis();
+31         is = INPUT.isEmpty() ? System.in : new ByteArrayInputStream(INPUT.getBytes());
+32         out = new PrintWriter(System.out);
+33 
+34         solve();
+35         out.flush();
+36         long G = System.currentTimeMillis();
+37         tr(G-S+"ms");
+38     }
+39 
+40     private static boolean eof()
+41     {
+42         if(lenbuf == -1)return true;
+43         int lptr = ptrbuf;
+44         while(lptr < lenbuf)if(!isSpaceChar(inbuf[lptr++]))return false;
+45 
+46         try {
+47             is.mark(1000);
+48             while(true){
+49                 int b = is.read();
+50                 if(b == -1){
+51                     is.reset();
+52                     return true;
+53                 }else if(!isSpaceChar(b)){
+54                     is.reset();
+55                     return false;
+56                 }
+57             }
+58         } catch (IOException e) {
+59             return true;
+60         }
+61     }
+62 
+63     private static byte[] inbuf = new byte[1024];
+64     static int lenbuf = 0, ptrbuf = 0;
+65 
+66     private static int readByte()
+67     {
+68         if(lenbuf == -1)throw new InputMismatchException();
+69         if(ptrbuf >= lenbuf){
+70             ptrbuf = 0;
+71             try { lenbuf = is.read(inbuf); } catch (IOException e) { throw new InputMismatchException(); }
+72             if(lenbuf <= 0)return -1;
+73         }
+74         return inbuf[ptrbuf++];
+75     }
+76 
+77     private static boolean isSpaceChar(int c) { return !(c >= 33 && c <= 126); }
+78 
+79     private static int skip() { int b; while((b = readByte()) != -1 && isSpaceChar(b)); return b; }
+80 
+81     private static double nd() { return Double.parseDouble(ns()); }
+82     private static char nc() { return (char)skip(); }
+83 
+84     private static String ns()
+85     {
+86         int b = skip();
+87         StringBuilder sb = new StringBuilder();
+88         while(!(isSpaceChar(b))){
+89             sb.appendCodePoint(b);
+90             b = readByte();
+91         }
+92         return sb.toString();
+93     }
+94 
+95     private static char[] ns(int n)
+96     {
+97         char[] buf = new char[n];
+98         int b = skip(), p = 0;
+99         while(p < n && !(isSpaceChar(b))){
+100             buf[p++] = (char)b;
+101             b = readByte();
+102         }
+103         return n == p ? buf : Arrays.copyOf(buf, p);
+104     }
+105 
+106     private static char[][] nm(int n, int m)
+107     {
+108         char[][] map = new char[n][];
+109         for(int i = 0;i < n;i++)map[i] = ns(m);
+110         return map;
+111     }
+112 
+113     private static int[] na(int n)
+114     {
+115         int[] a = new int[n];
+116         for(int i = 0;i < n;i++)a[i] = ni();
+117         return a;
+118     }
+119 
+120     private static int ni()
+121     {
+122         int num = 0, b;
+123         boolean minus = false;
+124         while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+125         if(b == '-'){
+126             minus = true;
+127             b = readByte();
+128         }
+129 
+130         while(true){
+131             if(b >= '0' && b <= '9'){
+132                 num = num * 10 + (b - '0');
+133             }else{
+134                 return minus ? -num : num;
+135             }
+136             b = readByte();
+137         }
+138     }
+139 
+140     private static long nl()
+141     {
+142         long num = 0;
+143         int b;
+144         boolean minus = false;
+145         while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+146         if(b == '-'){
+147             minus = true;
+148             b = readByte();
+149         }
+150 
+151         while(true){
+152             if(b >= '0' && b <= '9'){
+153                 num = num * 10 + (b - '0');
+154             }else{
+155                 return minus ? -num : num;
+156             }
+157             b = readByte();
+158         }
+159     }
+160 
+161     private static void tr(Object... o) { if(INPUT.length() != 0)System.out.println(Arrays.deepToString(o)); }
+162 
+163     // https://algs4.cs.princeton.edu/15uf/UF.java.html
+164     public static class UnionFind {
+165         private int count = 0;
+166         private int[] parent, rank;
+167 
+168         public UnionFind(int n) {
+169             count = n;
+170             parent = new int[n];
+171             rank = new int[n];
+172             for (int i = 0; i < n; i++) {
+173                 parent[i] = i;
+174             }
+175         }
+176 
+177         public int find(int p) {
+178             while (p != parent[p]) {
+179                 parent[p] = parent[parent[p]];
+180                 p = parent[p];
+181             }
+182             return p;
+183         }
+184 
+185         public void union(int p, int q) {
+186             int rootP = find(p);
+187             int rootQ = find(q);
+188             if (rootP ==rootQ) return;
+189             if (rank[rootQ] > rank[rootP]) {
+190                 parent[rootP] = rootQ;
+191             } else {
+192                 parent[rootQ] = rootP;
+193                 if (rank[rootP] == rank[rootQ]) {
+194                     rank[rootP]++;
+195                 }
+196             }
+197             count--;
+198         }
+199 
+200         public int count() {
+201             return count;
+202         }
+203 
+204         public void print() {
+205             out.println("Parent:");
+206             for (int i : parent) {
+207                 out.print(i);
+208                 out.print(" ");
+209             }
+210             out.println();
+211             out.println("Rank:");
+212             for (int i : rank) {
+213                 out.print(i);
+214                 out.print(" ");
+215             }
+216             out.println();
+217         }
+218     }
+219 }

@@ -1,0 +1,177 @@
+1 import java.io.*;
+2 import java.util.*;
+3  
+4  
+5 public class Main implements Runnable {
+6  
+7   public void run() {
+8     BetterScanner scanner = new BetterScanner(System.in);
+9 
+10     int n = scanner.nextInt();
+11     int a = scanner.nextInt();
+12     int b = scanner.nextInt();
+13 
+14     calc(n, a, b);
+15   }
+16 
+17   StringBuilder output = new StringBuilder();
+18 
+19   public void calc(int n, int a, int b) {
+20     for (int i = n - a + 1 ; i <= n ; i ++) {
+21       output.append(i).append(" ");
+22     }
+23     int rest = n - a - b + 1;
+24     if (rest < 0) {
+25       System.out.println(-1);
+26       return;
+27     } else if (rest >= 1) {
+28       if (!calcInner(rest, a - 1, b - 1)) {
+29         System.out.println(-1);
+30         return;
+31       }
+32     }
+33     for (int i = n - a ; i >= rest + 1 ; i --) {
+34       output.append(i).append(" ");
+35     }
+36     output.deleteCharAt(output.length() - 1);
+37     System.out.println(output);
+38   }
+39 
+40   public boolean calcInner(int n, int a, int b) {
+41     StringBuilder first = new StringBuilder();
+42     StringBuilder second = new StringBuilder();
+43     while (true) {
+44       if (a <= 0 || b <= 0) {
+45         return false;
+46       }
+47       int firstI = (n - a + 1 >= 1) ? n - a + 1 : 1;
+48       for (int i = firstI ; i <= n ; i ++) {
+49         first.append(i).append(" ");
+50       }
+51       int rest = n - a - b + 1;
+52       int endI = (rest + 1 >= 1) ? rest + 1 : 1;
+53       StringBuilder subSecond = new StringBuilder();
+54       for (int i = firstI - 1 ; i >= endI ; i --) {
+55         subSecond.append(i).append(" ");
+56       }
+57       second.insert(0, subSecond);
+58       if (rest <= 0) {
+59         output.append(first);
+60         output.append(second);
+61         return true;
+62       } else {
+63         n = rest;
+64         a --; b --;
+65       }
+66     }
+67   }
+68  
+69   public static void main(String[] args) {
+70     Main main = new Main();
+71     main.run();
+72   }
+73  
+74   // scanner slightly faster than usual ones
+75   public static class BetterScanner {
+76  
+77     private InputStream stream;
+78     private byte[] buffer = new byte[1024];
+79     private int pointer = 0;
+80     private int bufferLength = 0;
+81  
+82     public BetterScanner(InputStream stream) {
+83       this.stream = stream;
+84     }
+85  
+86     private boolean updateBuffer() {
+87       if (pointer >= bufferLength) {
+88         pointer = 0;
+89         try {
+90           bufferLength = stream.read(buffer);
+91         } catch (IOException exception) {
+92           exception.printStackTrace();
+93         }
+94         return bufferLength > 0;
+95       } else {
+96         return true;
+97       }
+98     }
+99  
+100     private int read() {
+101       if (updateBuffer()) {
+102         return buffer[pointer ++];
+103       } else {
+104         return -1;
+105       }
+106     }
+107  
+108     public boolean hasNext() {
+109       skipUnprintable();
+110       return updateBuffer();
+111     }
+112  
+113     private void skipUnprintable() { 
+114       while (updateBuffer() && !isPrintableChar(buffer[pointer])) {
+115         pointer ++;
+116       }
+117     }
+118  
+119     public String next() {
+120       if (hasNext()) {
+121         StringBuilder builder = new StringBuilder();
+122         int codePoint = read();
+123         while (isPrintableChar(codePoint)) {
+124           builder.appendCodePoint(codePoint);
+125           codePoint = read();
+126         }
+127         return builder.toString();
+128       } else {
+129         throw new NoSuchElementException();
+130       }
+131     }
+132  
+133     public long nextLong() {
+134       if (hasNext()) {
+135         long number = 0;
+136         boolean minus = false;
+137         int codePoint = read();
+138         if (codePoint == '-') {
+139           minus = true;
+140           codePoint = read();
+141         }
+142         if (codePoint >= '0' && codePoint <= '9') {
+143           while (true) {
+144             if (codePoint >= '0' && codePoint <= '9') {
+145               number *= 10;
+146               number += codePoint - '0';
+147             } else if (codePoint < 0 || !isPrintableChar(codePoint)) {
+148               return (minus) ? -number : number;
+149             } else {
+150               throw new NumberFormatException();
+151             }
+152             codePoint = read();
+153           }
+154         } else {
+155           throw new NumberFormatException();
+156         }
+157       } else {
+158         throw new NoSuchElementException();
+159       }
+160     }
+161  
+162     public int nextInt() {
+163       long number = nextLong();
+164       if (number >= Integer.MIN_VALUE && number <= Integer.MAX_VALUE) {
+165         return (int)number;
+166       } else {
+167         throw new NumberFormatException();
+168       }
+169     }
+170  
+171     private boolean isPrintableChar(int codePoint) {
+172       return codePoint >= 33 && codePoint <= 126;
+173     }
+174  
+175   }
+176  
+177 }

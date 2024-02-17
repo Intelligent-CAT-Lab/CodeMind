@@ -1,0 +1,340 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.util.Arrays;
+6 import java.io.IOException;
+7 import java.io.UncheckedIOException;
+8 import java.io.Closeable;
+9 import java.io.Writer;
+10 import java.io.OutputStreamWriter;
+11 import java.io.InputStream;
+12 
+13 /**
+14  * Built using CHelper plug-in
+15  * Actual solution is at the top
+16  */
+17 public class Main {
+18     public static void main(String[] args) throws Exception {
+19         Thread thread = new Thread(null, new TaskAdapter(), "", 1 << 27);
+20         thread.start();
+21         thread.join();
+22     }
+23 
+24     static class TaskAdapter implements Runnable {
+25         @Override
+26         public void run() {
+27             InputStream inputStream = System.in;
+28             OutputStream outputStream = System.out;
+29             FastInput in = new FastInput(inputStream);
+30             FastOutput out = new FastOutput(outputStream);
+31             DMergeTriplets solver = new DMergeTriplets();
+32             solver.solve(1, in, out);
+33             out.close();
+34         }
+35     }
+36 
+37     static class DMergeTriplets {
+38         Modular mod;
+39         Combination comb;
+40         int zero;
+41         int[][] f;
+42 
+43         public int f(int i, int j) {
+44             if (i == 0) {
+45                 return j == zero ? 1 : 0;
+46             }
+47             if (i < 0 || j >= f[i].length || j < 0) {
+48                 return 0;
+49             }
+50             if (f[i][j] == -1) {
+51                 f[i][j] = f(i - 1, j - 1);
+52                 f[i][j] = mod.plus(f[i][j], mod.mul(i - 1, f(i - 2, j + 1)));
+53                 f[i][j] = mod.plus(f[i][j], mod.mul(pick2(i - 1), f(i - 3, j)));
+54             }
+55             return f[i][j];
+56         }
+57 
+58         public int pick2(int n) {
+59             return mod.mul(n, (n - 1));
+60         }
+61 
+62         public void solve(int testNumber, FastInput in, FastOutput out) {
+63             int n = in.readInt() * 3;
+64             mod = new Modular(in.readInt());
+65             comb = new Combination(n, mod);
+66             zero = n;
+67             f = new int[n + 1][n + n + 1];
+68             SequenceUtils.deepFill(f, -1);
+69 
+70             int ans = 0;
+71             for (int i = 0; i <= n; i++) {
+72                 ans = mod.plus(ans, f(n, i + zero));
+73             }
+74 
+75             out.println(ans);
+76         }
+77 
+78     }
+79 
+80     static class Modular {
+81         int m;
+82 
+83         public int getMod() {
+84             return m;
+85         }
+86 
+87         public Modular(int m) {
+88             this.m = m;
+89         }
+90 
+91         public Modular(long m) {
+92             this.m = (int) m;
+93             if (this.m != m) {
+94                 throw new IllegalArgumentException();
+95             }
+96         }
+97 
+98         public Modular(double m) {
+99             this.m = (int) m;
+100             if (this.m != m) {
+101                 throw new IllegalArgumentException();
+102             }
+103         }
+104 
+105         public int valueOf(int x) {
+106             x %= m;
+107             if (x < 0) {
+108                 x += m;
+109             }
+110             return x;
+111         }
+112 
+113         public int valueOf(long x) {
+114             x %= m;
+115             if (x < 0) {
+116                 x += m;
+117             }
+118             return (int) x;
+119         }
+120 
+121         public int mul(int x, int y) {
+122             return valueOf((long) x * y);
+123         }
+124 
+125         public int plus(int x, int y) {
+126             return valueOf(x + y);
+127         }
+128 
+129         public String toString() {
+130             return "mod " + m;
+131         }
+132 
+133     }
+134 
+135     static class Factorial {
+136         int[] fact;
+137         int[] inv;
+138         Modular modular;
+139 
+140         public Modular getModular() {
+141             return modular;
+142         }
+143 
+144         public Factorial(int[] fact, int[] inv, InverseNumber in, int limit, Modular modular) {
+145             this.modular = modular;
+146             this.fact = fact;
+147             this.inv = inv;
+148             fact[0] = inv[0] = 1;
+149             for (int i = 1; i <= limit; i++) {
+150                 fact[i] = modular.mul(fact[i - 1], i);
+151                 inv[i] = modular.mul(inv[i - 1], in.inv[i]);
+152             }
+153         }
+154 
+155         public Factorial(int limit, Modular modular) {
+156             this(new int[limit + 1], new int[limit + 1], new InverseNumber(limit, modular), limit, modular);
+157         }
+158 
+159     }
+160 
+161     static class FastOutput implements AutoCloseable, Closeable, Appendable {
+162         private StringBuilder cache = new StringBuilder(10 << 20);
+163         private final Writer os;
+164 
+165         public FastOutput append(CharSequence csq) {
+166             cache.append(csq);
+167             return this;
+168         }
+169 
+170         public FastOutput append(CharSequence csq, int start, int end) {
+171             cache.append(csq, start, end);
+172             return this;
+173         }
+174 
+175         public FastOutput(Writer os) {
+176             this.os = os;
+177         }
+178 
+179         public FastOutput(OutputStream os) {
+180             this(new OutputStreamWriter(os));
+181         }
+182 
+183         public FastOutput append(char c) {
+184             cache.append(c);
+185             return this;
+186         }
+187 
+188         public FastOutput append(int c) {
+189             cache.append(c);
+190             return this;
+191         }
+192 
+193         public FastOutput println(int c) {
+194             return append(c).println();
+195         }
+196 
+197         public FastOutput println() {
+198             cache.append(System.lineSeparator());
+199             return this;
+200         }
+201 
+202         public FastOutput flush() {
+203             try {
+204                 os.append(cache);
+205                 os.flush();
+206                 cache.setLength(0);
+207             } catch (IOException e) {
+208                 throw new UncheckedIOException(e);
+209             }
+210             return this;
+211         }
+212 
+213         public void close() {
+214             flush();
+215             try {
+216                 os.close();
+217             } catch (IOException e) {
+218                 throw new UncheckedIOException(e);
+219             }
+220         }
+221 
+222         public String toString() {
+223             return cache.toString();
+224         }
+225 
+226     }
+227 
+228     static class SequenceUtils {
+229         public static void deepFill(Object array, int val) {
+230             if (!array.getClass().isArray()) {
+231                 throw new IllegalArgumentException();
+232             }
+233             if (array instanceof int[]) {
+234                 int[] intArray = (int[]) array;
+235                 Arrays.fill(intArray, val);
+236             } else {
+237                 Object[] objArray = (Object[]) array;
+238                 for (Object obj : objArray) {
+239                     deepFill(obj, val);
+240                 }
+241             }
+242         }
+243 
+244     }
+245 
+246     static class InverseNumber {
+247         int[] inv;
+248 
+249         public InverseNumber(int[] inv, int limit, Modular modular) {
+250             this.inv = inv;
+251             inv[1] = 1;
+252             int p = modular.getMod();
+253             for (int i = 2; i <= limit; i++) {
+254                 int k = p / i;
+255                 int r = p % i;
+256                 inv[i] = modular.mul(-k, inv[r]);
+257             }
+258         }
+259 
+260         public InverseNumber(int limit, Modular modular) {
+261             this(new int[limit + 1], limit, modular);
+262         }
+263 
+264     }
+265 
+266     static class FastInput {
+267         private final InputStream is;
+268         private byte[] buf = new byte[1 << 20];
+269         private int bufLen;
+270         private int bufOffset;
+271         private int next;
+272 
+273         public FastInput(InputStream is) {
+274             this.is = is;
+275         }
+276 
+277         private int read() {
+278             while (bufLen == bufOffset) {
+279                 bufOffset = 0;
+280                 try {
+281                     bufLen = is.read(buf);
+282                 } catch (IOException e) {
+283                     bufLen = -1;
+284                 }
+285                 if (bufLen == -1) {
+286                     return -1;
+287                 }
+288             }
+289             return buf[bufOffset++];
+290         }
+291 
+292         public void skipBlank() {
+293             while (next >= 0 && next <= 32) {
+294                 next = read();
+295             }
+296         }
+297 
+298         public int readInt() {
+299             int sign = 1;
+300 
+301             skipBlank();
+302             if (next == '+' || next == '-') {
+303                 sign = next == '+' ? 1 : -1;
+304                 next = read();
+305             }
+306 
+307             int val = 0;
+308             if (sign == 1) {
+309                 while (next >= '0' && next <= '9') {
+310                     val = val * 10 + next - '0';
+311                     next = read();
+312                 }
+313             } else {
+314                 while (next >= '0' && next <= '9') {
+315                     val = val * 10 - next + '0';
+316                     next = read();
+317                 }
+318             }
+319 
+320             return val;
+321         }
+322 
+323     }
+324 
+325     static class Combination {
+326         final Factorial factorial;
+327         final Modular modular;
+328 
+329         public Combination(Factorial factorial) {
+330             this.factorial = factorial;
+331             this.modular = factorial.getModular();
+332         }
+333 
+334         public Combination(int limit, Modular modular) {
+335             this(new Factorial(limit, modular));
+336         }
+337 
+338     }
+339 }
+340 

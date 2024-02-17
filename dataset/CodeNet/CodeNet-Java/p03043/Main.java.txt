@@ -1,0 +1,211 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.InputStreamReader;
+5 import java.io.OutputStream;
+6 import java.io.PrintWriter;
+7 import java.math.BigDecimal;
+8 import java.util.AbstractMap;
+9 import java.util.ArrayList;
+10 import java.util.Arrays;
+11 import java.util.HashMap;
+12 import java.util.HashSet;
+13 import java.util.List;
+14 import java.util.Map;
+15 import java.util.Set;
+16 import java.util.Stack;
+17 import java.util.TreeMap;
+18 
+19 import static java.util.Comparator.*;
+20 
+21 
+22 public class Main {
+23 	
+24 	public static void main(String[] args) {
+25         InputStream inputStream = System.in;
+26         OutputStream outputStream = System.out;
+27         MyInput in = new MyInput(inputStream);
+28         PrintWriter out = new PrintWriter(outputStream);
+29         
+30         Solver solver = new Solver();
+31         solver.solve(1, in, out);
+32         
+33         out.close();
+34     }
+35     
+36     // ======================================================================
+37     static class Solver {
+38 
+39     	public long calc(int n, int st, PrintWriter out) {
+40 //    	    out.println("start : n = " + n);
+41     	    long ans = 1;
+42     		long val = st;
+43     		while(val < n) {
+44     			val *= 2;
+45     			ans *= 2;
+46 //    			out.println("val = " + val + "  ans = " + ans);
+47     		}
+48 			return ans;
+49     	}
+50 
+51     	public void solve(int testNumber, MyInput in, PrintWriter out) {
+52     		int N = in.nextInt();
+53     		int K = in.nextInt();
+54     		long cnt; 
+55     		double wk, ans = 0;
+56     		for(int i=1; i <= N; i++) {
+57     			cnt = calc(K, i, out);
+58   				wk = (double)1 / (cnt * N);
+59    				ans += wk;
+60 //    		    out.println("i = " + i + " wk = " + wk + "  ans = " + ans);
+61     		}
+62     		out.println(ans);
+63         }
+64     }
+65     static class PPP {
+66     	public int key, val;
+67     	public PPP(int key, int val) {
+68     		this.key = key;
+69     		this.val = val;
+70     	}
+71 		public int getKey() {
+72 			return key;
+73 		}
+74 		public void setKey(int key) {
+75 			this.key = key;
+76 		}
+77 		public int getVal() {
+78 			return val;
+79 		}
+80 		public void setVal(int val) {
+81 			this.val = val;
+82 		}
+83     }
+84     // ======================================================================
+85     static class Pair<K, V> extends AbstractMap.SimpleEntry<K, V> {
+86         /** serialVersionUID. */
+87         private static final long serialVersionUID = 6411527075103472113L;
+88 
+89         public Pair(final K key, final V value) {
+90             super(key, value);
+91         }
+92         public String getString() {
+93             return "[" + getKey() + "] [" + getValue() + "]";
+94         }
+95      }    
+96     static class MyInput {
+97         private final BufferedReader in;
+98         private static int pos;
+99         private static int readLen;
+100         private static final char[] buffer = new char[1024 * 8];
+101         private static char[] str = new char[500 * 8 * 2];
+102         private static boolean[] isDigit = new boolean[256];
+103         private static boolean[] isSpace = new boolean[256];
+104         private static boolean[] isLineSep = new boolean[256];
+105  
+106         static {
+107             for (int i = 0; i < 10; i++) {
+108                 isDigit['0' + i] = true;
+109             }
+110             isDigit['-'] = true;
+111             isSpace[' '] = isSpace['\r'] = isSpace['\n'] = isSpace['\t'] = true;
+112             isLineSep['\r'] = isLineSep['\n'] = true;
+113         }
+114  
+115         public MyInput(InputStream is) {
+116             in = new BufferedReader(new InputStreamReader(is));
+117         }
+118  
+119         public int read() {
+120             if (pos >= readLen) {
+121                 pos = 0;
+122                 try {
+123                     readLen = in.read(buffer);
+124                 } catch (IOException e) {
+125                     throw new RuntimeException();
+126                 }
+127                 if (readLen <= 0) {
+128                     throw new MyInput.EndOfFileRuntimeException();
+129                 }
+130             }
+131             return buffer[pos++];
+132         }
+133  
+134         public int nextInt() {
+135             int len = 0;
+136             str[len++] = nextChar();
+137             len = reads(len, isSpace);
+138             int i = 0;
+139             int ret = 0;
+140             if (str[0] == '-') {
+141                 i = 1;
+142             }
+143             for (; i < len; i++) ret = ret * 10 + str[i] - '0';
+144             if (str[0] == '-') {
+145                 ret = -ret;
+146             }
+147             return ret;
+148         }
+149  
+150         public long nextLong() {
+151             int len = 0;
+152             str[len++] = nextChar();
+153             len = reads(len, isSpace);
+154             int i = 0;
+155             long ret = 0L;
+156             if (str[0] == '-') {
+157                 i = 1;
+158             }
+159             for (; i < len; i++) ret = ret * 10 + str[i] - '0';
+160             if (str[0] == '-') {
+161                 ret = -ret;
+162             }
+163             return ret;
+164         }
+165  
+166         public String nextString() {
+167         	String ret = new String(nextDChar()).trim();
+168             return ret;
+169         }
+170  
+171         public char[] nextDChar() {
+172             int len = 0;
+173             len = reads(len, isSpace);
+174             char[] ret = new char[len + 1];
+175             for (int i=0; i < len; i++)		ret[i] = str[i];
+176             ret[len] = 0x00;
+177             return ret;
+178         }
+179  
+180         public char nextChar() {
+181             while (true) {
+182                 final int c = read();
+183                 if (!isSpace[c]) {
+184                     return (char) c;
+185                 }
+186             }
+187         }
+188  
+189         int reads(int len, boolean[] accept) {
+190             try {
+191                 while (true) {
+192                     final int c = read();
+193                     if (accept[c]) {
+194                         break;
+195                     }
+196                     if (str.length == len) {
+197                         char[] rep = new char[str.length * 3 / 2];
+198                         System.arraycopy(str, 0, rep, 0, str.length);
+199                         str = rep;
+200                     }
+201                     str[len++] = (char) c;
+202                 }
+203             } catch (MyInput.EndOfFileRuntimeException e) {
+204             }
+205             return len;
+206         }
+207  
+208         static class EndOfFileRuntimeException extends RuntimeException {
+209         }
+210     }
+211 }

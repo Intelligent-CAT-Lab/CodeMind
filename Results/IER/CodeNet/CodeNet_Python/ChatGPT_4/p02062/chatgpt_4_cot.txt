@@ -1,0 +1,24 @@
+<<<Analysis>>>
+The input string is `?&?|?&?|?&?`?`.
+
+1. The input string is converted into a list of characters, with spaces removed (though there are no spaces in the input).
+2. An empty string is appended to the list of tokens to signify the end of the input.
+3. The `parse_formula` function is called, which in turn calls `parse_or`.
+4. The `parse_or` function calls `parse_and` for the first segment `?&?`.
+5. The `parse_and` function calls `parse_term` for the first `?`, which returns [1, 1] and increments `cur` to 1.
+6. Since the next token is `&`, `parse_and` continues and calls `parse_term` for the next `?`, which also returns [1, 1] and increments `cur` to 3.
+7. The `parse_and` function now combines the results of the two terms: zero = min(1, 1 + 1) = 1, one = 1 + 1 = 2, and returns [1, 2].
+8. Back in `parse_or`, since the next token is `|`, it continues and calls `parse_or` for the next segment `?&?`.
+9. Steps 5-7 repeat for the next segment `?&?`, which also returns [1, 2].
+10. The `parse_or` function now combines the results of the two segments: zero = 1 + 1 = 2, one = min(2, 1 + 2) = 2, and returns [2, 2].
+11. Back in `parse_or`, since the next token is `|`, it continues and calls `parse_or` for the next segment `?&?`.
+12. Steps 5-7 repeat for the next segment `?&?`, which also returns [1, 2].
+13. The `parse_or` function now combines the results of the two segments: zero = 2 + 1 = 3, one = min(2, 2 + 2) = 2, and returns [3, 2].
+14. Back in `parse_or`, since the next token is `|`, it continues and calls `parse_or` for the last `?`.
+15. The `parse_term` function is called for the last `?`, which returns [1, 1] and increments `cur` to the end of the tokens.
+16. The `parse_or` function now combines the results of the two segments: zero = 3 + 1 = 4, one = min(2, 3 + 1) = 2, and returns [4, 2].
+17. The `ans` variable is set to [4, 2], and the output is printed as "4 2".
+
+<<<Output>>>
+4 2
+[END-OF-RESPONSE]

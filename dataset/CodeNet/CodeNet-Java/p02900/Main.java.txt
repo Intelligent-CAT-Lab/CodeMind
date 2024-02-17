@@ -1,0 +1,82 @@
+1 //package BeginnerContest142;
+2 
+3 import java.util.*;
+4 import java.io.*;
+5 
+6 public class Main {
+7     static long MODULO = (long)1e9+7;
+8 
+9     public static long gcd(long n, long m){
+10         if(m == 0) return n;
+11         return gcd(m, n % m);
+12     }
+13 
+14 
+15     public static HashSet<Long> factors(long n){ // returns a list of the prime factors of the number n
+16         HashSet<Long> fact = new HashSet<>();
+17         fact.add(1L);
+18         for(long i = 2; i*i <= n; i++){
+19             while(n % i == 0){
+20                 fact.add(i);
+21                 n/=i;
+22             }
+23         }
+24         if(n > 1)
+25             fact.add(n);
+26         return fact;
+27     }
+28     // can also use sieve of eratosthenes for precomputing prime
+29 
+30     public static void main(String[] args) throws IOException {
+31         FastReader sc = new FastReader();
+32         PrintWriter pw = new PrintWriter(System.out);
+33         long a = sc.nextLong();
+34         long b = sc.nextLong();
+35         pw.println(factors(gcd(a,b)).size());
+36         //pw.println(factors(gcd(a,b)));
+37         pw.close();
+38     }
+39 
+40     static class FastReader {
+41         BufferedReader br;
+42         StringTokenizer st;
+43 
+44         public FastReader() {
+45             br = new BufferedReader(new
+46                     InputStreamReader(System.in));
+47         }
+48 
+49         String next() {
+50             while (st == null || !st.hasMoreElements()) {
+51                 try {
+52                     st = new StringTokenizer(br.readLine());
+53                 } catch (IOException e) {
+54                     e.printStackTrace();
+55                 }
+56             }
+57             return st.nextToken();
+58         }
+59 
+60         int nextInt() {
+61             return Integer.parseInt(next());
+62         }
+63 
+64         long nextLong() {
+65             return Long.parseLong(next());
+66         }
+67 
+68         double nextDouble() {
+69             return Double.parseDouble(next());
+70         }
+71 
+72         String nextLine() {
+73             String str = "";
+74             try {
+75                 str = br.readLine();
+76             } catch (IOException e) {
+77                 e.printStackTrace();
+78             }
+79             return str;
+80         }
+81     }
+82 }

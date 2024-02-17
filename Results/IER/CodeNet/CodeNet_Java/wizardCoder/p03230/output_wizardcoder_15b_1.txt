@@ -1,0 +1,151 @@
+Below is an instruction that describes a task, paired with an input that
+provides further context.  Write a response that appropriately completes
+the request.
+
+### Instruction:
+Below is an example:
+[[[Example Start]]]
+I want to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the output of the code.
+Consider the following code:
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class Main {
+
+    public static void main(String[] args) {
+        try {
+            InputStreamReader isr = new InputStreamReader(System.in);
+            BufferedReader br = new BufferedReader(isr);
+            String strArr[] = br.readLine().split(" ");
+
+            int n = Integer.parseInt(strArr[0]);
+            int a = Integer.parseInt(strArr[1]);
+            int b = Integer.parseInt(strArr[2]);
+            int answer = 0;
+
+            for (int i = 1; i < n + 1; i++) {
+                int num = i;
+                int sum = 0;
+
+                while (num!= 0) {
+                        sum += num % 10;
+                        num /= 10;
+                }
+
+                if (sum >= a && sum <= b ) {
+                        answer = answer + i;
+                }
+            }
+            System.out.println(answer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+<<Question>>
+What would be the output of code executiion given the following input:
+20 2 5
+Only print the output of code execution and end your response with "END-OF-OUTPUT":
+<<Answer>>
+84
+END-OF-OUTPUT
+[[[Example End]]]
+
+
+Consider the following code: 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+	static int v = 0;
+	static List<List<Integer>> ansList = null;
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(br.readLine());
+		br.close();
+
+		if (n == 1) {
+			System.out.println("Yes");
+			System.out.println(2);
+			System.out.println("1 1");
+			System.out.println("1 1");
+			return;
+		}
+		if (n == 2) {
+			System.out.println("No");
+			return;
+		}
+
+		int k = 0;
+		for (int i = 3; i <= n; i++) {
+			int ic2 = i * (i - 1) / 2;
+			if (ic2 == n) {
+				k = i;
+				break;
+			} else if (ic2 > n) {
+				System.out.println("No");
+				return;
+			}
+		}
+		System.out.println("Yes");
+
+		ansList = new ArrayList<List<Integer>>(k);
+		int[] target = new int[k];
+		for (int i = 0; i < k; i++) {
+			ansList.add(new ArrayList<Integer>(k - 1));
+			target[i] = i;
+		}
+		combination(target, 2, new ArrayList<Integer>());
+
+		System.out.println(k);
+		for (int i = 0; i < k; i++) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(k - 1).append(' ');
+			List<Integer> list = ansList.get(i);
+			for (int j : list) {
+				sb.append(j).append(' ');
+			}
+			sb.deleteCharAt(sb.length() - 1);
+			System.out.println(sb.toString());
+		}
+	}
+
+	static void combination(int[] target, int k, List<Integer> list) {
+		if (list.size() == k) {
+			v++;
+			for (int i : list) {
+				ansList.get(i).add(v);
+			}
+			return;
+		}
+
+		int i = 0;
+		if (!list.isEmpty()) {
+			i = list.get(list.size() - 1) + 1;
+			if (list.size() + target.length - i < k) {
+				return;
+			}
+		}
+		for ( ; i < target.length; i++) {
+			list.add(i);
+			combination(target, k, list);
+			list.remove(list.size() - 1);
+		}
+	}
+}
+
+<<Question>>
+What would be the output of code executiion given the following input:
+3
+
+Only print the output of code execution and end your response with "END-OF-OUTPUT":\<<Answer>>
+### Response:
+Yes
+3
+1 2 3
+1 2 3
+END-OF-OUTPUT

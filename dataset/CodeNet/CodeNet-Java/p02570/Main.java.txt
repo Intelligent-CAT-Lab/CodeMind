@@ -1,0 +1,194 @@
+1 import java.util.*;
+2 import java.util.Map.Entry;
+3 
+4 import java.io.*;
+5 
+6 public class Main {
+7 	static int[] a;
+8 	static long[] memo;
+9 	static long[] cum;
+10 
+11 //	static long dp(int idx) {
+12 //		if (idx == a.length)
+13 //			return 0;
+14 //		if (memo[idx] != -1)
+15 //			return memo[idx];
+16 //		long ans = Long.MAX_VALUE / 2;
+17 //		if (idx != a.length - 1) {
+18 //			ans = Math.min(a[idx] + a[idx + 1] + cum[idx + 2] + dp(idx + 2), cum[idx + 1] + dp(idx + 1));
+19 //		} else {
+20 //			ans = cum[idx + 1] + dp(idx + 1);
+21 //		}
+22 //		return memo[idx] = ans;
+23 //	}
+24 
+25 	public static void main(String[] args) throws NumberFormatException, IOException {
+26 		// TODO Auto-generated method stub
+27 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+28 		PrintWriter pw = new PrintWriter(System.out);
+29 
+30 		StringTokenizer st = new StringTokenizer(br.readLine());
+31 		int d = Integer.parseInt(st.nextToken());
+32 		int t = Integer.parseInt(st.nextToken());
+33 		int s = Integer.parseInt(st.nextToken());
+34 		double ans=d*1.0/s;
+35 		if(ans<=t)
+36 			pw.println("Yes");
+37 		else
+38 			pw.println("No");
+39 
+40 		pw.flush();
+41 	}
+42 
+43 	/*
+44 	 * 4 6 2 3 4 4 5 7 5 5 15 40 30 10 10 3 1 5 4 8 2 6 1 1 2 9 3 2 1 6 5 2 6 4 3
+45 	 * 
+46 	 */
+47 	static class SegmentTree { // 1-based DS, OOP
+48 
+49 		int N; // the number of elements in the array as a power of 2 (i.e. after padding)
+50 		int[] array, sTree, lazy;
+51 
+52 		SegmentTree(int[] in) {
+53 			array = in;
+54 			N = in.length - 1;
+55 			sTree = new int[N << 1]; // no. of nodes = 2*N - 1, we add one to cross out index zero
+56 			lazy = new int[N << 1];
+57 			build(1, 1, N);
+58 		}
+59 
+60 		void build(int node, int b, int e) // O(n)
+61 		{
+62 			if (b == e)
+63 				sTree[node] = array[b];
+64 			else {
+65 				int mid = b + e >> 1;
+66 				build(node << 1, b, mid);
+67 				build(node << 1 | 1, mid + 1, e);
+68 				sTree[node] = sTree[node << 1] + sTree[node << 1 | 1];
+69 			}
+70 		}
+71 
+72 		void update_point(int index, int val) // O(log n)
+73 		{
+74 			index += N - 1;
+75 			sTree[index] += val;
+76 			while (index > 1) {
+77 				index >>= 1;
+78 				sTree[index] = sTree[index << 1] + sTree[index << 1 | 1];
+79 			}
+80 		}
+81 
+82 		void update_range(int i, int j, int val) // O(log n)
+83 		{
+84 			update_range(1, 1, N, i, j, val);
+85 		}
+86 
+87 		void update_range(int node, int b, int e, int i, int j, int val) {
+88 			if (i > e || j < b)
+89 				return;
+90 			if (b >= i && e <= j) {
+91 				sTree[node] += (e - b + 1) * val;
+92 				lazy[node] += val;
+93 			} else {
+94 				int mid = b + e >> 1;
+95 				propagate(node, b, mid, e);
+96 				update_range(node << 1, b, mid, i, j, val);
+97 				update_range(node << 1 | 1, mid + 1, e, i, j, val);
+98 				sTree[node] = sTree[node << 1] + sTree[node << 1 | 1];
+99 			}
+100 
+101 		}
+102 
+103 		void propagate(int node, int b, int mid, int e) {
+104 			lazy[node << 1] += lazy[node];
+105 			lazy[node << 1 | 1] += lazy[node];
+106 			sTree[node << 1] += (mid - b + 1) * lazy[node];
+107 			sTree[node << 1 | 1] += (e - mid) * lazy[node];
+108 			lazy[node] = 0;
+109 		}
+110 
+111 		int query(int i, int j) {
+112 			return query(1, 1, N, i, j);
+113 		}
+114 
+115 		int query(int node, int b, int e, int i, int j) // O(log n)
+116 		{
+117 			if (i > e || j < b)
+118 				return 0;
+119 			if (b >= i && e <= j)
+120 				return sTree[node];
+121 			int mid = b + e >> 1;
+122 			propagate(node, b, mid, e);
+123 			int q1 = query(node << 1, b, mid, i, j);
+124 			int q2 = query(node << 1 | 1, mid + 1, e, i, j);
+125 			return q1 + q2;
+126 
+127 		}
+128 
+129 	}
+130 
+131 	static long gcd(long a, long b) {
+132 		if (a == 0)
+133 			return b;
+134 		return gcd(b % a, a);
+135 	}
+136 
+137 	static int countD(int x) {
+138 		int c = 0;
+139 		while (x != 0) {
+140 			c += x % 10;
+141 			x /= 10;
+142 		}
+143 		return c;
+144 	}
+145 
+146 	static ArrayList<Integer> intersect(ArrayList<Integer> a, ArrayList<Integer> b) {
+147 		ArrayList<Integer> res = new ArrayList<>();
+148 		if (b.size() != 0) {
+149 			HashSet<Integer> hm = new HashSet<>();
+150 			for (int x : a)
+151 				hm.add(x);
+152 			for (int x : b)
+153 				if (hm.contains(x))
+154 					res.add(x);
+155 		}
+156 		return res;
+157 	}
+158 
+159 	static class pair implements Comparable<pair> {
+160 		int x;
+161 		int y;
+162 
+163 		public pair(int d, int u) {
+164 			x = d;
+165 			y = u;
+166 		}
+167 
+168 		@Override
+169 		public int compareTo(pair o) {
+170 			return x - o.x;
+171 		}
+172 
+173 	}
+174 
+175 	static class pair2 implements Comparable<pair2> {
+176 		int x;
+177 		int y;
+178 
+179 		public pair2(int d, int u) {
+180 			x = d;
+181 			y = u;
+182 		}
+183 
+184 		@Override
+185 		public int compareTo(pair2 o) {
+186 			// TODO Auto-generated method stub
+187 			int x1 = y - x;
+188 			int x2 = o.y - o.x;
+189 			return x1 - x2;
+190 		}
+191 
+192 	}
+193 
+194 }

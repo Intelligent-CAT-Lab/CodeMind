@@ -1,0 +1,82 @@
+1 import java.util.ArrayList;
+2 import java.util.Arrays;
+3 import java.util.Collections;
+4 import java.util.HashMap;
+5 import java.util.HashSet;
+6 import java.util.LinkedList;
+7 import java.util.Scanner;
+8  
+9 public class Main {
+10 	
+11     public static void main(String[] args){
+12         Scanner sc = new Scanner(System.in);
+13         
+14         final int N = sc.nextInt();
+15         
+16         int[] heights = new int[N];
+17         for(int i = 0; i < N; i++){
+18         	heights[i] = sc.nextInt();
+19         }
+20         
+21         ArrayList<Integer> signed = new ArrayList<Integer>();
+22         int prev = Integer.MIN_VALUE;
+23         for(int i = 0; i < N - 1; i++){
+24         	final int next_diff = heights[i + 1] - heights[i];
+25         	final int next_sign = next_diff == 0 ? 0 : next_diff / Math.abs(next_diff);
+26         	
+27         	if(i == 0){
+28         		prev = next_sign;
+29         		continue;
+30         	}
+31         	
+32         	if(prev != next_sign){
+33         		signed.add(prev);
+34         		prev = next_sign;
+35         	}
+36         }
+37         if(prev != Integer.MIN_VALUE){
+38         	signed.add(prev);
+39         }
+40         //System.out.println(signed);
+41         
+42         int[] counts = new int[5];
+43         
+44         for(int i = 1; i < signed.size() - 1; i++){
+45         	final int prev_sign = signed.get(i - 1);
+46         	final int curr_sign = signed.get(i);
+47         	final int next_sign = signed.get(i + 1);
+48         	
+49         	if(curr_sign == 0){
+50         		if(prev_sign == 1 && next_sign == -1){
+51         			counts[0]++;
+52         		}else if(prev_sign == -1 && next_sign == 1){
+53         			counts[1]++;
+54         		}else {
+55         			counts[2]++;
+56         		}
+57         	}
+58         }
+59         
+60         for(int i = 0; i < signed.size() - 1; i++){
+61         	final int curr_sign = signed.get(i);
+62         	final int next_sign = signed.get(i + 1);
+63         	
+64         	if(curr_sign != next_sign && curr_sign != 0 && next_sign != 0){
+65         		if(curr_sign > 0){
+66         			counts[3]++;
+67         		}else{
+68         			counts[4]++;
+69         		}
+70         	}
+71         }
+72         
+73         for(int i = 0; i < 5; i++){
+74         	if(i != 0){
+75         		System.out.print(" ");
+76         	}
+77         	System.out.print(counts[i]);
+78         }
+79         System.out.println();
+80     }
+81      
+82 } 

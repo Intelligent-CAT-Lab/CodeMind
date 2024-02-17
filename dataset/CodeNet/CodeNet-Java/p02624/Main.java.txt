@@ -1,0 +1,98 @@
+1 import java.util.*;
+2 import java.io.*;
+3 
+4 // Template for atcoder
+5 public class Main {
+6 
+7     BufferedReader br;
+8     PrintWriter out;
+9     StringTokenizer st;
+10     boolean eof;
+11     final long MOD = 1000L * 1000L * 1000L + 7;
+12     private static final int[] dx = {0, -1, 0, 1};
+13     private static final int[] dy = {1, 0, -1, 0};
+14 
+15     void solve() throws IOException {
+16         int LIMIT = 1000 * 10000 + 10;
+17         int[] div = new int[LIMIT];
+18         Arrays.fill(div, 1);
+19         for (int i = 2; i < LIMIT; i++) {
+20             for (int j = i; j < LIMIT; j += i) {
+21                 div[j]++;
+22             }
+23         }
+24 
+25         long res = 0;
+26         int n = nextInt();
+27         for (int i = 1; i <= n; i++) {
+28             res += 1L * i * div[i];
+29         }
+30         outln(res);
+31     }
+32 
+33     void shuffle(int[] a) {
+34         int n = a.length;
+35         for(int i = 0; i < n; i++) {
+36             int r = i + (int) (Math.random() * (n - i));
+37             int tmp = a[i];
+38             a[i] = a[r];
+39             a[r] = tmp;
+40         }
+41     }
+42     private void outln(Object o) {
+43         out.println(o);
+44     }
+45     private void out(Object o) {
+46         out.print(o);
+47     }
+48     public Main() throws IOException {
+49         br = new BufferedReader(new InputStreamReader(System.in));
+50         out = new PrintWriter(System.out);
+51         solve();
+52         out.close();
+53     }
+54     public static void main(String[] args) throws IOException {
+55         new Main();
+56     }
+57 
+58     public long[] nextLongArr(int n) throws IOException{
+59         long[] res = new long[n];
+60         for(int i = 0; i < n; i++)
+61             res[i] = nextLong();
+62         return res;
+63     }
+64     public int[] nextIntArr(int n) throws IOException {
+65         int[] res = new int[n];
+66         for(int i = 0; i < n; i++)
+67             res[i] = nextInt();
+68         return res;
+69     }
+70     public String nextToken() {
+71         while (st == null || !st.hasMoreTokens()) {
+72             try {
+73                 st = new StringTokenizer(br.readLine());
+74             } catch (Exception e) {
+75                 eof = true;
+76                 return null;
+77             }
+78         }
+79         return st.nextToken();
+80     }
+81     public String nextString() {
+82         try {
+83             return br.readLine();
+84         } catch (IOException e) {
+85             eof = true;
+86             return null;
+87         }
+88     }
+89     public int nextInt() throws IOException {
+90         return Integer.parseInt(nextToken());
+91     }
+92     public long nextLong() throws IOException {
+93         return Long.parseLong(nextToken());
+94     }
+95     public double nextDouble() throws IOException {
+96         return Double.parseDouble(nextToken());
+97     }
+98 }

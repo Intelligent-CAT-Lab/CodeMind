@@ -1,0 +1,138 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.PrintWriter;
+6 import java.io.BufferedWriter;
+7 import java.io.Writer;
+8 import java.io.OutputStreamWriter;
+9 import java.util.InputMismatchException;
+10 import java.io.IOException;
+11 import java.io.InputStream;
+12 
+13 /**
+14  * Built using CHelper plug-in
+15  * Actual solution is at the top
+16  *
+17  * @author prakharjain
+18  */
+19 public class Main {
+20     public static void main(String[] args) {
+21         InputStream inputStream = System.in;
+22         OutputStream outputStream = System.out;
+23         InputReader in = new InputReader(inputStream);
+24         OutputWriter out = new OutputWriter(outputStream);
+25         BAlgae solver = new BAlgae();
+26         solver.solve(1, in, out);
+27         out.close();
+28     }
+29 
+30     static class BAlgae {
+31         public void solve(int testNumber, InputReader in, OutputWriter out) {
+32             long r = in.nextInt();
+33 
+34 
+35             long d = in.nextInt();
+36 
+37             long x = in.nextInt();
+38 
+39             for (int i = 0; i < 10; i++) {
+40                 x = r * x - d;
+41 
+42                 out.println(x);
+43             }
+44         }
+45 
+46     }
+47 
+48     static class OutputWriter {
+49         private final PrintWriter writer;
+50 
+51         public OutputWriter(OutputStream outputStream) {
+52             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+53         }
+54 
+55         public OutputWriter(Writer writer) {
+56             this.writer = new PrintWriter(writer);
+57         }
+58 
+59         public void close() {
+60             writer.close();
+61         }
+62 
+63         public void println(long i) {
+64             writer.println(i);
+65         }
+66 
+67     }
+68 
+69     static class InputReader {
+70         private InputStream stream;
+71         private byte[] buf = new byte[1024];
+72         private int curChar;
+73         private int numChars;
+74         private InputReader.SpaceCharFilter filter;
+75 
+76         public InputReader(InputStream stream) {
+77             this.stream = stream;
+78         }
+79 
+80         public static boolean isWhitespace(int c) {
+81             return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+82         }
+83 
+84         public int read() {
+85             if (numChars == -1) {
+86                 throw new InputMismatchException();
+87             }
+88             if (curChar >= numChars) {
+89                 curChar = 0;
+90                 try {
+91                     numChars = stream.read(buf);
+92                 } catch (IOException e) {
+93                     throw new InputMismatchException();
+94                 }
+95                 if (numChars <= 0) {
+96                     return -1;
+97                 }
+98             }
+99             return buf[curChar++];
+100         }
+101 
+102         public int nextInt() {
+103             int c = read();
+104             while (isSpaceChar(c)) {
+105                 c = read();
+106             }
+107             int sgn = 1;
+108             if (c == '-') {
+109                 sgn = -1;
+110                 c = read();
+111             }
+112             int res = 0;
+113             do {
+114                 if (c < '0' || c > '9') {
+115                     throw new InputMismatchException();
+116                 }
+117                 res *= 10;
+118                 res += c - '0';
+119                 c = read();
+120             } while (!isSpaceChar(c));
+121             return res * sgn;
+122         }
+123 
+124         public boolean isSpaceChar(int c) {
+125             if (filter != null) {
+126                 return filter.isSpaceChar(c);
+127             }
+128             return isWhitespace(c);
+129         }
+130 
+131         public interface SpaceCharFilter {
+132             public boolean isSpaceChar(int ch);
+133 
+134         }
+135 
+136     }
+137 }
+138 

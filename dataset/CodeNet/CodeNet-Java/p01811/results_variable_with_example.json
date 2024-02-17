@@ -1,0 +1,79 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6    public static void main(String[] args) {\n7\t\t try {\n7\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nQuestion: What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the sataes and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN",
+        "predict": "20\nEND-OF-STATE"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.io.IOException;\n2 import java.io.InputStream;\n3 import java.io.OutputStream;\n4 import java.io.PrintWriter;\n5 import java.util.NoSuchElementException;\n6 \n7 /*\n8                    _ooOoo_\n9                   o8888888o\n10                   88\" . \"88\n11                   (| -_- |)\n12                   O\\  =  /O\n13                ____/`---'\\____\n14              .'  \\\\|     |//  `.\n15             /  \\\\|||  :  |||//  \\\n16            /  _||||| -:- |||||-  \\\n17            |   | \\\\\\  -  /// |   |\n18            | \\_|  ''\\---/''  |   |\n19            \\  .-\\__  `-`  ___/-. /\n20          ___`. .'  /--.--\\  `. . __\n21       .\"\" '<  `.___\\_<|>_/___.'  >'\"\".\n22      | | :  `- \\`.;`\\ _ /`;.`/ - ` : | |\n23      \\  \\ `-.   \\_ __\\ /__ _/   .-` /  /\n24 ======`-.____`-.___\\_____/___.-`____.-'======\n25                    `=---='\n26 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n27             pass System Test!\n28 */\n29 \n30 public class Main {\n31   private static class Task {\n32     void solve(FastScanner in, PrintWriter out) throws Exception {\n33       String S = in.next();\n34       while (S.length() > 3) {\n35         boolean abc = false;\n36         for (int i = 0; i + 3 <= S.length(); i++) {\n37           if (S.substring(i, i + 3).equals(\"ABC\")) {\n38             S = S.substring(0, i) + \"X\" + S.substring(i + 3);\n39             abc = true;\n40           }\n41         }\n42         if (!abc) {\n43           out.println(\"No\");\n44           return;\n45         }\n46 \n47         boolean[] check = new boolean[3];\n48         for (int i = 0; i < S.length(); i++) {\n49           if (S.charAt(i) - 'A' >= 3) continue;\n50           check[S.charAt(i) - 'A'] = true;\n51         }\n52         int cnt = 0;\n53         for (boolean t : check) if (t) cnt++;\n54         if (cnt != 2) {\n55           out.println(\"No\");\n56           return;\n57         }\n58         for (int i = 0; i < 3; i++) {\n59           if (!check[i]) {\n60             char c = (char) (i + 'A');\n61             S = S.replaceAll(\"X\", \"\" + c);\n62           }\n63         }\n64       }\n65 \n66       if (S.equals(\"ABC\")) {\n67         out.println(\"Yes\");\n68       } else {\n69         out.println(\"No\");\n70       }\n71     }\n72   }\n73 \n74   /**\n75    * ?????????????????????????????\u00ac????????\u00a7??????\n76    */\n77   public static void main(String[] args) throws Exception {\n78     OutputStream outputStream = System.out;\n79     FastScanner in = new FastScanner();\n80     PrintWriter out = new PrintWriter(outputStream);\n81     Task solver = new Task();\n82     solver.solve(in, out);\n83     out.close();\n84   }\n85   private static class FastScanner {\n86     private final InputStream in = System.in;\n87     private final byte[] buffer = new byte[1024];\n88     private int ptr = 0;\n89     private int bufferLength = 0;\n90 \n91     private boolean hasNextByte() {\n92       if (ptr < bufferLength) {\n93         return true;\n94       } else {\n95         ptr = 0;\n96         try {\n97           bufferLength = in.read(buffer);\n98         } catch (IOException e) {\n99           e.printStackTrace();\n100         }\n101         if (bufferLength <= 0) {\n102           return false;\n103         }\n104       }\n105       return true;\n106     }\n107 \n108     private int readByte() {\n109       if (hasNextByte()) return buffer[ptr++];\n110       else return -1;\n111     }\n112 \n113     private static boolean isPrintableChar(int c) {\n114       return 33 <= c && c <= 126;\n115     }\n116 \n117     private void skipUnprintable() {\n118       while (hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++;\n119     }\n120 \n121     boolean hasNext() {\n122       skipUnprintable();\n123       return hasNextByte();\n124     }\n125 \n126     public String next() {\n127       if (!hasNext()) throw new NoSuchElementException();\n128       StringBuilder sb = new StringBuilder();\n129       int b = readByte();\n130       while (isPrintableChar(b)) {\n131         sb.appendCodePoint(b);\n132         b = readByte();\n133       }\n134       return sb.toString();\n135     }\n136 \n137     long nextLong() {\n138       if (!hasNext()) throw new NoSuchElementException();\n139       long n = 0;\n140       boolean minus = false;\n141       int b = readByte();\n142       if (b == '-') {\n143         minus = true;\n144         b = readByte();\n145       }\n146       if (b < '0' || '9' < b) {\n147         throw new NumberFormatException();\n148       }\n149       while (true) {\n150         if ('0' <= b && b <= '9') {\n151           n *= 10;\n152           n += b - '0';\n153         } else if (b == -1 || !isPrintableChar(b)) {\n154           return minus ? -n : n;\n155         } else {\n156           throw new NumberFormatException();\n157         }\n158         b = readByte();\n159       }\n160     }\n161 \n162     double nextDouble() {\n163       return Double.parseDouble(next());\n164     }\n165 \n166     double[] nextDoubleArray(int n) {\n167       double[] array = new double[n];\n168       for (int i = 0; i < n; i++) {\n169         array[i] = nextDouble();\n170       }\n171       return array;\n172     }\n173 \n174     double[][] nextDoubleMap(int n, int m) {\n175       double[][] map = new double[n][];\n176       for (int i = 0; i < n; i++) {\n177         map[i] = nextDoubleArray(m);\n178       }\n179       return map;\n180     }\n181 \n182     public int nextInt() {\n183       return (int) nextLong();\n184     }\n185 \n186     public int[] nextIntArray(int n) {\n187       int[] array = new int[n];\n188       for (int i = 0; i < n; i++) array[i] = nextInt();\n189       return array;\n190     }\n191 \n192     public long[] nextLongArray(int n) {\n193       long[] array = new long[n];\n194       for (int i = 0; i < n; i++) array[i] = nextLong();\n195       return array;\n196     }\n197 \n198     public String[] nextStringArray(int n) {\n199       String[] array = new String[n];\n200       for (int i = 0; i < n; i++) array[i] = next();\n201       return array;\n202     }\n203 \n204     public char[][] nextCharMap(int n) {\n205       char[][] array = new char[n][];\n206       for (int i = 0; i < n; i++) array[i] = next().toCharArray();\n207       return array;\n208     }\n209 \n210     public int[][] nextIntMap(int n, int m) {\n211       int[][] map = new int[n][];\n212       for (int i = 0; i < n; i++) {\n213         map[i] = nextIntArray(m);\n214       }\n215       return map;\n216     }\n217   }\n218 }\nGiven the following input:\nABC\n\n\nQuestion:\n What would be the states of variable b in line 129? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "65"
+        ],
+        "variable": "b",
+        "line": "129",
+        "predict": "There is no variable named \"b\" in line 129."
+    },
+    "2": {
+        "prompt": "Question:\n What would be the states of variable b in line 130? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "65",
+            "66",
+            "67",
+            "10"
+        ],
+        "variable": "b",
+        "line": "130",
+        "predict": "There is no variable named \"b\" in line 130."
+    },
+    "3": {
+        "prompt": "Question:\n What would be the states of variable b in line 131? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "65",
+            "66",
+            "67"
+        ],
+        "variable": "b",
+        "line": "131",
+        "predict": "There is no variable named \"b\" in line 131."
+    },
+    "4": {
+        "prompt": "Question:\n What would be the states of variable b in line 132? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "66",
+            "67",
+            "10"
+        ],
+        "variable": "b",
+        "line": "132",
+        "predict": "There is no variable named \"b\" in line 132."
+    },
+    "5": {
+        "prompt": "Question:\n What would be the states of variable S in line 33? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "\"ABC\""
+        ],
+        "variable": "S",
+        "line": "33",
+        "predict": "ABC\nEND-OF-STATE"
+    },
+    "6": {
+        "prompt": "Question:\n What would be the states of variable S in line 34? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "\"ABC\""
+        ],
+        "variable": "S",
+        "line": "34",
+        "predict": "ABC\nEND-OF-STATE"
+    },
+    "7": {
+        "prompt": "Question:\n What would be the states of variable S in line 66? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "\"ABC\""
+        ],
+        "variable": "S",
+        "line": "66",
+        "predict": "ABC\nEND-OF-STATE"
+    }
+}

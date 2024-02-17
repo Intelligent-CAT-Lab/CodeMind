@@ -1,0 +1,290 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.PrintWriter;
+6 import java.io.PrintStream;
+7 import java.util.Arrays;
+8 import java.io.BufferedWriter;
+9 import java.util.InputMismatchException;
+10 import java.io.IOException;
+11 import java.io.File;
+12 import java.util.ArrayList;
+13 import java.util.HashSet;
+14 import java.io.Writer;
+15 import java.io.OutputStreamWriter;
+16 import java.io.BufferedReader;
+17 import java.io.FileReader;
+18 import java.io.InputStream;
+19 
+20 /**
+21  * Built using CHelper plug-in
+22  * Actual solution is at the top
+23  */
+24 public class Main {
+25     public static void main(String[] args) {
+26         InputStream inputStream = System.in;
+27         OutputStream outputStream = System.out;
+28         InputReader in = new InputReader(inputStream);
+29         OutputWriter out = new OutputWriter(outputStream);
+30         TaskF solver = new TaskF();
+31         solver.solve(1, in, out);
+32         out.close();
+33     }
+34 
+35     static class TaskF {
+36         int mod = 1000000007;
+37         public static int n;
+38         public int[][] comb;
+39         public long[][] dp;
+40         HashSet<TaskF.Point> pp;
+41 
+42         public void solve(int testNumber, InputReader in, OutputWriter out) {
+43             n = in.nextInt();
+44             ArrayList<TaskF.Point> ps = new ArrayList<>();
+45             for (int i = 0; i < n; i++) {
+46                 TaskF.Point p = new TaskF.Point();
+47                 p.coeff[i] = 1;
+48                 ps.add(p);
+49             }
+50             pp = new HashSet<>();
+51             comb = Utils.getComb(n + 10, mod);
+52 //        dfs(ps);
+53             dp = new long[n + 10][101];
+54             AUtils.deepFill(dp, -1);
+55             out.println((n * (dfs(n - 1, 0) + dfs(n - 1, 1))) % mod);
+56         }
+57 
+58         public long dfs(int left, int excess) {
+59             if (dp[left][excess] != -1) return dp[left][excess];
+60             if (left == 0) {
+61                 return excess == 0 ? 1 : 0;
+62             }
+63             long ret = 0;
+64             for (int pos = 0; pos <= left; pos++) {
+65                 for (int neg = 0; neg + pos <= left; neg++) {
+66                     if (pos + neg == 0) continue;
+67                     int take = pos + neg;
+68                     if (excess > take + 1) continue;
+69                     int t = Math.abs(excess + pos - neg);
+70                     if (t % 2 != 0) continue;
+71                     ret = (ret + dfs(left - pos - neg, t / 2) * comb[left][pos] % mod * comb[left - pos][neg]) % mod;
+72                 }
+73             }
+74             Debug.print(left, excess, ret);
+75             return dp[left][excess] = ret % mod;
+76         }
+77 
+78         static class Point {
+79             public int[] coeff;
+80 
+81             public Point() {
+82                 this.coeff = new int[n];
+83             }
+84 
+85 
+86             public boolean equals(Object o) {
+87                 if (this == o) return true;
+88                 if (o == null || getClass() != o.getClass()) return false;
+89 
+90                 TaskF.Point point = (TaskF.Point) o;
+91 
+92                 return Arrays.equals(coeff, point.coeff);
+93             }
+94 
+95 
+96             public int hashCode() {
+97                 return Arrays.hashCode(coeff);
+98             }
+99 
+100 
+101             public String toString() {
+102                 return "Point{" +
+103                         "coeff=" + Arrays.toString(coeff) +
+104                         '}';
+105             }
+106 
+107         }
+108 
+109     }
+110 
+111     static class OutputWriter {
+112         private final PrintWriter writer;
+113 
+114         public OutputWriter(OutputStream outputStream) {
+115             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+116         }
+117 
+118         public OutputWriter(Writer writer) {
+119             this.writer = new PrintWriter(writer);
+120         }
+121 
+122         public void close() {
+123             writer.close();
+124         }
+125 
+126         public void println(long i) {
+127             writer.println(i);
+128         }
+129 
+130     }
+131 
+132     static class Utils {
+133         public static int[][] getComb(int sz, int mod) {
+134             int[][] comb = new int[sz][sz];
+135             for (int i = 0; i < sz; i++) {
+136                 comb[i][0] = 1;
+137                 for (int j = 1; j <= i; j++) {
+138                     comb[i][j] = comb[i - 1][j] + comb[i - 1][j - 1];
+139                     if (comb[i][j] >= mod) comb[i][j] -= mod;
+140                 }
+141             }
+142             return comb;
+143         }
+144 
+145     }
+146 
+147     static class AUtils {
+148         public static void deepFill(long[][] x, long val) {
+149             for (long[] y : x) deepFill(y, val);
+150         }
+151 
+152         public static void deepFill(long[] x, long val) {
+153             Arrays.fill(x, val);
+154         }
+155 
+156     }
+157 
+158     static class InputReader {
+159         private InputStream stream;
+160         private byte[] buf = new byte[1 << 16];
+161         private int curChar;
+162         private int numChars;
+163 
+164         public InputReader(InputStream stream) {
+165             this.stream = stream;
+166         }
+167 
+168         public int read() {
+169             if (this.numChars == -1) {
+170                 throw new InputMismatchException();
+171             } else {
+172                 if (this.curChar >= this.numChars) {
+173                     this.curChar = 0;
+174 
+175                     try {
+176                         this.numChars = this.stream.read(this.buf);
+177                     } catch (IOException var2) {
+178                         throw new InputMismatchException();
+179                     }
+180 
+181                     if (this.numChars <= 0) {
+182                         return -1;
+183                     }
+184                 }
+185 
+186                 return this.buf[this.curChar++];
+187             }
+188         }
+189 
+190         public int nextInt() {
+191             int c;
+192             for (c = this.read(); isSpaceChar(c); c = this.read()) {
+193                 ;
+194             }
+195 
+196             byte sgn = 1;
+197             if (c == 45) {
+198                 sgn = -1;
+199                 c = this.read();
+200             }
+201 
+202             int res = 0;
+203 
+204             while (c >= 48 && c <= 57) {
+205                 res *= 10;
+206                 res += c - 48;
+207                 c = this.read();
+208                 if (isSpaceChar(c)) {
+209                     return res * sgn;
+210                 }
+211             }
+212 
+213             throw new InputMismatchException();
+214         }
+215 
+216         public static boolean isSpaceChar(int c) {
+217             return c == 32 || c == 10 || c == 13 || c == 9 || c == -1;
+218         }
+219 
+220     }
+221 
+222     static class Debug {
+223         public static boolean DEBUG;
+224 
+225         static {
+226             try {
+227                 DEBUG = System.getProperty("user.dir").contains("Dropbox");
+228             } catch (Exception e) {
+229                 DEBUG = false;
+230             }
+231         }
+232 
+233         private static ArrayList<String> getParams() {
+234             StackTraceElement[] t = Thread.currentThread().getStackTrace();
+235             StackTraceElement up = t[3];
+236 
+237             ArrayList<String> ret = new ArrayList<>();
+238             String qqq = up.toString();
+239             ret.add("." + up.getMethodName() + qqq.substring(qqq.indexOf("("), qqq.length()));
+240             try {
+241                 BufferedReader br = new BufferedReader(new FileReader(
+242                         new File("src/" + up.getClassName().replaceAll("\\.", "/") + ".java")));
+243                 int g = up.getLineNumber();
+244                 while (--g > 0) br.readLine();
+245                 String q = br.readLine();
+246                 String[] ss = q.split("Debug\\.print\\(");
+247                 String[] qq = ss[1].substring(0, ss[1].lastIndexOf(")")).split(",");
+248                 for (int i = 0; i < qq.length; i++) {
+249                     ret.add(qq[i].trim());
+250                 }
+251             } catch (Exception e) {
+252             }
+253             for (int i = 0; i < 100; i++) ret.add("???");
+254             return ret;
+255         }
+256 
+257         private static String toString(Object o) {
+258             if (o == null) {
+259                 return "null";
+260             } else if (o instanceof Object[]) {
+261                 return Arrays.toString((Object[]) o);
+262             } else if (o instanceof char[]) {
+263                 return new String((char[]) o);
+264             } else if (o instanceof int[]) {
+265                 return Arrays.toString((int[]) o);
+266             } else if (o instanceof long[]) {
+267                 return Arrays.toString((long[]) o);
+268             } else if (o instanceof double[]) {
+269                 return Arrays.toString((double[]) o);
+270             } else if (o instanceof boolean[]) {
+271                 return Arrays.toString((boolean[]) o);
+272             } else {
+273                 return o.toString();
+274             }
+275         }
+276 
+277         public static void print(Object... x) {
+278             if (!DEBUG) return;
+279             ArrayList<String> s = getParams();
+280             System.out.print(s.get(0) + ": ");
+281             for (int i = 0; i < x.length; i++) {
+282                 System.out.print(s.get(i + 1) + " = " + toString(x[i]));
+283                 if (i != x.length - 1) System.out.print(", ");
+284             }
+285             System.out.println();
+286         }
+287 
+288     }
+289 }
+290 

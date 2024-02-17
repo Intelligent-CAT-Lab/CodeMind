@@ -1,0 +1,56 @@
+Print the answer and end your response with "END-OF-OUTPUT":
+The variable N is initialized to 2, and variable K is initialized to 2.
+The code first initializes a numpy array power with length N + 10, which is 12.
+The code then enters a loop that iterates from 1 to N + 10 (inclusive), meaning it will consider numbers from 1 to 12.
+For each number n in this range, it calculates the value of power[n] as follows:
+power[n] = power[n - 1] * (K + 1) % MOD
+The code then enters a loop that iterates from 1 to N (inclusive), meaning it will consider numbers from 1 to 2.
+For each number n in this range, it calculates the value of ret as follows:
+ret = K * (K + 1) // 2 * N * power[N - 1] % MOD
+The code then initializes a numpy array dp with length 1, which is 1.
+The code then enters a loop that iterates from N to 1 (inclusive), meaning it will consider numbers from 2 to 1.
+For each number n in this range, it initializes a new numpy array newdp with length len(dp) * (n + 1) // n + 1, which is 2.
+The code then enters a loop that iterates from K + 1 to K + 1 (inclusive), meaning it will consider numbers from 3 to 3.
+For each number k in this range, it enters a loop that iterates from len(dp) to len(dp) (inclusive), meaning it will consider numbers from 0 to 0.
+For each number t in this range, it calculates the value of x as follows:
+x = (k + t) // n
+The code then calculates the value of ret as follows:
+ret -= x * dp[t] % MOD * power[n - 1] % MOD
+The code then calculates the value of newdp[t + x] as follows:
+newdp[t + x] += dp[t]
+The code then updates dp to newdp.
+After the loop finishes, the code prints the final value of ret, which is 1.
+<<<Output>>>
+1
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import sys
+import numpy as np
+import numba
+from numba import njit
+i8 = numba.int64
+
+read = sys.stdin.buffer.read
+readline = sys.stdin.buffer.readline
+readlines = sys.stdin.buffer.readlines
+
+MOD = 1_000_000_007
+
+@njit((i8, i8), cache=True)
+def main(N, K):
+    power = np.zeros(N + 10, np.int64)
+    power[0] = 1
+    for n in range(1, N + 10):
+        power[n] = power[n - 1] * (K + 1) % MOD
+    ret = K * (K + 1) // 2 * N * power[N - 1] % MOD
+
+    dp = np.array([1], np.int64)
+    dp[0] = 1
+    for n in range(N, 0, -1):
+        newdp = np.zeros(len(dp) * (n + 1) // n + 1, np.int64)
+        for k in range(K + 1):

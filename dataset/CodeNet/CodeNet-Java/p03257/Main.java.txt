@@ -1,0 +1,79 @@
+1 
+2 
+3 import java.util.Scanner;
+4 
+5 public class Main {
+6 	public static void main(String[] args) {
+7 		Scanner sc = new Scanner(System.in);
+8 		int n = sc.nextInt();
+9 		if (n==2) {
+10 			System.out.println("4 7");
+11 			System.out.println("23 10");
+12 			return;
+13 		}
+14 		
+15 		int snt[] = new int[n * 2];
+16 
+17 		int cn = 0;
+18 		int x = 2;
+19 		while (cn < n * 2) {
+20 			if (isSNT(x)) {
+21 				snt[cn] = x;
+22 				cn++;
+23 			}
+24 			x++;
+25 		}
+26 
+27 		long[][] a = new long[n][n];
+28 		for (int i = 0; i < n; i++) {
+29 			for (int j = i % 2; j < n; j += 2) {
+30 				int a1 = (i + j) / 2;
+31 				int a2 = (j - i + n - 1) / 2 + n;
+32 				a[i][j] = snt[a1] * snt[a2];
+33 			}
+34 		}
+35 
+36 
+37 
+38 		int dx[] = { -1, 0, 1, 0 };
+39 		int dy[] = { 0, 1, 0, -1 };
+40 		for (int i = 0; i < n; i++) {
+41 			for (int j = (i + 1) % 2; j < n; j += 2) {
+42 				long gcd = 0;
+43 				long tich = 1;
+44 				for (int k = 0; k < 4; k++) {
+45 					if (i + dx[k] < 0 || i + dx[k] >= n)
+46 						continue;
+47 					if (j + dy[k] < 0 || j + dy[k] >= n)
+48 						continue;
+49 					if (gcd == 0) {
+50 						gcd = a[i + dx[k]][j + dy[k]];
+51 						tich = gcd;
+52 					} else {
+53 						gcd = gcd(tich, a[i + dx[k]][j + dy[k]]);
+54 						tich = tich / gcd * a[i + dx[k]][j + dy[k]];
+55 					}
+56 				}
+57 				a[i][j] = tich+1;
+58 
+59 			}
+60 		}
+61 		for (int i = 0; i < n; i++) {
+62 			for (int j = 0; j < n; j++) {
+63 				System.out.print(a[i][j] + " ");
+64 			}
+65 			System.out.println();
+66 		}
+67 	}
+68 
+69 	private static boolean isSNT(int x) {
+70 		for (int i = 2; i * i <= x; i++)
+71 			if (x % i == 0)
+72 				return false;
+73 		return true;
+74 	}
+75 
+76 	private static long gcd(long a, long b) {
+77 		return (b == 0) ? a : gcd(b, a % b);
+78 	}
+79 }

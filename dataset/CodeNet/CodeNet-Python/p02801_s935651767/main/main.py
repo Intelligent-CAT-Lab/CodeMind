@@ -1,0 +1,1 @@
+print((chr(ord(eval(input()))+1)))

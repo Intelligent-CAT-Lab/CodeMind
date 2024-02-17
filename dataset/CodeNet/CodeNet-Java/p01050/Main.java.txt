@@ -1,0 +1,65 @@
+1 
+2 import java.util.Scanner;
+3 
+4 public class Main {
+5 
+6 	public static void main(String[] args) {
+7 		Scanner sc = new Scanner(System.in);
+8 
+9 		String s;
+10 		String sd = "abcdefghijklmnopqrstuvwxyz";
+11 		String sdnum = "0123456789";
+12 		s = sc.next();
+13 		int count[];
+14 		int countnum[];
+15 		count = new int[26];
+16 		countnum = new int[10];
+17 
+18 		for (int i = 0; i < s.length(); ++i) {
+19 			if (s.charAt(i) >= '0' && s.charAt(i) <= '9') {
+20 				++countnum[s.charAt(i) - '0'];
+21 			}
+22 			if (s.charAt(i) >= 'a' && s.charAt(i) <= 'z') {
+23 				++count[s.charAt(i) - 'a'];
+24 			}
+25 		}
+26 
+27 		int ans = 0;
+28 		for (int i = 26; i >= 3; --i) {
+29 			for (int j = 0; j <= 26 - i; ++j) {
+30 				int tmp = 10000;
+31 				for (int k = j; k < j + i; ++k) {
+32 					tmp = Math.min(tmp, count[k]);
+33 				}
+34 				ans += tmp * 3;
+35 				for (int k = j; k < j + i; ++k) {
+36 					count[k] -= tmp;
+37 				}
+38 			}
+39 		}
+40 		for (int i = 0; i < 26; ++i) {
+41 			ans += count[i];
+42 		}
+43 
+44 		for (int i = 10; i >= 3; --i) {
+45 			for (int j = 0; j <= 10 - i; ++j) {
+46 				int tmp = 10000;
+47 				for (int k = j; k < j + i; ++k) {
+48 					tmp = Math.min(tmp, countnum[k]);
+49 				}
+50 				ans += tmp * 3;
+51 				for (int k = j; k < j + i; ++k) {
+52 					countnum[k] -= tmp;
+53 				}
+54 			}
+55 		}
+56 		for (int i = 0; i < 10; ++i) {
+57 			ans += countnum[i];
+58 		}
+59 
+60 		System.out.println(ans);
+61 		sc.close();
+62 	}
+63 
+64 }
+65 

@@ -1,0 +1,903 @@
+1 import java.util.*;
+2 import java.io.*;
+3 import java.math.*;
+4 public class Main {
+5 	static boolean DEBUG;
+6 	public static void main(String[] args) {
+7 		DEBUG = args.length > 0 && args[0].equals("-DEBUG");
+8 		Solver solver = new Solver();
+9 		solver.solve();
+10 		solver.exit();
+11 	}
+12 
+13 	static class FastScanner {
+14 		private final InputStream in = System.in;
+15 		private final byte[] buffer = new byte[1024];
+16 		private int ptr = 0;
+17 		private int buflen = 0;
+18 		private boolean hasNextByte() {
+19 			if(ptr < buflen) {
+20 				return true;
+21 			}else{
+22 				ptr = 0;
+23 				try {
+24 					buflen = in.read(buffer);
+25 				} catch (IOException e) {
+26 					e.printStackTrace();
+27 				}
+28 				if(buflen <= 0) {
+29 					return false;
+30 				}
+31 			}
+32 			return true;
+33 		}
+34 		private int readByte() { if(hasNextByte()) return buffer[ptr++]; else return -1;}
+35 		private boolean isPrintableChar(int c) { return 33 <= c && c <= 126;}
+36 		private void skipUnprintable() { while(hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++;}
+37 		public boolean hasNext() { skipUnprintable(); return hasNextByte();}
+38 		public String next() {
+39 			if(!hasNext()) throw new NoSuchElementException();
+40 			StringBuilder sb = new StringBuilder();
+41 			int b = readByte();
+42 			while(isPrintableChar(b)) {
+43 				sb.appendCodePoint(b);
+44 				b = readByte();
+45 			}
+46 			return sb.toString();
+47 		}
+48 		public long nextLong() {
+49 			if(!hasNext()) throw new NoSuchElementException();
+50 			long n = 0;
+51 			boolean minus = false;
+52 			int b = readByte();
+53 			if(b == '-') {
+54 				minus = true;
+55 				b = readByte();
+56 			}
+57 			if(b < '0' || '9' < b) {
+58 				throw new NumberFormatException();
+59 			}
+60 			while(true){
+61 				if('0' <= b && b <= '9') {
+62 					n *= 10;
+63 					n += b - '0';
+64 				}else if(b == -1 || !isPrintableChar(b)){
+65 					return minus ? -n : n;
+66 				}else{
+67 					throw new NumberFormatException();
+68 				}
+69 				b = readByte();
+70 			}
+71 		}
+72 	}
+73 
+74 	static class Solver {
+75 		FastScanner sc = new FastScanner();
+76 		public Solver() { }
+77 
+78 		String ns() { return sc.next(); }
+79 		String[] ns(int n) {
+80 			String a[] = new String[n];
+81 			for(int i = 0; i < n; i ++) { a[i] = ns(); }
+82 			return a;
+83 		}
+84 		String[][] ns(int n, int m) {
+85 			String a[][] = new String[n][m];
+86 			for(int i = 0; i < n; i ++) { a[i] = ns(m); }
+87 			return a;
+88 		}
+89 		char[] nc(int n) {
+90 			String str = ns();
+91 			char a[] = new char[max(n, str.length())];
+92 			for(int i = 0; i < str.length(); i ++) { a[i] = str.charAt(i); }
+93 			return a;
+94 		}
+95 		char[][] nc(int n, int m) {
+96 			char a[][] = new char[n][m];
+97 			for(int i = 0; i < n; i ++) { a[i] = nc(m); }
+98 			return a;
+99 		}
+100 		boolean[] nb(int n, char t) {
+101 			char c[] = nc(-1);
+102 			if(n < 0) n = c.length;
+103 			boolean a[] = new boolean[n];
+104 			for(int i = 0; i < n; i ++) { a[i] = c[i] == t; }
+105 			return a;
+106 		}
+107 		boolean[][] nb(int n, int m, char t) {
+108 			boolean a[][] = new boolean[n][m];
+109 			for(int i = 0; i < n; i ++) { a[i] = nb(m, t); }
+110 			return a;
+111 		}
+112 		int ni() { return (int)sc.nextLong(); }
+113 		int[] ni(int n) {
+114 			int a[] = new int[n];
+115 			for(int i = 0; i < n; i ++) { a[i] = ni(); }
+116 			return a;
+117 		}
+118 		int[][] ni(int n, int m) {
+119 			int a[][] = new int[n][m];
+120 			for(int i = 0; i < n; i ++) { a[i] = ni(m); }
+121 			return a;
+122 		}
+123 		long nl() { return sc.nextLong(); }
+124 		long[] nl(int n) {
+125 			long a[] = new long[n];
+126 			for(int i = 0; i < n; i ++) { a[i] = nl(); }
+127 			return a;
+128 		}
+129 		long[][] nl(int n, int m) {
+130 			long a[][] = new long[n][m];
+131 			for(int i = 0; i < n; i ++) { a[i] = nl(m); }
+132 			return a;
+133 		}
+134 		double nd() { return Double.parseDouble(sc.next()); }
+135 		double[] nd(int n) {
+136 			double a[] = new double[n];
+137 			for(int i = 0; i < n; i ++) { a[i] = nd(); }
+138 			return a;
+139 		}
+140 		double[][] nd(int n, int m) {
+141 			double a[][] = new double[n][m];
+142 			for(int i = 0; i < n; i ++) { a[i] = nd(m); }
+143 			return a;
+144 		}
+145 
+146 		PrintWriter out = new PrintWriter(System.out);
+147 		PrintWriter err = new PrintWriter(System.err);
+148 		void prt() { out.print(""); }
+149 		<T> void prt(T a) { out.print(a); }
+150 		void prtln() { out.println(""); }
+151 		<T> void prtln(T a) { out.println(a); }
+152 		void prtln(int... a) {
+153 			StringBuilder sb = new StringBuilder();
+154 			for(int element : a){ sb.append(element+" "); }
+155 			prtln(sb.toString().trim());
+156 		}
+157 		void prtln(long... a) {
+158 			StringBuilder sb = new StringBuilder();
+159 			for(long element : a){ sb.append(element+" "); }
+160 			prtln(sb.toString().trim());
+161 		}
+162 		void prtln(double... a) {
+163 			StringBuilder sb = new StringBuilder();
+164 			for(double element : a){ sb.append(element+" "); }
+165 			prtln(sb.toString().trim());
+166 		}
+167 		void prtln(String... a) {
+168 			StringBuilder sb = new StringBuilder();
+169 			for(String element : a){ sb.append(element+" "); }
+170 			prtln(sb.toString().trim());
+171 		}
+172 		void prtln(char... a) {
+173 			StringBuilder sb = new StringBuilder();
+174 			for(char element : a){ sb.append(element); }
+175 			prtln(sb.toString().trim());
+176 		}
+177 		void prtln(int[][] a) { for(int[] element : a){ prtln(element); } }
+178 		void prtln(long[][] a) { for(long[] element : a){ prtln(element); } }
+179 		void prtln(double[][] a) { for(double[] element : a){ prtln(element); } }
+180 		void prtln(String[][] a) { for(String[] element : a){ prtln(element); } }
+181 		void prtln(char[][] a) { for(char[] element : a){ prtln(element); } }
+182 		String errconvert(int a) { return isINF(a) ? "_" : String.valueOf(a); }
+183 		String errconvert(long a) { return isINF(a) ? "_" : String.valueOf(a); }
+184 		void errprt(int a) { if(DEBUG) { err.print(errconvert(a)); } }
+185 		void errprt(long a) { if(DEBUG) { err.print(errconvert(a)); } }
+186 		void errprt() { if(DEBUG) { err.print(""); } }
+187 		<T> void errprt(T a) { if(DEBUG) { err.print(a); } }
+188 		void errprt(boolean a) { if(DEBUG) { errprt(a ? "#" : "."); } }
+189 		void errprtln() { if(DEBUG) { err.println(""); } }
+190 		void errprtln(int a) { if(DEBUG) { err.println(errconvert(a)); } }
+191 		void errprtln(long a) { if(DEBUG) { err.println(errconvert(a)); } }
+192 		<T> void errprtln(T a) { if(DEBUG) { err.println(a); } }
+193 		void errprtln(boolean a) { if(DEBUG) { errprtln(a ? "#" : "."); } }
+194 		void errprtln(int... a) {
+195 			if(DEBUG) {
+196 				StringBuilder sb = new StringBuilder();
+197 				for(int element : a){ sb.append(errconvert(element)+" "); }
+198 				errprtln(sb.toString().trim());
+199 			}
+200 		}
+201 		void errprtln(long... a) {
+202 			if(DEBUG) {
+203 				StringBuilder sb = new StringBuilder();
+204 				for(long element : a){ sb.append(errconvert(element)+" "); }
+205 				errprtln(sb.toString().trim());
+206 			}
+207 		}
+208 		void errprtln(double... a) {
+209 			if(DEBUG) {
+210 				StringBuilder sb = new StringBuilder();
+211 				for(double element : a){ sb.append(element+" "); }
+212 				errprtln(sb.toString().trim());
+213 			}
+214 		}
+215 		void errprtln(String... a) {
+216 			if(DEBUG) {
+217 				StringBuilder sb = new StringBuilder();
+218 				for(String element : a){ sb.append(element+" "); }
+219 				errprtln(sb.toString().trim());
+220 			}
+221 		}
+222 		void errprtln(char... a) {
+223 			if(DEBUG) {
+224 				StringBuilder sb = new StringBuilder();
+225 				for(char element : a){ sb.append(element); }
+226 				errprtln(sb.toString().trim());
+227 			}
+228 		}
+229 		void errprtln(boolean... a) {
+230 			if(DEBUG) {
+231 				StringBuilder sb = new StringBuilder();
+232 				for(boolean element : a){ sb.append((element ? "#" : ".")+" "); }
+233 				errprtln(sb.toString().trim());
+234 			}
+235 		}
+236 		void errprtln(int[][] a) { if(DEBUG) { for(int[] element : a){ errprtln(element); } } }
+237 		void errprtln(long[][] a) { if(DEBUG) { for(long[] element : a){ errprtln(element); } } }
+238 		void errprtln(double[][] a) { if(DEBUG) { for(double[] element : a){ errprtln(element); } } }
+239 		void errprtln(String[][] a) { if(DEBUG) { for(String[] element : a){ errprtln(element); } } }
+240 		void errprtln(char[][] a) { if(DEBUG) { for(char[] element : a){ errprtln(element); } } }
+241 		void errprtln(boolean[][] a) { if(DEBUG) { for(boolean[] element : a){ errprtln(element); } } }
+242 
+243 		void reply(boolean b) { prtln(b ? "Yes" : "No"); }
+244 		void REPLY(boolean b) { prtln(b ? "YES" : "NO"); }
+245 
+246 		void flush() { out.flush(); if(DEBUG) { err.flush(); } }
+247 		void exit() { flush(); System.exit(0); }
+248 		void assertion(boolean b) { if(!b) throw new AssertionError(); }
+249 
+250 		int min(int a, int b) { return Math.min(a, b); }
+251 		long min(long a, long b) { return Math.min(a, b); }
+252 		double min(double a, double b) { return Math.min(a, b); }
+253 		int min(int... x) {
+254 			int min = x[0];
+255 			for(int val : x) { min = min(min, val); }
+256 			return min;
+257 		}
+258 		long min(long... x) {
+259 			long min = x[0];
+260 			for(long val : x) { min = min(min, val); }
+261 			return min;
+262 		}
+263 		double min(double... x) {
+264 			double min = x[0];
+265 			for(double val : x) { min = min(min, val); }
+266 			return min;
+267 		}
+268 		int max(int a, int b) { return Math.max(a, b); }
+269 		long max(long a, long b) { return Math.max(a, b); }
+270 		double max(double a, double b) { return Math.max(a, b); }
+271 		int max(int... x) {
+272 			int max = x[0];
+273 			for(int val : x) { max = max(max, val); }
+274 			return max;
+275 		}
+276 		long max(long... x) {
+277 			long max = x[0];
+278 			for(long val : x) { max = max(max, val); }
+279 			return max;
+280 		}
+281 		double max(double... x) {
+282 			double max = x[0];
+283 			for(double val : x) { max = max(max, val); }
+284 			return max;
+285 		}
+286 		long sum(int... a) {
+287 			long sum = 0;
+288 			for(int element : a) { sum += element; }
+289 			return sum;
+290 		}
+291 		long sum(long... a) {
+292 			long sum = 0;
+293 			for(long element : a) { sum += element; }
+294 			return sum;
+295 		}
+296 		double sum(double... a) {
+297 			double sum = 0;
+298 			for(double element : a) { sum += element; }
+299 			return sum;
+300 		}
+301 		long[] sums(int[] a) {
+302 			long sum[] = new long[a.length + 1];
+303 			sum[0] = 0;
+304 			for(int i = 0; i < a.length; i ++) { sum[i + 1] = sum[i] + a[i]; }
+305 			return sum;
+306 		}
+307 		long[] sums(long[] a) {
+308 			long sum[] = new long[a.length + 1];
+309 			sum[0] = 0;
+310 			for(int i = 0; i < a.length; i ++) { sum[i + 1] = sum[i] + a[i]; }
+311 			return sum;
+312 		}
+313 		double[] sums(double[] a) {
+314 			double sum[] = new double[a.length + 1];
+315 			sum[0] = 0;
+316 			for(int i = 0; i < a.length; i ++) { sum[i + 1] = sum[i] + a[i]; }
+317 			return sum;
+318 		}
+319 
+320 		int abs(int x) { return x >= 0 ? x : - x; }
+321 		long abs(long x) { return x >= 0 ? x : - x; }
+322 		double abs(double x) { return x >= 0 ? x : - x; }
+323 		int signum(int x) { return x > 0 ? 1 : x < 0 ? -1 : 0; }
+324 		int signum(long x) { return x > 0 ? 1 : x < 0 ? -1 : 0; }
+325 		int signum(double x) { return x > 0 ? 1 : x < 0 ? -1 : 0; }
+326 		long round(double x) { return Math.round(x); }
+327 		long floor(double x) { return (long)Math.floor(x); }
+328 		int divfloor(int a, int b) { return signum(a) == signum(b) ? a / b : - divceil(abs(a), abs(b)); }
+329 		long divfloor(long a, long b) { return signum(a) == signum(b) ? a / b : - divceil(abs(a), abs(b)); }
+330 		long ceil(double x) { return (long)Math.ceil(x); }
+331 		int divceil(int a, int b) { return a >= 0 && b > 0 ? (a + b - 1) / b
+332 											: a < 0 && b < 0 ? divceil(abs(a), abs(b))
+333 											: - divfloor(abs(a), abs(b)); }
+334 		long divceil(long a, long b) { return a >= 0 && b > 0 ? (a + b - 1) / b
+335 											: a < 0 && b < 0 ? divceil(abs(a), abs(b))
+336 											: - divfloor(abs(a), abs(b)); }
+337 		double sqrt(int x) { return Math.sqrt((double)x); }
+338 		double sqrt(long x) { return Math.sqrt((double)x); }
+339 		double sqrt(double x) { return Math.sqrt(x); }
+340 		double pow(double x, double y) { return Math.pow(x, y); }
+341 		long pow(long x, long y) {
+342 			if(y == 0) { return 1;
+343 			}else {
+344 				long tmp = pow(x, y / 2);
+345 				return tmp * tmp * (y % 2 == 0 ? 1 : x);
+346 			}
+347 		}
+348 		int gcd(int a, int b) { return b == 0 ? a : gcd(b, a % b); }
+349 		long gcd(long a, long b) { return b == 0 ? a : gcd(b, a % b); }
+350 		long lcm(long a, long b) { return a / gcd(a, b) * b; }
+351 		int gcd(int[] array) {
+352 			int gcd = 0;
+353 			for(int i = 0; i < array.length; i ++) { gcd = gcd(gcd, array[i]); }
+354 			return gcd;
+355 		}
+356 		long gcd(long[] array) {
+357 			long gcd = 0;
+358 			for(int i = 0; i < array.length; i ++) { gcd = gcd(gcd, array[i]); }
+359 			return gcd;
+360 		}
+361 
+362 		int upperToInt(char a) { return a - 'A'; }
+363 		int lowerToInt(char a) { return a - 'a'; }
+364 		int numToInt(char a) { return a - '0'; }
+365 		int charToInt(char a) { return a >= 'a' ? lowerToInt(a) : a >= 'A' ? upperToInt(a) : numToInt(a); }
+366 		char intToUpper(int a) { return (char)(a + 'A'); }
+367 		char intToLower(int a) { return (char)(a + 'a'); }
+368 		char intToNum(int a) { return (char)(a + '0'); }
+369 		int[] charToInt(char[] a) {
+370 			int array[] = new int[a.length];
+371 			for(int i = 0; i < a.length; i ++) { array[i] = charToInt(a[i]); }
+372 			return array;
+373 		}
+374 
+375 		long[] div(long a) {
+376 			List<Long> divList = new ArrayList<Long>();
+377 			for(long i = 1; i * i <= a; i ++) {
+378 				if(a % i == 0) {
+379 					divList.add(i);
+380 					if(i * i != a) { divList.add(a / i); };
+381 				}
+382 			}
+383 
+384 			long div[] = new long[divList.size()];
+385 			for(int i = 0; i < divList.size(); i ++) { div[i] = divList.get(i); }
+386 			return div;
+387 		}
+388 
+389 		long[][] factor(long a) {
+390 			List<Long> factorList = new ArrayList<Long>();
+391 			List<Long> degreeList = new ArrayList<Long>();
+392 			for(long i = 2; i * i <= a; i ++) {
+393 				if(a % i == 0) {
+394 					long count = 0;
+395 					while(a % i == 0) {
+396 						a /= i;
+397 						count ++;
+398 					}
+399 					factorList.add(i);
+400 					degreeList.add(count);
+401 				}
+402 			}
+403 			if(a > 1) {
+404 				factorList.add(a);
+405 				degreeList.add(1L);
+406 			}
+407 			long factor[][] = new long[factorList.size()][2];
+408 			for(int i = 0; i < factorList.size(); i ++) {
+409 				factor[i][0] = factorList.get(i);
+410 				factor[i][1] = degreeList.get(i);
+411 			}
+412 			Arrays.sort(factor, (sort1, sort2) -> Long.compare(sort1[0], sort2[0]));
+413 			return factor;
+414 		}
+415 
+416 		boolean isPrime(long x) {
+417 			boolean ok = x > 1;
+418 			for(long i = 2; i * i <= x; i ++) {
+419 				ok &= x % i != 0;
+420 				if(!ok) return ok;
+421 			}
+422 			return ok;
+423 		}
+424 		boolean[] prime(int num) {
+425 			boolean prime[] = new boolean[num];
+426 			fill(prime, true);
+427 			prime[0] = false;
+428 			prime[1] = false;
+429 			for(int i = 2; i < num; i ++) {
+430 				if(prime[i]) {
+431 					for(int j = 2; i * j < num; j ++) {
+432 						prime[i * j] = false;
+433 					}
+434 				}
+435 			}
+436 			return prime;
+437 		}
+438 
+439 		long[][] countElements(long[] a, boolean sort) {
+440 			int len = a.length;
+441 			long array[] = new long[len];
+442 			for(int i = 0; i < len; i ++) {
+443 				array[i] = a[i];
+444 			}
+445 			if(sort) { Arrays.sort(array); }
+446 			List<Long> elem = new ArrayList<Long>();
+447 			List<Long> cnt = new ArrayList<Long>();
+448 			long tmp = 1;
+449 			for(int i = 1; i <= len; i ++) {
+450 				if(i == len || array[i] != array[i - 1]) {
+451 					elem.add(array[i - 1]);
+452 					cnt.add(tmp);
+453 					tmp = 1;
+454 				}else {
+455 					tmp ++;
+456 				}
+457 			}
+458 			long counts[][] = new long[elem.size()][2];
+459 			for(int i = 0; i < elem.size(); i ++) {
+460 				counts[i][0] = elem.get(i);
+461 				counts[i][1] = cnt.get(i);
+462 			}
+463 			return counts;
+464 		}
+465 		long[][] countElements(String str, boolean sort) {
+466 			int len = str.length();
+467 			char array[] = str.toCharArray();
+468 			if(sort) { Arrays.sort(array); }
+469 			List<Long> elem = new ArrayList<Long>();
+470 			List<Long> cnt = new ArrayList<Long>();
+471 			long tmp = 1;
+472 			for(int i = 1; i <= len; i ++) {
+473 				if(i == len || array[i] != array[i - 1]) {
+474 					elem.add((long)array[i - 1]);
+475 					cnt.add(tmp);
+476 					tmp = 1;
+477 				}else {
+478 					tmp ++;
+479 				}
+480 			}
+481 			long counts[][] = new long[elem.size()][2];
+482 			for(int i = 0; i < elem.size(); i ++) {
+483 				counts[i][0] = elem.get(i);
+484 				counts[i][1] = cnt.get(i);
+485 			}
+486 			return counts;
+487 		}
+488 
+489 		int[] baseConvert(long x, int n) {
+490 			long tmp = x;
+491 			int len = 0;
+492 			while(tmp > 0) { tmp /= n; len ++; }
+493 			int digit[] = new int[len];
+494 			int i = 0;
+495 			tmp = x;
+496 			while(tmp > 0) { digit[i ++] = (int)(tmp % n); tmp /= n; }
+497 			return digit;
+498 		}
+499 		int[] baseConvert(int x, int n) {
+500 			int tmp = x;
+501 			int len = 0;
+502 			while(tmp > 0) { tmp /= n; len ++; }
+503 			int digit[] = new int[len];
+504 			int i = 0;
+505 			tmp = x;
+506 			while(tmp > 0) { digit[i ++] = (int)(tmp % n); tmp /= n; }
+507 			return digit;
+508 		}
+509 
+510 		int numDigits(long a) { return Long.toString(a).length(); }
+511 		long bitFlag(int a) { return 1L << (long)a; }
+512 		boolean isFlagged(long x, int a) { return (x & bitFlag(a)) != 0; }
+513 
+514 		long countString(String str, String a) { return (str.length() - str.replace(a, "").length()) / a.length(); }
+515 		long countStringAll(String str, String a) { return str.length() - str.replaceAll(a, "").length(); }
+516 
+517 		int lowerBound(long[] array, long key) {
+518 			return BS(array, key, true, true, true);
+519 		}
+520 		int lowerBound(long[] array, long key, int ng, int ok) {
+521 			return BS(array, key, true, true, true, ng, ok);
+522 		}
+523 		int upperBound(long[] array, long key) {
+524 			return BS(array, key, true, true, false);
+525 		}
+526 		int upperBound(long[] array, long key, int ng, int ok) {
+527 			return BS(array, key, true, true, false, ng, ok);
+528 		}
+529 		int cntBS(long[] array, long key, boolean ascending, boolean greater, boolean equals) {
+530 			return BS(array, key, ascending, greater, equals, true);
+531 		}
+532 		int cntBS(long[] array, long key, boolean ascending, boolean greater, boolean equals, int ng, int ok) {
+533 			return BS(array, key, ascending, greater, equals, true, ng, ok);
+534 		}
+535 		int BS(long[] array, long key, boolean ascending, boolean greater, boolean equals) {
+536 			return BS(array, key, ascending, greater, equals, false);
+537 		}
+538 		int BS(long[] array, long key, boolean ascending, boolean greater, boolean equals, int ng, int ok) {
+539 			return BS(array, key, ascending, greater, equals, false, ng, ok);
+540 		}
+541 		int BS(long[] array, long key, boolean ascending, boolean greater, boolean equals, boolean count) {
+542 			int ng = ascending ^ greater ? array.length : -1;
+543 			int ok = ascending ^ greater ? -1 : array.length;
+544 			return BS(array, key, ascending, greater, equals, count, ng, ok);
+545 		}
+546 		int BS(long[] array, long key, boolean ascending, boolean greater, boolean equals, boolean count, int ng, int ok) {
+547 			int index = binarySearch(array, key, greater, equals, ng, ok);
+548 			return count ? (int)abs(ok - index) : index;
+549 		}
+550 		int binarySearch(long[] array, long key, boolean greater, boolean equals, int ng, int ok) {
+551 			while (abs(ok - ng) > 1) {
+552 				int mid = (ok + ng) / 2;
+553 				if(isOKforBinarySearch(array, mid, key, greater, equals)) {
+554 					ok = mid;
+555 				}else {
+556 					ng = mid;
+557 				}
+558 			}
+559 			return ok;
+560 		}
+561 		boolean isOKforBinarySearch(long[] array, int index, long key, boolean greater, boolean equals) {
+562 			return (array[index] > key && greater)
+563 				|| (array[index] < key && !greater)
+564 				|| (array[index] == key && equals);
+565 		}
+566 
+567 		void reverse(String[] array) {
+568 			String reversed[] = new String[array.length];
+569 			for(int i = 0; i < array.length; i ++) { reversed[array.length - i - 1] = array[i]; }
+570 			for(int i = 0; i < array.length; i ++) { array[i] = reversed[i]; }
+571 		}
+572 		void reverse(int[] array) {
+573 			int reversed[] = new int[array.length];
+574 			for(int i = 0; i < array.length; i ++) { reversed[array.length - i - 1] = array[i]; }
+575 			for(int i = 0; i < array.length; i ++) { array[i] = reversed[i]; }
+576 		}
+577 		void reverse(long[] array) {
+578 			long reversed[] = new long[array.length];
+579 			for(int i = 0; i < array.length; i ++) { reversed[array.length - i - 1] = array[i]; }
+580 			for(int i = 0; i < array.length; i ++) { array[i] = reversed[i]; }
+581 		}
+582 		void reverse(double[] array) {
+583 			double reversed[] = new double[array.length];
+584 			for(int i = 0; i < array.length; i ++) { reversed[array.length - i - 1] = array[i]; }
+585 			for(int i = 0; i < array.length; i ++) { array[i] = reversed[i]; }
+586 		}
+587 		void reverse(boolean[] array) {
+588 			boolean reversed[] = new boolean[array.length];
+589 			for(int i = 0; i < array.length; i ++) { reversed[array.length - i - 1] = array[i]; }
+590 			for(int i = 0; i < array.length; i ++) { array[i] = reversed[i]; }
+591 		}
+592 		void reverse(Object[] array) {
+593 			Object reversed[] = new Object[array.length];
+594 			for(int i = 0; i < array.length; i ++) { reversed[array.length - i - 1] = array[i]; }
+595 			for(int i = 0; i < array.length; i ++) { array[i] = reversed[i]; }
+596 		}
+597 		void fill(int[] array, int x) { Arrays.fill(array, x); }
+598 		void fill(long[] array, long x) { Arrays.fill(array, x); }
+599 		void fill(double[] array, double x) { Arrays.fill(array, x); }
+600 		void fill(boolean[] array, boolean x) { Arrays.fill(array, x); }
+601 		void fill(int[][] array, int x) { for(int[] a : array) { fill(a, x); } }
+602 		void fill(long[][] array, long x) { for(long[] a : array) { fill(a, x); } }
+603 		void fill(double[][] array, double x) { for(double[] a : array) { fill(a, x); } }
+604 		void fill(boolean[][] array, boolean x) { for(boolean[] a : array) { fill(a, x); } }
+605 		void fill(int[][][] array, int x) { for(int[][] a : array) { fill(a, x); } }
+606 		void fill(long[][][] array, long x) { for(long[][] a : array) { fill(a, x); } }
+607 		void fill(double[][][] array, double x) { for(double[][] a : array) { fill(a, x); } }
+608 		void fill(boolean[][][] array, boolean x) { for(boolean[][] a : array) { fill(a, x); } }
+609 
+610 		void shuffleArray(int[] array){
+611 			int n = array.length;
+612 			Random rnd = new Random();
+613 			for(int i = 0; i < n; i ++){
+614 				int tmp = array[i];
+615 				int randomPos = i + rnd.nextInt(n - i);
+616 				array[i] = array[randomPos];
+617 				array[randomPos] = tmp;
+618 			}
+619 		}
+620 		void shuffleArray(long[] array){
+621 			int n = array.length;
+622 			Random rnd = new Random();
+623 			for(int i = 0; i < n; i ++){
+624 				long tmp = array[i];
+625 				int randomPos = i + rnd.nextInt(n - i);
+626 				array[i] = array[randomPos];
+627 				array[randomPos] = tmp;
+628 			}
+629 		}
+630 		void shuffleArray(double[] array){
+631 			int n = array.length;
+632 			Random rnd = new Random();
+633 			for(int i = 0; i < n; i ++){
+634 				double tmp = array[i];
+635 				int randomPos = i + rnd.nextInt(n - i);
+636 				array[i] = array[randomPos];
+637 				array[randomPos] = tmp;
+638 			}
+639 		}
+640 
+641 		void swap(int[] array, int i, int j) {
+642 			int tmp = array[i];
+643 			array[i] = array[j];
+644 			array[j] = tmp;
+645 		}
+646 		void swap(long[] array, int i, int j) {
+647 			long tmp = array[i];
+648 			array[i] = array[j];
+649 			array[j] = tmp;
+650 		}
+651 		void swap(double[] array, int i, int j) {
+652 			double tmp = array[i];
+653 			array[i] = array[j];
+654 			array[j] = tmp;
+655 		}
+656 
+657 		long INF = (long)1e18 + 7;
+658 		boolean isINF(long a) { return abs(a) > INF / 1000; }
+659 		boolean isPlusINF(long a) { return a > 0 && isINF(a); }
+660 		boolean isMinusINF(long a) { return isPlusINF(- a); }
+661 		int I_INF = (int)1e9 + 7;
+662 		boolean isINF(int a) { return abs(a) > I_INF / 1000; }
+663 		boolean isPlusINF(int a) { return a > 0 && isINF(a); }
+664 		boolean isMinusINF(int a) { return isPlusINF(- a); }
+665 
+666 
+667 		// mods
+668 		long MOD = (long)1e9 + 7; // 998244353;
+669 		public long mod(long i) { i %= MOD; return i + (i < 0 ? MOD : 0); }
+670 
+671 		long pow_m(long x, long y) {
+672 			if(y == 0) { return 1;
+673 			}else {
+674 				long tmp = pow_m(x, y / 2);
+675 				return mod(mod(tmp * tmp) * (y % 2 == 0 ? 1 : x));
+676 			}
+677 		}
+678 		long[] pows_m(long x, int max) {
+679 			long pow[] = new long[max + 1];
+680 			pow[0] = 1;
+681 			for(int i = 0; i < max; i ++) {
+682 				pow[i + 1] = mod(pow[i] * x);
+683 			}
+684 			return pow;
+685 		}
+686 
+687 		int MAX_INV_SIZE = 100_100;
+688 		HashMap<Long, Long> invMap = new HashMap<>();
+689 		long inv(long x) {
+690 			x = mod(x);
+691 			if(invMap.containsKey(x)) { return invMap.get(x); }
+692 			if(invMap.size() >= MAX_INV_SIZE) { return calInv(x); }
+693 			invMap.put(x, calInv(x));
+694 			return invMap.get(x);
+695 		}
+696 		long calInv(long x) { return pow_m(x, MOD - 2); }
+697 
+698 		int MAX_FACT = 5_000_100;
+699 		long fact[];
+700 		long invFact[];
+701 		boolean isFactPrepared = false;
+702 		HashMap<Integer, long[]> factMap;
+703 		void prepareFact() {
+704 			fact = new long[MAX_FACT];
+705 			Arrays.fill(fact, 0);
+706 			invFact = new long[MAX_FACT];
+707 			Arrays.fill(invFact, 0);
+708 			fact[0] = 1;
+709 			int maxIndex = min(MAX_FACT, (int)MOD);
+710 			for(int i = 1; i < maxIndex; i ++) { fact[i] = mod(fact[i - 1] * i); }
+711 			invFact[maxIndex - 1] = inv(fact[maxIndex - 1]);
+712 			for(int i = maxIndex - 1; i > 0; i --) { invFact[i - 1] = mod(invFact[i] * i); }
+713 
+714 			factMap = new HashMap<>();
+715 			isFactPrepared = true;
+716 		}
+717 
+718 		long P(int n, int r) {
+719 			if(!isFactPrepared) { prepareFact(); }
+720 			if(n < 0 || r < 0 || n < r) { return 0; }
+721 			if(n >= MAX_FACT) {
+722 				if(!factMap.containsKey(n)) {
+723 					long largeFact[] = new long[MAX_FACT];
+724 					factMap.put(n, largeFact);
+725 					fill(largeFact, -INF);
+726 					largeFact[0] = 1;
+727 				}
+728 				long largeFact[] = factMap.get(n);
+729 				int i = r;
+730 				while(isINF(largeFact[i])) { i --; }
+731 				for(; i < r; i ++) { largeFact[i + 1] = mod(largeFact[i] * (n - i)); }
+732 				return largeFact[r];
+733 			}
+734 			return mod(fact[n] * invFact[n - r]);
+735 		}
+736 		long C(int n, int r) {
+737 			if(!isFactPrepared) { prepareFact(); }
+738 			if(n < 0 || r < 0 || n < r) { return 0; }
+739 			return mod(P(n, r) * invFact[r]);
+740 		}
+741 		long H(int n, int r) { return C((n - 1) + r, r); }
+742 
+743 
+744 		// grid
+745 		class Grids {
+746 			int h;
+747 			int w;
+748 			Grid[][] gs;
+749 			Grids(int h, int w) {
+750 				this.h = h;
+751 				this.w = w;
+752 				gs = new Grid[h][w];
+753 				for(int i = 0; i < h; i ++) {
+754 					for(int j = 0; j < w; j ++) {
+755 						gs[i][j] = new Grid(i, j, h, w);
+756 					}
+757 				}
+758 			}
+759 
+760 			void init(boolean[][] b) {
+761 				for(int i = 0; i < h; i ++) {
+762 					for(int j = 0; j < w; j ++) {
+763 						gs[i][j].b = b[i][j];
+764 					}
+765 				}
+766 			}
+767 			void init(long[][] val) {
+768 				for(int i = 0; i < h; i ++) {
+769 					for(int j = 0; j < w; j ++) {
+770 						gs[i][j].val = val[i][j];
+771 					}
+772 				}
+773 			}
+774 
+775 			Grid get(int x, int y) { return isValid(x, y, h, w) ? gs[x][y] : null; }
+776 
+777 			int dx[] = {0, -1, 1, 0, 0, -1, 1, -1, 1};
+778 			int dy[] = {0, 0, 0, -1, 1, -1, -1, 1, 1};
+779 			Grid next(Grid g, int i) {
+780 				return isValid(g.x + dx[i], g.y + dy[i], g.h, g.w)
+781 					? gs[g.x + dx[i]][g.y + dy[i]]
+782 					: null;
+783 			}
+784 		}
+785 		class Grid implements Comparable<Grid> {
+786 			int x;
+787 			int y;
+788 			int h;
+789 			int w;
+790 			int i;
+791 			boolean b;
+792 			long val;
+793 
+794 			Grid() {  }
+795 			Grid(int x, int y, int h, int w) { init(x, y, h, w, false, 0); }
+796 			Grid(int x, int y, int h, int w, boolean b) { init(x, y, h, w, b, 0); }
+797 			Grid(int x, int y, int h, int w, long val) { init(x, y, h, w, false, val); }
+798 			Grid(int x, int y, int h, int w, boolean b, long val) { init(x, y, h, w, b, val); }
+799 
+800 			void init(int x, int y, int h, int w, boolean b, long val) {
+801 				this.x = x;
+802 				this.y = y;
+803 				this.h = h;
+804 				this.w = w;
+805 				this.b = b;
+806 				this.val = val;
+807 				i = x * w + y;
+808 			}
+809 
+810 			@Override
+811 			public int compareTo(Grid g) {
+812 				return Long.compare(this.val, g.val);
+813 			}
+814 		}
+815 
+816 		boolean isValid(int x, int y, int h, int w) {
+817 			return x >= 0 && x < h && y >= 0 && y < w;
+818 		}
+819 		boolean isValid(Grid g) {
+820 			return isValid(g.x, g.y, g.h, g.w);
+821 		}
+822 
+823 		// graph
+824 		class Graph {
+825 			int numNode;
+826 			int numEdge;
+827 			boolean directed;
+828 			Edge edges[];
+829 			Node nodes[];
+830 			Node reversedNodes[];
+831 
+832 			Graph(int numNode, int numEdge, boolean directed) {
+833 				this.numNode = numNode;
+834 				this.numEdge = numEdge;
+835 				this.directed = directed;
+836 				nodes = new Node[numNode];
+837 				reversedNodes = new Node[numNode];
+838 				for(int i = 0; i < numNode; i ++) {
+839 					nodes[i] = new Node(i);
+840 					reversedNodes[i] = new Node(i);
+841 				}
+842 			}
+843 
+844 			void init(Edge[] edges) {
+845 				this.edges = edges;
+846 				for(Edge edge : edges) {
+847 					nodes[edge.source].add(edge.target, edge.cost);
+848 					if(directed) {
+849 						reversedNodes[edge.target].add(edge.source, edge.cost);
+850 					}else {
+851 						nodes[edge.target].add(edge.source, edge.cost);
+852 					}
+853 				}
+854 			}
+855 
+856 			void clearNodes() {
+857 				for(Node n : nodes) { n.clear(); }
+858 				for(Node n : reversedNodes) { n.clear(); }
+859 			}
+860 		}
+861 
+862 		class Node extends ArrayList<Edge> {
+863 			int id;
+864 
+865 			Node(int id) {
+866 				this.id = id;
+867 			}
+868 			void add(int target, long cost) {
+869 				add(new Edge(id, target, cost));
+870 			}
+871 		}
+872 
+873 		class Edge implements Comparable<Edge> {
+874 			int source;
+875 			int target;
+876 			long cost;
+877 			Edge(int source, int target, long cost) {
+878 				this.source = source;
+879 				this.target = target;
+880 				this.cost = cost;
+881 			}
+882 
+883 			@Override
+884 			public int compareTo(Edge e) {
+885 				return Long.compare(this.cost, e.cost);
+886 			}
+887 		}
+888 
+889 public void solve() {
+890 	long n = nl();
+891 	long p = nl();
+892 	long factor[][] = factor(p);
+893 	long ans = 1;
+894 	for(int i = 0; i < factor.length; i ++) {
+895 		if(factor[i][1] >= n) ans *= pow(factor[i][0], factor[i][1] / n);
+896 	}
+897 	prtln(ans);
+898 }
+899 
+900 
+901 
+902 	}
+903 }

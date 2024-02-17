@@ -1,0 +1,1 @@
+print("Yes" if "7" in list("117") else "No")

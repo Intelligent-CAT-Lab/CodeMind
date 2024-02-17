@@ -1,0 +1,707 @@
+1 
+2 
+3 import java.io.IOException;
+4 import java.io.InputStream;
+5 import java.io.PrintWriter;
+6 import java.io.Serializable;
+7 import java.util.Iterator;
+8 import java.util.Locale;
+9 import java.util.NoSuchElementException;
+10 
+11 public class Main {
+12 
+13 	public static void main(String[] args) {
+14 		new Main();
+15 	}
+16 
+17 	final int MOD = 1000000007;
+18 	public Main() {
+19 		FastIO io = new FastIO();
+20 		/*
+21 		 * author: 31536000
+22 		 * ABC132 F問題
+23 		 * 考察メモ
+24 		 *  こんなの順に遷移すればいいだけなので
+25 		 *  dp[i][j]は第i番目まで見て、現在の値がjの分類の時の通り数と考える
+26 		 *  すると、dp[1][j]は1
+27 		 *  で、問題はjの範囲だがO(sqrt(N))で抑えられる
+28 		 *
+29 		 */
+30 		int N = io.nextInt(), K = io.nextInt();
+31 		int sqrt = (int)Math.floor(Math.sqrt(N));
+32 		sqrt = sqrt * (sqrt + 1) > N ? 2 * sqrt - 1 : 2 * sqrt;
+33 		long[][] dp = new long[K][sqrt];
+34 		for (int i = 0;i < sqrt;++ i) dp[0][i] = Math.max(1, N / (sqrt - i) - N / (sqrt - i + 1));
+35 		for (int i = 1;i < K;++ i) {
+36 			long sum = 0;
+37 			for (int j = sqrt - 1;j >= 0;-- j) {
+38 				sum = (sum + dp[i - 1][sqrt - j - 1]) % MOD;
+39 				dp[i][j] = sum * Math.max(1, N / (sqrt - j) - N / (sqrt - j + 1)) % MOD;
+40 			}
+41 		}
+42 		long ans = 0;
+43 		for (int i = 0;i < sqrt;++ i) ans += dp[K - 1][i];
+44 		io.println(ans % MOD);
+45 		io.flush();
+46 	}
+47 
+48 	public class FastIO {
+49 		private final InputStream in = System.in;
+50 		private final byte[] buffer = new byte[1024];
+51 		private int read = 0;
+52 		private int length = 0;
+53 		public final PrintWriter out = new PrintWriter(System.out, false);
+54 		public final PrintWriter err = new PrintWriter(System.err, false);
+55 
+56 		private boolean hasNextByte() {
+57 			if (read < length) return true;
+58 			read = 0;
+59 			try {
+60 				length = in.read(buffer);
+61 			} catch (IOException e) {
+62 				e.printStackTrace();
+63 			}
+64 			return length > 0;
+65 		}
+66 
+67 		private int readByte() {
+68 			return hasNextByte() ? buffer[read++] : -1;
+69 		}
+70 
+71 		private boolean isPrintableChar(int c) {
+72 			return 33 <= c && c <= 126;
+73 		}
+74 
+75 		private boolean isNumber(int c) {
+76 			return '0' <= c && c <= '9';
+77 		}
+78 
+79 		public boolean hasNext() {
+80 			while (hasNextByte() && !isPrintableChar(buffer[read])) read++;
+81 			return hasNextByte();
+82 		}
+83 
+84 		public char nextChar() {
+85 			if (!hasNextByte())  throw new NoSuchElementException();
+86 			return (char)readByte();
+87 		}
+88 
+89 		public char[][] nextChar(int height) {
+90 			char[][] ret = new char[height][];
+91 			for (int i = 0;i < ret.length;++ i) ret[i] = next().toCharArray();
+92 			return ret;
+93 		}
+94 
+95 		public String next() {
+96 			if (!hasNext()) throw new NoSuchElementException();
+97 			StringBuilder sb = new StringBuilder();
+98 			int b;
+99 			while (isPrintableChar(b = readByte())) sb.appendCodePoint(b);
+100 			return sb.toString();
+101 		}
+102 
+103 		public long nextLong() {
+104 			if (!hasNext()) throw new NoSuchElementException();
+105 			long n = 0;
+106 			boolean minus = false;
+107 			int b = readByte();
+108 			if (b == '-') {
+109 				minus = true;
+110 				b = readByte();
+111 			}
+112 			if (!isNumber(b)) throw new NumberFormatException();
+113 			while (true) {
+114 				if (isNumber(b)) {
+115 					n *= 10;
+116 					n += b - '0';
+117 				} else if (b == -1 || !isPrintableChar(b)) return minus ? -n : n;
+118 				else throw new NumberFormatException();
+119 				b = readByte();
+120 			}
+121 		}
+122 
+123 		public int nextInt() {
+124 			long nl = nextLong();
+125 			if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE) throw new NumberFormatException();
+126 			return (int) nl;
+127 		}
+128 
+129 		public double nextDouble() {
+130 			return Double.parseDouble(next());
+131 		}
+132 
+133 		public int[] nextInt(int width) {
+134 			int[] ret = new int[width];
+135 			for (int i = 0;i < width;++ i) ret[i] = nextInt();
+136 			return ret;
+137 		}
+138 
+139 		public long[] nextLong(int width) {
+140 			long[] ret = new long[width];
+141 			for (int i = 0;i < width;++ i) ret[i] = nextLong();
+142 			return ret;
+143 		}
+144 
+145 		public int[][] nextInt(int width, int height) {
+146 			int[][] ret = new int[height][width];
+147 			for (int i = 0, j;i < height;++ i) for (j = 0;j < width;++ j) ret[i][j] = nextInt();
+148 			return ret;
+149 		}
+150 
+151 		public long[][] nextLong(int width, int height) {
+152 			long[][] ret = new long[height][width];
+153 			for (int i = 0, j;i < height;++ i) for (j = 0;j < width;++ j) ret[j][i] = nextLong();
+154 			return ret;
+155 		}
+156 
+157 		public boolean[] nextBoolean(char T) {
+158 			char[] s = next().toCharArray();
+159 			boolean[] ret = new boolean[s.length];
+160 			for (int i = 0;i < ret.length;++ i) ret[i] = s[i] == T;
+161 			return ret;
+162 		}
+163 
+164 		public boolean[][] nextBoolean(char T, int height) {
+165 			boolean[][] ret = new boolean[height][];
+166 			for (int i = 0;i < ret.length;++ i) {
+167 				char[] s = next().toCharArray();
+168 				ret[i] = new boolean[s.length];
+169 				for (int j = 0;j < ret[i].length;++ j) ret[i][j] = s[j] == T;
+170 			}
+171 			return ret;
+172 		}
+173 
+174 		@Override
+175 		protected void finalize() throws Throwable {
+176 			try {
+177 				super.finalize();
+178 			} finally {
+179 				in.close();
+180 				out.close();
+181 				err.close();
+182 			}
+183 		}
+184 
+185 		public void print(boolean b) {
+186 			out.print(b);
+187 		}
+188 
+189 		public void print(char c) {
+190 			out.print(c);
+191 		}
+192 
+193 		public void print(char[] s) {
+194 			out.print(s);
+195 		}
+196 
+197 		public void print(double d) {
+198 			out.print(d);
+199 		}
+200 
+201 		public void print(float f) {
+202 			out.print(f);
+203 		}
+204 
+205 		public void print(int i) {
+206 			out.print(i);
+207 		}
+208 
+209 		public void print(long l) {
+210 			out.print(l);
+211 		}
+212 
+213 		public void print(Object obj) {
+214 			out.print(obj);
+215 		}
+216 
+217 		public void print(String s) {
+218 			out.print(s);
+219 		}
+220 
+221 		public void printf(String format, Object... args) {
+222 			out.printf(format, args);
+223 		}
+224 
+225 		public void printf(Locale l, String format, Object... args) {
+226 			out.printf(l, format, args);
+227 		}
+228 
+229 		public void println() {
+230 			out.println();
+231 		}
+232 
+233 		public void println(boolean b) {
+234 			out.println(b);
+235 		}
+236 
+237 		public void println(char c) {
+238 			out.println(c);
+239 		}
+240 
+241 		public void println(char[] s) {
+242 			out.println(s);
+243 		}
+244 
+245 		public void println(double d) {
+246 			out.println(d);
+247 		}
+248 
+249 		public void println(float f) {
+250 			out.println(f);
+251 		}
+252 
+253 		public void println(int i) {
+254 			out.println(i);
+255 		}
+256 
+257 		public void println(long l) {
+258 			out.println(l);
+259 		}
+260 
+261 		public void println(Object obj) {
+262 			out.println(obj);
+263 		}
+264 
+265 		public void println(String s) {
+266 			out.println(s);
+267 		}
+268 
+269 		public void flush() {
+270 			out.flush();
+271 			err.flush();
+272 		}
+273 	}
+274 
+275 	public enum BoundType {
+276 		CLOSED, OPEN;
+277 	}
+278 
+279 	public static class Range<C extends Comparable<? super C>> implements Serializable{
+280 
+281 		private static final long serialVersionUID = 6582232757238309626L;
+282 		protected C lower;
+283 		protected C upper;
+284 		protected BoundType lowerType;
+285 		protected BoundType upperType;
+286 
+287 		protected Range(C lower, BoundType lowerType, C upper, BoundType upperType) {
+288 			this.lower = lower;
+289 			this.upper = upper;
+290 			this.lowerType = lowerType;
+291 			this.upperType = upperType;
+292 		}
+293 
+294 		public static <C extends Comparable<? super C>> Range<C> range(C lower, BoundType lowerType, C upper, BoundType upperType) {
+295 			if (lower != null && upper != null) {
+296 				int comp = lower.compareTo(upper);
+297 				if (comp > 0) throw new IllegalArgumentException();
+298 				else if (comp == 0) {
+299 					if (lowerType == BoundType.OPEN && upperType == BoundType.OPEN) throw new IllegalArgumentException();
+300 					else if (lowerType == BoundType.OPEN || upperType == BoundType.OPEN)return new Range<C>(null, BoundType.CLOSED, null, BoundType.CLOSED);
+301 				}
+302 			}
+303 			return new Range<C>(lower, lowerType, upper, upperType);
+304 		}
+305 
+306 		public static <C extends Comparable<? super C>> Range<C> all() {
+307 			return range(null, BoundType.OPEN, null, BoundType.OPEN);
+308 		}
+309 
+310 		public static <C extends Comparable<? super C>> Range<C> atMost(C upper) {
+311 			return range(null, BoundType.OPEN, upper, BoundType.CLOSED);
+312 		}
+313 
+314 		public static <C extends Comparable<? super C>> Range<C> lessThan(C upper) {
+315 			return range(null, BoundType.OPEN, upper, BoundType.OPEN);
+316 		}
+317 
+318 		public static <C extends Comparable<? super C>> Range<C> downTo(C upper, BoundType boundType) {
+319 			return range(null, BoundType.OPEN, upper, boundType);
+320 		}
+321 
+322 		public static <C extends Comparable<? super C>> Range<C> atLeast(C lower) {
+323 			return range(lower, BoundType.CLOSED, null, BoundType.OPEN);
+324 		}
+325 
+326 		public static <C extends Comparable<? super C>> Range<C> greaterThan(C lower) {
+327 			return range(lower, BoundType.OPEN, null, BoundType.OPEN);
+328 		}
+329 
+330 		public static <C extends Comparable<? super C>> Range<C> upTo(C lower, BoundType boundType) {
+331 			return range(lower, boundType, null, BoundType.OPEN);
+332 		}
+333 
+334 		public static <C extends Comparable<? super C>> Range<C> open(C lower, C upper) {
+335 			return range(lower, BoundType.OPEN, upper, BoundType.OPEN);
+336 		}
+337 
+338 		public static <C extends Comparable<? super C>> Range<C> openClosed(C lower, C upper) {
+339 			return range(lower, BoundType.OPEN, upper, BoundType.CLOSED);
+340 		}
+341 
+342 		public static <C extends Comparable<? super C>> Range<C> closedOpen(C lower, C upper) {
+343 			return range(lower, BoundType.CLOSED, upper, BoundType.OPEN);
+344 		}
+345 
+346 		public static <C extends Comparable<? super C>> Range<C> closed(C lower, C upper) {
+347 			return range(lower, BoundType.CLOSED, upper, BoundType.CLOSED);
+348 		}
+349 
+350 		public static <C extends Comparable<? super C>> Range<C> singleton(C value) {
+351 			return range(value, BoundType.CLOSED, value, BoundType.CLOSED);
+352 		}
+353 
+354 		public static <C extends Comparable<? super C>> Range<C> empty() {
+355 			return range(null, BoundType.CLOSED, null, BoundType.CLOSED);
+356 		}
+357 
+358 		public static <C extends Comparable<? super C>> Range<C> encloseAll(Iterable<C> values) {
+359 			C lower = values.iterator().next();
+360 			C upper = lower;
+361 			for (C i : values) {
+362 				if (lower.compareTo(i) > 0) lower = i;
+363 				if (upper.compareTo(i) < 0) upper = i;
+364 			}
+365 			return range(lower, BoundType.CLOSED, upper, BoundType.CLOSED);
+366 		}
+367 
+368 		public boolean hasLowerBound() {
+369 			return lower != null;
+370 		}
+371 
+372 		public C lowerEndpoint() {
+373 			if (hasLowerBound()) return lower;
+374 			throw new IllegalStateException();
+375 		}
+376 
+377 		public BoundType lowerBoundType() {
+378 			if (hasLowerBound()) return lowerType;
+379 			throw new IllegalStateException();
+380 		}
+381 
+382 		public boolean hasUpperBound() {
+383 			return upper != null;
+384 		}
+385 
+386 		public C upperEndpoint() {
+387 			if (hasUpperBound()) return upper;
+388 			throw new IllegalStateException();
+389 		}
+390 
+391 		public BoundType upperBoundType() {
+392 			if (hasUpperBound()) return upperType;
+393 			throw new IllegalStateException();
+394 		}
+395 
+396 		/**
+397 		 * この区間が空集合か判定します。
+398 		 * @return 空集合ならばtrue
+399 		 */
+400 		public boolean isEmpty() {
+401 			return lower == null && upper == null && lowerType == BoundType.CLOSED;
+402 		}
+403 
+404 		/**
+405 		 * 与えられた引数が区間の左側に位置するか判定します。<br>
+406 		 * 接する場合は区間の左側ではないと判定します。
+407 		 * @param value 調べる引数
+408 		 * @return 区間の左側に位置するならtrue
+409 		 */
+410 		public boolean isLess(C value) {
+411 			return isLess(value, BoundType.CLOSED);
+412 		}
+413 
+414 		private boolean isLess(C value, BoundType boundType) {
+415 			if (lower == null || value == null) return false;
+416 			if (lowerType == BoundType.CLOSED && boundType == BoundType.CLOSED) return lower.compareTo(value) > 0;
+417 			return lower.compareTo(value) >= 0;
+418 		}
+419 
+420 		/**
+421 		 * 与えられた引数が区間の右側に位置するか判定します。<br>
+422 		 * 接する場合は区間の右側ではないと判定します。
+423 		 * @param value 調べる引数
+424 		 * @return 区間の右側に位置するならtrue
+425 		 */
+426 		public boolean isGreater(C value) {
+427 			return isGreater(value, BoundType.CLOSED);
+428 		}
+429 
+430 		private boolean isGreater(C value, BoundType boundType) {
+431 			if (upper == null || value == null) return false;
+432 			if (upperType == BoundType.CLOSED && boundType == BoundType.CLOSED)return upper.compareTo(value) < 0;
+433 			return upper.compareTo(value) <= 0;
+434 		}
+435 
+436 		/**
+437 		 * 与えられた引数が区間内に位置するか判定します。<br>
+438 		 * 接する場合も区間内に位置すると判定します。
+439 		 * @param value 調べる引数
+440 		 * @return 区間内に位置するならtrue
+441 		 */
+442 		public boolean contains(C value) {
+443 			return !isLess(value) && !isGreater(value) && !isEmpty();
+444 		}
+445 
+446 		/**
+447 		 * 与えられた引数すべてが区間内に位置するか判定します。<br>
+448 		 * 接する場合も区間内に位置すると判定します。
+449 		 * @param value 調べる要素
+450 		 * @return 全ての要素が区間内に位置するならtrue
+451 		 */
+452 		public boolean containsAll(Iterable<? extends C> values) {
+453 			for (C i : values) if (!contains(i)) return false;
+454 			return true;
+455 		}
+456 
+457 		/**
+458 		 * 与えられた区間がこの区間に内包されるか判定します。<br>
+459 		 *
+460 		 * @param other
+461 		 * @return 与えられた区間がこの区間に内包されるならtrue
+462 		 */
+463 		public boolean encloses(Range<C> other) {
+464 			return !isLess(other.lower, other.lowerType) && !isGreater(other.upper, other.upperType);
+465 		}
+466 
+467 		/**
+468 		 * 与えられた区間がこの区間と公差するか判定します。<br>
+469 		 * 接する場合は公差するものとします。
+470 		 * @param value 調べる引数
+471 		 * @return 区間が交差するならtrue
+472 		 */
+473 		public boolean isConnected(Range<C> other) {
+474 			C lower, upper;
+475 			BoundType lowerType, upperType;
+476 			if (isLess(other.lower, other.lowerType)) {
+477 				lower = other.lower;
+478 				lowerType = other.lowerType;
+479 			} else {
+480 				lower = this.lower;
+481 				lowerType = this.lowerType;
+482 			}
+483 			if (isGreater(other.upper, other.upperType)) {
+484 				upper = other.upper;
+485 				upperType = other.upperType;
+486 			} else {
+487 				upper = this.upper;
+488 				upperType = this.upperType;
+489 			}
+490 			if (lower == null || upper == null) return true;
+491 			int comp = lower.compareTo(upper);
+492 			if (comp < 0) return true;
+493 			else if (comp > 0) return false;
+494 			return lowerType == BoundType.CLOSED || upperType == BoundType.CLOSED;
+495 		}
+496 
+497 		/**
+498 		 * この区間との積集合を返します。
+499 		 * @param connectedRange 積集合を求める区間
+500 		 * @return 積集合
+501 		 */
+502 		public Range<C> intersection(Range<C> connectedRange) {
+503 			if (!isConnected(connectedRange)) throw new IllegalArgumentException();
+504 			C lower, upper;
+505 			BoundType lowerType, upperType;
+506 			if (isLess(connectedRange.lower, connectedRange.lowerType)) {
+507 				lower = connectedRange.lower;
+508 				lowerType = connectedRange.lowerType;
+509 			} else {
+510 				lower = this.lower;
+511 				lowerType = this.lowerType;
+512 			}
+513 			if (isGreater(connectedRange.upper, connectedRange.upperType)) {
+514 				upper = connectedRange.upper;
+515 				upperType = connectedRange.upperType;
+516 			} else {
+517 				upper = this.upper;
+518 				upperType = this.upperType;
+519 			}
+520 			return range(lower, lowerType, upper, upperType);
+521 		}
+522 
+523 		/**
+524 		 * この区間との和集合を返します。
+525 		 * @param other 和集合を求める区間
+526 		 * @return 和集合
+527 		 */
+528 		public Range<C> span(Range<C> other) {
+529 			if (other.isEmpty()) return range(lower, lowerType, upper, upperType);
+530 			C lower, upper;
+531 			BoundType lowerType, upperType;
+532 			if (isLess(other.lower, other.lowerType)) {
+533 				lower = this.lower;
+534 				lowerType = this.lowerType;
+535 			} else {
+536 				lower = other.lower;
+537 				lowerType = other.lowerType;
+538 			}
+539 			if (isGreater(other.upper, other.upperType)) {
+540 				upper = this.upper;
+541 				upperType = this.upperType;
+542 			} else {
+543 				upper = other.upper;
+544 				upperType = other.upperType;
+545 			}
+546 			return range(lower, lowerType, upper, upperType);
+547 		}
+548 
+549 		@Override
+550 		public boolean equals(Object object) {
+551 			if (this == object) return true;
+552 			if (object instanceof Range) {
+553 				@SuppressWarnings("unchecked")
+554 				Range<C> comp = (Range<C>) object;
+555 				return lower.compareTo(comp.lower) == 0 && upper.compareTo(comp.upper) == 0 && lowerType == comp.lowerType && upperType == comp.upperType;
+556 			}
+557 			return false;
+558 		}
+559 
+560 		@Override
+561 		public int hashCode() {
+562 			if (lower == null && upper == null) return 0;
+563 			else if (lower == null) return upper.hashCode();
+564 			else if (upper == null) return lower.hashCode();
+565 			return lower.hashCode() ^ upper.hashCode();
+566 		}
+567 
+568 		@Override
+569 		public String toString() {
+570 			if (isEmpty()) return "()";
+571 			return (lowerType == BoundType.OPEN ? "(" : "[") + (lower == null ? "" : lower.toString()) + ".." + (upper == null ? "" : upper.toString()) + (upperType == BoundType.OPEN ? ")" : "]");
+572 		}
+573 	}
+574 
+575 	public interface IterableFunction<T> {
+576 		public T next(T value);
+577 	}
+578 
+579 	public static class IterableRange<C extends Comparable<? super C>> extends Range<C> implements Iterable<C>{
+580 
+581 		private static final long serialVersionUID = -8258795284144976352L;
+582 		protected IterableFunction<C> func;
+583 
+584 		protected IterableRange(C lower, BoundType lowerType, C upper, BoundType upperType, IterableFunction<C> func) {
+585 			super(lower, lowerType, upper, upperType);
+586 			this.func = func;
+587 		}
+588 
+589 		public static <C extends Comparable<? super C>> IterableRange<C> range(C lower, BoundType lowerType, C upper, BoundType upperType, IterableFunction<C> func) {
+590 			if (lower == null || upper == null) throw new IllegalArgumentException();
+591 			int comp = lower.compareTo(upper);
+592 			if (comp > 0) throw new IllegalArgumentException();
+593 			else if (comp == 0 && (lowerType == BoundType.OPEN || upperType == BoundType.OPEN)) throw new IllegalArgumentException();
+594 			return new IterableRange<C>(lower, lowerType, upper, upperType, func);
+595 		}
+596 
+597 		public static <C extends Comparable<? super C>> IterableRange<C> open(C lower, C upper, IterableFunction<C> func) {
+598 			if (lower == null) throw new IllegalArgumentException();
+599 			return range(func.next(lower), BoundType.CLOSED, upper, BoundType.OPEN, func);
+600 		}
+601 
+602 		public static <C extends Comparable<? super C>> IterableRange<C> openClosed(C lower, C upper, IterableFunction<C> func) {
+603 			if (lower == null) throw new IllegalArgumentException();
+604 			return range(func.next(lower), BoundType.CLOSED, upper, BoundType.CLOSED, func);
+605 		}
+606 
+607 		public static <C extends Comparable<? super C>> IterableRange<C> closedOpen(C lower, C upper, IterableFunction<C> func) {
+608 			return range(lower, BoundType.CLOSED, upper, BoundType.OPEN, func);
+609 		}
+610 
+611 		public static <C extends Comparable<? super C>> IterableRange<C> closed(C lower, C upper, IterableFunction<C> func) {
+612 			return range(lower, BoundType.CLOSED, upper, BoundType.CLOSED, func);
+613 		}
+614 
+615 		public static <C extends Comparable<? super C>> IterableRange<C> singleton(C value, IterableFunction<C> func) {
+616 			return range(value, BoundType.CLOSED, value, BoundType.CLOSED, func);
+617 		}
+618 
+619 		private class Iter implements Iterator<C> {
+620 			C now;
+621 			Iter() {
+622 				now = lower;
+623 			}
+624 			@Override
+625 			public boolean hasNext() {
+626 				return !isGreater(now);
+627 			}
+628 
+629 			@Override
+630 			public C next() {
+631 				C ret = now;
+632 				now = func.next(now);
+633 				return ret;
+634 			}
+635 		}
+636 
+637 		@Override
+638 		public Iterator<C> iterator() {
+639 			return new Iter();
+640 		}
+641 	}
+642 
+643 	public static class IntRange extends IterableRange<Integer>{
+644 
+645 		private static final long serialVersionUID = 1384105098345065693L;
+646 
+647 		protected IntRange(int lower, BoundType lowerType, int upper, BoundType upperType) {
+648 			super(lower, lowerType, upper, upperType, i -> i + 1);
+649 		}
+650 
+651 		public static IntRange range(int lower, BoundType lowerType, int upper, BoundType upperType) {
+652 			if (lower > upper) return new IntRange(0, BoundType.CLOSED, -1, BoundType.CLOSED);
+653 			if (lowerType == BoundType.OPEN) ++ lower;
+654 			if (upperType == BoundType.OPEN) -- upper;
+655 			return new IntRange(lower, BoundType.CLOSED, upper, BoundType.CLOSED);
+656 		}
+657 
+658 		public static IntRange open(int lower, int upper) {
+659 			return range(lower, BoundType.OPEN, upper, BoundType.OPEN);
+660 		}
+661 
+662 		public static IntRange open(int upper) {
+663 			return range(0, BoundType.CLOSED, upper, BoundType.OPEN);
+664 		}
+665 
+666 		public static IntRange openClosed(int lower, int upper) {
+667 			return range(lower, BoundType.OPEN, upper, BoundType.CLOSED);
+668 		}
+669 
+670 		public static IntRange closedOpen(int lower, int upper) {
+671 			return range(lower, BoundType.CLOSED, upper, BoundType.OPEN);
+672 		}
+673 
+674 		public static IntRange closed(int lower, int upper) {
+675 			return range(lower, BoundType.CLOSED, upper, BoundType.CLOSED);
+676 		}
+677 
+678 		public static IntRange closed(int upper) {
+679 			return range(0, BoundType.CLOSED, upper, BoundType.CLOSED);
+680 		}
+681 
+682 		public static IntRange singleton(int value) {
+683 			return range(value, BoundType.CLOSED, value, BoundType.CLOSED);
+684 		}
+685 
+686 		private class Iter implements Iterator<Integer> {
+687 			int now;
+688 			Iter() {
+689 				now = lower;
+690 			}
+691 			@Override
+692 			public boolean hasNext() {
+693 				return now <= upper;
+694 			}
+695 
+696 			@Override
+697 			public Integer next() {
+698 				return now++;
+699 			}
+700 		}
+701 
+702 		@Override
+703 		public Iterator<Integer> iterator() {
+704 			return new Iter();
+705 		}
+706 	}
+707 }

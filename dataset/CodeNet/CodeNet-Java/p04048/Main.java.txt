@@ -1,0 +1,203 @@
+1 import java.io.ByteArrayInputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.Arrays;
+6 
+7 public class Main {
+8 	static InputStream is;
+9 	static PrintWriter out;
+10 	static String INPUT = "";
+11 
+12 	static void solver() {
+13 		long n = nl();
+14 		long x = nl();
+15 		long sum = 0;
+16 		if (x == n - x) {
+17 			sum = 3 * x;
+18 			System.out.println(sum);
+19 			return;
+20 		} else {
+21 			if (x > n - x) {
+22 				sum += x + n - x;
+23 				sum += calc(x, n - x, false);
+24 			} else if (x < n - x) {
+25 				sum += x + n - x;
+26 				sum += calc(x, n - x, false);
+27 			}
+28 			System.out.println(sum);
+29 			return;
+30 		}
+31 
+32 	}
+33 
+34 	static long calc(long x, long y, boolean first) {
+35 		long sum = 0;
+36 		if (x % y == 0) {
+37 			if (first)
+38 				sum += y;
+39 			sum += (x / y * 2 - 1) * y;
+40 			return sum;
+41 		} else {
+42 			if (first)
+43 				sum += y;
+44 			sum += (x / y * 2) * y;
+45 			sum += calc(y, x % y, false);
+46 			return sum;
+47 		}
+48 	}
+49 
+50 	public static void main(String[] args) throws Exception {
+51 		is = INPUT.isEmpty() ? System.in : new ByteArrayInputStream(INPUT.getBytes());
+52 		out = new PrintWriter(System.out);
+53 
+54 		solver();
+55 		out.flush();
+56 	}
+57 
+58 	static long nl() {
+59 		try {
+60 			long num = 0;
+61 			boolean minus = false;
+62 			while ((num = is.read()) != -1 && !((num >= '0' && num <= '9') || num == '-'))
+63 				;
+64 			if (num == '-') {
+65 				num = 0;
+66 				minus = true;
+67 			} else {
+68 				num -= '0';
+69 			}
+70 
+71 			while (true) {
+72 				int b = is.read();
+73 				if (b >= '0' && b <= '9') {
+74 					num = num * 10 + (b - '0');
+75 				} else {
+76 					return minus ? -num : num;
+77 				}
+78 			}
+79 		} catch (IOException e) {
+80 		}
+81 		return -1;
+82 	}
+83 
+84 	static char nc() {
+85 		try {
+86 			int b = skip();
+87 			if (b == -1)
+88 				return 0;
+89 			return (char) b;
+90 		} catch (IOException e) {
+91 		}
+92 		return 0;
+93 	}
+94 
+95 	static double nd() {
+96 		try {
+97 			return Double.parseDouble(ns());
+98 		} catch (Exception e) {
+99 		}
+100 		return 0;
+101 	}
+102 
+103 	static String ns() {
+104 		try {
+105 			int b = skip();
+106 			StringBuilder sb = new StringBuilder();
+107 			if (b == -1)
+108 				return "";
+109 			sb.append((char) b);
+110 			while (true) {
+111 				b = is.read();
+112 				if (b == -1)
+113 					return sb.toString();
+114 				if (b <= ' ')
+115 					return sb.toString();
+116 				sb.append((char) b);
+117 			}
+118 		} catch (IOException e) {
+119 		}
+120 		return "";
+121 	}
+122 
+123 	public static char[] ns(int n) {
+124 		char[] buf = new char[n];
+125 		try {
+126 			int b = skip(), p = 0;
+127 			if (b == -1)
+128 				return null;
+129 			buf[p++] = (char) b;
+130 			while (p < n) {
+131 				b = is.read();
+132 				if (b == -1 || b <= ' ')
+133 					break;
+134 				buf[p++] = (char) b;
+135 			}
+136 			return Arrays.copyOf(buf, p);
+137 		} catch (IOException e) {
+138 		}
+139 		return null;
+140 	}
+141 
+142 	public static byte[] nse(int n) {
+143 		byte[] buf = new byte[n];
+144 		try {
+145 			int b = skip();
+146 			if (b == -1)
+147 				return null;
+148 			is.read(buf);
+149 			return buf;
+150 		} catch (IOException e) {
+151 		}
+152 		return null;
+153 	}
+154 
+155 	static int skip() throws IOException {
+156 		int b;
+157 		while ((b = is.read()) != -1 && !(b >= 33 && b <= 126))
+158 			;
+159 		return b;
+160 	}
+161 
+162 	static boolean eof() {
+163 		try {
+164 			is.mark(1000);
+165 			int b = skip();
+166 			is.reset();
+167 			return b == -1;
+168 		} catch (IOException e) {
+169 			return true;
+170 		}
+171 	}
+172 
+173 	static int ni() {
+174 		try {
+175 			int num = 0;
+176 			boolean minus = false;
+177 			while ((num = is.read()) != -1 && !((num >= '0' && num <= '9') || num == '-'))
+178 				;
+179 			if (num == '-') {
+180 				num = 0;
+181 				minus = true;
+182 			} else {
+183 				num -= '0';
+184 			}
+185 
+186 			while (true) {
+187 				int b = is.read();
+188 				if (b >= '0' && b <= '9') {
+189 					num = num * 10 + (b - '0');
+190 				} else {
+191 					return minus ? -num : num;
+192 				}
+193 			}
+194 		} catch (IOException e) {
+195 		}
+196 		return -1;
+197 	}
+198 
+199 	static void tr(Object... o) {
+200 		if (INPUT.length() != 0)
+201 			System.out.println(Arrays.deepToString(o));
+202 	}
+203 }

@@ -1,0 +1,90 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.io.OutputStream;
+6 import java.util.StringTokenizer;
+7 import java.io.Writer;
+8 import java.io.IOException;
+9 import java.io.BufferedReader;
+10 import java.io.InputStreamReader;
+11 import java.io.InputStream;
+12 
+13 /**
+14  * Built using CHelper plug-in
+15  * Actual solution is at the top
+16  *
+17  * @author palayutm
+18  */
+19 public class Main {
+20     public static void main(String[] args) {
+21         InputStream inputStream = System.in;
+22         OutputStream outputStream = System.out;
+23         InputReader in = new InputReader(inputStream);
+24         OutputWriter out = new OutputWriter(outputStream);
+25         TaskD solver = new TaskD();
+26         solver.solve(1, in, out);
+27         out.close();
+28     }
+29 
+30     static class TaskD {
+31         public void solve(int testNumber, InputReader in, OutputWriter out) {
+32             int n = in.nextInt(), K = in.nextInt();
+33             long ans = 0;
+34             for (int i = K + 1; i <= n; i++) {
+35                 for (int j = 0; j * i <= n; j++) {
+36                     if (i * (j + 1) - 1 <= n) {
+37                         ans += i - K;
+38                     } else {
+39                         ans += Math.max(i - K - (i * (j + 1) - 1 - n), 0);
+40                     }
+41                 }
+42             }
+43             if (K == 0) ans -= n;
+44             out.println(ans);
+45         }
+46 
+47     }
+48 
+49     static class OutputWriter extends PrintWriter {
+50         public OutputWriter(OutputStream out) {
+51             super(out);
+52         }
+53 
+54         public OutputWriter(Writer out) {
+55             super(out);
+56         }
+57 
+58         public void close() {
+59             super.close();
+60         }
+61 
+62     }
+63 
+64     static class InputReader {
+65         public BufferedReader reader;
+66         public StringTokenizer tokenizer;
+67 
+68         public InputReader(InputStream stream) {
+69             reader = new BufferedReader(new InputStreamReader(stream), 32768);
+70             tokenizer = null;
+71         }
+72 
+73         public String next() {
+74             while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+75                 try {
+76                     tokenizer = new StringTokenizer(reader.readLine());
+77                 } catch (IOException e) {
+78                     throw new RuntimeException(e);
+79                 }
+80             }
+81             return tokenizer.nextToken();
+82         }
+83 
+84         public int nextInt() {
+85             return Integer.parseInt(next());
+86         }
+87 
+88     }
+89 }
+90 

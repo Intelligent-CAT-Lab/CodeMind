@@ -1,0 +1,114 @@
+1 import static java.lang.Integer.parseInt;
+2 import static java.lang.Long.parseLong;
+3 import static java.lang.Math.max;
+4 import static java.lang.Math.min;
+5 import static java.lang.System.exit;
+6 import static java.util.Arrays.fill;
+7 
+8 import java.io.BufferedReader;
+9 import java.io.IOException;
+10 import java.io.InputStreamReader;
+11 import java.io.PrintWriter;
+12 import java.util.StringTokenizer;
+13 
+14 public class Main {
+15 
+16 	static int add(int a, int b) {
+17 		int res = a + b;
+18 		return res >= mod ? res - mod : res;
+19 	}
+20 
+21 	static int mul(int a, int b) {
+22 		int res = (int) ((long) a * b % mod);
+23 		return res < 0 ? res + mod : res;
+24 	}
+25 
+26 	static int mod;
+27 
+28 	static void solve() throws Exception {
+29 		int n = scanInt(), k = scanInt();
+30 		mod = scanInt();
+31 		if (k % 2 == 0) {
+32 			out.print(mul(solve2(n / 2, k / 2 + 1), solve2((n + 1) / 2, k / 2 + 1)));
+33 		} else {
+34 			int dyn[][] = new int[k + 2][k + 2];
+35 			dyn[0][0] = 1;
+36 			int ndyn[][] = new int[k + 2][k + 2];
+37 			for (int i = 0; i < (n | 1) / 2 + k / 2 + 2; i++) {
+38 				for (int a[]: ndyn) {
+39 					fill(a, 0);
+40 				}
+41 				int mask = (i < (n + 1) / 2 ? 1 : 0) + (i >= k / 2 + 2 ? 2 : 0);
+42 				for (int m = mask;; m = (m - 1) & mask) {
+43 					for (int j = 0; j < k + 2; j++) {
+44 						for (int jj = 0; jj < k + 2; jj++) {
+45 							int nj = (m & 1) != 0 ? min(j + 1, k + 1) : 0;
+46 							int njj = (m & 2) != 0 && (j != 0 || jj != 0) ? max(j, jj) + 1 : 0;
+47 							if (nj < k + 2 && njj < k + 2) {
+48 								ndyn[nj][njj] = add(ndyn[nj][njj], dyn[j][jj]);
+49 							}
+50 						}
+51 					}
+52 					if (m == 0) {
+53 						break;
+54 					}
+55 				}
+56 				int t[][] = dyn;
+57 				dyn = ndyn;
+58 				ndyn = t;
+59 			}
+60 			int ans = 0;
+61 			for (int i = 0; i < k + 2; i++) {
+62 				for (int j = 0; j < k + 2; j++) {
+63 					ans = add(ans, dyn[i][j]);
+64 				}
+65 			}
+66 			out.print(ans);
+67 		}
+68 	}
+69 
+70 	static int solve2(int n, int k) {
+71 		int dyn[] = new int[k];
+72 		fill(dyn, 1);
+73 		for (int i = 0; i < n; i++) {
+74 			int v = dyn[k - 1];
+75 			for (int j = k - 2; j >= 0; j--) {
+76 				dyn[j + 1] = add(dyn[j], v);
+77 			}
+78 			dyn[0] = v;
+79 		}
+80 		return dyn[k - 1];
+81 	}
+82 
+83 	static int scanInt() throws IOException {
+84 		return parseInt(scanString());
+85 	}
+86 
+87 	static long scanLong() throws IOException {
+88 		return parseLong(scanString());
+89 	}
+90 
+91 	static String scanString() throws IOException {
+92 		while (tok == null || !tok.hasMoreTokens()) {
+93 			tok = new StringTokenizer(in.readLine());
+94 		}
+95 		return tok.nextToken();
+96 	}
+97 
+98 	static BufferedReader in;
+99 	static PrintWriter out;
+100 	static StringTokenizer tok;
+101 
+102 	public static void main(String[] args) {
+103 		try {
+104 			in = new BufferedReader(new InputStreamReader(System.in));
+105 			out = new PrintWriter(System.out);
+106 			solve();
+107 			in.close();
+108 			out.close();
+109 		} catch (Throwable e) {
+110 			e.printStackTrace();
+111 			exit(1);
+112 		}
+113 	}
+114 }

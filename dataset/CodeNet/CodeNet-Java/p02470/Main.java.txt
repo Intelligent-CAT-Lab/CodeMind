@@ -1,0 +1,276 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 public class Main {
+5 
+6 	private static Scanner sc;
+7 	private static Printer pr;
+8 
+9 	private static void solve() {
+10 		int n = sc.nextInt();
+11 
+12 		pr.println(Euler.totient((long)n));
+13 	}
+14 
+15 	static class Euler {
+16 		private int[] phi;
+17 
+18 		Euler(int n) {
+19 			phi = new int[n];
+20 			for (int i = 1; i <= n; i++) {
+21 				phi[i - 1] = i;
+22 			}
+23 
+24 			for (int i = 2; i <= n; i++) {
+25 				if (phi[i - 1] == i) {
+26 					for (int j = i; j <= n; j += i) {
+27 						phi[j - 1] = phi[j - 1] / i * (i - 1);
+28 					}
+29 				}
+30 			}
+31 		}
+32 
+33 		int totient(int n) {
+34 			return phi[n - 1];
+35 		}
+36 
+37 		static long totient(long n) {
+38 			long i = n;
+39 			long phi = n;
+40 			if (i % 2 == 0) {
+41 				phi = phi / 2;
+42 				while (i % 2 == 0) {
+43 					i /= 2;
+44 				}
+45 			}
+46 			if (i % 3 == 0) {
+47 				phi = phi / 3 * 2;
+48 				while (i % 3 == 0) {
+49 					i /= 3;
+50 				}
+51 			}
+52 			for (long j = 1; true; j++) {
+53 				long tmp = j * 6 - 1;
+54 				if (tmp * tmp > n) {
+55 					break;
+56 				}
+57 				if (i % tmp == 0) {
+58 					phi = phi / tmp * (tmp - 1);
+59 					while (i % tmp == 0) {
+60 						i /= tmp;
+61 					}
+62 				}
+63 
+64 				tmp = j * 6 + 1;
+65 				if (tmp * tmp > n) {
+66 					break;
+67 				}
+68 				if (i % tmp == 0) {
+69 					phi = phi / tmp * (tmp - 1);
+70 					while (i % tmp == 0) {
+71 						i /= tmp;
+72 					}
+73 				}
+74 			}
+75 			if (i != 1) {
+76 				phi = phi / i * (i - 1);
+77 			}
+78 
+79 //			long phi = n;
+80 //			for (long e : hs) {
+81 //				phi /= e;
+82 //				phi *= (e - 1);
+83 //			}
+84 
+85 			return phi;
+86 		}
+87 	}
+88 
+89 	// ---------------------------------------------------
+90 	public static void main(String[] args) {
+91 		sc = new Scanner(INPUT == null ? System.in : new ByteArrayInputStream(INPUT.getBytes()));
+92 		pr = new Printer(System.out);
+93 
+94 		solve();
+95 
+96 //		pr.close();
+97 		pr.flush();
+98 //		sc.close();
+99 	}
+100 
+101 	static String INPUT = null;
+102 
+103 	@SuppressWarnings("unused")
+104 	private static class Scanner {
+105 		BufferedReader br;
+106 
+107 		Scanner (InputStream in) {
+108 			br = new BufferedReader(new InputStreamReader(in));
+109 		}
+110 
+111 		private boolean isPrintable(int ch) {
+112 			return ch >= '!' && ch <= '~';
+113 		}
+114 
+115 		private boolean isCRLF(int ch) {
+116 			return ch == '\n' || ch == '\r' || ch == -1;
+117 		}
+118 
+119 		private int nextPrintable() {
+120 			try {
+121 				int ch;
+122 				while (!isPrintable(ch = br.read())) {
+123 					if (ch == -1) {
+124 						throw new NoSuchElementException();
+125 					}
+126 				}
+127 
+128 				return ch;
+129 			} catch (IOException e) {
+130 				throw new NoSuchElementException();
+131 			}
+132 		}
+133 
+134 		String next() {
+135 			try {
+136 				int ch = nextPrintable();
+137 				StringBuilder sb = new StringBuilder();
+138 				do {
+139 					sb.appendCodePoint(ch);
+140 				} while (isPrintable(ch = br.read()));
+141 
+142 				return sb.toString();
+143 			} catch (IOException e) {
+144 				throw new NoSuchElementException();
+145 			}
+146 		}
+147 
+148 		int nextInt() {
+149 			try {
+150 				// parseInt from Integer.parseInt()
+151 				boolean negative = false;
+152 				int res = 0;
+153 				int limit = -Integer.MAX_VALUE;
+154 				int radix = 10;
+155 
+156 				int fc = nextPrintable();
+157 				if (fc < '0') {
+158 					if (fc == '-') {
+159 						negative = true;
+160 						limit = Integer.MIN_VALUE;
+161 					} else if (fc != '+') {
+162 						throw new NumberFormatException();
+163 					}
+164 					fc = br.read();
+165 				}
+166 				int multmin = limit / radix;
+167 
+168 				int ch = fc;
+169 				do {
+170 					int digit = ch - '0';
+171 					if (digit < 0 || digit >= radix) {
+172 						throw new NumberFormatException();
+173 					}
+174 					if (res < multmin) {
+175 						throw new NumberFormatException();
+176 					}
+177 					res *= radix;
+178 					if (res < limit + digit) {
+179 						throw new NumberFormatException();
+180 					}
+181 					res -= digit;
+182 
+183 				} while (isPrintable(ch = br.read()));
+184 
+185 				return negative ? res : -res;
+186 			} catch (IOException e) {
+187 				throw new NoSuchElementException();
+188 			}
+189 		}
+190 
+191 		long nextLong() {
+192 			try {
+193 				// parseLong from Long.parseLong()
+194 				boolean negative = false;
+195 				long res = 0;
+196 				long limit = -Long.MAX_VALUE;
+197 				int radix = 10;
+198 
+199 				int fc = nextPrintable();
+200 				if (fc < '0') {
+201 					if (fc == '-') {
+202 						negative = true;
+203 						limit = Long.MIN_VALUE;
+204 					} else if (fc != '+') {
+205 						throw new NumberFormatException();
+206 					}
+207 					fc = br.read();
+208 				}
+209 				long multmin = limit / radix;
+210 
+211 				int ch = fc;
+212 				do {
+213 					int digit = ch - '0';
+214 					if (digit < 0 || digit >= radix) {
+215 						throw new NumberFormatException();
+216 					}
+217 					if (res < multmin) {
+218 						throw new NumberFormatException();
+219 					}
+220 					res *= radix;
+221 					if (res < limit + digit) {
+222 						throw new NumberFormatException();
+223 					}
+224 					res -= digit;
+225 
+226 				} while (isPrintable(ch = br.read()));
+227 
+228 				return negative ? res : -res;
+229 			} catch (IOException e) {
+230 				throw new NoSuchElementException();
+231 			}
+232 		}
+233 
+234 		float nextFloat() {
+235 			return Float.parseFloat(next());
+236 		}
+237 
+238 		double nextDouble() {
+239 			return Double.parseDouble(next());
+240 		}
+241 
+242 		String nextLine() {
+243 			try {
+244 				int ch;
+245 				while (isCRLF(ch = br.read())) {
+246 					if (ch == -1) {
+247 						throw new NoSuchElementException();
+248 					}
+249 				}
+250 				StringBuilder sb = new StringBuilder();
+251 				do {
+252 					sb.appendCodePoint(ch);
+253 				} while (!isCRLF(ch = br.read()));
+254 
+255 				return sb.toString();
+256 			} catch (IOException e) {
+257 				throw new NoSuchElementException();
+258 			}
+259 		}
+260 
+261 		void close() {
+262 			try {
+263 				br.close();
+264 			} catch (IOException e) {
+265 //				throw new NoSuchElementException();
+266 			}
+267 		}
+268 	}
+269 
+270 	private static class Printer extends PrintWriter {
+271 		Printer(OutputStream out) {
+272 			super(out);
+273 		}
+274 	}
+275 }
+276 

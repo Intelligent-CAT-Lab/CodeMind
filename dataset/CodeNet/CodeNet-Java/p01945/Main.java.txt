@@ -1,0 +1,50 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStreamReader;
+4 
+5 public class Main {
+6 
+7 	public static void main(String[] args) throws IOException {
+8 		// TODO 自動生成されたメソッド・スタブ
+9 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+10 
+11 		String str = br.readLine();
+12 
+13 		while(str.contains("()")){
+14 			str = str.replaceAll("\\(\\)", "");
+15 		}
+16 		//System.out.println(str);
+17 		char[] input = str.toCharArray();
+18 
+19 		int starIndex = 0;
+20 
+21 		for(int i = 0; i < input.length; i++){
+22 			if(input[i] == '*'){
+23 				starIndex = i;
+24 			}
+25 		}
+26 
+27 		int left = starIndex - 1;
+28 		int right = starIndex + 1;
+29 
+30 		int result = 0;
+31 		while(left >= 0){
+32 			if(input[left] == '('){
+33 				while(right <= input.length - 1){
+34 					if(input[right] == ')'){
+35 						result++;
+36 						break;
+37 					}
+38 
+39 					right++;
+40 				}
+41 			}
+42 
+43 			left--;
+44 		}
+45 
+46 		System.out.println(result);
+47 	}
+48 
+49 }
+50 

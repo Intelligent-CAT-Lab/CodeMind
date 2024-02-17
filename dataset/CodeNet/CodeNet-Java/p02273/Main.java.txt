@@ -1,0 +1,50 @@
+1 import java.util.Scanner;
+2 import java.lang.Math;
+3 
+4 class Main {
+5 
+6     public static class Tuple{
+7         public final double x;
+8         public final double y;
+9         public Tuple(double x, double y) {
+10             this.x = x;
+11             this.y = y;
+12         }
+13         public void print(){
+14             System.out.printf("%f %f\n", x, y);
+15         }
+16     }
+17 
+18     static void koch(int n, Tuple a, Tuple b){
+19         if (n == 0) return;
+20 
+21         Tuple s, t, u;
+22         double cos60 = Math.cos(Math.PI * 60.0 / 180.0);
+23         double sin60 = Math.sin(Math.PI * 60.0 / 180.0);
+24         s = new Tuple((2.0 * a.x + 1.0 *b.x) / 3.0, (2.0 * a.y + 1.0 * b.y) / 3.0);
+25         t = new Tuple((1.0 * a.x + 2.0 *b.x) / 3.0, (1.0 * a.y + 2.0 * b.y) / 3.0);
+26         u = new Tuple((t.x - s.x) * cos60 - (t.y - s.y) * sin60 + s.x,
+27                       (t.x - s.x) * sin60 + (t.y - s.y) * cos60 + s.y);
+28 
+29         koch(n - 1, a, s);
+30         s.print();
+31         koch(n - 1, s, u);
+32         u.print();
+33         koch(n - 1, u, t);
+34         t.print();
+35         koch(n - 1, t, b);
+36     }
+37 
+38     public static void main(String[] args) {
+39         Scanner sc = new Scanner(System.in);
+40 
+41         int n = sc.nextInt();
+42         Tuple a = new Tuple(0.0,0.0);
+43         Tuple b = new Tuple(100.0,0.0);
+44 
+45         a.print();
+46         koch(n,a,b);
+47         b.print();
+48     }
+49 }
+50 

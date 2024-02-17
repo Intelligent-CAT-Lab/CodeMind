@@ -1,0 +1,159 @@
+1 
+2 public class Main {
+3   private static void solve() {
+4     System.out.println(solve(nl()));
+5   }
+6 
+7   private static String solve(long k) {
+8     int m = "FESTIVAL".length();
+9 
+10     int n = 600;
+11     int l = m - 1;
+12     long[][] dp = new long[n + 1][l + 1];
+13     for (int i = 0; i < n; i++) {
+14       dp[i][0] = 1;
+15       for (int j = 0; j < l; j++) {
+16         for (int p = 0; p <= i; p++) {
+17           for (int q = 0; q <= j; q++) {
+18             dp[i + 1][j + 1] += dp[p][q];
+19           }
+20         }
+21       }
+22     }
+23 
+24     long[] a = new long[n + 1];
+25     for (int i = n; i >= 1; i--) {
+26       a[i] = k / dp[i][l];
+27       k -= a[i] * dp[i][l];
+28     }
+29 
+30     StringBuilder sb = new StringBuilder();
+31     for (int i = 1; i <= n; i++) {
+32       sb.append("FESTIVA");
+33       for (int j = 0; j < a[i]; j++) {
+34         sb.append("L");
+35       }
+36     }
+37     return sb.toString();
+38   }
+39 
+40 
+41 
+42   private static long check(String s) {
+43     String t = "FESTIVAL";
+44     int m = t.length();
+45     int[] map = new int[26];
+46     for (int i = 0; i < m; i++) {
+47       map[t.charAt(i) - 'A'] = i;
+48     }
+49 
+50     int n = s.length();
+51     int[] a = new int[n];
+52     for (int i = 0; i < n; i++) {
+53       a[i] = map[s.charAt(i) - 'A'];
+54     }
+55 
+56     long[][] dp = new long[n + 1][m + 1];
+57     dp[0][0] = 1;
+58     for (int i = 0; i < n; i++) {
+59       for (int j = 0; j <= m; j++) {
+60         dp[i + 1][j] = dp[i][j];
+61       }
+62       dp[i + 1][a[i] + 1] += dp[i][a[i]];
+63     }
+64 
+65     return dp[n][m];
+66   }
+67 
+68   public static void main(String[] args) {
+69     new Thread(null, new Runnable() {
+70       @Override
+71       public void run() {
+72         long start = System.currentTimeMillis();
+73         String debug = args.length > 0 ? args[0] : null;
+74         if (debug != null) {
+75           try {
+76             is = java.nio.file.Files.newInputStream(java.nio.file.Paths.get(debug));
+77           } catch (Exception e) {
+78             throw new RuntimeException(e);
+79           }
+80         }
+81         reader = new java.io.BufferedReader(new java.io.InputStreamReader(is), 32768);
+82         solve();
+83         out.flush();
+84         tr((System.currentTimeMillis() - start) + "ms");
+85       }
+86     }, "", 64000000).start();
+87   }
+88 
+89   private static java.io.InputStream is = System.in;
+90   private static java.io.PrintWriter out = new java.io.PrintWriter(System.out);
+91   private static java.util.StringTokenizer tokenizer = null;
+92   private static java.io.BufferedReader reader;
+93 
+94   public static String next() {
+95     while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+96       try {
+97         tokenizer = new java.util.StringTokenizer(reader.readLine());
+98       } catch (Exception e) {
+99         throw new RuntimeException(e);
+100       }
+101     }
+102     return tokenizer.nextToken();
+103   }
+104 
+105   private static double nd() {
+106     return Double.parseDouble(next());
+107   }
+108 
+109   private static long nl() {
+110     return Long.parseLong(next());
+111   }
+112 
+113   private static int[] na(int n) {
+114     int[] a = new int[n];
+115     for (int i = 0; i < n; i++)
+116       a[i] = ni();
+117     return a;
+118   }
+119 
+120   private static char[] ns() {
+121     return next().toCharArray();
+122   }
+123 
+124   private static long[] nal(int n) {
+125     long[] a = new long[n];
+126     for (int i = 0; i < n; i++)
+127       a[i] = nl();
+128     return a;
+129   }
+130 
+131   private static int[][] ntable(int n, int m) {
+132     int[][] table = new int[n][m];
+133     for (int i = 0; i < n; i++) {
+134       for (int j = 0; j < m; j++) {
+135         table[i][j] = ni();
+136       }
+137     }
+138     return table;
+139   }
+140 
+141   private static int[][] nlist(int n, int m) {
+142     int[][] table = new int[m][n];
+143     for (int i = 0; i < n; i++) {
+144       for (int j = 0; j < m; j++) {
+145         table[j][i] = ni();
+146       }
+147     }
+148     return table;
+149   }
+150 
+151   private static int ni() {
+152     return Integer.parseInt(next());
+153   }
+154 
+155   private static void tr(Object... o) {
+156     if (is != System.in)
+157       System.out.println(java.util.Arrays.deepToString(o));
+158   }
+159 }

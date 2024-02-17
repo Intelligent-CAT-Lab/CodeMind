@@ -1,0 +1,154 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.InputStreamReader;
+5 import java.io.OutputStream;
+6 import java.io.PrintWriter;
+7 import java.util.InputMismatchException;
+8 import java.util.StringTokenizer;
+9 
+10 public class Main {
+11 
+12 	public static void main(String[] args) throws IOException {
+13 		InputStream inputStream = System.in;
+14 		OutputStream outputStream = System.out;
+15 		InputReader in = new InputReader(inputStream);
+16 		PrintWriter out = new PrintWriter(outputStream);
+17 		TaskX solver = new TaskX();
+18 		solver.solve(1, in, out);
+19 		out.close();
+20 	}
+21 
+22 	static int INF = 1 << 30;
+23 	static long LINF = 1L << 55;
+24 	static int MOD = 1000000007;
+25 	static int[] mh4 = { 0, -1, 1, 0 };
+26 	static int[] mw4 = { -1, 0, 0, 1 };
+27 	static int[] mh8 = { -1, -1, -1, 0, 0, 1, 1, 1 };
+28 	static int[] mw8 = { -1, 0, 1, -1, 1, -1, 0, 1 };
+29 
+30 	static class TaskX {
+31 
+32 		public void solve(int testNumber, InputReader in, PrintWriter out) {
+33 
+34 			char[] s = in.nextString().toCharArray();
+35 			int n = s.length;
+36 			long[] ac = new long[n+1];
+37 			long[] bc = new long[n+1];
+38 			long[] cc = new long[n+1];
+39 			long[] xc = new long[n+1];
+40 			for (int i = 0; i < n; i++) {
+41 				ac[i+1] += ac[i];
+42 				bc[i+1] += bc[i];
+43 				cc[i+1] += cc[i];
+44 				xc[i+1] += xc[i];
+45 				if (s[i] == 'A') ac[i+1]++;
+46 				if (s[i] == 'B') bc[i+1]++;
+47 				if (s[i] == 'C') cc[i+1]++;
+48 				if (s[i] == '?') xc[i+1]++;
+49 			}
+50 
+51 			long ans = 0;
+52 			for (int i = 0; i < n; i++) {
+53 				if (s[i] == 'B' || s[i] == '?') {
+54 					long a = ac[i] - ac[0];
+55 					long l = xc[i] - xc[0];
+56 					long c = cc[n] - cc[i+1];
+57 					long r = xc[n] - xc[i+1];
+58 
+59 					ans += power(3, l+r, MOD) * a % MOD * c % MOD;
+60 					ans += power(3, l+r-1, MOD) * a % MOD * r % MOD;
+61 					ans += power(3, l+r-1, MOD) * l % MOD * c % MOD;
+62 					ans += power(3, l+r-2, MOD) * l % MOD * r % MOD;
+63 				}
+64 			}
+65 
+66 			out.println(ans % MOD);
+67 
+68 		}
+69 
+70 		/**
+71 		 * 累乗[a^e (mod modP)]
+72 		 *
+73 		 * @param a : 被累乗数
+74 		 * @param e : 累乗数
+75 		 * @param modP : mod数
+76 		 * */
+77 		static long power(long a, long e, long modP) {
+78 			long ret = 1;
+79 			for (; e > 0; e /= 2) {
+80 				if (e % 2 != 0) {
+81 					ret = (ret * a) % modP;
+82 				}
+83 				a = (a * a) % modP;
+84 			}
+85 			return ret;
+86 		}
+87 	}
+88 
+89 	static class InputReader {
+90 		BufferedReader in;
+91 		StringTokenizer tok;
+92 
+93 		public String nextString() {
+94 			while (!tok.hasMoreTokens()) {
+95 				try {
+96 					tok = new StringTokenizer(in.readLine(), " ");
+97 				} catch (IOException e) {
+98 					throw new InputMismatchException();
+99 				}
+100 			}
+101 			return tok.nextToken();
+102 		}
+103 
+104 		public int nextInt() {
+105 			return Integer.parseInt(nextString());
+106 		}
+107 
+108 		public long nextLong() {
+109 			return Long.parseLong(nextString());
+110 		}
+111 
+112 		public double nextDouble() {
+113 			return Double.parseDouble(nextString());
+114 		}
+115 
+116 		public int[] nextIntArray(int n) {
+117 			int[] res = new int[n];
+118 			for (int i = 0; i < n; i++) {
+119 				res[i] = nextInt();
+120 			}
+121 			return res;
+122 		}
+123 
+124 		public int[] nextIntArrayDec(int n) {
+125 			int[] res = new int[n];
+126 			for (int i = 0; i < n; i++) {
+127 				res[i] = nextInt() - 1;
+128 			}
+129 			return res;
+130 		}
+131 
+132 		public long[] nextLongArray(int n) {
+133 			long[] res = new long[n];
+134 			for (int i = 0; i < n; i++) {
+135 				res[i] = nextLong();
+136 			}
+137 			return res;
+138 		}
+139 
+140 		public long[] nextLongArrayDec(int n) {
+141 			long[] res = new long[n];
+142 			for (int i = 0; i < n; i++) {
+143 				res[i] = nextLong() - 1;
+144 			}
+145 			return res;
+146 		}
+147 
+148 		public InputReader(InputStream inputStream) {
+149 			in = new BufferedReader(new InputStreamReader(inputStream));
+150 			tok = new StringTokenizer("");
+151 		}
+152 	}
+153 
+154 }

@@ -1,0 +1,94 @@
+1 import java.util.*; import java.io.*; import java.math.*;
+2 public class Main{
+3 	static void solve(){//Here is the main function
+4       ArrayList<Integer> one = nextIntArray();
+5       int N = one.get(0);
+6       int d = one.get(1);
+7       if(N <= 2){
+8         myout(0);
+9         return;
+10       }
+11       N -= 3;
+12       int loop = N / 11;
+13       int amari = N % 11;
+14       int[][] map = {{1,1,1,2,2,3,4,4,5,5,5}, {0,1,2,2,3,3,3,4,4,4,5}, {1,1,1,2,2,2,3,3,4,5,5},
+15                     {0,0,1,1,2,3,3,4,4,4,5}, {1,2,2,3,3,3,4,4,4,5,5}, {0,0,1,1,1,2,2,3,4,4,5},
+16                     {0,1,1,2,3,3,4,4,4,5,5}, {1,1,2,2,2,3,3,3,4,4,5}, {0,1,1,1,2,2,3,4,4,5,5},
+17                     {1,1,2,3,3,4,4,4,5,5,5}, {0,1,1,1,2,2,2,3,3,4,5}};
+18       myout(loop * 5 + map[d][amari]);
+19 	}
+20 	//Method addition frame start
+21 
+22 
+23 
+24 	//Method addition frame end
+25 
+26 	//Don't have to see. start------------------------------------------
+27 	static class InputIterator{
+28 		ArrayList<String> inputLine = new ArrayList<>(1024);
+29 		int index = 0; int max; String read;
+30 		InputIterator(){
+31 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+32 			try{
+33 				while((read = br.readLine()) != null){
+34 					inputLine.add(read);
+35 				}
+36 			}catch(IOException e){}
+37 			max = inputLine.size();
+38 		}
+39 		boolean hasNext(){return (index < max);}
+40 		String next(){
+41 			if(hasNext()){
+42 				return inputLine.get(index++);
+43 			}else{
+44 				throw new IndexOutOfBoundsException("There is no more input");
+45 			}
+46 		}
+47 	}
+48 	static HashMap<Integer, String> CONVSTR = new HashMap<>();
+49 	static InputIterator ii = new InputIterator();//This class cannot be used in reactive problem.
+50 	static PrintWriter out = new PrintWriter(System.out);
+51 	static void flush(){out.flush();}
+52 	static void myout(Object t){out.println(t);}
+53 	static void myerr(Object t){System.err.print("debug:");System.err.println(t);}
+54 	static String next(){return ii.next();}
+55 	static boolean hasNext(){return ii.hasNext();}
+56 	static int nextInt(){return Integer.parseInt(next());}
+57 	static long nextLong(){return Long.parseLong(next());}
+58 	static double nextDouble(){return Double.parseDouble(next());}
+59 	static ArrayList<String> nextStrArray(){return myconv(next(), 8);}
+60 	static ArrayList<String> nextCharArray(){return myconv(next(), 0);}
+61 	static ArrayList<Integer> nextIntArray(){
+62 		ArrayList<String> input = nextStrArray(); ArrayList<Integer> ret = new ArrayList<>(input.size());
+63 		for(int i = 0; i < input.size(); i++){
+64 			ret.add(Integer.parseInt(input.get(i)));
+65 		}
+66 		return ret;
+67 	}
+68 	static ArrayList<Long> nextLongArray(){
+69 		ArrayList<String> input = nextStrArray(); ArrayList<Long> ret = new ArrayList<>(input.size());
+70 		for(int i = 0; i < input.size(); i++){
+71 			ret.add(Long.parseLong(input.get(i)));
+72 		}
+73 		return ret;
+74 	}
+75 	static String myconv(Object list, int no){//only join
+76 		String joinString = CONVSTR.get(no);
+77 		if(list instanceof String[]){
+78 			return String.join(joinString, (String[])list);
+79 		}else if(list instanceof ArrayList){
+80 			return String.join(joinString, (ArrayList)list);
+81 		}else{
+82 			throw new ClassCastException("Don't join");
+83 		}
+84 	}
+85 	static ArrayList<String> myconv(String str, int no){//only split
+86 		String splitString = CONVSTR.get(no);
+87 		return new ArrayList<String>(Arrays.asList(str.split(splitString)));
+88 	}
+89 	public static void main(String[] args){
+90 		CONVSTR.put(8, " "); CONVSTR.put(9, "\n"); CONVSTR.put(0, "");
+91 		solve();flush();
+92 	}
+93 	//Don't have to see. end------------------------------------------
+94 }

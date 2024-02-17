@@ -1,0 +1,1 @@
+a=int(eval(input()));print((a//3))

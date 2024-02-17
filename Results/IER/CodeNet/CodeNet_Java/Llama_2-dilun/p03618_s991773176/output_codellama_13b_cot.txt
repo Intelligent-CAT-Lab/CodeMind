@@ -1,0 +1,102 @@
+
+<<<Analysis>>>
+The variable num is initialized with 0.
+It enters a for loop and it iterates from 1 to 4 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [0, 9]. If it does, it adds the current interger i to variable answer. The condition is met when i is 1,2,3 and 4.
+After the loop finishes, it print the fianl value of variable answer as output, which is 10.
+<<<Output>>>
+10
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.*;
+import java.util.*;
+
+@SuppressWarnings("unused")
+public class Main {
+    private FastScanner in = new FastScanner(System.in);
+    private PrintWriter out = new PrintWriter(System.out);
+    final int MOD = (int)1e9+7;
+    long ceil(long a, long b){return (a + b - 1) / b;}
+    long gcd(long a, long b){
+        return b == 0? a : gcd(b, a % b);
+    }
+    long lcm(long a, long b){
+        return a / gcd(a, b) * b; //オーバーフローに注意
+    }
+
+    void solve() {
+        String S = in.nextStr();
+        int[] num = new int[26];
+        long ans = (long)(S.length())*(S.length()+1)/2+1;
+        for(int i = 0; i < S.length(); i++){
+            int c = (S.charAt(i)-'a');
+            num[c]++;
+            ans -= num[c];
+        }
+        out.println(ans);
+    }
+    //end solve
+
+    public static void main(String[] args) {
+        new Main().m();
+    }
+
+    private void m() {
+        solve();
+        out.flush();
+    }
+
+    static class FastScanner {
+        Reader input;
+
+        FastScanner() {this(System.in);}
+        FastScanner(InputStream stream) {this.input = new BufferedReader(new InputStreamReader(stream));}
+
+        int nextInt() {return (int) nextLong();}
+
+        long nextLong() {
+            try {
+                int sign = 1;
+                int b = input.read();
+                while ((b < '0' || '9' < b) && b!= '-' && b!= '+') {
+                    b = input.read();
+                }
+                if (b == '-') {
+                    sign = -1;
+                    b = input.read();
+                } else if (b == '+') {
+                    b = input.read();
+                }
+                long ret = b - '0';
+                while (true) {
+                    b = input.read();
+                    if (b < '0' || '9' < b) return ret * sign;
+                    ret *= 10;
+                    ret += b - '0';
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return -1;
+            }
+        }
+
+        double nextDouble() {
+            try {
+                double sign = 1;
+                int b = input.read();
+                while ((b < '0' || '9' < b) && b!= '-' && b!= '+') {
+                    b = input.read();
+                }
+                if (b == '-') {
+                    sign = -1;
+                    b = input.read();
+                } else if (b == '+') {
+                    b = input.read();
+                }
+                double ret = b - '0';
+                while (true) {
+                    b = input.read();
+                    if (b < '0' || '9' < b)

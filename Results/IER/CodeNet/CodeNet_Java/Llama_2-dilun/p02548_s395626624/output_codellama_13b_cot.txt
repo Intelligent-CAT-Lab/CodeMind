@@ -1,0 +1,97 @@
+
+<<<Analysis>>>
+The variable n, variable a and variable b are initialized with 3, 2 and 5 respectively according to the input. And variable sum is initialized with 0.
+It enters a for loop and it iterates from 1 to 3 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [2, 5]. If it does, it adds the current interger i to variable answer. The condition is met when i is 2,3,4,5,11,12,13,14 and 20.
+After the loop finishes, it print the fianl value of variable answer as output, which is 84.
+<<<Output>>>
+84
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.*;
+import java.util.*;
+import java.math.BigDecimal;
+
+@SuppressWarnings("unused")
+public class Main {
+    FastScanner in;
+    PrintWriter out;
+    final static int MOD = (int)1e9+7;
+    
+    void solve(){
+        int N = in.nextInt();
+        
+        Sieve sieve = new Sieve(N);
+        long ans = 0;
+        for(int C = 1; C < N; C++){
+            int AB = N - C;
+            ArrayList<int[]> run = sieve.primeFactor(AB);
+            long m = 1;
+            for(int[] e : run){
+                m *= (e[1] + 1);
+            }
+            ans += m;
+        }
+        out.println(ans);
+    }
+    
+    class Sieve{
+        int MAX;
+        int[] f;
+        ArrayList<Integer> primes;
+        
+        public Sieve(){
+            this((int)1e6);
+        }
+        
+        public Sieve(int m){
+            this.MAX = m;
+            f = new int[MAX+1];
+            primes = new ArrayList<>();
+            f[0] = f[1] = -1;
+            for(int i = 2; i <= MAX; i++){
+                if(f[i]!= 0) continue;
+                primes.add(i);
+                f[i] = i;
+                if((long)i*i > MAX) continue;
+                for(int j = i*i; j <= MAX; j += i){
+                    if(f[j] == 0) f[j] = i;
+                }
+            }
+        }
+        
+        //xが素数かどうか
+        boolean isPrime(int x){ return f[x] == x;}
+        
+        //xを素因数分解した結果を返す
+        private ArrayList<Integer> factorList(int x){
+            ArrayList<Integer> res = new ArrayList<>();
+            while(x!= 1){
+                res.add(f[x]);
+                x /= f[x];
+            }
+            return res;
+        }
+        
+        //xを素因数分解した結果をランレングス圧縮して返す
+        ArrayList<int[]> primeFactor(int x){
+            if(x == 0) return null;
+            ArrayList<Integer> fl = factorList(x);
+            ArrayList<int[]> res = new ArrayList<>();
+            if(fl.size() == 0){ return res;}
+            res.add(new int[]{fl.get(0), 0});
+            for(int p : fl){
+                if(res.get(res.size()-1)[0] == p){
+                    res.get(res.size()-1)[1]++;
+                }else{
+                    res.add(new int[]{p, 1});
+                }
+            }
+            return res;
+        }
+        
+        int[] lcm(int[] a){
+            int[] ex = new int[MAX

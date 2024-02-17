@@ -1,0 +1,428 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.util.Arrays;
+6 import java.io.BufferedWriter;
+7 import java.io.IOException;
+8 import java.io.InputStreamReader;
+9 import java.io.UncheckedIOException;
+10 import java.util.Objects;
+11 import java.nio.charset.Charset;
+12 import java.util.StringTokenizer;
+13 import java.io.Writer;
+14 import java.io.OutputStreamWriter;
+15 import java.io.BufferedReader;
+16 import java.util.regex.Pattern;
+17 import java.io.InputStream;
+18 
+19 /**
+20  * Built using CHelper plug-in
+21  * Actual solution is at the top
+22  *
+23  * @author mikit
+24  */
+25 public class Main {
+26     public static void main(String[] args) {
+27         InputStream inputStream = System.in;
+28         OutputStream outputStream = System.out;
+29         LightScanner in = new LightScanner(inputStream);
+30         LightWriter out = new LightWriter(outputStream);
+31         FRedBlackSoulGem solver = new FRedBlackSoulGem();
+32         solver.solve(1, in, out);
+33         out.close();
+34     }
+35 
+36     static class FRedBlackSoulGem {
+37         public void solve(int testNumber, LightScanner in, LightWriter out) {
+38             Debug.enable("src");
+39             int n = in.ints(), m = in.ints();
+40             ModMath mod = new ModMath(m);
+41             long ans = 0;
+42             Exponentiation exp2 = mod.getExponentiation(2, n);
+43             for (int r = 1; r < n; r++) {
+44                 int b = n - r;
+45 
+46                 long t = mod.ncr(n, r);
+47                 t *= mod.pow(2, r * (r - 1L) / 2);
+48                 t %= m;
+49 
+50                 t *= mod.pow(2, b * (b - 1L) / 2);
+51                 t %= m;
+52 
+53                 long p = 0;
+54                 Factorial fact = mod.getFactorial(b + 1);
+55                 for (int i = 0; i <= b; i++) {
+56                     if (i % 2 == 0) {
+57                         p += fact.ncr(b, i) * mod.pow(exp2.pow(b - i) - 1, r) % m;
+58                         p %= m;
+59                     } else {
+60                         p -= fact.ncr(b, i) * mod.pow(exp2.pow(b - i) - 1, r) % m;
+61                         p %= m;
+62                     }
+63                 }
+64                 if (p < 0) {
+65                     p += m;
+66                 }
+67 
+68                 //System.out.println("r="+r+" b="+b +" p="+p);
+69                 t *= p;
+70                 t %= m;
+71 
+72                 ans += t;
+73                 ans %= m;
+74             }
+75             out.ans(ans).ln();
+76         }
+77 
+78     }
+79 
+80     static class LightWriter implements AutoCloseable {
+81         private final Writer out;
+82         private boolean autoflush = false;
+83         private boolean breaked = true;
+84 
+85         public LightWriter(Writer out) {
+86             this.out = out;
+87         }
+88 
+89         public LightWriter(OutputStream out) {
+90             this(new BufferedWriter(new OutputStreamWriter(out, Charset.defaultCharset())));
+91         }
+92 
+93         public LightWriter print(char c) {
+94             try {
+95                 out.write(c);
+96                 breaked = false;
+97             } catch (IOException ex) {
+98                 throw new UncheckedIOException(ex);
+99             }
+100             return this;
+101         }
+102 
+103         public LightWriter print(String s) {
+104             try {
+105                 out.write(s, 0, s.length());
+106                 breaked = false;
+107             } catch (IOException ex) {
+108                 throw new UncheckedIOException(ex);
+109             }
+110             return this;
+111         }
+112 
+113         public LightWriter ans(String s) {
+114             if (!breaked) {
+115                 print(' ');
+116             }
+117             return print(s);
+118         }
+119 
+120         public LightWriter ans(long l) {
+121             return ans(Long.toString(l));
+122         }
+123 
+124         public LightWriter ln() {
+125             print(System.lineSeparator());
+126             breaked = true;
+127             if (autoflush) {
+128                 try {
+129                     out.flush();
+130                 } catch (IOException ex) {
+131                     throw new UncheckedIOException(ex);
+132                 }
+133             }
+134             return this;
+135         }
+136 
+137         public void close() {
+138             try {
+139                 out.close();
+140             } catch (IOException ex) {
+141                 throw new UncheckedIOException(ex);
+142             }
+143         }
+144 
+145     }
+146 
+147     static class Exponentiation {
+148         private final ModMath mod;
+149         private final long base;
+150         private final int max;
+151         private final long[] natural;
+152         private final long[] reverse;
+153 
+154         public Exponentiation(ModMath mod, long base, int max) {
+155             this.mod = mod;
+156             this.base = base;
+157             this.max = max;
+158             this.natural = new long[max];
+159             this.reverse = new long[max];
+160             natural[0] = 1;
+161             for (int i = 1; i < max; i++) {
+162                 natural[i] = mod.mod(natural[i - 1] * base);
+163             }
+164             reverse[max - 1] = mod.inv(natural[max - 1]);
+165             for (int i = max - 1; i > 0; i--) {
+166                 reverse[i - 1] = mod.mod(reverse[i] * base);
+167             }
+168         }
+169 
+170         public long pow(int x) {
+171             if (x >= 0) {
+172                 return natural[x];
+173             } else {
+174                 return reverse[-x];
+175             }
+176         }
+177 
+178         public String toString() {
+179             return "Exponentiation{" +
+180                     "natural=" + Arrays.toString(natural) +
+181                     ", reverse=" + Arrays.toString(reverse) +
+182                     '}';
+183         }
+184 
+185     }
+186 
+187     static class Vec3l implements Comparable<Vec3l> {
+188         public long x;
+189         public long y;
+190         public long z;
+191 
+192         public Vec3l(long x, long y, long z) {
+193             this.x = x;
+194             this.y = y;
+195             this.z = z;
+196         }
+197 
+198         public boolean equals(Object o) {
+199             if (this == o) return true;
+200             if (o == null || getClass() != o.getClass()) return false;
+201             Vec3i vec3i = (Vec3i) o;
+202             return x == vec3i.x &&
+203                     y == vec3i.y &&
+204                     z == vec3i.z;
+205         }
+206 
+207         public int hashCode() {
+208             return Objects.hash(x, y, z);
+209         }
+210 
+211         public String toString() {
+212             return "(" + x + ", " + y + ", " + z + ")";
+213         }
+214 
+215         public int compareTo(Vec3l o) {
+216             if (x == o.x) {
+217                 if (y == o.y) {
+218                     return Long.compare(z, o.z);
+219                 }
+220                 return Long.compare(y, o.z);
+221             }
+222             return Long.compare(x, o.x);
+223         }
+224 
+225     }
+226 
+227     static class ModMath {
+228         private static final int DEFAULT_MOD = 1_000_000_007;
+229         private final long mod;
+230 
+231         public ModMath(long mod) {
+232             this.mod = mod;
+233         }
+234 
+235         public ModMath() {
+236             this(DEFAULT_MOD);
+237         }
+238 
+239         public long mod(long x) {
+240             x %= mod;
+241             return x < 0 ? x + mod : x;
+242         }
+243 
+244         public long inv(long x) {
+245             return mod(LongEuclidSolver.solve(x, -mod).x);
+246         }
+247 
+248         public long pow(long x, long y) {
+249             if (y < 0) {
+250                 return pow(inv(x), -y);
+251             } else if (y == 0) {
+252                 return 1;
+253             } else if (y % 2 == 0) {
+254                 long z = pow(x, y / 2);
+255                 return (z * z) % mod;
+256             } else {
+257                 return (x % mod) * pow(x, y - 1) % mod;
+258             }
+259         }
+260 
+261         public long npr(int n, int r) {
+262             if (n < r) {
+263                 return 0;
+264             }
+265             long ans = 1;
+266             for (int i = 0; i < r; i++) {
+267                 ans *= (n - i);
+268                 ans %= mod;
+269             }
+270             return ans;
+271         }
+272 
+273         public long ncr(int n, int r) {
+274             long div = 1;
+275             for (int i = 2; i <= r; i++) {
+276                 div *= i;
+277                 div %= mod;
+278             }
+279             return mod(npr(n, r) * inv(div));
+280         }
+281 
+282         public Factorial getFactorial(int n) {
+283             return new Factorial(this, n);
+284         }
+285 
+286         public Exponentiation getExponentiation(long base, int max) {
+287             return new Exponentiation(this, base, max);
+288         }
+289 
+290     }
+291 
+292     static class LongEuclidSolver {
+293         private LongEuclidSolver() {
+294         }
+295 
+296         public static Vec3l solve(long p, long q) {
+297             if (q == 0) {
+298                 return new Vec3l(p, 1, p);
+299             }
+300             Vec3l vals = solve(q, p % q);
+301             long a = vals.y;
+302             long b = vals.x - (p / q) * a;
+303             return new Vec3l(a, b, vals.z);
+304         }
+305 
+306     }
+307 
+308     static class Factorial {
+309         private final ModMath mod;
+310         private final int max;
+311         private final long[] natural;
+312         private final long[] reverse;
+313 
+314         public Factorial(ModMath mod, int max) {
+315             this.mod = mod;
+316             this.max = max;
+317             this.natural = new long[max];
+318             this.reverse = new long[max];
+319             natural[0] = 1;
+320             for (int i = 1; i < max; i++) {
+321                 natural[i] = mod.mod(natural[i - 1] * i);
+322             }
+323             reverse[max - 1] = mod.inv(natural[max - 1]);
+324             for (int i = max - 1; i > 0; i--) {
+325                 reverse[i - 1] = mod.mod(reverse[i] * i);
+326             }
+327         }
+328 
+329         public long npr(int n, int r) {
+330             return n < r ? 0 : mod.mod(natural[n] * reverse[n - r]);
+331         }
+332 
+333         public long ncr(int n, int r) {
+334             return mod.mod(npr(n, r) * reverse[r]);
+335         }
+336 
+337         public String toString() {
+338             return "Factorial{" +
+339                     "natural=" + Arrays.toString(natural) +
+340                     ", reverse=" + Arrays.toString(reverse) +
+341                     '}';
+342         }
+343 
+344     }
+345 
+346     static class LightScanner {
+347         private BufferedReader reader = null;
+348         private StringTokenizer tokenizer = null;
+349 
+350         public LightScanner(InputStream in) {
+351             reader = new BufferedReader(new InputStreamReader(in));
+352         }
+353 
+354         public String string() {
+355             if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+356                 try {
+357                     tokenizer = new StringTokenizer(reader.readLine());
+358                 } catch (IOException e) {
+359                     throw new UncheckedIOException(e);
+360                 }
+361             }
+362             return tokenizer.nextToken();
+363         }
+364 
+365         public int ints() {
+366             return Integer.parseInt(string());
+367         }
+368 
+369     }
+370 
+371     static class Debug {
+372         private static final String DEBUG_CALL_PATTERN = "^.+\\.debug\\((.+)\\);.*$";
+373         private static Pattern debugRegex;
+374         private static boolean enabled = false;
+375         private static String src;
+376 
+377         public static void enable(String s) {
+378             enabled = true;
+379             src = s;
+380             if (debugRegex == null) {
+381                 debugRegex = Pattern.compile(DEBUG_CALL_PATTERN);
+382             }
+383         }
+384 
+385     }
+386 
+387     static class Vec3i implements Comparable<Vec3i> {
+388         public int x;
+389         public int y;
+390         public int z;
+391 
+392         public Vec3i(int x, int y, int z) {
+393             this.x = x;
+394             this.y = y;
+395             this.z = z;
+396         }
+397 
+398         public boolean equals(Object o) {
+399             if (this == o) return true;
+400             if (o == null || getClass() != o.getClass()) return false;
+401             Vec3i vec3i = (Vec3i) o;
+402             return x == vec3i.x &&
+403                     y == vec3i.y &&
+404                     z == vec3i.z;
+405         }
+406 
+407         public int hashCode() {
+408             return Objects.hash(x, y, z);
+409         }
+410 
+411         public String toString() {
+412             return "(" + x + ", " + y + ", " + z + ")";
+413         }
+414 
+415         public int compareTo(Vec3i o) {
+416             if (x == o.x) {
+417                 if (y == o.y) {
+418                     return Integer.compare(z, o.z);
+419                 }
+420                 return Integer.compare(y, o.z);
+421             }
+422             return Integer.compare(x, o.x);
+423         }
+424 
+425     }
+426 }
+427 
+428 

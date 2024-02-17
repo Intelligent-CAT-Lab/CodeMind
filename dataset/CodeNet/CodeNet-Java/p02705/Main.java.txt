@@ -1,0 +1,302 @@
+1 
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.PrintWriter;
+6 import java.math.BigInteger;
+7 import java.util.Arrays;
+8 import java.util.InputMismatchException;
+9 
+10 /**
+11  * @author Mubtasim Shahriar
+12  */
+13 
+14 public class Main {
+15 
+16 
+17 	public static void main(String[] args) {
+18 
+19 		InputStream inputStream = System.in;
+20 		OutputStream outputStream = System.out;
+21 		InputReader sc = new InputReader(inputStream);
+22 		PrintWriter out = new PrintWriter(outputStream);
+23 		Solver solver = new Solver();
+24 //		int t = sc.nextInt();
+25 		int t = 1;
+26 		while(t--!=0) {
+27 			solver.solve(sc, out);
+28 		}		
+29 		out.close();
+30 
+31 	}
+32 
+33 	static class Solver {
+34 		public void solve(InputReader sc, PrintWriter out) {
+35 			double r = sc.nextDouble();
+36 			double pi = Math.PI;
+37 			out.println(2*pi*r);
+38 		}
+39 	}
+40 
+41 	static class InputReader { 
+42 		private boolean finished = false;
+43 
+44 		private InputStream stream;
+45 		private byte[] buf = new byte[1024];
+46 		private int curChar;
+47 		private int numChars;
+48 		private SpaceCharFilter filter;
+49 
+50 		public InputReader(InputStream stream) {
+51 			this.stream = stream;
+52 		}
+53 
+54 		public int read() {
+55 			if (numChars == -1) {
+56 				throw new InputMismatchException();
+57 			}
+58 			if (curChar >= numChars) {
+59 				curChar = 0;
+60 				try {
+61 					numChars = stream.read(buf);
+62 				} catch (IOException e) {
+63 					throw new InputMismatchException();
+64 				}
+65 				if (numChars <= 0) {
+66 					return -1;
+67 				}
+68 			}
+69 			return buf[curChar++];
+70 		}
+71 
+72 		public int peek() {
+73 			if (numChars == -1) {
+74 				return -1;
+75 			}
+76 			if (curChar >= numChars) {
+77 				curChar = 0;
+78 				try {
+79 					numChars = stream.read(buf);
+80 				} catch (IOException e) {
+81 					return -1;
+82 				}
+83 				if (numChars <= 0) {
+84 					return -1;
+85 				}
+86 			}
+87 			return buf[curChar];
+88 		}
+89 
+90 		public int nextInt() {
+91 			int c = read();
+92 			while (isSpaceChar(c)) {
+93 				c = read();
+94 			}
+95 			int sgn = 1;
+96 			if (c == '-') {
+97 				sgn = -1;
+98 				c = read();
+99 			}
+100 			int res = 0;
+101 			do {
+102 				if (c < '0' || c > '9') {
+103 					throw new InputMismatchException();
+104 				}
+105 				res *= 10;
+106 				res += c - '0';
+107 				c = read();
+108 			} while (!isSpaceChar(c));
+109 			return res * sgn;
+110 		}
+111 
+112 		public long nextLong() {
+113 			int c = read();
+114 			while (isSpaceChar(c)) {
+115 				c = read();
+116 			}
+117 			int sgn = 1;
+118 			if (c == '-') {
+119 				sgn = -1;
+120 				c = read();
+121 			}
+122 			long res = 0;
+123 			do {
+124 				if (c < '0' || c > '9') {
+125 					throw new InputMismatchException();
+126 				}
+127 				res *= 10;
+128 				res += c - '0';
+129 				c = read();
+130 			} while (!isSpaceChar(c));
+131 			return res * sgn;
+132 		}
+133 
+134 		public String nextString() {
+135 			int c = read();
+136 			while (isSpaceChar(c)) {
+137 				c = read();
+138 			}
+139 			StringBuilder res = new StringBuilder();
+140 			do {
+141 				if (Character.isValidCodePoint(c)) {
+142 					res.appendCodePoint(c);
+143 				}
+144 				c = read();
+145 			} while (!isSpaceChar(c));
+146 			return res.toString();
+147 		}
+148 
+149 		public boolean isSpaceChar(int c) {
+150 			if (filter != null) {
+151 				return filter.isSpaceChar(c);
+152 			}
+153 			return isWhitespace(c);
+154 		}
+155 
+156 		public static boolean isWhitespace(int c) {
+157 			return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+158 		}
+159 
+160 		private String readLine0() {
+161 			StringBuilder buf = new StringBuilder();
+162 			int c = read();
+163 			while (c != '\n' && c != -1) {
+164 				if (c != '\r') {
+165 					buf.appendCodePoint(c);
+166 				}
+167 				c = read();
+168 			}
+169 			return buf.toString();
+170 		}
+171 
+172 		public String readLine() {
+173 			String s = readLine0();
+174 			while (s.trim().length() == 0) {
+175 				s = readLine0();
+176 			}
+177 			return s;
+178 		}
+179 
+180 		public String readLine(boolean ignoreEmptyLines) {
+181 			if (ignoreEmptyLines) {
+182 				return readLine();
+183 			} else {
+184 				return readLine0();
+185 			}
+186 		}
+187 
+188 		public BigInteger readBigInteger() {
+189 			try {
+190 				return new BigInteger(nextString());
+191 			} catch (NumberFormatException e) {
+192 				throw new InputMismatchException();
+193 			}
+194 		}
+195 
+196 		public char nextCharacter() {
+197 			int c = read();
+198 			while (isSpaceChar(c)) {
+199 				c = read();
+200 			}
+201 			return (char) c;
+202 		}
+203 
+204 		public double nextDouble() {
+205 			int c = read();
+206 			while (isSpaceChar(c)) {
+207 				c = read();
+208 			}
+209 			int sgn = 1;
+210 			if (c == '-') {
+211 				sgn = -1;
+212 				c = read();
+213 			}
+214 			double res = 0;
+215 			while (!isSpaceChar(c) && c != '.') {
+216 				if (c == 'e' || c == 'E') {
+217 					return res * Math.pow(10, nextInt());
+218 				}
+219 				if (c < '0' || c > '9') {
+220 					throw new InputMismatchException();
+221 				}
+222 				res *= 10;
+223 				res += c - '0';
+224 				c = read();
+225 			}
+226 			if (c == '.') {
+227 				c = read();
+228 				double m = 1;
+229 				while (!isSpaceChar(c)) {
+230 					if (c == 'e' || c == 'E') {
+231 						return res * Math.pow(10, nextInt());
+232 					}
+233 					if (c < '0' || c > '9') {
+234 						throw new InputMismatchException();
+235 					}
+236 					m /= 10;
+237 					res += (c - '0') * m;
+238 					c = read();
+239 				}
+240 			}
+241 			return res * sgn;
+242 		}
+243 
+244 		public boolean isExhausted() {
+245 			int value;
+246 			while (isSpaceChar(value = peek()) && value != -1) {
+247 				read();
+248 			}
+249 			return value == -1;
+250 		}
+251 
+252 		public String next() {
+253 			return nextString();
+254 		}
+255 
+256 		public SpaceCharFilter getFilter() {
+257 			return filter;
+258 		}
+259 
+260 		public void setFilter(SpaceCharFilter filter) {
+261 			this.filter = filter;
+262 		}
+263 
+264 		public interface SpaceCharFilter {
+265 			public boolean isSpaceChar(int ch);
+266 		}
+267 		public int[] nextIntArray(int n){
+268 			int[] array=new int[n];
+269 			for(int i=0;i<n;++i)array[i]=nextInt();
+270 			return array;
+271 		}
+272 		public int[] nextSortedIntArray(int n){
+273 			int array[]=nextIntArray(n);
+274 			Arrays.sort(array);
+275 			return array;
+276 		}
+277 		public int[] nextSumIntArray(int n){
+278 			int[] array=new int[n];
+279 			array[0]=nextInt();
+280 			for(int i=1;i<n;++i)array[i]=array[i-1]+nextInt();
+281 			return array;
+282 		}
+283 		public long[] nextLongArray(int n){
+284 			long[] array=new long[n];
+285 			for(int i=0;i<n;++i)array[i]=nextLong();
+286 			return array;
+287 		}
+288 		public long[] nextSumLongArray(int n){
+289 			long[] array=new long[n];
+290 			array[0]=nextInt();
+291 			for(int i=1;i<n;++i)array[i]=array[i-1]+nextInt();
+292 			return array;
+293 		}
+294 		public long[] nextSortedLongArray(int n){
+295 			long array[]=nextLongArray(n);
+296 			Arrays.sort(array);
+297 			return array;
+298 		}
+299 	}
+300 
+301 
+302 }

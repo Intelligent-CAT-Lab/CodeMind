@@ -1,0 +1,26 @@
+Print the answer and end your response with "END-OF-OUTPUT":
+The variable s is initialized to "aabxyyzz".
+The variable t is initialized to 0.
+The variable d is initialized to {0:0}.
+The code then enters a loop that iterates over the characters in s.
+For each character x in s, it calculates the value of i by subtracting the ASCII value of x from the ASCII value of 'a'.
+The value of t is then updated to t XOR 1 << i, which is 1 << i if i is even, and 0 otherwise.
+The value of d is then updated to d[t] if t is in d, and to 1000000 otherwise.
+The value of d is then updated to min(d[t], min((d[t^(1<<j)] for j in range(26) if t^(1<<j) in d))+1), which is min(d[t], min((d[t^(1<<j)] for j in range(26) if t^(1<<j) in d))+1) if t in d, and to 1000000 otherwise.
+After the loop finishes, the code prints the final value of d[t], which is 3.
+<<<Output>>>
+3
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+#!/usr/bin/env python3
+s = input()
+t = 0
+d = {t:0}
+for i in (ord(x)-ord('a') for x in s) :
+	t ^= 1 << i
+	d[t] = min(d[t] if t in d else 1000000, min((d[t^(1<<j

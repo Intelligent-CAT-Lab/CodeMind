@@ -1,0 +1,50 @@
+1 import java.util.Arrays;
+2 import java.util.Scanner;
+3 
+4 public class Main {
+5 
+6     public static void main(String[] args) {
+7         Scanner sc = new Scanner(System.in);
+8         int sx = sc.nextInt();
+9         int sy = sc.nextInt();
+10         int tx = sc.nextInt();
+11         int ty = sc.nextInt();
+12 
+13         System.out.println( solve(sx, sy, tx, ty) );
+14     }
+15 
+16     private static String solve(int sx, int sy, int tx, int ty) {
+17         int dx = tx - sx;
+18         int dy = ty - sy;
+19 
+20         StringBuilder b = new StringBuilder();
+21         // sx < tx, sy < ty なので 特定の形式で行ける
+22         // first
+23         b.append( renzoku('R', dx) );
+24         b.append( renzoku('U', dy) );
+25 
+26         // second
+27         b.append( renzoku('L', dx) );
+28         b.append( renzoku('D', dy) );
+29 
+30         // third
+31         b.append( renzoku('D', 1) );
+32         b.append( renzoku('R', dx + 1) );
+33         b.append( renzoku('U', dy + 1) );
+34         b.append( renzoku('L', 1) );
+35 
+36         // forth
+37         b.append( renzoku('U', 1) );
+38         b.append( renzoku('L', dx + 1) );
+39         b.append( renzoku('D', dy + 1) );
+40         b.append( renzoku('R', 1) );
+41 
+42         return b.toString();
+43     }
+44 
+45     private static String renzoku(char c, int n) {
+46         char[] chars = new char[n];
+47         Arrays.fill(chars, c);
+48         return new String(chars);
+49     }
+50 }

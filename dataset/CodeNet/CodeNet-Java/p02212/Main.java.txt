@@ -1,0 +1,180 @@
+1 import java.util.*;
+2 import java.io.*;
+3 
+4 public class Main {
+5 	public static long gcd(long n, long m){ if(m > n) return gcd(m,n); if(m == 0) return n; return gcd(m, n%m);}
+6 	public static long lcm(long m, long n){ return (m/gcd(m,n))*n;}
+7 	static int mod = 1000000007;
+8 	static int INF = Integer.MAX_VALUE;
+9 	static int[] dx = {0,0,1,-1};
+10 	static int[] dy = {1,-1,0,0};
+11 	static int[] dx8 = {0,0,1,-1,1,1,-1,-1};
+12 	static int[] dy8 = {1,-1,0,0,1,-1,-1,1};
+13 	public static void main(String[] args){
+14 		FastScanner scanner = new FastScanner();
+15 		int[] a = new int[4];
+16 		for(int i = 0; i < 4; i++){
+17 			a[i] = scanner.nextInt();
+18 		}
+19 		Arrays.sort(a);
+20 		System.out.println(Math.abs(a[0]+a[3]-a[1]-a[2]));
+21  	}
+22 
+23 	static class Edge implements Comparable<Edge>{
+24 		int to;
+25 		int cost;
+26 		Edge(int to, int cost){
+27 			this.to = to;
+28 			this.cost = cost;
+29 		}
+30 		public int compareTo(Edge e){
+31 			return cost-e.cost;
+32 		}
+33 	}
+34 	static class Edge2 implements Comparable<Edge2>{
+35 		int from;
+36 		int to;
+37 		int cost;
+38 		Edge2(int from, int to, int cost){
+39 			this.from = from;
+40 			this.to = to;
+41 			this.cost = cost;
+42 		}
+43 		public int compareTo(Edge2 e){
+44 			return cost-e.cost;
+45 		}
+46 	}
+47 
+48 	static class RMQ {
+49 		private int size_, dat[];
+50 		private int query_(int a, int b, int k, int l, int r) {
+51 			if(r <= a || b <= l) return 2147483647;
+52 			if(a <= l && r <= b) return dat[k];
+53 			int lc = query_(a, b, 2 * k, l, (l + r) / 2);
+54 			int rc = query_(a, b, 2 * k + 1, (l + r) / 2, r);
+55 			return Math.min(lc, rc);
+56 		}
+57 		RMQ(int s) {
+58 			for(size_ = 1; size_ < s;) size_ *= 2;
+59 			dat = new int[size_ * 2];
+60 			for(int i = 0; i < size_ * 2; i++) dat[i] = 2147483647;
+61 		}
+62 		public void update(int pos, int x) {
+63 			pos += size_; dat[pos] = x;
+64 			while(pos > 1) {
+65 				pos /= 2;
+66 				dat[pos] = Math.min(dat[2 * pos], dat[2 * pos + 1]);
+67 			}
+68 		}
+69 		public int query(int l, int r) {
+70 			return query_(l, r, 1, 0, size_);
+71 		}
+72 	}
+73 	static int size = 2100000;
+74 	static long[] fac = new long[size];
+75 	static long[] finv = new long[size];
+76 	static long[] inv = new long[size];
+77 	//繰り返し二乗法
+78 	public static long pow(long x, long n){
+79 		long ans = 1;
+80 		while(n > 0){
+81 			if((n & 1) == 1){
+82 				ans = ans * x;
+83 				ans %= mod;
+84 			}
+85 			x = x * x % mod;
+86 			n >>= 1;
+87 		}
+88 		return ans;
+89 	}
+90 	public static long div(long x, long y){
+91 		return (x*pow(y, mod-2))%mod;
+92 	}
+93 	//fac, inv, finvテーブルの初期化、これ使う場合はinitComb()で初期化必要
+94 	public static  void initComb(){
+95 		fac[0] = finv[0] = inv[0] = fac[1] = finv[1] = inv[1] = 1;
+96 		for (int i = 2; i < size; ++i) {
+97 			fac[i] = fac[i - 1] * i % mod;
+98 			inv[i] = mod - (mod / i) * inv[(int) (mod % i)] % mod;
+99 			finv[i] = finv[i - 1] * inv[i] % mod;
+100 		}
+101 	}
+102 	//nCk % mod
+103 	public static long comb(int n, int k){
+104 		return fac[n] * finv[k] % mod * finv[n - k] % mod;
+105 	}
+106 	//n! % mod
+107 	public static long fact(int n){
+108 		return fac[n];
+109 	}
+110 	//(n!)^-1 with % mod
+111 	public static long finv(int n){
+112 		return finv[n];
+113 	}
+114 	private static class FastScanner {
+115 		private final InputStream in = System.in;
+116 		private final byte[] buffer = new byte[1024];
+117 		private int ptr = 0;
+118 		private int buflen = 0;
+119 		private boolean hasNextByte() {
+120 				if (ptr < buflen) {
+121 						return true;
+122 				}else{
+123 						ptr = 0;
+124 						try {
+125 								buflen = in.read(buffer);
+126 						} catch (IOException e) {
+127 								e.printStackTrace();
+128 						}
+129 						if (buflen <= 0) {
+130 								return false;
+131 						}
+132 				}
+133 				return true;
+134 		}
+135 		private int readByte() { if (hasNextByte()) return buffer[ptr++]; else return -1;}
+136 		private static boolean isPrintableChar(int c) { return 33 <= c && c <= 126;}
+137 		public boolean hasNext() { while(hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++; return hasNextByte();}
+138 		public String next() {
+139 				if (!hasNext()) throw new NoSuchElementException();
+140 				StringBuilder sb = new StringBuilder();
+141 				int b = readByte();
+142 				while(isPrintableChar(b)) {
+143 						sb.appendCodePoint(b);
+144 						b = readByte();
+145 				}
+146 				return sb.toString();
+147 		}
+148 		public long nextLong() {
+149 				if (!hasNext()) throw new NoSuchElementException();
+150 				long n = 0;
+151 				boolean minus = false;
+152 				int b = readByte();
+153 				if (b == '-') {
+154 						minus = true;
+155 						b = readByte();
+156 				}
+157 				if (b < '0' || '9' < b) {
+158 						throw new NumberFormatException();
+159 				}
+160 				while(true){
+161 						if ('0' <= b && b <= '9') {
+162 								n *= 10;
+163 								n += b - '0';
+164 						}else if(b == -1 || !isPrintableChar(b)){
+165 								return minus ? -n : n;
+166 						}else{
+167 								throw new NumberFormatException();
+168 						}
+169 						b = readByte();
+170 				}
+171 		}
+172 		public int nextInt() {
+173 				long nl = nextLong();
+174 				if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE) throw new NumberFormatException();
+175 				return (int) nl;
+176 		}
+177 		public double nextDouble() { return Double.parseDouble(next());}
+178 	}
+179 }
+180 

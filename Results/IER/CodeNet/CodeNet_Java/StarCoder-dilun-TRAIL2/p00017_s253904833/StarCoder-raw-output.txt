@@ -1,0 +1,59 @@
+e variable shift is initialized with 0.
+It enters a for loop and it iterates until there is no more input.
+Inside the for loop, it splits the input string into an array of words.
+Then it enters a for loop and it iterates from 0 to 25 to check each integer j in this range.
+Inside the for loop, it enters a for loop and it iterates from 0 to the length of the current word in the array of words.
+Inside the for loop, it calculates the shifted word of the current character c in the current word in the array of words by calling the method shiftWord(c, j).
+Then it checks if the shifted word is "the", "this" or "that". If it is, it returns the value of variable j as the output.
+After the loop finishes, it print the fianl value of variable j as output, which is 13.
+<<<Output>>>
+13
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		
+		for(; scanner.hasNext();)
+		{
+			String in = scanner.nextLine();
+			
+			int shift = getShift(in);
+			
+			String out = "";
+			for(int i=0; i<in.length(); i++)
+			{
+				out += shiftWord(in.charAt(i), shift);
+			}
+			System.out.println(out);
+		}
+	}
+	
+	static int getShift(String str)
+	{
+		String[] word = str.split("[.]");
+		
+		for(int i=0; i<word.length; i++)
+		{
+			for(int j=0; j<26; j++)
+			{
+				String w = "";
+				for(int k=0; k<word[i].length(); k++)
+				{
+					w += shiftWord(word[i].charAt(k), j);
+				}
+				if(w.equals("the") || w.equals("this") || w.equals("that"))
+				{
+					return j;
+				}
+			}
+		}
+	

@@ -1,0 +1,65 @@
+ variable N is initialized with the value of the input.
+The variable N is multiplied by 9.
+The for loop iterates from 0 to the length of the input.
+The if statement checks if the value of N.dsum() is less than or equal to i*9.
+If it is, it prints the value of i as output.
+<<<Output>>>
+1
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.util.*;
+
+public class Main {
+	static class LongInteger {
+		ArrayList<Integer> n;
+		int dsum = -1;
+		
+		public LongInteger(String str) {
+			n = new ArrayList<>();
+			for(int i=str.length()-1; i>=0; i--) {
+				n.add(str.charAt(i)-'0');
+			}
+		}
+		
+		public int dsum() {
+			if(dsum == -1) {
+				dsum=0;
+				for(int i : n)
+					dsum += i;
+			}
+			return dsum;
+		}
+		
+		public void multi(int x) {
+			ArrayList<Integer> nn = new ArrayList<>();
+			int carry = 0;
+			for(int i : n) {
+				int temp = i*x+carry;
+				nn.add(temp%10);
+				carry = temp/10;
+			}
+			while(carry>0) {
+				nn.add(carry%10);
+				carry /= 10;
+			}
+			n = nn;
+			dsum = -1;
+		}
+		
+		public void add(int x) {
+			int carry = x;
+			int idx = 0;
+			while(carry>0) {
+				int temp = (idx < n.size()? n.get(idx) : 0) + carry;
+				dsum += temp%10 - (idx < n.size()? n.get(idx) : 0);
+				if(idx < n.size())
+					n.set(idx, temp%10);
+				else
+					n.add(temp%10);
+				carry = temp/10;
+				idx++;

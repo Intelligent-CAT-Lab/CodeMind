@@ -1,0 +1,111 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6    public static void main(String[] args) {\n7\t\t try {\n7\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nQuestion: What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the sataes and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.io.*;\n2 import java.util.*;\n3 \n4 class Solver {\n5   final int k, n;\n6   \n7   Solver(int k, int n) {\n8     this.k = k;\n9     this.n = n;\n10   }\n11   \n12   private List<Integer> solveK1() {\n13     List<Integer> answers = new ArrayList<>();\n14     for (int i = 0; i < (n + 1) / 2; i++) {\n15       answers.add(1);\n16     }\n17     return answers;\n18   }\n19   \n20   private List<Integer> solveKEven() {\n21     List<Integer> answers = new ArrayList<>();\n22     answers.add(k / 2);\n23     for (int i = 1; i < n; i++) {\n24       answers.add(k);\n25     }\n26     return answers;\n27   }\n28   \n29   private void decrement(int[] digits) {\n30     for (int i = n - 1; true; i--) {\n31       if (digits[i] > 1) {\n32         digits[i]--;\n33         for (int j = i + 1; j < n; j++) {\n34           digits[j] = k;\n35         }\n36         return;\n37       } else if (digits[i] == 1) {\n38         digits[i]--;\n39         return;\n40       }\n41     }\n42   }\n43   \n44   private List<Integer> solveKOdd() {\n45     int[] digits = new int[n];\n46     Arrays.fill(digits, (k + 1) / 2);\n47     for (int i = 0; i < n / 2; i++) {\n48       decrement(digits);\n49     }\n50     List<Integer> answers = new ArrayList<>();\n51     for (int i = 0; i < n && digits[i] > 0; i++) {\n52       answers.add(digits[i]);\n53     }\n54     return answers;\n55   }\n56   \n57   public List<Integer> solve() {\n58     if (k == 1) {\n59       return solveK1();\n60     } else if (k % 2 == 0) {\n61       return solveKEven();\n62     } else {\n63       return solveKOdd();\n64     }\n65   }\n66 }\n67 \n68 public class Main {\n69   private static void execute(ContestReader reader, PrintWriter out) {\n70     int k = reader.nextInt();\n71     int n = reader.nextInt();\n72     for (int i : new Solver(k, n).solve()) {\n73       out.println(i);\n74     }\n75   }\n76   \n77   public static void main(String[] args) {\n78     ContestReader reader = new ContestReader(System.in);\n79     PrintWriter out = new PrintWriter(System.out);\n80     execute(reader, out);\n81     out.flush();\n82   }\n83 }\n84 \n85 class ContestReader {\n86   private BufferedReader reader;\n87   private StringTokenizer tokenizer;\n88   \n89   ContestReader(InputStream in) {\n90     reader = new BufferedReader(new InputStreamReader(in));\n91   }\n92   \n93   public String next() {\n94     while (tokenizer == null || !tokenizer.hasMoreTokens()) {\n95       try {\n96         tokenizer = new java.util.StringTokenizer(reader.readLine());\n97       } catch (Exception e) {\n98         throw new RuntimeException(e);\n99       }\n100     }\n101     return tokenizer.nextToken();\n102   }\n103   \n104   public int nextInt() {\n105     return Integer.parseInt(next());\n106   }\n107   \n108   public long nextLong() {\n109     return Long.parseLong(next());\n110   }\n111   \n112   public double nextDouble() {\n113     return Double.parseDouble(next());\n114   }\n115   \n116   public String[] nextArray(int n) {\n117     String[] array = new String[n];\n118     for (int i = 0; i < n; i++) {\n119       array[i] = next();\n120     }\n121     return array;\n122   }\n123   \n124   public int[] nextIntArray(int n) {\n125     int[] array = new int[n];\n126     for (int i = 0; i < n; i++) {\n127       array[i] = nextInt();\n128     }\n129     return array;\n130   }\n131   \n132   public long[] nextLongArray(int n) {\n133     long[] array = new long[n];\n134     for (int i = 0; i < n; i++) {\n135       array[i] = nextLong();\n136     }\n137     return array;\n138   }\n139   \n140   public double[] nextDoubleArray(int n) {\n141     double[] array = new double[n];\n142     for (int i = 0; i < n; i++) {\n143       array[i] = nextDouble();\n144     }\n145     return array;\n146   }\n147   \n148   public int[][] nextIntMatrix(int n, int m) {\n149     int[][] matrix = new int[n][m];\n150     for (int i = 0; i < n; i++) {\n151       for (int j = 0; j < m; j++) {\n152         matrix[i][j] = nextInt();\n153       }\n154     }\n155     return matrix;\n156   }\n157   \n158   public long[][] nextLongMatrix(int n, int m) {\n159     long[][] matrix = new long[n][m];\n160     for (int i = 0; i < n; i++) {\n161       for (int j = 0; j < m; j++) {\n162         matrix[i][j] = nextLong();\n163       }\n164     }\n165     return matrix;\n166   }\n167   \n168   public double[][] nextDoubleMatrix(int n, int m) {\n169     double[][] matrix = new double[n][m];\n170     for (int i = 0; i < n; i++) {\n171       for (int j = 0; j < m; j++) {\n172         matrix[i][j] = nextDouble();\n173       }\n174     }\n175     return matrix;\n176   }\n177 }\n178 \n179 class ModCalculator {\n180   private final long mod;\n181   private final ModCombinationCache modCombinationCache;\n182   \n183   ModCalculator(long mod) {\n184     this.mod = mod;\n185     this.modCombinationCache = new ModCombinationCache();\n186   }\n187   \n188   public long add(long a, long b) {\n189     return (a + b) % mod;\n190   }\n191   \n192   public long sub(long a, long b) {\n193     return (a - b + mod) % mod;\n194   }\n195   \n196   public long mul(long a, long b) {\n197     return (a * b) % mod;\n198   }\n199   \n200   public long pow(long a, long b) {\n201     if (b == 0) {\n202       return 1;\n203     }\n204     long v = pow(mul(a, a), b / 2);\n205     if (b % 2 == 1) {\n206       return mul(v, a);\n207     } else {\n208       return v;\n209     }\n210   }\n211   \n212   public long inverse(long a) {\n213     return pow(a, mod - 2);\n214   }\n215   \n216   public long div(long a, long b) {\n217     return mul(a, inverse(b));\n218   }\n219   \n220   public long getF(int n) {\n221     return modCombinationCache.getF(n);\n222   }\n223   \n224   public long getP(int n, int r) {\n225     return modCombinationCache.getP(n, r);\n226   }\n227   \n228   public long getC(int n, int k) {\n229     return modCombinationCache.getC(n, k);\n230   }\n231   \n232   class ModCombinationCache {\n233     private final List<Long> factorialCache;\n234     private final List<Long> factorialInverseCache;\n235     \n236     public ModCombinationCache() {\n237       factorialCache = new ArrayList<>();\n238       factorialCache.add(1L);\n239       factorialInverseCache = new ArrayList<>();\n240       factorialInverseCache.add(1L);\n241     }\n242     \n243     private void resize(int n) {\n244       for (int i = factorialCache.size() - 1; i < n; i++) {\n245         long v = mul(factorialCache.get(i), i + 1);\n246         factorialCache.add(v);\n247         factorialInverseCache.add(inverse(v));\n248       }\n249     }\n250     \n251     long getF(int n) {\n252       resize(n);\n253       return factorialCache.get(n);\n254     }\n255     \n256     long getP(int n, int r) {\n257       resize(n);\n258       return mul(factorialCache.get(n), factorialInverseCache.get(n - r));\n259     }\n260     \n261     long getC(int n, int k) {\n262       resize(n);\n263       return mul(factorialCache.get(n), mul(factorialInverseCache.get(k), factorialInverseCache.get(n-k)));\n264     }\n265   }\n266 }\n267  \n268 class Algorithm {\n269   private static void swap(Object[] list, int a, int b) {\n270     Object tmp = list[a];\n271     list[a] = list[b];\n272     list[b] = tmp;\n273   }\n274   \n275   public static <T extends Comparable<? super T>> boolean nextPermutation(T[] ts) {\n276     int rightMostAscendingOrderIndex = ts.length - 2;\n277     while (rightMostAscendingOrderIndex >= 0 &&\n278         ts[rightMostAscendingOrderIndex].compareTo(ts[rightMostAscendingOrderIndex + 1]) >= 0) {\n279       rightMostAscendingOrderIndex--;\n280     }\n281     if (rightMostAscendingOrderIndex < 0) {\n282       return false;\n283     }\n284     \n285     int rightMostGreatorIndex = ts.length - 1;\n286     while (ts[rightMostAscendingOrderIndex].compareTo(ts[rightMostGreatorIndex]) >= 0) {\n287       rightMostGreatorIndex--;\n288     }\n289     \n290     swap(ts, rightMostAscendingOrderIndex, rightMostGreatorIndex);\n291     for (int i = 0; i < (ts.length - rightMostAscendingOrderIndex - 1) / 2; i++) {\n292       swap(ts, rightMostAscendingOrderIndex + 1 + i, ts.length - 1 - i);\n293     }\n294     return true;\n295   }\n296   \n297   public static void shuffle(int[] array) {\n298     Random random = new Random();\n299     int n = array.length;\n300     for (int i = 0; i < n; i++) {\n301       int randomIndex = i + random.nextInt(n - i);\n302       \n303       int temp = array[i];\n304       array[i] = array[randomIndex];\n305       array[randomIndex] = temp;\n306     }\n307   }\n308   \n309   public static void shuffle(long[] array) {\n310     Random random = new Random();\n311     int n = array.length;\n312     for (int i = 0; i < n; i++) {\n313       int randomIndex = i + random.nextInt(n - i);\n314       \n315       long temp = array[i];\n316       array[i] = array[randomIndex];\n317       array[randomIndex] = temp;\n318     }\n319   }\n320   \n321   public static void sort(int[] array) {\n322     shuffle(array);\n323     Arrays.sort(array);\n324   }\n325   \n326   public static void sort(long[] array) {\n327     shuffle(array);\n328     Arrays.sort(array);\n329   }\n330 }\n331 \n332 class UnionFind {\n333   int[] parents;\n334   int[] ranks;\n335 \n336   UnionFind(int n) {\n337     parents = new int[n];\n338     ranks = new int[n];\n339 \n340     for (int i = 0; i < n; i++) {\n341       parents[i] = i;\n342     }\n343   }\n344 \n345   public int getRoot(int index) {\n346     if (parents[index] == index) {\n347       return index;\n348     } else {\n349       parents[index] = getRoot(parents[index]);\n350       return parents[index];\n351     }\n352   }\n353 \n354   public boolean sameGroup(int a, int b) {\n355     return getRoot(a) == getRoot(b);\n356   }\n357 \n358   public void merge(int a, int b) {\n359     int rootA = getRoot(a);\n360     int rootB = getRoot(b);\n361     if (rootA == rootB) {\n362       return;\n363     }\n364     if (ranks[rootA] < ranks[rootB]) {\n365       parents[rootA] = rootB;\n366     } else if (ranks[rootB] < ranks[rootA]) {\n367       parents[rootB] = rootA;\n368     } else {\n369       parents[rootA] = rootB;\n370       ranks[rootB]++;\n371     }\n372   }\n373 }\n\nGiven the following input:\n3 2\n\n\nQuestion:\n What would be the states of variable k in line 70? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "3"
+        ],
+        "variable": "k",
+        "line": "70"
+    },
+    "2": {
+        "prompt": "Question:\n What would be the states of variable n in line 71? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "n",
+        "line": "71"
+    },
+    "3": {
+        "prompt": "Question:\n What would be the states of variable i in line 47? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "i",
+        "line": "47"
+    },
+    "4": {
+        "prompt": "Question:\n What would be the states of variable i in line 30? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "30"
+    },
+    "5": {
+        "prompt": "Question:\n What would be the states of variable i in line 31? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "31"
+    },
+    "6": {
+        "prompt": "Question:\n What would be the states of variable i in line 32? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "32"
+    },
+    "7": {
+        "prompt": "Question:\n What would be the states of variable i in line 33? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "33"
+    },
+    "8": {
+        "prompt": "Question:\n What would be the states of variable i in line 51? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "1"
+        ],
+        "variable": "i",
+        "line": "51"
+    },
+    "9": {
+        "prompt": "Question:\n What would be the states of variable i in line 52? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "1"
+        ],
+        "variable": "i",
+        "line": "52"
+    },
+    "10": {
+        "prompt": "Question:\n What would be the states of variable n in line 72? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2",
+            "2",
+            "2"
+        ],
+        "variable": "n",
+        "line": "72"
+    },
+    "11": {
+        "prompt": "Question:\n What would be the states of variable i in line 72? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2",
+            "1"
+        ],
+        "variable": "i",
+        "line": "72"
+    },
+    "12": {
+        "prompt": "Question:\n What would be the states of variable k in line 72? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "3",
+            "3",
+            "3"
+        ],
+        "variable": "k",
+        "line": "72"
+    }
+}

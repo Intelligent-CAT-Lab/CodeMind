@@ -1,0 +1,199 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.BufferedWriter;
+6 import java.util.Set;
+7 import java.io.IOException;
+8 import java.io.InputStreamReader;
+9 import java.util.HashSet;
+10 import java.io.UncheckedIOException;
+11 import java.nio.charset.Charset;
+12 import java.util.StringTokenizer;
+13 import java.io.Writer;
+14 import java.io.OutputStreamWriter;
+15 import java.io.BufferedReader;
+16 import java.io.InputStream;
+17 
+18 /**
+19  * Built using CHelper plug-in
+20  * Actual solution is at the top
+21  *
+22  * @author mikit
+23  */
+24 public class Main {
+25     public static void main(String[] args) {
+26         InputStream inputStream = System.in;
+27         OutputStream outputStream = System.out;
+28         LightScanner in = new LightScanner(inputStream);
+29         LightWriter out = new LightWriter(outputStream);
+30         JConnectedCheckerboard solver = new JConnectedCheckerboard();
+31         solver.solve(1, in, out);
+32         out.close();
+33     }
+34 
+35     static class JConnectedCheckerboard {
+36         public void solve(int testNumber, LightScanner in, LightWriter out) {
+37             // out.setBoolLabel(LightWriter.BoolLabel.YES_NO_FIRST_UP);
+38             int n = in.ints();
+39             Set<Vec2i> ans = new HashSet<>();
+40             for (int i = 1; i < n; i += 2) {
+41                 ans.add(new Vec2i(i, 0));
+42                 ans.add(new Vec2i(0, i));
+43             }
+44             for (int i = n % 2; i < n; i += 2) {
+45                 ans.add(new Vec2i(i, n - 1));
+46                 ans.add(new Vec2i(n - 1, i));
+47             }
+48             int offset = 0;
+49             int d = 2;
+50             for (int unused = 0; unused < 10; unused++) {
+51                 for (int i = 1; i < n; i += 2 * d) {
+52                     for (int j = offset; j < n; j += 2 * d) {
+53                         ans.add(new Vec2i(i, j));
+54                     }
+55                 }
+56                 for (int i = d + 1; i < n; i += 2 * d) {
+57                     for (int j = offset + d; j < n; j += 2 * d) {
+58                         ans.add(new Vec2i(i, j));
+59                     }
+60                 }
+61 
+62                 offset += d;
+63                 d *= 2;
+64             }
+65 
+66             out.ans(ans.size()).ln();
+67             for (Vec2i an : ans) {
+68                 out.ans(an.x).ans(an.y).ln();
+69             }
+70         }
+71 
+72     }
+73 
+74     static class LightScanner {
+75         private BufferedReader reader = null;
+76         private StringTokenizer tokenizer = null;
+77 
+78         public LightScanner(InputStream in) {
+79             reader = new BufferedReader(new InputStreamReader(in));
+80         }
+81 
+82         public String string() {
+83             if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+84                 try {
+85                     tokenizer = new StringTokenizer(reader.readLine());
+86                 } catch (IOException e) {
+87                     throw new UncheckedIOException(e);
+88                 }
+89             }
+90             return tokenizer.nextToken();
+91         }
+92 
+93         public int ints() {
+94             return Integer.parseInt(string());
+95         }
+96 
+97     }
+98 
+99     static class LightWriter implements AutoCloseable {
+100         private final Writer out;
+101         private boolean autoflush = false;
+102         private boolean breaked = true;
+103 
+104         public LightWriter(Writer out) {
+105             this.out = out;
+106         }
+107 
+108         public LightWriter(OutputStream out) {
+109             this(new BufferedWriter(new OutputStreamWriter(out, Charset.defaultCharset())));
+110         }
+111 
+112         public LightWriter print(char c) {
+113             try {
+114                 out.write(c);
+115                 breaked = false;
+116             } catch (IOException ex) {
+117                 throw new UncheckedIOException(ex);
+118             }
+119             return this;
+120         }
+121 
+122         public LightWriter print(String s) {
+123             try {
+124                 out.write(s, 0, s.length());
+125                 breaked = false;
+126             } catch (IOException ex) {
+127                 throw new UncheckedIOException(ex);
+128             }
+129             return this;
+130         }
+131 
+132         public LightWriter ans(String s) {
+133             if (!breaked) {
+134                 print(' ');
+135             }
+136             return print(s);
+137         }
+138 
+139         public LightWriter ans(int i) {
+140             return ans(Integer.toString(i));
+141         }
+142 
+143         public LightWriter ln() {
+144             print(System.lineSeparator());
+145             breaked = true;
+146             if (autoflush) {
+147                 try {
+148                     out.flush();
+149                 } catch (IOException ex) {
+150                     throw new UncheckedIOException(ex);
+151                 }
+152             }
+153             return this;
+154         }
+155 
+156         public void close() {
+157             try {
+158                 out.close();
+159             } catch (IOException ex) {
+160                 throw new UncheckedIOException(ex);
+161             }
+162         }
+163 
+164     }
+165 
+166     static class Vec2i implements Comparable<Vec2i> {
+167         public int x;
+168         public int y;
+169 
+170         public Vec2i(int x, int y) {
+171             this.x = x;
+172             this.y = y;
+173         }
+174 
+175         public boolean equals(Object o) {
+176             if (this == o) return true;
+177             if (o == null || getClass() != o.getClass()) return false;
+178             Vec2i vec2i = (Vec2i) o;
+179             return x == vec2i.x && y == vec2i.y;
+180         }
+181 
+182         public int hashCode() {
+183             return 31 * x + y;
+184         }
+185 
+186         public String toString() {
+187             return "(" + x + ", " + y + ")";
+188         }
+189 
+190         public int compareTo(Vec2i o) {
+191             if (x == o.x) {
+192                 return Integer.compare(y, o.y);
+193             }
+194             return Integer.compare(x, o.x);
+195         }
+196 
+197     }
+198 }
+199 

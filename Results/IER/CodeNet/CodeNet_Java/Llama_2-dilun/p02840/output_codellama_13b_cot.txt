@@ -1,0 +1,77 @@
+
+<<<Analysis>>>
+The variable n, variable a and variable b are initialized with 3, 4 and 2 respectively according to the input. And variable sum is initialized with 0.
+It enters a for loop and it iterates from 1 to 3 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [2, 5]. If it does, it adds the current interger i to variable answer. The condition is met when i is 2,3,4,5,11,12,13,14 and 20.
+After the loop finishes, it print the fianl value of variable answer as output, which is 84.
+<<<Output>>>
+84
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+public class Main {
+
+	private static final String NO = "No";
+	private static final String YES = "Yes";
+	InputStream is;
+	PrintWriter out;
+	String INPUT = "";
+	private List<Integer>[] g;
+
+	private static final long MOD = 998244353;
+	private static final int INF = Integer.MAX_VALUE;
+
+	void solve() {
+		int T = 1;
+		for (int i = 0; i < T; i++)
+			solve(i);
+	}
+
+	void solve(int T) {
+		int n = ni();
+		int x = ni();
+		int d = ni();
+		if (d == 0)
+			if (x == 0) {
+				out.print(1);
+				return;
+			} else {
+				out.print(n + 1);
+				return;
+			}
+
+		if (x == 0) {
+			out.print(1 + n * (n - 1) / 2L);
+			return;
+		}
+
+		Map<Long, List<long[]>> m = new HashMap<Long, List<long[]>>();
+
+		for (long take = 0; take <= n; ++take) {
+			long b = take * x;
+			long sum = take * (take - 1) / 2L;
+			long rsum = (n - take) * take + sum;
+			long c = b / d;
+			add(m, b % d, new long[] { c + sum, c + rsum });
+		}
+		long ans = 0L;
+		for (Entry<Long, List<long[]>[]> en : m.entrySet()) {
+			List<long[]> v = en.getValue();
+			Collections.sort(v, new Comparator<long[]>(){
+																																																																																																																																															

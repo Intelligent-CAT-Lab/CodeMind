@@ -1,0 +1,106 @@
+
+<<<Analysis>>>
+The variable n is initialized with 6 according to the input.
+It enters a for loop and it iterates from 1 to 6 to check each integer i in this range. The value of variable i is also passed to variable f.
+Inside the for loop, it calculates the sum of the digits of the current interger f by repeatedlly extracting the digits of number with a while loop and adding it to variable ans.
+Then it checks if the calculated variable ans falls within the range [1, 9]. If it does, it adds the current interger f to variable wset[l]. The condition is met when f is 1, 2, 3, 4, 5, 6.
+After the loop finishes, it print the fianl value of variable ans as output, which is 15.
+<<<Output>>>
+15
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+// package arc.arc085;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        InputReader in = new InputReader(System.in);
+        PrintWriter out = new PrintWriter(System.out);
+
+        int n = in.nextInt();
+        int[] a = new int[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = in.nextInt();
+        }
+
+        int[][] dp = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i][j] = a[i];
+            }
+        }
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (j + i <= n - 1) {
+                    dp[j][j + i] = Math.min(dp[j][j + i], dp[j + 1][j + i - 1] + a[j + i]);
+                }
+            }
+        }
+
+        int ans = dp[0][n - 1];
+        for (int i = 1; i < n; i++) {
+            ans = Math.min(ans, dp[i - 1][n - 1] + a[i]);
+        }
+        out.println(ans);
+        out.flush();
+    }
+
+    public static void debug(Object... o) {
+        System.err.println(Arrays.deepToString(o));
+    }
+
+    public static class InputReader {
+        private static final int BUFFER_LENGTH = 1 << 12;
+        private InputStream stream;
+        private byte[] buf = new byte[BUFFER_LENGTH];
+        private int curChar;
+        private int numChars;
+
+        public InputReader(InputStream stream) {
+            this.stream = stream;
+        }
+
+        private int next() {
+            if (numChars == -1) {
+                throw new InputMismatchException();
+            }
+            if (curChar >= numChars) {
+                curChar = 0;
+                try {
+                    numChars = stream.read(buf);
+                } catch (IOException e) {
+                    throw new InputMismatchException();
+                }
+                if (numChars <= 0)
+                    return -1;
+            }
+            return buf[curChar++];
+        }
+
+        public char nextChar() {
+            return (char) skipWhileSpace();
+        }
+
+        public String nextToken() {
+            int c = skipWhileSpace();
+            StringBuilder res = new StringBuilder();
+            do {
+                res.append((char) c);
+                c = next();
+            } while (!isSpaceChar(c));
+            return res.toString();
+        }
+
+        public int nextInt() {
+            return (int) nextLong();
+        }
+
+        public long nextLong() {
+            int c = skipWhileSpace();
+            long sgn = 1;

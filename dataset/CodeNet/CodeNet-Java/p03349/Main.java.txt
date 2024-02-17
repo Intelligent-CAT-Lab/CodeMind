@@ -1,0 +1,121 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.StringTokenizer;
+6 import java.io.IOException;
+7 import java.io.BufferedReader;
+8 import java.io.InputStreamReader;
+9 import java.io.InputStream;
+10 
+11 /**
+12  * Built using CHelper plug-in
+13  * Actual solution is at the top
+14  *
+15  * @author kessido
+16  */
+17 public class Main {
+18     public static void main(String[] args) {
+19         InputStream inputStream = System.in;
+20         OutputStream outputStream = System.out;
+21         InputReader in = new InputReader(inputStream);
+22         PrintWriter out = new PrintWriter(outputStream);
+23         ESequenceGrowingHard solver = new ESequenceGrowingHard();
+24         solver.solve(1, in, out);
+25         out.close();
+26     }
+27 
+28     static class ESequenceGrowingHard {
+29         private long MOD;
+30         private int k;
+31         private int n;
+32         private long[][] numberOfSequencesOfSizeIwithElementBiggerThenJ = new long[301][301];
+33         private long[][] sumValue = new long[301][301];
+34         private long[][] nChK = new long[301][301];
+35 
+36         public void solve(int testNumber, InputReader in, PrintWriter out) {
+37             n = in.NextInt();
+38             k = in.NextInt();
+39             MOD = in.NextLong();
+40             nChK = MathExtentions.preComputeNChooseK_MOD_Mod(n, MOD);
+41             for (int j = k; j >= 0; j--) {
+42                 numberOfSequencesOfSizeIwithElementBiggerThenJ[0][j] = 1 % MOD;
+43                 numberOfSequencesOfSizeIwithElementBiggerThenJ[1][j] = (k - j) % MOD;
+44             }
+45             sumValue[0][k] = 1;
+46             sumValue[1][k] = 0;
+47 
+48             for (int j = k - 1; j >= 0; j--) {
+49                 sumValue[0][j] = (sumValue[0][j + 1] + numberOfSequencesOfSizeIwithElementBiggerThenJ[0][j]) % MOD;
+50                 sumValue[1][j] = (sumValue[1][j + 1] + numberOfSequencesOfSizeIwithElementBiggerThenJ[1][j]) % MOD;
+51             }
+52 
+53             for (int i = 2; i <= n; i++) {
+54                 for (int j = k - 1; j >= 0; j--) {
+55                     long res = 0;
+56                     for (int sizeToTheLeft = 0; sizeToTheLeft < i; sizeToTheLeft++) {
+57                         long optionLeft = sumValue[sizeToTheLeft][j + 1];
+58                         long optionRight = numberOfSequencesOfSizeIwithElementBiggerThenJ[i - 1 - sizeToTheLeft][j];
+59                         long optionToAddToEachSide = nChK[i - 1][sizeToTheLeft];
+60                         res = (res + ((((optionLeft * optionRight) % MOD) * optionToAddToEachSide) % MOD)) % MOD;
+61                     }
+62                     numberOfSequencesOfSizeIwithElementBiggerThenJ[i][j] = res;
+63                     sumValue[i][j] = (sumValue[i][j + 1] + res) % MOD;
+64                 }
+65             }
+66             out.println(numberOfSequencesOfSizeIwithElementBiggerThenJ[n][0]);
+67         }
+68 
+69     }
+70 
+71     static class InputReader {
+72         BufferedReader reader;
+73         StringTokenizer tokenizer;
+74 
+75         public InputReader(InputStream stream) {
+76             reader = new BufferedReader(new InputStreamReader(stream), 32768);
+77             tokenizer = null;
+78         }
+79 
+80         public String next() {
+81             while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+82                 try {
+83                     tokenizer = new StringTokenizer(reader.readLine(), " \t\n\r\f,");
+84                 } catch (IOException e) {
+85                     throw new RuntimeException(e);
+86                 }
+87             }
+88             return tokenizer.nextToken();
+89         }
+90 
+91         public int NextInt() {
+92             return Integer.parseInt(next());
+93         }
+94 
+95         public long NextLong() {
+96             return Long.parseLong(next());
+97         }
+98 
+99     }
+100 
+101     static class MathExtentions {
+102         public static long[][] preComputeNChooseK_MOD_Mod(final int maxn, final long MOD) {
+103             long[][] res = new long[maxn + 1][];
+104             for (int i = 0; i <= maxn; i++) {
+105                 res[i] = new long[i + 1];
+106                 res[i][0] = 1;
+107                 res[i][i] = 1;
+108             }
+109             for (int i = 2; i < maxn; i++) {
+110                 for (int j = 1; j <= i >> 1; j++) {
+111                     final long ress = (res[i - 1][j] + res[i - 1][j - 1]) % MOD;
+112                     res[i][j] = ress;
+113                     res[i][i - j] = ress;
+114                 }
+115             }
+116             return res;
+117         }
+118 
+119     }
+120 }
+121 

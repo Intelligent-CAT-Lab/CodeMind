@@ -1,0 +1,134 @@
+1 import java.io.IOException;
+2 import java.util.InputMismatchException;
+3 
+4 public class Main {
+5 	void run() {
+6 		MyScanner sc = new MyScanner();
+7 
+8 		char[] c = sc.next().toCharArray();
+9 		int n = c.length;
+10 		StringBuilder s = new StringBuilder();
+11 		for (int i = 0; i < n; i++) {
+12 			if (c[i] == 'A' || c[i] == 'Z') {
+13 				s.append(c[i]);
+14 			}
+15 		}
+16 		c = s.toString().toCharArray();
+17 		n = c.length;
+18 		s = new StringBuilder();
+19 		for (int i = 0; i < n; i++) {
+20 			if (s.length() == 0 || s.charAt(s.length() - 1) != c[i]) {
+21 				s.append(c[i]);
+22 			}
+23 		}
+24 		if (0 < s.length() && s.charAt(0) == 'Z') {
+25 			s.deleteCharAt(0);
+26 		}
+27 		if (0 < s.length() && s.charAt(s.length() - 1) == 'A') {
+28 			s.deleteCharAt(s.length() - 1);
+29 		}
+30 		if (0 < s.length()) {
+31 			System.out.println(s);
+32 		} else {
+33 			System.out.println(-1);
+34 		}
+35 	}
+36 
+37 	public static void main(String[] args) {
+38 		new Main().run();
+39 	}
+40 
+41 	public void mapDebug(int[][] a) {
+42 		System.out.println("--------map display---------");
+43 		for (int i = 0; i < a.length; i++) {
+44 			for (int j = 0; j < a[i].length; j++) {
+45 				System.out.printf("%3d ", a[i][j]);
+46 			}
+47 			System.out.println();
+48 		}
+49 		System.out.println("----------------------------" + '\n');
+50 	}
+51 
+52 	class MyScanner {
+53 		int read() {
+54 			try {
+55 				return System.in.read();
+56 			} catch (IOException e) {
+57 				throw new InputMismatchException();
+58 			}
+59 		}
+60 
+61 		boolean isSpaceChar(int c) {
+62 			return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+63 		}
+64 
+65 		boolean isEndline(int c) {
+66 			return c == '\n' || c == '\r' || c == -1;
+67 		}
+68 
+69 		int nextInt() {
+70 			return Integer.parseInt(next());
+71 		}
+72 
+73 		int[] nextIntArray(int n) {
+74 			int[] array = new int[n];
+75 			for (int i = 0; i < n; i++)
+76 				array[i] = nextInt();
+77 			return array;
+78 		}
+79 
+80 		long nextLong() {
+81 			return Long.parseLong(next());
+82 		}
+83 
+84 		long[] nextLongArray(int n) {
+85 			long[] array = new long[n];
+86 			for (int i = 0; i < n; i++)
+87 				array[i] = nextLong();
+88 			return array;
+89 		}
+90 
+91 		double nextDouble() {
+92 			return Double.parseDouble(next());
+93 		}
+94 
+95 		double[] nextDoubleArray(int n) {
+96 			double[] array = new double[n];
+97 			for (int i = 0; i < n; i++)
+98 				array[i] = nextDouble();
+99 			return array;
+100 		}
+101 
+102 		String next() {
+103 			int c = read();
+104 			while (isSpaceChar(c))
+105 				c = read();
+106 			StringBuilder res = new StringBuilder();
+107 			do {
+108 				res.appendCodePoint(c);
+109 				c = read();
+110 			} while (!isSpaceChar(c));
+111 			return res.toString();
+112 		}
+113 
+114 		String[] nextStringArray(int n) {
+115 			String[] array = new String[n];
+116 			for (int i = 0; i < n; i++)
+117 				array[i] = next();
+118 
+119 			return array;
+120 		}
+121 
+122 		String nextLine() {
+123 			int c = read();
+124 			while (isEndline(c))
+125 				c = read();
+126 			StringBuilder res = new StringBuilder();
+127 			do {
+128 				res.appendCodePoint(c);
+129 				c = read();
+130 			} while (!isEndline(c));
+131 			return res.toString();
+132 		}
+133 	}
+134 }

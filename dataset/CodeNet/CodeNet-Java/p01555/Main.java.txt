@@ -1,0 +1,95 @@
+1 import java.io.IOException;
+2 import java.util.LinkedList;
+3 import java.util.List;
+4 import java.util.Scanner;
+5   
+6   
+7 public class Main{
+8      
+9     public static long count(long s){
+10         long p = 1;
+11         long cnt = 1;
+12         long res = 0;
+13          
+14         while(p * 10 < s){
+15             long less3 =  (p * 10 - 1)/3 - (p - 1)/3;
+16             long less5 =  (p * 10 - 1)/5 - (p - 1)/5;
+17             long less15 = (p * 10 - 1)/15 - (p - 1)/15;
+18              
+19             res += ((p * 10 - 1) - (p - 1) - less3 - less5 + less15) * cnt;
+20             res += (less3 - less15) * 4;
+21             res += (less5 - less15) * 4;
+22             res += less15 * 8;
+23              
+24             cnt++;
+25             p *= 10;
+26         }
+27          
+28          
+29         long less3 =  (s - 1)/3 - (p - 1)/3;
+30         long less5 =  (s - 1)/5 - (p - 1)/5;
+31         long less15 = (s - 1)/15 - (p - 1)/15;
+32          
+33         res += ((s - 1) - (p - 1) - less3 - less5 + less15) * cnt;
+34         res += (less3 - less15) * 4;
+35         res += (less5 - less15) * 4;
+36         res += less15 * 8;
+37          
+38         return res;
+39     }
+40      
+41     public static void main(String[] args) throws IOException {
+42         Scanner sc = new Scanner(System.in);
+43          
+44         final long s = sc.nextLong();
+45          
+46         long upper = s;
+47         long lower = 1/*(long) Math.pow(10 ,(long)Math.log10(s))*/;
+48          
+49         while(upper - lower > 1){
+50             long med = (upper + lower)/2;
+51             long dist = count(med);
+52             //System.out.println(upper + " " + lower + " " + med + " " + dist + " " + s);
+53              
+54             if(dist > s){
+55                 upper = med;
+56             }else if(dist < s){
+57                 lower = med;
+58             }else{
+59                 upper = med;
+60                 lower = med-1;
+61             }
+62         }
+63          
+64          
+65         for(long i = lower, cur = count(lower) + 1; ; i++){
+66             String str = null;
+67              
+68             if(i % 15 == 0){
+69                 str = "FizzBuzz";
+70             }else if(i % 5 == 0){
+71                 str = "Buzz";
+72             }else if(i % 3 == 0){
+73                 str = "Fizz";
+74             }else{
+75                 str = Long.toString(i);
+76             }
+77              
+78             char[] ch = str.toCharArray();
+79             for(int j = 0; j < ch.length; j++, cur++){
+80                  
+81                 if(cur < s){
+82                     //System.out.println(cur + " " + ch[j]);
+83                     continue;
+84                 }else if(cur >= (s + 20)){
+85                     System.out.println();
+86                     return;
+87                 }else{
+88                     System.out.print(ch[j]);
+89                 }
+90             }
+91         }
+92          
+93     }
+94       
+95 }

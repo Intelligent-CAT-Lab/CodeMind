@@ -1,0 +1,1 @@
+print("CODEFESTIVAL"[:-8])

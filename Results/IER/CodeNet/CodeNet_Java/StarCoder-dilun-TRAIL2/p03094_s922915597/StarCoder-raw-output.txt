@@ -1,0 +1,54 @@
+ variable n is initialized with 2.
+It enters a for loop and it iterates from 1 to 2 to check each integer k in this range. The value of variable k is also passed to variable g.
+Inside the for loop, it calculates the value of variable g.
+After the loop finishes, it print the fianl value of variable res as output, which is 1.
+<<<Output>>>
+1
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskF solver = new TaskF();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class TaskF {
+        static final long MODULO = (long) 1e9 + 7;
+
+        public void solve(int testNumber, InputReader in, PrintWriter out) {
+            int n = in.nextInt();
+            long[] invs = new long[Math.max(3, n) + 1];
+            invs[1] = 1;
+            for (int i = 2; i < invs.length; ++i) {
+                invs[i] = (MODULO - invs[((int) (MODULO % i))] * (MODULO / i) % MODULO) % MODULO;
+                if (invs[i] * i % MODULO!= 1) throw new RuntimeException();
+            }
+
+            long[] e = new long[n + 1];
+            long s = 0;
+            for (int k = n; k >= 1; --k) {
+                s = (s + invs[n] * invs[k]) %

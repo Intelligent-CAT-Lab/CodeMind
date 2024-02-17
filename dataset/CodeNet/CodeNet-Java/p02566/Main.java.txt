@@ -1,0 +1,630 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.util.stream.IntStream;
+5 import java.util.Arrays;
+6 import java.nio.ByteBuffer;
+7 import java.nio.charset.Charset;
+8 import java.util.NoSuchElementException;
+9 import java.io.OutputStream;
+10 import java.util.stream.LongStream;
+11 import java.nio.CharBuffer;
+12 import java.io.IOException;
+13 import java.nio.charset.CharsetDecoder;
+14 import java.lang.reflect.Field;
+15 import java.nio.charset.StandardCharsets;
+16 import java.io.UncheckedIOException;
+17 import java.util.function.Consumer;
+18 import java.security.AccessControlException;
+19 import java.io.Writer;
+20 import java.io.InputStream;
+21 
+22 /**
+23  * Built using CHelper reloaded plug-in
+24  * Actual solution is at the top
+25  *
+26  * @author mikit
+27  */
+28 public class Main {
+29     public static void main(String[] args) {
+30         InputStream inputStream = System.in;
+31         OutputStream outputStream = System.out;
+32         LightScanner2 in = new LightScanner2(inputStream);
+33         LightWriter2 out = new LightWriter2(outputStream);
+34         INumberOfSubstrings solver = new INumberOfSubstrings();
+35         solver.solve(1, in, out);
+36         out.close();
+37     }
+38 
+39     static class INumberOfSubstrings {
+40         public void solve(int testNumber, LightScanner2 in, LightWriter2 out) {
+41             char[] s = in.chars();
+42             int n = s.length;
+43             int[] lcp = StringUtil.lcpArray(s);
+44             out.ans(n * (n + 1L) / 2 - IntMath.sum(lcp)).ln();
+45         }
+46 
+47     }
+48 
+49     static class StringUtil {
+50         private static final int SA_THRESHOLD_NAIVE = 10;
+51         private static final int SA_THRESHOLD_DOUBLING = 40;
+52 
+53         private StringUtil() {
+54         }
+55 
+56         private static int[] saNaive(int[] s) {
+57             int n = s.length;
+58             int[] sa = new int[n];
+59             for (int i = 0; i < n; i++) sa[i] = i;
+60             IntroSort.sort(sa, (l, r) -> {
+61                 while (l < n && r < n) {
+62                     if (s[l] != s[r]) return s[l] - s[r];
+63                     l++;
+64                     r++;
+65                 }
+66                 return r - l;
+67             });
+68             return sa;
+69         }
+70 
+71         private static int[] saDoubling(int[] s) {
+72             int n = s.length;
+73             int[] sa = new int[n];
+74             for (int i = 0; i < n; i++) sa[i] = i;
+75             int[] rnk = s.clone();
+76             int[] tmp = new int[n];
+77 
+78             for (int k = 1; k < n; k *= 2) {
+79                 final int _k = k;
+80                 final int[] _rnk = rnk;
+81                 IntComparator cmp = (x, y) -> {
+82                     if (_rnk[x] != _rnk[y]) return _rnk[x] - _rnk[y];
+83                     int rx = x + _k < n ? _rnk[x + _k] : -1;
+84                     int ry = y + _k < n ? _rnk[y + _k] : -1;
+85                     return rx - ry;
+86                 };
+87                 IntroSort.sort(sa, cmp);
+88                 tmp[sa[0]] = 0;
+89                 for (int i = 1; i < n; i++) {
+90                     tmp[sa[i]] = tmp[sa[i - 1]] + (cmp.compare(sa[i - 1], sa[i]) < 0 ? 1 : 0);
+91                 }
+92                 int[] buf = tmp;
+93                 tmp = rnk;
+94                 rnk = buf;
+95             }
+96             return sa;
+97         }
+98 
+99         private static int[] sais(int[] s, int upper) {
+100             int n = s.length;
+101             if (n == 0) return new int[0];
+102             if (n == 1) return new int[]{0};
+103             if (n == 2) {
+104                 return s[0] < s[1] ? new int[]{0, 1} : new int[]{1, 0};
+105             }
+106             if (n < SA_THRESHOLD_NAIVE) return saNaive(s);
+107             if (n < SA_THRESHOLD_DOUBLING) return saDoubling(s);
+108 
+109             int[] sa = new int[n];
+110             boolean[] ls = new boolean[n];
+111             for (int i = n - 2; i >= 0; i--) {
+112                 ls[i] = s[i] < s[i + 1] || (s[i] == s[i + 1] && ls[i + 1]);
+113             }
+114 
+115             int[] sumL = new int[upper + 1];
+116             int[] sumS = new int[upper + 1];
+117 
+118             for (int i = 0; i < n; i++) {
+119                 if (ls[i]) {
+120                     sumL[s[i] + 1]++;
+121                 } else {
+122                     sumS[s[i]]++;
+123                 }
+124             }
+125 
+126             for (int i = 0; i <= upper; i++) {
+127                 sumS[i] += sumL[i];
+128                 if (i < upper) sumL[i + 1] += sumS[i];
+129             }
+130 
+131             int[] buf = new int[upper + 1];
+132             Consumer<int[]> induce = lms -> {
+133                 Arrays.fill(sa, -1);
+134                 System.arraycopy(sumS, 0, buf, 0, upper + 1);
+135                 for (int d : lms) {
+136                     if (d == n) continue;
+137                     sa[buf[s[d]]++] = d;
+138                 }
+139                 System.arraycopy(sumL, 0, buf, 0, upper + 1);
+140                 sa[buf[s[n - 1]]++] = n - 1;
+141                 for (int i = 0; i < n; i++) {
+142                     int v = sa[i];
+143                     if (v >= 1 && !ls[v - 1]) {
+144                         sa[buf[s[v - 1]]++] = v - 1;
+145                     }
+146                 }
+147                 System.arraycopy(sumL, 0, buf, 0, upper + 1);
+148                 for (int i = n - 1; i >= 0; i--) {
+149                     int v = sa[i];
+150                     if (v >= 1 && ls[v - 1]) {
+151                         sa[--buf[s[v - 1] + 1]] = v - 1;
+152                     }
+153                 }
+154             };
+155 
+156             int[] lmsMap = new int[n + 1];
+157             Arrays.fill(lmsMap, -1);
+158             int m = 0;
+159             for (int i = 1; i < n; i++) {
+160                 if (!ls[i - 1] && ls[i]) lmsMap[i] = m++;
+161             }
+162 
+163             int[] lms = new int[m];
+164             {
+165                 int p = 0;
+166                 for (int i = 1; i < n; i++) {
+167                     if (!ls[i - 1] && ls[i]) lms[p++] = i;
+168                 }
+169             }
+170 
+171             induce.accept(lms);
+172 
+173             if (m == 0) return sa;
+174             int[] sortedLms = new int[m];
+175             {
+176                 int p = 0;
+177                 for (int v : sa) {
+178                     if (lmsMap[v] != -1) sortedLms[p++] = v;
+179                 }
+180             }
+181             int[] recS = new int[m];
+182             int recUpper = 0;
+183             recS[lmsMap[sortedLms[0]]] = 0;
+184             for (int i = 1; i < m; i++) {
+185                 int l = sortedLms[i - 1], r = sortedLms[i];
+186                 int endL = (lmsMap[l] + 1 < m) ? lms[lmsMap[l] + 1] : n;
+187                 int endR = (lmsMap[r] + 1 < m) ? lms[lmsMap[r] + 1] : n;
+188                 boolean same = true;
+189                 if (endL - l != endR - r) {
+190                     same = false;
+191                 } else {
+192                     while (l < endL && s[l] == s[r]) {
+193                         l++;
+194                         r++;
+195                     }
+196                     if (l == n || s[l] != s[r]) same = false;
+197                 }
+198                 if (!same) {
+199                     recUpper++;
+200                 }
+201                 recS[lmsMap[sortedLms[i]]] = recUpper;
+202             }
+203 
+204             int[] recSA = sais(recS, recUpper);
+205             for (int i = 0; i < m; i++) {
+206                 sortedLms[i] = lms[recSA[i]];
+207             }
+208             induce.accept(sortedLms);
+209             return sa;
+210         }
+211 
+212         public static int[] suffixArray(int[] s, int upper) {
+213             return sais(s, upper);
+214         }
+215 
+216         public static int[] lcpArray(int[] s, int[] sa) {
+217             int n = s.length;
+218             int[] rnk = new int[n];
+219             for (int i = 0; i < n; i++) rnk[sa[i]] = i;
+220             int[] lcp = new int[n - 1];
+221             int h = 0;
+222             for (int i = 0; i < n; i++) {
+223                 if (h > 0) h--;
+224                 if (rnk[i] == 0) continue;
+225                 for (int j = sa[rnk[i] - 1]; j + h < n && i + h < n; h++) {
+226                     if (s[j + h] != s[i + h]) break;
+227                 }
+228                 lcp[rnk[i] - 1] = h;
+229             }
+230             return lcp;
+231         }
+232 
+233         public static int[] lcpArray(char[] s) {
+234             int n = s.length;
+235             int[] is = new int[n];
+236             for (int i = 0; i < n; i++) is[i] = s[i];
+237             return lcpArray(is, suffixArray(is, 255));
+238         }
+239 
+240     }
+241 
+242     static class LightWriter2 implements AutoCloseable {
+243         private static final int BUF_SIZE = 1024 * 1024;
+244         private static final int BUF_THRESHOLD = 64 * 1024;
+245         private final OutputStream out;
+246         private final byte[] buf = new byte[BUF_SIZE];
+247         private int ptr;
+248         private final Field fastStringAccess;
+249         private boolean autoflush = false;
+250         private boolean breaked = true;
+251 
+252         public LightWriter2(OutputStream out) {
+253             this.out = out;
+254             Field f;
+255             try {
+256                 f = String.class.getDeclaredField("value");
+257                 f.setAccessible(true);
+258                 if (f.getType() != byte[].class) f = null;
+259             } catch (ReflectiveOperationException | AccessControlException ignored) {
+260                 f = null;
+261             }
+262             this.fastStringAccess = f;
+263         }
+264 
+265         public LightWriter2(Writer out) {
+266             this.out = new LightWriter2.WriterOutputStream(out);
+267             this.fastStringAccess = null;
+268         }
+269 
+270         private void allocate(int n) {
+271             if (ptr + n <= BUF_SIZE) return;
+272             try {
+273                 out.write(buf, 0, ptr);
+274                 ptr = 0;
+275             } catch (IOException ex) {
+276                 throw new UncheckedIOException(ex);
+277             }
+278             if (BUF_SIZE < n) throw new IllegalArgumentException("Internal buffer exceeded");
+279         }
+280 
+281         public void close() {
+282             try {
+283                 out.write(buf, 0, ptr);
+284                 ptr = 0;
+285                 out.flush();
+286                 out.close();
+287             } catch (IOException ex) {
+288                 throw new UncheckedIOException(ex);
+289             }
+290         }
+291 
+292         public LightWriter2 print(char c) {
+293             allocate(1);
+294             buf[ptr++] = (byte) c;
+295             breaked = false;
+296             return this;
+297         }
+298 
+299         public LightWriter2 print(String s) {
+300             byte[] bytes;
+301             if (this.fastStringAccess == null) bytes = s.getBytes();
+302             else {
+303                 try {
+304                     bytes = (byte[]) fastStringAccess.get(s);
+305                 } catch (IllegalAccessException ignored) {
+306                     bytes = s.getBytes();
+307                 }
+308             }
+309             int n = bytes.length;
+310             if (n <= BUF_THRESHOLD) {
+311                 allocate(n);
+312                 System.arraycopy(bytes, 0, buf, ptr, n);
+313                 ptr += n;
+314                 return this;
+315             }
+316             try {
+317                 out.write(buf, 0, ptr);
+318                 ptr = 0;
+319                 out.write(bytes);
+320                 out.flush();
+321             } catch (IOException ex) {
+322                 throw new UncheckedIOException(ex);
+323             }
+324             return this;
+325         }
+326 
+327         public LightWriter2 ans(long l) {
+328             if (!breaked) {
+329                 print(' ');
+330             }
+331             breaked = false;
+332             if (l == 0) return print('0');
+333             if (l < 0) {
+334                 print('-');
+335                 l = -l;
+336             }
+337             int n = 0;
+338             long t = l;
+339             while (t > 0) {
+340                 t /= 10;
+341                 n++;
+342             }
+343             allocate(n);
+344             for (int i = 1; i <= n; i++) {
+345                 buf[ptr + n - i] = (byte) (l % 10 + '0');
+346                 l /= 10;
+347             }
+348             ptr += n;
+349             return this;
+350         }
+351 
+352         public LightWriter2 ln() {
+353             print(System.lineSeparator());
+354             breaked = true;
+355             if (autoflush) {
+356                 try {
+357                     out.flush();
+358                 } catch (IOException ex) {
+359                     throw new UncheckedIOException(ex);
+360                 }
+361             }
+362             return this;
+363         }
+364 
+365         private static class WriterOutputStream extends OutputStream {
+366             final Writer writer;
+367             final CharsetDecoder decoder;
+368 
+369             WriterOutputStream(Writer writer) {
+370                 this.writer = writer;
+371                 this.decoder = StandardCharsets.UTF_8.newDecoder();
+372             }
+373 
+374             public void write(int b) throws IOException {
+375                 writer.write(b);
+376             }
+377 
+378             public void write(byte[] b) throws IOException {
+379                 writer.write(decoder.decode(ByteBuffer.wrap(b)).array());
+380             }
+381 
+382             public void write(byte[] b, int off, int len) throws IOException {
+383                 writer.write(decoder.decode(ByteBuffer.wrap(b, off, len)).array());
+384             }
+385 
+386             public void flush() throws IOException {
+387                 writer.flush();
+388             }
+389 
+390             public void close() throws IOException {
+391                 writer.close();
+392             }
+393 
+394         }
+395 
+396     }
+397 
+398     static final class BitMath {
+399         private BitMath() {
+400         }
+401 
+402         public static int count(int v) {
+403             return Integer.bitCount(v);
+404         }
+405 
+406         public static int msb(int v) {
+407             if (v == 0) {
+408                 throw new IllegalArgumentException("Bit not found");
+409             }
+410             v |= (v >> 1);
+411             v |= (v >> 2);
+412             v |= (v >> 4);
+413             v |= (v >> 8);
+414             v |= (v >> 16);
+415             return count(v) - 1;
+416         }
+417 
+418     }
+419 
+420     static class IntroSort {
+421         private static int INSERTIONSORT_THRESHOLD = 16;
+422 
+423         private IntroSort() {
+424         }
+425 
+426         static void sort(int[] a, int low, int high, int maxDepth, IntComparator comparator) {
+427             while (high - low > INSERTIONSORT_THRESHOLD) {
+428                 if (maxDepth-- == 0) {
+429                     HeapSort.sort(a, low, high, comparator);
+430                     return;
+431                 }
+432                 int cut = QuickSort.step(a, low, high, comparator);
+433                 sort(a, cut, high, maxDepth, comparator);
+434                 high = cut;
+435             }
+436             InsertionSort.sort(a, low, high, comparator);
+437         }
+438 
+439         public static void sort(int[] a, IntComparator comparator) {
+440             if (a.length <= INSERTIONSORT_THRESHOLD) {
+441                 InsertionSort.sort(a, 0, a.length, comparator);
+442             } else {
+443                 sort(a, 0, a.length, 2 * BitMath.msb(a.length), comparator);
+444             }
+445         }
+446 
+447     }
+448 
+449     static class LightScanner2 extends LightScannerAdapter {
+450         private static final int BUF_SIZE = 1024 * 1024;
+451         private final InputStream stream;
+452         private final StringBuilder builder = new StringBuilder();
+453         private final byte[] buf = new byte[BUF_SIZE];
+454         private int ptr;
+455         private int len;
+456 
+457         public LightScanner2(InputStream stream) {
+458             this.stream = stream;
+459         }
+460 
+461         private int read() {
+462             if (ptr < len) return buf[ptr++];
+463             try {
+464                 ptr = 0;
+465                 len = stream.read(buf);
+466             } catch (IOException ex) {
+467                 throw new UncheckedIOException(ex);
+468             }
+469             if (len == -1) return -1;
+470             return buf[ptr++];
+471         }
+472 
+473         private void skip() {
+474             int b;
+475             while (isTokenSeparator(b = read()) && b != -1) ;
+476             if (b == -1) throw new NoSuchElementException("EOF");
+477             ptr--;
+478         }
+479 
+480         private void loadToken() {
+481             builder.setLength(0);
+482             skip();
+483             for (int b = read(); !isTokenSeparator(b); b = read()) {
+484                 builder.appendCodePoint(b);
+485             }
+486         }
+487 
+488         public char[] chars() {
+489             loadToken();
+490             char[] res = new char[builder.length()];
+491             builder.getChars(0, builder.length(), res, 0);
+492             return res;
+493         }
+494 
+495         public void close() {
+496             try {
+497                 stream.close();
+498             } catch (IOException e) {
+499                 throw new UncheckedIOException(e);
+500             }
+501         }
+502 
+503         private static boolean isTokenSeparator(int b) {
+504             return b < 33 || 126 < b;
+505         }
+506 
+507     }
+508 
+509     static class HeapSort {
+510         private HeapSort() {
+511         }
+512 
+513         private static void heapfy(int[] a, int low, int high, int i, int val, IntComparator comparator) {
+514             int child = 2 * i - low + 1;
+515             while (child < high) {
+516                 if (child + 1 < high && comparator.compare(a[child], a[child + 1]) < 0) {
+517                     child++;
+518                 }
+519                 if (comparator.compare(val, a[child]) >= 0) {
+520                     break;
+521                 }
+522                 a[i] = a[child];
+523                 i = child;
+524                 child = 2 * i - low + 1;
+525             }
+526             a[i] = val;
+527         }
+528 
+529         static void sort(int[] a, int low, int high, IntComparator comparator) {
+530             for (int p = (high + low) / 2 - 1; p >= low; p--) {
+531                 heapfy(a, low, high, p, a[p], comparator);
+532             }
+533             while (high > low) {
+534                 high--;
+535                 int pval = a[high];
+536                 a[high] = a[low];
+537                 heapfy(a, low, high, low, pval, comparator);
+538             }
+539         }
+540 
+541     }
+542 
+543     static class InsertionSort {
+544         private InsertionSort() {
+545         }
+546 
+547         static void sort(int[] a, int low, int high, IntComparator comparator) {
+548             for (int i = low; i < high; i++) {
+549                 for (int j = i; j > low && comparator.compare(a[j - 1], a[j]) > 0; j--) {
+550                     ArrayUtil.swap(a, j - 1, j);
+551                 }
+552             }
+553         }
+554 
+555     }
+556 
+557     static abstract class LightScannerAdapter implements AutoCloseable {
+558         public abstract void close();
+559 
+560     }
+561 
+562     static final class IntMath {
+563         private IntMath() {
+564         }
+565 
+566         public static long sum(int... v) {
+567             return Arrays.stream(v).mapToLong(x -> x).sum();
+568         }
+569 
+570     }
+571 
+572     static class QuickSort {
+573         private QuickSort() {
+574         }
+575 
+576         private static void med(int[] a, int low, int x, int y, int z, IntComparator comparator) {
+577             if (comparator.compare(a[z], a[x]) < 0) {
+578                 ArrayUtil.swap(a, low, x);
+579             } else if (comparator.compare(a[y], a[z]) < 0) {
+580                 ArrayUtil.swap(a, low, y);
+581             } else {
+582                 ArrayUtil.swap(a, low, z);
+583             }
+584         }
+585 
+586         static int step(int[] a, int low, int high, IntComparator comparator) {
+587             int x = low + 1, y = low + (high - low) / 2, z = high - 1;
+588             if (comparator.compare(a[x], a[y]) < 0) {
+589                 med(a, low, x, y, z, comparator);
+590             } else {
+591                 med(a, low, y, x, z, comparator);
+592             }
+593 
+594             int lb = low + 1, ub = high;
+595             while (true) {
+596                 while (comparator.compare(a[lb], a[low]) < 0) {
+597                     lb++;
+598                 }
+599                 ub--;
+600                 while (comparator.compare(a[low], a[ub]) < 0) {
+601                     ub--;
+602                 }
+603                 if (lb >= ub) {
+604                     return lb;
+605                 }
+606                 ArrayUtil.swap(a, lb, ub);
+607                 lb++;
+608             }
+609         }
+610 
+611     }
+612 
+613     static interface IntComparator {
+614         int compare(int k1, int k2);
+615 
+616     }
+617 
+618     static final class ArrayUtil {
+619         private ArrayUtil() {
+620         }
+621 
+622         public static void swap(int[] a, int x, int y) {
+623             int t = a[x];
+624             a[x] = a[y];
+625             a[y] = t;
+626         }
+627 
+628     }
+629 }
+630 

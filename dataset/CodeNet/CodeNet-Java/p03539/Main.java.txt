@@ -1,0 +1,160 @@
+1 // package other2017.codefestival2017.finale;
+2 
+3 import java.io.IOException;
+4 import java.io.InputStream;
+5 import java.io.PrintWriter;
+6 import java.util.Arrays;
+7 import java.util.InputMismatchException;
+8 
+9 public class Main {
+10     private static final long MOD = 1000000007;
+11 
+12     public static long cnt(int a, int n, int k, long sum) {
+13         if (a == n) {
+14             return sum;
+15         }
+16         long f = 0;
+17         for (int i = 0; i <= k ; i++) {
+18             f += cnt(a+1, n, k, sum+i);
+19         }
+20         return f;
+21     }
+22 
+23     public static void main(String[] args) {
+24         InputReader in = new InputReader(System.in);
+25         PrintWriter out = new PrintWriter(System.out);
+26 
+27         int n = in.nextInt();
+28         int k = in.nextInt();
+29 
+30         long pownk1 = 1;
+31         for (int i = 1; i <= n-1; i++) {
+32             pownk1 *= (k+1);
+33             pownk1 %= MOD;
+34         }
+35         long total = 0;
+36         for (int i = 0; i <= k; i++) {
+37             total += i * pownk1 % MOD;
+38             total %= MOD;
+39         }
+40         total *= n;
+41         total %= MOD;
+42 
+43         int maxha = 100000;
+44         long[][] dp = new long[n+1][maxha+1];
+45         dp[n][0] = 1;
+46 
+47         for (int head = n ; head >= 1 ; head--) {
+48             for (int ha = 0 ; ha <= maxha ; ha++) {
+49                 long base = dp[head][ha];
+50                 if (base == 0) {
+51                     continue;
+52                 }
+53                 for (int l = 0 ; l <= k ; l++) {
+54                     if (l <= head) {
+55                         int canha = (ha + l) / head;
+56                         dp[head-1][ha+canha] += base;
+57                         dp[head-1][ha+canha] %= MOD;
+58                     } else {
+59                         dp[head-1][ha] += base;
+60                         dp[head-1][ha] %= MOD;
+61                     }
+62                 }
+63             }
+64         }
+65 
+66         for (int i = 0; i <= maxha ; i++) {
+67             long dec = dp[0][i] * i % MOD;
+68             total += MOD-dec;
+69             total %= MOD;
+70         }
+71         out.println(total%MOD);
+72         out.flush();
+73     }
+74 
+75     public static void debug(Object... o) {
+76         System.err.println(Arrays.deepToString(o));
+77     }
+78 
+79     public static class InputReader {
+80         private static final int BUFFER_LENGTH = 1 << 12;
+81         private InputStream stream;
+82         private byte[] buf = new byte[BUFFER_LENGTH];
+83         private int curChar;
+84         private int numChars;
+85 
+86         public InputReader(InputStream stream) {
+87             this.stream = stream;
+88         }
+89 
+90         private int next() {
+91             if (numChars == -1) {
+92                 throw new InputMismatchException();
+93             }
+94             if (curChar >= numChars) {
+95                 curChar = 0;
+96                 try {
+97                     numChars = stream.read(buf);
+98                 } catch (IOException e) {
+99                     throw new InputMismatchException();
+100                 }
+101                 if (numChars <= 0)
+102                     return -1;
+103             }
+104             return buf[curChar++];
+105         }
+106 
+107         public char nextChar() {
+108             return (char) skipWhileSpace();
+109         }
+110 
+111         public String nextToken() {
+112             int c = skipWhileSpace();
+113             StringBuilder res = new StringBuilder();
+114             do {
+115                 res.append((char) c);
+116                 c = next();
+117             } while (!isSpaceChar(c));
+118             return res.toString();
+119         }
+120 
+121         public int nextInt() {
+122             return (int) nextLong();
+123         }
+124 
+125         public long nextLong() {
+126             int c = skipWhileSpace();
+127             long sgn = 1;
+128             if (c == '-') {
+129                 sgn = -1;
+130                 c = next();
+131             }
+132             long res = 0;
+133             do {
+134                 if (c < '0' || c > '9') {
+135                     throw new InputMismatchException();
+136                 }
+137                 res *= 10;
+138                 res += c - '0';
+139                 c = next();
+140             } while (!isSpaceChar(c));
+141             return res * sgn;
+142         }
+143 
+144         public double nextDouble() {
+145             return Double.valueOf(nextToken());
+146         }
+147 
+148         int skipWhileSpace() {
+149             int c = next();
+150             while (isSpaceChar(c)) {
+151                 c = next();
+152             }
+153             return c;
+154         }
+155 
+156         boolean isSpaceChar(int c) {
+157             return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+158         }
+159     }
+160 }

@@ -1,0 +1,304 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.math.BigDecimal;
+4 import java.math.BigInteger;
+5 import java.util.ArrayDeque;
+6 import java.util.ArrayList;
+7 import java.util.Arrays;
+8 import java.util.BitSet;
+9 import java.util.Collections;
+10 import java.util.Comparator;
+11 import java.util.Deque;
+12 import java.util.HashMap;
+13 import java.util.HashSet;
+14 import java.util.List;
+15 import java.util.Map;
+16 import java.util.Map.Entry;
+17 import java.util.NoSuchElementException;
+18 import java.util.Objects;
+19 import java.util.PriorityQueue;
+20 import java.util.Queue;
+21 import java.util.Scanner;
+22 import java.util.Set;
+23 import java.util.TreeMap;
+24 import java.util.TreeSet;
+25 
+26 public class Main {
+27 
+28 	static Scanner sc = new Scanner(System.in);
+29 
+30 	static class FastScanner {
+31 		private final InputStream in;
+32 		private final byte[] buffer = new byte[1024];
+33 		private int ptr = 0;
+34 		private int buflen = 0;
+35 
+36 		public FastScanner(InputStream source) {
+37 			in = source;
+38 		}
+39 
+40 		private boolean hasNextByte() {
+41 			if (ptr < buflen) {
+42 				return true;
+43 			} else {
+44 				ptr = 0;
+45 				try {
+46 					buflen = in.read(buffer);
+47 				} catch (IOException e) {
+48 					e.printStackTrace();
+49 				}
+50 				if (buflen <= 0) {
+51 					return false;
+52 				}
+53 			}
+54 			return true;
+55 		}
+56 
+57 		private int readByte() {
+58 			if (hasNextByte())
+59 				return buffer[ptr++];
+60 			else
+61 				return -1;
+62 		}
+63 
+64 		private static boolean isPrintableChar(int c) {
+65 			return 33 <= c && c <= 126;
+66 		}
+67 
+68 		public boolean hasNext() {
+69 			while (hasNextByte() && !isPrintableChar(buffer[ptr]))
+70 				ptr++;
+71 			return hasNextByte();
+72 		}
+73 
+74 		public String next() {
+75 			if (!hasNext())
+76 				throw new NoSuchElementException();
+77 			StringBuilder sb = new StringBuilder();
+78 			int b = readByte();
+79 			while (isPrintableChar(b)) {
+80 				sb.appendCodePoint(b);
+81 				b = readByte();
+82 			}
+83 			return sb.toString();
+84 		}
+85 
+86 		public long nextLong() {
+87 			if (!hasNext())
+88 				throw new NoSuchElementException();
+89 			long n = 0;
+90 			boolean minus = false;
+91 			int b = readByte();
+92 			if (b == '-') {
+93 				minus = true;
+94 				b = readByte();
+95 			}
+96 			if (b < '0' || '9' < b) {
+97 				throw new NumberFormatException();
+98 			}
+99 			while (true) {
+100 				if ('0' <= b && b <= '9') {
+101 					n *= 10;
+102 					n += b - '0';
+103 				} else if (b == -1 || !isPrintableChar(b)) {
+104 					return minus ? -n : n;
+105 				} else {
+106 					throw new NumberFormatException();
+107 				}
+108 				b = readByte();
+109 			}
+110 		}
+111 
+112 		public int nextInt() {
+113 			long nl = nextLong();
+114 			if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE)
+115 				throw new NumberFormatException();
+116 			return (int) nl;
+117 		}
+118 
+119 		public double nextDouble() {
+120 			return Double.parseDouble(next());
+121 		}
+122 	}
+123 
+124 	/**
+125 	 * Compute n! mod. p, (n!)^(-1) mod.p
+126 	 *
+127 	 * @param fac[]
+128 	 *            : n! mod. p
+129 	 * @param finv[]
+130 	 *            : (n!)^(-1) mod. p
+131 	 * @param MAX
+132 	 *            :
+133 	 * @param MOD
+134 	 *            :
+135 	 */
+136 
+137 	static void hz_COMinit(long fac[], long finv[], long inv[], final int MAX, final long MOD) {
+138 		fac[0] = fac[1] = 1L;
+139 		finv[0] = finv[1] = 1L;
+140 		inv[1] = 1L;
+141 		for (int i = 2; i < MAX; i++) {
+142 			fac[i] = fac[i - 1] * i % MOD;
+143 			inv[i] = MOD - inv[(int) (MOD % i)] * (MOD / i) % MOD;
+144 			finv[i] = finv[i - 1] * inv[i] % MOD;
+145 		}
+146 	}
+147 	/*
+148 	 * static void hz_COMinit(long fac[], long finv[], long inv[],final int MAX,
+149 	 * final long MOD) { fac[0] = fac[1] = 1L; finv[0] = finv[1] = 1L; inv[1] =
+150 	 * 1L; for (int i = 2; i < MAX; i++){ fac[i] = (BigInteger.valueOf(fac[i -
+151 	 * 1]).multiply(BigInteger.valueOf(i)).mod(BigInteger.valueOf(MOD))).
+152 	 * longValue(); inv[i] =
+153 	 * (BigInteger.valueOf(MOD).subtract(BigInteger.valueOf(inv[(int)(MOD%i)]).
+154 	 * multiply(BigInteger.valueOf(MOD/i)).mod(BigInteger.valueOf(MOD)))).
+155 	 * longValue(); finv[i] = (BigInteger.valueOf(finv[i -
+156 	 * 1]).multiply(BigInteger.valueOf(inv[i])).mod(BigInteger.valueOf(MOD))).
+157 	 * longValue(); } }
+158 	 */
+159 
+160 	/**
+161 	 * @Compute nCk(二項係数計算) mod. p
+162 	 * @param fac[]
+163 	 *            : n! mod. p
+164 	 * @param finv[]
+165 	 *            : (n!)^(-1) mod. p
+166 	 * @return :nCk(二項係数計算) mod. p
+167 	 */
+168 	static long hz_COM(long fac[], long finv[], int n, int k, final long MOD) {
+169 		if (n < k)
+170 			return 0;
+171 		if (n < 0 || k < 0)
+172 			return 0;
+173 		return fac[n] * (finv[k] * finv[n - k] % MOD) % MOD;
+174 	}
+175 	/*
+176 	 * static long hz_COM(long fac[],long finv[], int n, int k, final long MOD){
+177 	 * if (n < k) return 0; if (n < 0 || k < 0) return 0; return
+178 	 * BigInteger.valueOf(fac[n]) .multiply(BigInteger.valueOf(finv[k])
+179 	 * .multiply(BigInteger.valueOf(finv[n - k])) .mod(BigInteger.valueOf(MOD))
+180 	 * ) .mod(BigInteger.valueOf(MOD)).longValue(); }
+181 	 */
+182 
+183 	static int hz_swap(int a, int b) {
+184 		if (a >= b)
+185 			return a;
+186 		else
+187 			return b;
+188 	}
+189 
+190 	static long hz_swap(long a, long b) {
+191 		if (a >= b)
+192 			return a;
+193 		else
+194 			return b;
+195 	}
+196 
+197 	// mod上での差分
+198 	static long hz_modSub(long a, long b, long mod) {
+199 		long v = a - b;
+200 		if (v < 0)
+201 			v += mod;
+202 		return v % mod;
+203 	}
+204 
+205 	// mod上での割算
+206 	static long hz_modDiv(long a, long b, long mod) {
+207 		return (a % mod) * hz_modInv(b, mod) % mod;
+208 	}
+209 
+210 	// 逆元
+211 	static long hz_modInv(long a, long mod) {
+212 		return hz_modPow(a, mod - 2L, mod);
+213 	}
+214 
+215 	// mod上での累乗
+216 	static long hz_modPow(long n, long k, long mod) {
+217 
+218 		long result = 1L;
+219 
+220 		// k を右シフトしつつ n を 2 乗していく
+221 		while (k > 0L) {
+222 			// k の最下ビットが 1 なら、今の n を答えに掛ける
+223 			if ((k & 1L) == 1L)
+224 				result = (result * n) % mod;
+225 			n = n * n % mod;
+226 			k >>= 1L;
+227 		}
+228 
+229 		return result;
+230 	}
+231 
+232 	// Union Find Tree
+233 	static class HZ_UF {
+234 
+235 		public int[] par;
+236 		public int[] rank;
+237 
+238 		public HZ_UF(int n) {
+239 			this.par = new int[n + 1];
+240 			this.rank = new int[n + 1];
+241 
+242 			Arrays.fill(par, -1);
+243 			Arrays.fill(rank, 0);
+244 		}
+245 
+246 		public void unite(int x, int y) {
+247 			link(root(x), root(y));
+248 		}
+249 
+250 		public boolean link(int x, int y) {
+251 			if (x == y)
+252 				return false;
+253 			if (rank[x] > rank[y]) {
+254 				par[x] += par[y];
+255 				par[y] = x;
+256 			} else {
+257 				par[y] += par[x];
+258 				par[x] = y;
+259 				if (rank[x] == rank[y])
+260 					rank[y]++;
+261 			}
+262 			return true;
+263 		}
+264 
+265 		public boolean isSame(int x, int y) {
+266 			return root(x) == root(y);
+267 		}
+268 
+269 		public int root(int x) {
+270 			if (par[x] < 0)
+271 				return x;
+272 			else
+273 				return x = root(par[x]);
+274 		}
+275 
+276 		public int size(int x) {
+277 			return -par[root(x)];
+278 		}
+279 	}
+280 
+281 	public static void main(String[] args) {
+282 
+283 		solve_abc178_b();
+284 	}
+285   
+286   	public static void solve_abc178_b() {
+287 
+288 		FastScanner sc = new FastScanner(System.in);
+289 		
+290 		long a = sc.nextLong();
+291 		long b = sc.nextLong();
+292 		long c = sc.nextLong();
+293 		long d = sc.nextLong();
+294 		
+295 		long ans = a * c;
+296 		ans = Math.max(ans, a * d);
+297 		ans = Math.max(ans, b * c);
+298 		ans = Math.max(ans, b * d);
+299 		
+300 		System.out.println(ans);
+301 		
+302 
+303 	}
+304 }

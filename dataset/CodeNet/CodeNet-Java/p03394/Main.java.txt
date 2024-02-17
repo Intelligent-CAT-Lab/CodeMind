@@ -1,0 +1,200 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.PrintWriter;
+6 import java.util.List;
+7 import java.io.BufferedWriter;
+8 import java.io.Writer;
+9 import java.io.OutputStreamWriter;
+10 import java.util.InputMismatchException;
+11 import java.io.IOException;
+12 import java.util.ArrayList;
+13 import java.io.InputStream;
+14 
+15 /**
+16  * Built using CHelper plug-in
+17  * Actual solution is at the top
+18  *
+19  * @author prakharjain
+20  */
+21 public class Main {
+22     public static void main(String[] args) {
+23         InputStream inputStream = System.in;
+24         OutputStream outputStream = System.out;
+25         InputReader in = new InputReader(inputStream);
+26         OutputWriter out = new OutputWriter(outputStream);
+27         AC_GC_22_B solver = new AC_GC_22_B();
+28         solver.solve(1, in, out);
+29         out.close();
+30     }
+31 
+32     static class AC_GC_22_B {
+33         public void solve(int testNumber, InputReader in, OutputWriter out) {
+34             int n = in.nextInt();
+35 
+36             if (n == 3) {
+37                 out.println("2 5 63");
+38                 return;
+39             } else if (n == 4) {
+40                 out.println("2 5 20 63");
+41                 return;
+42             }
+43 
+44             List<Integer> ans = new ArrayList<>();
+45             long _2 = 0;
+46             long _3 = 0;
+47             int _23 = 0;
+48             int i;
+49             for (i = 2; ans.size() < n - 2; i++) {
+50                 int num = i;
+51                 if (num % 2 == 0 && num % 3 == 0) {
+52                     _23++;
+53                 } else if (num % 2 == 0) {
+54                     _2 += num;
+55                 } else if (num % 3 == 0) {
+56                     _3 += num;
+57                 }
+58 
+59                 if (num % 2 == 0 || num % 3 == 0) {
+60                     ans.add(num);
+61                 }
+62             }
+63 
+64             int k = i;
+65             int sn = -1;
+66             for (; ; i++) {
+67                 int num = i;
+68                 if (num % 2 == 0 && (_2 % 3 == 0 || num % 3 != 0) && (_2 + num) % 3 == 0) {
+69                     sn = num;
+70                     ans.add(num);
+71                     break;
+72                 }
+73             }
+74 
+75             i = k;
+76             for (; ; i++) {
+77                 int num = i;
+78                 if (num % 3 == 0 && (_3 % 2 == 0 || num % 2 != 0) && num != sn && (_3 + num) % 2 == 0) {
+79                     ans.add(num);
+80                     break;
+81                 }
+82             }
+83 
+84             for (int j = 0; j < ans.size(); j++) {
+85                 out.print(ans.get(j));
+86                 out.print(' ');
+87             }
+88         }
+89 
+90     }
+91 
+92     static class InputReader {
+93         private InputStream stream;
+94         private byte[] buf = new byte[1024];
+95         private int curChar;
+96         private int numChars;
+97         private InputReader.SpaceCharFilter filter;
+98 
+99         public InputReader(InputStream stream) {
+100             this.stream = stream;
+101         }
+102 
+103         public static boolean isWhitespace(int c) {
+104             return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+105         }
+106 
+107         public int read() {
+108             if (numChars == -1) {
+109                 throw new InputMismatchException();
+110             }
+111             if (curChar >= numChars) {
+112                 curChar = 0;
+113                 try {
+114                     numChars = stream.read(buf);
+115                 } catch (IOException e) {
+116                     throw new InputMismatchException();
+117                 }
+118                 if (numChars <= 0) {
+119                     return -1;
+120                 }
+121             }
+122             return buf[curChar++];
+123         }
+124 
+125         public int nextInt() {
+126             int c = read();
+127             while (isSpaceChar(c)) {
+128                 c = read();
+129             }
+130             int sgn = 1;
+131             if (c == '-') {
+132                 sgn = -1;
+133                 c = read();
+134             }
+135             int res = 0;
+136             do {
+137                 if (c < '0' || c > '9') {
+138                     throw new InputMismatchException();
+139                 }
+140                 res *= 10;
+141                 res += c - '0';
+142                 c = read();
+143             } while (!isSpaceChar(c));
+144             return res * sgn;
+145         }
+146 
+147         public boolean isSpaceChar(int c) {
+148             if (filter != null) {
+149                 return filter.isSpaceChar(c);
+150             }
+151             return isWhitespace(c);
+152         }
+153 
+154         public interface SpaceCharFilter {
+155             public boolean isSpaceChar(int ch);
+156 
+157         }
+158 
+159     }
+160 
+161     static class OutputWriter {
+162         private final PrintWriter writer;
+163 
+164         public OutputWriter(OutputStream outputStream) {
+165             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+166         }
+167 
+168         public OutputWriter(Writer writer) {
+169             this.writer = new PrintWriter(writer);
+170         }
+171 
+172         public void print(Object... objects) {
+173             for (int i = 0; i < objects.length; i++) {
+174                 if (i != 0) {
+175                     writer.print(' ');
+176                 }
+177                 writer.print(objects[i]);
+178             }
+179         }
+180 
+181         public void println(Object... objects) {
+182             print(objects);
+183             writer.println();
+184         }
+185 
+186         public void print(char i) {
+187             writer.print(i);
+188         }
+189 
+190         public void close() {
+191             writer.close();
+192         }
+193 
+194         public void print(int i) {
+195             writer.print(i);
+196         }
+197 
+198     }
+199 }
+200 

@@ -1,0 +1,113 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6    public static void main(String[] args) {\n7\t\t try {\n7\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nQuestion: What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the sataes and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.io.OutputStream;\n2 import java.io.IOException;\n3 import java.io.InputStream;\n4 import java.io.OutputStream;\n5 import java.io.PrintWriter;\n6 import java.io.BufferedWriter;\n7 import java.io.Writer;\n8 import java.io.OutputStreamWriter;\n9 import java.util.InputMismatchException;\n10 import java.io.IOException;\n11 import java.io.InputStream;\n12 \n13 /**\n14  * Built using CHelper plug-in\n15  * Actual solution is at the top\n16  *\n17  * @author gaidash\n18  */\n19 public class Main {\n20     public static void main(String[] args) {\n21         InputStream inputStream = System.in;\n22         OutputStream outputStream = System.out;\n23         InputReader in = new InputReader(inputStream);\n24         OutputWriter out = new OutputWriter(outputStream);\n25         ACircle solver = new ACircle();\n26         solver.solve(1, in, out);\n27         out.close();\n28     }\n29 \n30     static class ACircle {\n31         public void solve(int testNumber, InputReader in, OutputWriter out) {\n32             int r = in.nextInt();\n33 \n34             out.println(r * r);\n35         }\n36 \n37     }\n38 \n39     static class InputReader {\n40         private InputStream stream;\n41         private byte[] buf = new byte[1024];\n42         private int curChar;\n43         private int numChars;\n44         private InputReader.SpaceCharFilter filter;\n45 \n46         public InputReader(InputStream stream) {\n47             this.stream = stream;\n48         }\n49 \n50         public int read() {\n51             if (numChars == -1) {\n52                 throw new InputMismatchException();\n53             }\n54             if (curChar >= numChars) {\n55                 curChar = 0;\n56                 try {\n57                     numChars = stream.read(buf);\n58                 } catch (IOException e) {\n59                     throw new InputMismatchException();\n60                 }\n61                 if (numChars <= 0) {\n62                     return -1;\n63                 }\n64             }\n65             return buf[curChar++];\n66         }\n67 \n68         public int nextInt() {\n69             int c = read();\n70             while (isSpaceChar(c)) {\n71                 c = read();\n72             }\n73             int sgn = 1;\n74             if (c == '-') {\n75                 sgn = -1;\n76                 c = read();\n77             }\n78             int res = 0;\n79             do {\n80                 if (c < '0' || c > '9') {\n81                     throw new InputMismatchException();\n82                 }\n83                 res *= 10;\n84                 res += c - '0';\n85                 c = read();\n86             } while (!isSpaceChar(c));\n87             return res * sgn;\n88         }\n89 \n90         public boolean isSpaceChar(int c) {\n91             if (filter != null) {\n92                 return filter.isSpaceChar(c);\n93             }\n94             return isWhitespace(c);\n95         }\n96 \n97         public static boolean isWhitespace(int c) {\n98             return c == ' ' || c == '\\n' || c == '\\r' || c == '\\t' || c == -1;\n99         }\n100 \n101         public interface SpaceCharFilter {\n102             public boolean isSpaceChar(int ch);\n103 \n104         }\n105 \n106     }\n107 \n108     static class OutputWriter {\n109         private final PrintWriter writer;\n110 \n111         public OutputWriter(OutputStream outputStream) {\n112             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));\n113         }\n114 \n115         public OutputWriter(Writer writer) {\n116             this.writer = new PrintWriter(writer);\n117         }\n118 \n119         public void close() {\n120             writer.close();\n121         }\n122 \n123         public void println(int i) {\n124             writer.println(i);\n125         }\n126 \n127     }\n128 }\n129 \n\nGiven the following input:\n2\n\n\nQuestion:\n What would be the states of variable c in line 69? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "50"
+        ],
+        "variable": "c",
+        "line": "69"
+    },
+    "2": {
+        "prompt": "Question:\n What would be the states of variable c in line 94? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "50",
+            "10"
+        ],
+        "variable": "c",
+        "line": "94"
+    },
+    "3": {
+        "prompt": "Question:\n What would be the states of variable c in line 70? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "50"
+        ],
+        "variable": "c",
+        "line": "70"
+    },
+    "4": {
+        "prompt": "Question:\n What would be the states of variable sgn in line 73? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "sgn",
+        "line": "73"
+    },
+    "5": {
+        "prompt": "Question:\n What would be the states of variable c in line 74? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "50"
+        ],
+        "variable": "c",
+        "line": "74"
+    },
+    "6": {
+        "prompt": "Question:\n What would be the states of variable res in line 78? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "res",
+        "line": "78"
+    },
+    "7": {
+        "prompt": "Question:\n What would be the states of variable c in line 80? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "50"
+        ],
+        "variable": "c",
+        "line": "80"
+    },
+    "8": {
+        "prompt": "Question:\n What would be the states of variable res in line 83? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "res",
+        "line": "83"
+    },
+    "9": {
+        "prompt": "Question:\n What would be the states of variable res in line 84? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "res",
+        "line": "84"
+    },
+    "10": {
+        "prompt": "Question:\n What would be the states of variable c in line 84? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "50"
+        ],
+        "variable": "c",
+        "line": "84"
+    },
+    "11": {
+        "prompt": "Question:\n What would be the states of variable c in line 85? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "10"
+        ],
+        "variable": "c",
+        "line": "85"
+    },
+    "12": {
+        "prompt": "Question:\n What would be the states of variable c in line 86? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "10"
+        ],
+        "variable": "c",
+        "line": "86"
+    },
+    "13": {
+        "prompt": "Question:\n What would be the states of variable r in line 32? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "r",
+        "line": "32"
+    }
+}

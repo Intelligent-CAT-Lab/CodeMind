@@ -1,0 +1,98 @@
+1 import java.util.*;
+2 
+3 public class Main {
+4 	public static void main (String[] args) {
+5 		Scanner sc = new Scanner(System.in);
+6 		char[] arr = sc.next().toCharArray();
+7 		int num = 0;
+8 		boolean plus = true;
+9 		boolean si = false;
+10 		boolean xs = false;
+11 		long[] keis = new long[6];
+12 		for (char c : arr) {
+13 		    if (c == '+') {
+14 		        if (xs) {
+15 		            if (plus) {
+16 		                keis[1] = num;
+17 		            } else {
+18 		                keis[1] = -num;
+19 		            }
+20 		        }
+21 		        num = 0;
+22 		        plus = true;
+23 		    } else if (c == '-') {
+24 		        if (xs) {
+25 		            if (plus) {
+26 		                keis[1] = num;
+27 		            } else {
+28 		                keis[1] = -num;
+29 		            }
+30 		        }
+31 		        num = 0;
+32 		        plus = false;
+33 		    } else if (c == '^') {
+34 		        si = true;
+35 		        xs = false;
+36 		    } else if (c == 'x') {
+37 		        if (num == 0) {
+38 		            num = 1;
+39 		        }
+40 		        xs = true;
+41 		    } else {
+42 		        if (si) {
+43 		            int v = c - '0';
+44 		            if (plus) {
+45 		                keis[v] = num;
+46 		            } else {
+47 		                keis[v] = -num;
+48 		            }
+49 		            si = false;
+50 		        } else {
+51 		            num = num * 10 + c - '0';
+52 		        }
+53 		    }
+54 		}
+55 		if (plus) {
+56 		    keis[0] = num;
+57 		} else {
+58 		    keis[0] = -num;
+59 		}
+60 		int ji = 0;
+61 		for (int i = 5; i >= 0; i--) {
+62 		    if (keis[i] != 0) {
+63 		        ji = i;
+64 		        break;
+65 		    }
+66 		}
+67 		int[] ans = new int[ji];
+68 		for (int i = 1; i <= Math.abs(keis[0]) && ji > 0; i++) {
+69 		    long result = 0;
+70 		    for (int j = 0; j <= 5; j++) {
+71 		        result += (long)Math.pow(i, j) * keis[j];
+72 		    }
+73 		    if (result == 0) {
+74 		        ji--;
+75 		        ans[ji] = -i;
+76 		    }
+77 		    result = 0;
+78 		    for (int j = 0; j <= 5; j++) {
+79 		        result += (long)Math.pow(-i, j) * keis[j];
+80 		    }
+81 		    if (result == 0) {
+82 		        ji--;
+83 		        ans[ji] = i;
+84 		    }
+85 		}
+86 		Arrays.sort(ans);
+87 		StringBuilder sb = new StringBuilder();
+88 		for (int i = 0; i < ans.length; i++) {
+89 		    sb.append("(x");
+90 		    if (ans[i] >= 0) {
+91 		        sb.append("+");
+92 		    }
+93 		    sb.append(ans[i]).append(")");
+94 		}
+95 		System.out.println(sb);
+96 	}
+97 }
+98 

@@ -1,0 +1,485 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 public class Main {
+5 	static InputStream is;
+6 	static PrintWriter out;
+7 	static String INPUT = "";
+8 
+9 	static final long mod = (long) 1e9 + 7;
+10 	static final int dx[] = { -1, 0, 1, 0 }, dy[] = { 0, -1, 0, 1 };
+11 	static final int[] dx8 = { -1, -1, -1, 0, 0, 1, 1, 1 }, dy8 = { -1, 0, 1, -1, 1, -1, 0, 1 };
+12 	static final int inf = Integer.MAX_VALUE / 3;
+13 	static final long linf = Long.MAX_VALUE / 3;
+14 	static final double dinf = Double.MAX_VALUE / 3;
+15 	static final double eps = 1e-10;
+16 	static final double pi = Math.PI;
+17 
+18 	static void solve() {
+19 		int n = ni(), m = ni();
+20 		if(n>m) {
+21 			int t = n;
+22 			n = m;
+23 			m = t;
+24 		}
+25 		
+26 		if(m-n>1) {
+27 			out.println(0);
+28 			return;
+29 		}
+30 
+31 		long ans = 1;
+32 		for(int i=0;i<n;i++) {
+33 			ans = mul(ans, i+1);
+34 		}
+35 		for(int i=0;i<m;i++) {
+36 			ans = mul(ans, i+1);
+37 		}
+38 		
+39 		if(m==n) {
+40 			ans = mul(ans, 2);
+41 		}
+42 		
+43 		out.println(ans);
+44 	}
+45 
+46 	//libraries		
+47 	static int lowerBound(int[] a, int x) {
+48 		int l = -1, r = a.length;
+49 		while (r - l > 1) {
+50 			int c = (l + r) / 2;
+51 			if (a[c] < x) {//昇順の配列
+52 				//if (a[c] > x) {//降順の配列
+53 				l = c;
+54 			} else {
+55 				r = c;
+56 			}
+57 		}
+58 		return r;
+59 	}
+60 
+61 	static int upperBound(int[] a, int x) {
+62 		int l = -1, r = a.length;
+63 		while (r - l > 1) {
+64 			int c = (l + r) / 2;
+65 			if (a[c] <= x) {
+66 				l = c;
+67 			} else {
+68 				r = c;
+69 			}
+70 		}
+71 		return r;
+72 	}
+73 
+74 	static int lowerBound(long[] a, long x) {
+75 		int l = -1, r = a.length;
+76 		while (r - l > 1) {
+77 			int c = (l + r) / 2;
+78 			if (a[c] < x) {
+79 				l = c;
+80 			} else {
+81 				r = c;
+82 			}
+83 		}
+84 		return r;
+85 	}
+86 
+87 	static int upperBound(long[] a, long x) {
+88 		int l = -1, r = a.length;
+89 		while (r - l > 1) {
+90 			int c = (l + r) / 2;
+91 			if (a[c] <= x) {
+92 				l = c;
+93 			} else {
+94 				r = c;
+95 			}
+96 		}
+97 		return r;
+98 	}
+99 
+100 	static int lowerBound(double[] a, double x) {
+101 		int l = -1, r = a.length;
+102 		while (r - l > 1) {
+103 			int c = (l + r) / 2;
+104 			if (a[c] < x) {
+105 				l = c;
+106 			} else {
+107 				r = c;
+108 			}
+109 		}
+110 		return r;
+111 	}
+112 
+113 	static int upperBound(double[] a, double x) {
+114 		int l = -1, r = a.length;
+115 		while (r - l > 1) {
+116 			int c = (l + r) / 2;
+117 			if (a[c] <= x) {
+118 				l = c;
+119 			} else {
+120 				r = c;
+121 			}
+122 		}
+123 		return r;
+124 	}
+125 
+126 	static <T> int lowerBound(List<T> ls, T x) throws RuntimeException {
+127 		if (ls.size() == 0)
+128 			return -1;
+129 		if (ls.get(0) instanceof Integer) {
+130 			return ~Collections.binarySearch(ls, x, (t1, t2) -> ((Integer) t1).compareTo((Integer) t2) >= 0 ? 1 : -1);
+131 		} else if (ls.get(0) instanceof Long) {
+132 			return ~Collections.binarySearch(ls, x, (t1, t2) -> ((Long) t1).compareTo((Long) t2) >= 0 ? 1 : -1);
+133 		} else if (ls.get(0) instanceof Double) {
+134 			return ~Collections.binarySearch(ls, x, (t1, t2) -> ((Double) t1).compareTo((Double) t2) >= 0 ? 1 : -1);
+135 		} else {
+136 			System.err.println(
+137 					String.format("%s:数値でないリストを二分探索しています。", Thread.currentThread().getStackTrace()[1].getMethodName()));
+138 			throw new RuntimeException();
+139 		}
+140 	}
+141 
+142 	static <T> int upperBound(List<T> ls, T x) throws RuntimeException {
+143 		if (ls.size() == 0)
+144 			return -1;
+145 		if (ls.get(0) instanceof Integer) {
+146 			return ~Collections.binarySearch(ls, x, (t1, t2) -> ((Integer) t1).compareTo((Integer) t2) > 0 ? 1 : -1);
+147 		} else if (ls.get(0) instanceof Long) {
+148 			return ~Collections.binarySearch(ls, x, (t1, t2) -> ((Long) t1).compareTo((Long) t2) > 0 ? 1 : -1);
+149 		} else if (ls.get(0) instanceof Double) {
+150 			return ~Collections.binarySearch(ls, x, (t1, t2) -> ((Double) t1).compareTo((Double) t2) > 0 ? 1 : -1);
+151 		} else {
+152 			System.err.println(
+153 					String.format("%s:数値でないリストを二分探索しています。", Thread.currentThread().getStackTrace()[1].getMethodName()));
+154 			throw new RuntimeException();
+155 		}
+156 	}
+157 
+158 	static <T> int rupperBound(List<T> ls, T x) throws RuntimeException {
+159 		if (ls.size() == 0)
+160 			return -1;
+161 		if (ls.get(0) instanceof Integer) {
+162 			return ~Collections.binarySearch(ls, x, (t1, t2) -> ((Integer) t1).compareTo((Integer) t2) < 0 ? 1 : -1);
+163 		} else if (ls.get(0) instanceof Long) {
+164 			return ~Collections.binarySearch(ls, x, (t1, t2) -> ((Long) t1).compareTo((Long) t2) < 0 ? 1 : -1);
+165 		} else if (ls.get(0) instanceof Double) {
+166 			return ~Collections.binarySearch(ls, x, (t1, t2) -> ((Double) t1).compareTo((Double) t2) < 0 ? 1 : -1);
+167 		} else {
+168 			System.err.println(
+169 					String.format("%s:数値でないリストを二分探索しています。", Thread.currentThread().getStackTrace()[1].getMethodName()));
+170 			throw new RuntimeException();
+171 		}
+172 	}
+173 
+174 	static <T> int rlowerBound(List<T> ls, T x) {
+175 		if (ls.size() == 0)
+176 			return -1;
+177 		if (ls.get(0) instanceof Integer) {
+178 			return ~Collections.binarySearch(ls, x, (t1, t2) -> ((Integer) t1).compareTo((Integer) t2) <= 0 ? 1 : -1);
+179 		} else if (ls.get(0) instanceof Long) {
+180 			return ~Collections.binarySearch(ls, x, (t1, t2) -> ((Long) t1).compareTo((Long) t2) <= 0 ? 1 : -1);
+181 		} else if (ls.get(0) instanceof Double) {
+182 			return ~Collections.binarySearch(ls, x, (t1, t2) -> ((Double) t1).compareTo((Double) t2) <= 0 ? 1 : -1);
+183 		} else {
+184 			System.err.println(
+185 					String.format("%s:数値でないリストを二分探索しています。", Thread.currentThread().getStackTrace()[1].getMethodName()));
+186 			throw new RuntimeException();
+187 		}
+188 	}
+189 
+190 	static int[] concat(int x, int arr[]) {
+191 		int ret[] = new int[arr.length + 1];
+192 		System.arraycopy(arr, 0, ret, 1, ret.length - 1);
+193 		ret[0] = x;
+194 		return ret;
+195 	}
+196 
+197 	static int[] concat(int arr[], int x) {
+198 		int ret[] = new int[arr.length + 1];
+199 		System.arraycopy(arr, 0, ret, 0, ret.length - 1);
+200 		ret[ret.length - 1] = x;
+201 		return ret;
+202 	}
+203 
+204 	static long[] concat(long x, long arr[]) {
+205 		long ret[] = new long[arr.length + 1];
+206 		System.arraycopy(arr, 0, ret, 1, ret.length - 1);
+207 		ret[0] = x;
+208 		return ret;
+209 	}
+210 
+211 	static long[] concat(long arr[], long x) {
+212 		long ret[] = new long[arr.length + 1];
+213 		System.arraycopy(arr, 0, ret, 0, ret.length - 1);
+214 		ret[ret.length - 1] = x;
+215 		return ret;
+216 	}
+217 
+218 	static long max(long x, long y) {
+219 		return Math.max(x, y);
+220 	}
+221 
+222 	static long min(long x, long y) {
+223 		return Math.min(x, y);
+224 	}
+225 
+226 	static long max(long x, long y, long z) {
+227 		x = Math.max(x, y);
+228 		x = Math.max(x, z);
+229 		return x;
+230 	}
+231 
+232 	static long min(long x, long y, long z) {
+233 		x = Math.min(x, y);
+234 		x = Math.min(x, z);
+235 		return x;
+236 	}
+237 
+238 	static double max(double x, double y) {
+239 		return Math.max(x, y);
+240 	}
+241 
+242 	static double min(double x, double y) {
+243 		return Math.min(x, y);
+244 	}
+245 
+246 	static double max(double x, double y, double z) {
+247 		x = Math.max(x, y);
+248 		x = Math.max(x, z);
+249 		return x;
+250 	}
+251 
+252 	static double min(double x, double y, double z) {
+253 		x = Math.min(x, y);
+254 		x = Math.min(x, z);
+255 		return x;
+256 	}
+257 
+258 	static void sort(int[] ar) {
+259 		Arrays.sort(ar);
+260 	}
+261 
+262 	static void sort(long[] ar) {
+263 		Arrays.sort(ar);
+264 	}
+265 
+266 	static void sort(double[] ar) {
+267 		Arrays.sort(ar);
+268 	}
+269 
+270 	static void rsort(int[] ar) {
+271 		Arrays.sort(ar);
+272 		int len = ar.length;
+273 		for (int i = 0; i < len / 2; i++) {
+274 			int tmp = ar[i];
+275 			ar[i] = ar[len - 1 - i];
+276 			ar[len - 1 - i] = tmp;
+277 		}
+278 	}
+279 
+280 	static void rsort(long[] ar) {
+281 		Arrays.sort(ar);
+282 		int len = ar.length;
+283 		for (int i = 0; i < len / 2; i++) {
+284 			long tmp = ar[i];
+285 			ar[i] = ar[len - 1 - i];
+286 			ar[len - 1 - i] = tmp;
+287 		}
+288 	}
+289 
+290 	static void rsort(double[] ar) {
+291 		Arrays.sort(ar);
+292 		int len = ar.length;
+293 		for (int i = 0; i < len / 2; i++) {
+294 			double tmp = ar[i];
+295 			ar[i] = ar[len - 1 - i];
+296 			ar[len - 1 - i] = tmp;
+297 		}
+298 	}
+299 
+300 	static void fill(int arr[], int x) {
+301 		Arrays.fill(arr, x);
+302 	}
+303 
+304 	static void fill(long arr[], long x) {
+305 		Arrays.fill(arr, x);
+306 	}
+307 
+308 	static void fill(double arr[], double x) {
+309 		Arrays.fill(arr, x);
+310 	}
+311 
+312 	static void fill(int arr[][], int x) {
+313 		for (int i = 0; i < arr.length; i++)
+314 			Arrays.fill(arr[i], x);
+315 	}
+316 
+317 	static void fill(long arr[][], long x) {
+318 		for (int i = 0; i < arr.length; i++)
+319 			Arrays.fill(arr[i], x);
+320 	}
+321 
+322 	static void fill(double arr[][], double x) {
+323 		for (int i = 0; i < arr.length; i++)
+324 			Arrays.fill(arr[i], x);
+325 	}
+326 
+327 	//MOD culc
+328 	static long plus(long x, long y) {
+329 		long res = (x + y) % mod;
+330 		return res < 0 ? res + mod : res;
+331 	}
+332 
+333 	static long sub(long x, long y) {
+334 		long res = (x - y) % mod;
+335 		return res < 0 ? res + mod : res;
+336 	}
+337 
+338 	static long mul(long x, long y) {
+339 		long res = (x * y) % mod;
+340 		return res < 0 ? res + mod : res;
+341 	}
+342 
+343 	static long div(long x, long y) {
+344 		long res = x * pow(y, mod - 2) % mod;
+345 		return res < 0 ? res + mod : res;
+346 	}
+347 
+348 	static long pow(long x, long y) {
+349 		if (y < 0)
+350 			return 0;
+351 		if (y == 0)
+352 			return 1;
+353 		if (y % 2 == 1)
+354 			return (x * pow(x, y - 1)) % mod;
+355 		long root = pow(x, y / 2);
+356 		return root * root % mod;
+357 	}
+358 
+359 	public static void main(String[] args) throws Exception {
+360 		is = INPUT.isEmpty() ? System.in : new ByteArrayInputStream(INPUT.getBytes());
+361 		out = new PrintWriter(System.out);
+362 		solve();
+363 		out.flush();
+364 	}
+365 
+366 	//input
+367 	private static byte[] inbuf = new byte[1024];
+368 	static int lenbuf = 0, ptrbuf = 0;
+369 
+370 	private static int readByte() {
+371 		if (lenbuf == -1)
+372 			throw new InputMismatchException();
+373 		if (ptrbuf >= lenbuf) {
+374 			ptrbuf = 0;
+375 			try {
+376 				lenbuf = is.read(inbuf);
+377 			} catch (IOException e) {
+378 				throw new InputMismatchException();
+379 			}
+380 			if (lenbuf <= 0)
+381 				return -1;
+382 		}
+383 		return inbuf[ptrbuf++];
+384 	}
+385 
+386 	private static boolean isSpaceChar(int c) {
+387 		return !(c >= 33 && c <= 126);
+388 	}
+389 
+390 	private static int skip() {
+391 		int b;
+392 		while ((b = readByte()) != -1 && isSpaceChar(b))
+393 			;
+394 		return b;
+395 	}
+396 
+397 	@SuppressWarnings("unused")
+398 	private static double nd() {
+399 		return Double.parseDouble(ns());
+400 	}
+401 
+402 	@SuppressWarnings("unused")
+403 	private static char nc() {
+404 		return (char) skip();
+405 	}
+406 
+407 	private static String ns() {
+408 		int b = skip();
+409 		StringBuilder sb = new StringBuilder();
+410 		while (!(isSpaceChar(b))) {
+411 			sb.appendCodePoint(b);
+412 			b = readByte();
+413 		}
+414 		return sb.toString();
+415 	}
+416 
+417 	private static char[] ns(int n) {
+418 		char[] buf = new char[n];
+419 		int b = skip(), p = 0;
+420 		while (p < n && !(isSpaceChar(b))) {
+421 			buf[p++] = (char) b;
+422 			b = readByte();
+423 		}
+424 		return n == p ? buf : Arrays.copyOf(buf, p);
+425 	}
+426 
+427 	@SuppressWarnings("unused")
+428 	private static char[][] nm(int n, int m) {
+429 		char[][] map = new char[n][];
+430 		for (int i = 0; i < n; i++)
+431 			map[i] = ns(m);
+432 		return map;
+433 	}
+434 
+435 	@SuppressWarnings("unused")
+436 	private static int[] na(int n) {
+437 		int[] a = new int[n];
+438 		for (int i = 0; i < n; i++)
+439 			a[i] = ni();
+440 		return a;
+441 	}
+442 
+443 	private static int ni() {
+444 		int num = 0, b;
+445 		boolean minus = false;
+446 		while ((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'))
+447 			;
+448 		if (b == '-') {
+449 			minus = true;
+450 			b = readByte();
+451 		}
+452 
+453 		while (true) {
+454 			if (b >= '0' && b <= '9') {
+455 				num = num * 10 + (b - '0');
+456 			} else {
+457 				return minus ? -num : num;
+458 			}
+459 			b = readByte();
+460 		}
+461 	}
+462 
+463 	@SuppressWarnings("unused")
+464 	private static long nl() {
+465 		long num = 0;
+466 		int b;
+467 		boolean minus = false;
+468 		while ((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'))
+469 			;
+470 		if (b == '-') {
+471 			minus = true;
+472 			b = readByte();
+473 		}
+474 
+475 		while (true) {
+476 			if (b >= '0' && b <= '9') {
+477 				num = num * 10 + (b - '0');
+478 			} else {
+479 				return minus ? -num : num;
+480 			}
+481 			b = readByte();
+482 		}
+483 	}
+484 
+485 }

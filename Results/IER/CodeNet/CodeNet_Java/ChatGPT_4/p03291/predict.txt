@@ -1,0 +1,36 @@
+<<<Analysis>>>
+The input string is "A??C?" which has a length of 5. The code initializes four arrays `ac`, `bc`, `cc`, and `xc` of length 6 (n+1) to keep track of the cumulative count of 'A', 'B', 'C', and '?' characters respectively.
+
+The code then iterates over the input string and updates the cumulative counts in the respective arrays. After the loop, the arrays will have the following values:
+- ac: [0, 1, 1, 1, 1, 1] (since there is one 'A' at the beginning)
+- bc: [0, 0, 0, 0, 0, 0] (since there are no 'B's)
+- cc: [0, 0, 0, 0, 1, 1] (since there is one 'C' at the fourth position)
+- xc: [0, 0, 1, 2, 2, 3] (since there are three '?'s)
+
+Next, the code iterates over the input string again and calculates the contribution of each 'B' or '?' to the final answer. The contribution is calculated based on the number of 'A's before the current position, the number of 'C's after the current position, and the number of '?'s before and after the current position.
+
+The `power` function is used to calculate the powers of 3, which is used to account for the different combinations that the '?' characters can represent ('A', 'B', or 'C').
+
+The calculations for each character are as follows:
+- For the first 'A', there is no contribution to the answer.
+- For the first '?', the values are a=1, l=0, c=1, r=2. The contributions are calculated as follows:
+  - power(3, 0+2, MOD) * 1 * 1 % MOD = 9 * 1 * 1 % MOD = 9
+  - power(3, 0+2-1, MOD) * 1 * 2 % MOD = 3 * 1 * 2 % MOD = 6
+  - power(3, 0+2-1, MOD) * 0 * 1 % MOD = 3 * 0 * 1 % MOD = 0
+  - power(3, 0+2-2, MOD) * 0 * 2 % MOD = 1 * 0 * 2 % MOD = 0
+  The total contribution for the first '?' is 9 + 6 + 0 + 0 = 15.
+- For the second '?', the values are a=1, l=1, c=1, r=1. The contributions are calculated as follows:
+  - power(3, 1+1, MOD) * 1 * 1 % MOD = 9 * 1 * 1 % MOD = 9
+  - power(3, 1+1-1, MOD) * 1 * 1 % MOD = 3 * 1 * 1 % MOD = 3
+  - power(3, 1+1-1, MOD) * 1 * 1 % MOD = 3 * 1 * 1 % MOD = 3
+  - power(3, 1+1-2, MOD) * 1 * 1 % MOD = 1 * 1 * 1 % MOD = 1
+  The total contribution for the second '?' is 9 + 3 + 3 + 1 = 16.
+- For the 'C', there is no contribution to the answer.
+- For the last '?', the values are a=1, l=2, c=0, r=0. The contributions are calculated as follows:
+  - power(3, 2+0, MOD) * 1 * 0 % MOD = 9 * 1 * 0 % MOD = 0
+  - power(3, 2+0-1, MOD) * 1 * 0 % MOD = 3 * 1 * 0 % MOD = 0
+  - power(3, 2+0-1, MOD) * 2 * 0 % MOD = 3 * 2 * 0 % MOD = 0
+  - power(3, 2+0-2, MOD) * 2 * 0 % MOD = 1 * 2 * 0 % MOD = 0
+  The total contribution for the last '?' is 0 + 0 + 0 + 0 = 0.
+
+The final answer is the sum of the

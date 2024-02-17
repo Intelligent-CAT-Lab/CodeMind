@@ -1,0 +1,33 @@
+<<<Analysis>>>
+The input provided is `3 2 1`, which corresponds to the variables N, M, and K respectively. The code is designed to calculate a certain mathematical expression involving combinations and modular exponentiation, and then output the result.
+
+The code initializes the combination utility with `COMinit()`, which precomputes factorials and their modular inverses up to a certain limit defined by `MAX`.
+
+The main calculation is done in a loop that iterates from `k=0` to `k=K` (inclusive). For each iteration, it calculates a temporary value `tmp` as follows:
+1. `tmp` is initialized to 1.
+2. It multiplies `tmp` by the combination of (N-1) choose k, modulo MOD (`COM(N-1,k)%MOD`).
+3. It then multiplies `tmp` by `modPow(M-1, N-1-k, MOD)%MOD`, which is the modular exponentiation of (M-1) to the power of (N-1-k), modulo MOD.
+4. The result is then added to the accumulator `ans`, which is also taken modulo MOD.
+
+After the loop, the final answer is multiplied by M and taken modulo MOD once more. The result is then printed.
+
+Given the input `3 2 1`, the loop will run for k=0 and k=1. The MOD value is a constant `998244353`.
+
+Let's calculate the output step by step:
+- For k=0:
+  - `tmp = COM(2, 0) % MOD = 1 % MOD = 1`
+  - `tmp *= modPow(1, 2, MOD) % MOD = 1 % MOD = 1`
+  - `ans += tmp % MOD = 1`
+- For k=1:
+  - `tmp = COM(2, 1) % MOD = 2 % MOD = 2`
+  - `tmp *= modPow(1, 1, MOD) % MOD = 1 % MOD = 1`
+  - `ans += tmp % MOD = (1 + 2) % MOD = 3`
+
+Finally, the answer is multiplied by M and taken modulo MOD:
+- `ans *= M % MOD = 3 * 2 % MOD = 6`
+
+Therefore, the output of the code should be `6`.
+
+<<<Output>>>
+6
+[END-OF-RESPONSE]

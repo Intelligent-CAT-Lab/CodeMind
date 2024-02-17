@@ -1,0 +1,166 @@
+1 import java.io.*;
+2 import java.util.*;
+3 import java.math.*;
+4 import java.awt.Point;
+5  
+6 public class Main {
+7 	static final long MOD = 998244353L;
+8 	//static final long INF = 1000000000000000007L;
+9 	//static final long MOD = 1000000007L;
+10 	//static final int INF = 1000000007;
+11 	
+12 	//static long[] factorial;
+13 	
+14 	public static void main(String[] args) {
+15 		FastScanner sc = new FastScanner();
+16 		PrintWriter pw = new PrintWriter(System.out);
+17 		
+18 		int N = sc.ni();
+19 		int A = sc.ni();
+20 		int B = sc.ni();
+21 		pw.println(Math.min(A*N,B));
+22 		pw.close();
+23 	}
+24 	
+25 	public static long dist(long[] p1, long[] p2) {
+26 		return (Math.abs(p2[0]-p1[0])+Math.abs(p2[1]-p1[1]));
+27 	}
+28 	
+29 	//Find the GCD of two numbers
+30 	public static long gcd(long a, long b) {
+31 		if (a < b) return gcd(b,a);
+32 		if (b == 0)
+33 			return a;
+34 		else
+35 			return gcd(b,a%b);
+36 	}
+37 	
+38 	//Fast exponentiation (x^y mod m)
+39 	public static long power(long x, long y, long m) { 
+40 		if (y < 0) return 0L;
+41 		long ans = 1;
+42 		x %= m;
+43 		while (y > 0) { 
+44 			if(y % 2 == 1) 
+45 				ans = (ans * x) % m; 
+46 			y /= 2;  
+47 			x = (x * x) % m;
+48 		} 
+49 		return ans; 
+50 	}
+51 	
+52 	public static int[] shuffle(int[] array) {
+53 		Random rgen = new Random();
+54 		for (int i = 0; i < array.length; i++) {
+55 		    int randomPosition = rgen.nextInt(array.length);
+56 		    int temp = array[i];
+57 		    array[i] = array[randomPosition];
+58 		    array[randomPosition] = temp;
+59 		}
+60 		return array;
+61 	}
+62 	
+63 	public static long[] shuffle(long[] array) {
+64 		Random rgen = new Random();
+65 		for (int i = 0; i < array.length; i++) {
+66 		    int randomPosition = rgen.nextInt(array.length);
+67 		    long temp = array[i];
+68 		    array[i] = array[randomPosition];
+69 		    array[randomPosition] = temp;
+70 		}
+71 		return array;
+72 	}
+73 	
+74 	public static int[][] shuffle(int[][] array) {
+75 		Random rgen = new Random();
+76 		for (int i = 0; i < array.length; i++) {
+77 		    int randomPosition = rgen.nextInt(array.length);
+78 		    int[] temp = array[i];
+79 		    array[i] = array[randomPosition];
+80 		    array[randomPosition] = temp;
+81 		}
+82 		return array;
+83 	}
+84 	
+85     public static int[][] sort(int[][] array) {
+86     	//Sort an array (immune to quicksort TLE)
+87  
+88 		Arrays.sort(array, new Comparator<int[]>() {
+89 			  @Override
+90         	  public int compare(int[] a, int[] b) {
+91 				  //return a[0]-b[0]; //ascending order
+92 				  if (a[0] != b[0]) {
+93 					  return (a[0]-b[0]);
+94 				  } else {
+95 					  return (a[1]-b[1]);
+96 				  }
+97 	          }
+98 		});
+99 		return array;
+100 	}
+101     
+102     public static long[][] sort(long[][] array) {
+103     	//Sort an array (immune to quicksort TLE)
+104 		Random rgen = new Random();
+105 		for (int i = 0; i < array.length; i++) {
+106 		    int randomPosition = rgen.nextInt(array.length);
+107 		    long[] temp = array[i];
+108 		    array[i] = array[randomPosition];
+109 		    array[randomPosition] = temp;
+110 		}
+111 		Arrays.sort(array, new Comparator<long[]>() {
+112 			  @Override
+113         	  public int compare(long[] a, long[] b) {
+114 				  if (a[0] < b[0])
+115 					  return -1;
+116 				  else if (a[0] > b[0])
+117 					  return 1;
+118 				  else
+119 					  return 0;
+120 	          }
+121 		});
+122 		return array;
+123 	}
+124     
+125     static class FastScanner { 
+126         BufferedReader br; 
+127         StringTokenizer st; 
+128   
+129         public FastScanner() { 
+130             br = new BufferedReader(new InputStreamReader(System.in)); 
+131         } 
+132   
+133         String next() { 
+134             while (st == null || !st.hasMoreElements()) { 
+135                 try { 
+136                     st = new StringTokenizer(br.readLine());
+137                 } catch (IOException  e) { 
+138                     e.printStackTrace(); 
+139                 } 
+140             } 
+141             return st.nextToken(); 
+142         } 
+143   
+144         int ni() { 
+145             return Integer.parseInt(next()); 
+146         } 
+147   
+148         long nl() { 
+149             return Long.parseLong(next()); 
+150         } 
+151   
+152         double nd() { 
+153             return Double.parseDouble(next()); 
+154         } 
+155   
+156         String nextLine() {
+157             String str = ""; 
+158             try { 
+159                 str = br.readLine(); 
+160             } catch (IOException e) {
+161                 e.printStackTrace(); 
+162             } 
+163             return str;
+164         }
+165     }
+166 }

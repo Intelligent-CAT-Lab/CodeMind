@@ -1,0 +1,183 @@
+Below is an instruction that describes a task, paired with an input that
+provides further context.  Write a response that appropriately completes
+the request.
+
+### Instruction:
+Below is an example:
+[[[Example Start]]]
+I want to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the output of the code.
+Consider the following code:
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class Main {
+
+    public static void main(String[] args) {
+        try {
+            InputStreamReader isr = new InputStreamReader(System.in);
+            BufferedReader br = new BufferedReader(isr);
+            String strArr[] = br.readLine().split(" ");
+
+            int n = Integer.parseInt(strArr[0]);
+            int a = Integer.parseInt(strArr[1]);
+            int b = Integer.parseInt(strArr[2]);
+            int answer = 0;
+
+            for (int i = 1; i < n + 1; i++) {
+                int num = i;
+                int sum = 0;
+
+                while (num!= 0) {
+                        sum += num % 10;
+                        num /= 10;
+                }
+
+                if (sum >= a && sum <= b ) {
+                        answer = answer + i;
+                }
+            }
+            System.out.println(answer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+<<Question>>
+What would be the output of code executiion given the following input:
+20 2 5
+Only print the output of code execution and end your response with "END-OF-OUTPUT":
+<<Answer>>
+84
+END-OF-OUTPUT
+[[[Example End]]]
+
+
+Consider the following code: 
+import java.util.*;
+import java.lang.*;
+import java.math.*;
+import java.io.*;
+import static java.lang.Math.*;
+import static java.util.Arrays.*;
+import static java.util.Collections.*;
+
+public class Main{
+	Scanner sc=new Scanner(System.in);
+
+	int INF=1<<28;
+	double EPS=1e-12;
+
+	int n, w;
+
+	void run(){
+		n=sc.nextInt();
+		w=sc.nextInt();
+		solve();
+	}
+
+	boolean[] flag;
+	int[] count;
+	int sum, left, right;
+
+	void solve(){
+		flag=new boolean[n+1];
+		count=new int[n+1];
+		sum=0;
+		left=1;
+		right=w+1;
+		for(int i=1; i<w; i++){
+			for(int k=1; k*k<=i; k++){
+				if(i%k==0){
+					count[k]++;
+					update(k);
+					if(i/k!=k){
+						count[i/k]++;
+						update(i/k);
+					}
+				}
+			}
+		}
+		for(int i=0; i<n-w+1; i++){
+			left=i+1;
+			right=i+w+1;
+			for(int k=1; k*k<=i; k++){
+				if(i%k==0){
+					count[k]--;
+					update(k);
+					if(i/k!=k){
+						count[i/k]--;
+						update(i/k);
+					}
+				}
+			}
+			for(int k=1; k*k<=i+w; k++){
+				if((i+w)%k==0){
+					count[k]++;
+					update(k);
+					if((i+w)/k!=k){
+						count[(i+w)/k]++;
+						update((i+w)/k);
+					}
+				}
+			}
+			update(left-1);
+			update(right-1);
+//			debug("i", i, "i+w-1", i+w-1);
+//			debug("count", count);
+//			debug("flag", flag);
+//			debug("sum", sum);
+//			debug(sum);
+//			debug();
+			print(sum+(i<n-w?" ":"\n"));
+		}
+		// iの約数が減って
+		// i+wの約数が増える
+		// iが確定じゃなくなった
+		// i+wが確定する
+	}
+
+	void update(int i){
+		boolean det=left<=i&&i<right;
+		if(flag[i]&&!det&&count[i]<2){
+			flag[i]=false;
+			sum--;
+		}
+		if(!flag[i]&&(det||count[i]>=2)){
+			flag[i]=true;
+			sum++;
+		}
+	}
+
+	void debug(Object... os){
+		System.err.println(Arrays.deepToString(os));
+	}
+
+	void print(String s){
+		System.out.print(s);
+	}
+
+	void println(String s){
+		System.out.println(s);
+	}
+
+	public static void main(String[] args){
+		System.setOut(new PrintStream(new BufferedOutputStream(System.out)));
+		new Main().run();
+		System.out.flush();
+	}
+}
+<<Question>>
+What would be the output of code executiion given the following input:
+10 2
+
+Only print the output of code execution and end your response with "END-OF-OUTPUT":\<<Answer>>
+### Response:
+```
+1 2 3 4 5 6 7 8 9 10 
+11 12 13 14 15 16 17 18 19 20 
+21 22 23 24 25 26 27 28 29 30 
+31 32 33 34 35 36 37 38 39 40 
+41 42 43 44 45 46 47 48 49 50 
+51 52 53 54 55 56 57 58 59 60 
+61 62 63 64 65 66 67 68 69 

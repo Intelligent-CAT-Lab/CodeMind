@@ -1,0 +1,44 @@
+<<<Analysis>>>
+The input provided is `2 2`, which means n = 2 and m = 2.
+
+The `solve` method initializes an array `fac` of size m+1 (which is 3 in this case) to store the factorial of numbers from 0 to m. It then calculates the factorial of each number modulo `mod` (which is 10^9 + 7).
+
+The `solve` method then initializes `ans` to 0 and starts a loop from i = 0 to n (inclusive), which in this case will run for i = 0, 1, and 2.
+
+Inside the loop, the following steps are performed for each i:
+1. Calculate `combi(n, i)` which is the combination of n choose i, using the precomputed factorials and the `power` function for modular inverse.
+2. Calculate `perm(m, i)` which is the permutation of m taken i at a time, using the precomputed factorials and the `power` function for modular inverse.
+3. Multiply `combi(n, i)` with `perm(m, i)` and take modulo `mod`.
+4. Calculate `can` which is the permutation of (m - i) taken (n - i) at a time, using the `perm` function.
+5. Multiply the result from step 3 with `can` twice, taking modulo `mod` after each multiplication.
+6. Depending on whether i is even or odd, add or subtract the result from `ans` and take modulo `mod`.
+
+After the loop, the final value of `ans` is printed.
+
+Let's calculate the values for each i:
+- For i = 0:
+  - `combi(2, 0)` = 1 (since nC0 is always 1)
+  - `perm(2, 0)` = 1 (since P(n, 0) is always 1)
+  - `can` = `perm(2, 2)` = 2 (since P(n, n) is always n!)
+  - The result for i = 0 is (1 * 1 * 2 * 2) % mod = 4
+  - Since i is even, we add this to `ans`, so `ans` = 4
+
+- For i = 1:
+  - `combi(2, 1)` = 2 (since nC1 is always n)
+  - `perm(2, 1)` = 2 (since P(n, 1) is always n)
+  - `can` = `perm(1, 1)` = 1 (since P(n, n) is always n!)
+  - The result for i = 1 is (2 * 2 * 1 * 1) % mod = 4
+  - Since i is odd, we subtract this from `ans`, so `ans` = (4 + mod - 4) % mod = 0
+
+- For i = 2:
+  - `combi(2, 2)` = 1 (since nCn is always 1)
+  - `perm(2, 2)` = 2 (since P(n, n) is always n!)
+  - `can` = `perm(0, 0)` = 1 (since P(0, 0) is always 1)
+  - The result for i = 2 is (1 * 2 * 1 * 1) % mod = 2
+  - Since i is even, we add this to `ans`, so `ans` = (0 + 2) % mod = 2
+
+Finally, the method prints the value of `ans`, which is 2.
+
+<<<Output>>>
+2
+[END-OF-RESPONSE]

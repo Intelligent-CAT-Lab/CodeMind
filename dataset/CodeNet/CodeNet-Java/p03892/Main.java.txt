@@ -1,0 +1,131 @@
+1 import java.io.IOException; 
+2 import java.io.InputStream; 
+3 import java.io.PrintWriter; 
+4 import java.util.*; 
+5  
+6 
+7 class Main{ 
+8 	static long gcd(long a, long b){
+9 		if(b==0)return a;
+10 		return gcd(b, a%b);
+11 	}
+12 
+13 	static void solve(){ 
+14 		long a = ni(), b=ni();
+15 		a=Math.abs(ni()-a);
+16 		b=Math.abs(ni()-b);
+17 		long g = gcd(a, b);
+18 		long ans = a/g + b/g -1;
+19 		out.println(ans*g);
+20 	} 
+21  
+22  
+23  
+24  
+25 	 public static void main(String[] args){ 
+26 		 solve(); 
+27 		 out.flush(); 
+28 	 } 
+29 	 private static InputStream in = System.in; 
+30 	 private static PrintWriter out = new PrintWriter(System.out); 
+31  
+32 	 static boolean inrange(int y, int x, int h, int w){ 
+33 		 return y>=0 && y<h && x>=0 && x<w; 
+34 	 } 
+35 	 @SuppressWarnings("unchecked") 
+36 	 static<T extends Comparable> int lower_bound(List<T> list, T key){ 
+37 		 int lower=-1;int upper=list.size(); 
+38 		 while(upper - lower>1){ 
+39 		 int center =(upper+lower)/2; 
+40 		 if(list.get(center).compareTo(key)>=0)upper=center; 
+41 		 else lower=center; 
+42 		 } 
+43 		 return upper; 
+44 	 } 
+45 	 @SuppressWarnings("unchecked") 
+46 	 static <T extends Comparable> int upper_bound(List<T> list, T key){ 
+47 		 int lower=-1;int upper=list.size(); 
+48 		 while(upper-lower >1){ 
+49 		 int center=(upper+lower)/2; 
+50 		 if(list.get(center).compareTo(key)>0)upper=center; 
+51 		 else lower=center; 
+52 		 } 
+53 		 return upper; 
+54 	 } 
+55 	 @SuppressWarnings("unchecked") 
+56 	 static <T extends Comparable> boolean next_permutation(List<T> list){ 
+57 		 int lastIndex = list.size()-2; 
+58 		 while(lastIndex>=0 && list.get(lastIndex).compareTo(list.get(lastIndex+1))>=0)--lastIndex; 
+59 		 if(lastIndex<0)return false; 
+60 		 int swapIndex = list.size()-1; 
+61 		 while(list.get(lastIndex).compareTo(list.get(swapIndex))>=0)swapIndex--; 
+62 		 T tmp = list.get(lastIndex); 
+63 		 list.set(lastIndex++, list.get(swapIndex)); 
+64 		 list.set(swapIndex, tmp); 
+65 		 swapIndex = list.size()-1; 
+66 		 while(lastIndex<swapIndex){ 
+67 		 tmp = list.get(lastIndex); 
+68 		 list.set(lastIndex, list.get(swapIndex)); 
+69 		 list.set(swapIndex, tmp); 
+70 		 ++lastIndex;--swapIndex; 
+71 		 } 
+72 		 return true; 
+73 	 } 
+74 	 private static final byte[] buffer = new byte[1<<15]; 
+75 	 private static int ptr = 0; 
+76 	 private static int buflen = 0; 
+77 	 private static boolean hasNextByte(){ 
+78 		 if(ptr<buflen)return true; 
+79 		 ptr = 0; 
+80 		 try{ 
+81 			 buflen = in.read(buffer); 
+82 		 } catch (IOException e){ 
+83 			 e.printStackTrace(); 
+84 		 } 
+85 		 return buflen>0; 
+86 	 } 
+87 	 private static int readByte(){ if(hasNextByte()) return buffer[ptr++]; else return -1;} 
+88 	 private static boolean isSpaceChar(int c){ return !(33<=c && c<=126);} 
+89 	 private static int skip(){int res; while((res=readByte())!=-1 && isSpaceChar(res)); return res;} 
+90  
+91 	 private static double nd(){ return Double.parseDouble(ns()); } 
+92 	 private static char nc(){ return (char)skip(); } 
+93 	 private static String ns(){ 
+94 		 StringBuilder sb = new StringBuilder(); 
+95 		 for(int b=skip();!isSpaceChar(b);b=readByte())sb.append((char)b); 
+96 		 return sb.toString(); 
+97 	 } 
+98 	 private static int[] nia(int n){ 
+99 		 int[] res = new int[n]; 
+100 		 for(int i=0;i<n;++i)res[i]=ni(); 
+101 		 return res; 
+102 	 } 
+103 	 private static long[] nla(int n){ 
+104 		 long[] res = new long[n]; 
+105 		 for(int i=0;i<n;++i)res[i]=nl(); 
+106 		 return res; 
+107 	 } 
+108 	 private static int ni(){ 
+109 		 int res=0,b; 
+110 		 boolean minus=false; 
+111 		 while((b=readByte())!=-1 && !((b>='0'&&b<='9') || b=='-')); 
+112 		 if(b=='-'){ 
+113 			 minus=true; 
+114 			 b=readByte(); 
+115 		 } 
+116 		 for(;'0'<=b&&b<='9';b=readByte())res=res*10+(b-'0'); 
+117 		 return minus ? -res:res; 
+118 	 } 
+119 	 private static long nl(){ 
+120 		 long res=0,b; 
+121 		 boolean minus=false; 
+122 		 while((b=readByte())!=-1 && !((b>='0'&&b<='9') || b=='-')); 
+123 		 if(b=='-'){ 
+124 			 minus=true; 
+125 			 b=readByte(); 
+126 		 } 
+127 		 for(;'0'<=b&&b<='9';b=readByte())res=res*10+(b-'0'); 
+128 		 return minus ? -res:res; 
+129 	} 
+130 } 
+131 

@@ -1,0 +1,170 @@
+1 
+2 import java.util.Arrays;
+3 
+4 public class Main {
+5   private static void solve() {
+6     char[] s = ns();
+7     int n = s.length;
+8     int[] idx = new int[26];
+9     
+10     for (int i = 0; i < n; i ++) {
+11       int c = s[i] - 'a';
+12       idx[c] ++;
+13     }
+14     int[][] a = new int[26][];
+15     for (int i = 0; i < 26; i ++) {
+16       a[i] = new int[idx[i]];
+17     }
+18 
+19     int[] map = new int[n];
+20     Arrays.fill(map, -1);
+21 
+22     int[] ptr = new int[26];
+23     int now = 0;
+24     int oddUsed = -1;
+25     for (int i = 0; i < n; i ++) {
+26       int c = s[i] - 'a';
+27       
+28       boolean odd = idx[c] % 2 == 1;
+29       if (odd && oddUsed >= 0 && oddUsed != c) {
+30         System.out.println(-1);
+31         return;
+32       }
+33 
+34       int p = ptr[c];
+35       if (p < idx[c] / 2) {
+36         map[i] = now ++;
+37       } else if (odd && p == idx[c] / 2) {
+38         map[i] = n / 2;
+39         oddUsed = c;
+40         
+41       } else {
+42         int inv = idx[c] - p - 1;
+43         map[i] = n - a[c][inv] - 1;
+44       }
+45       a[c][p] = map[i];
+46       ptr[c] ++;
+47     }
+48     int[] array = new int[n];
+49     for (int i = 0; i < n; i ++) {
+50       array[map[i]] = i;
+51     }
+52     long x = bubbleCount(array, 0, n);
+53     System.out.println(x);
+54   }
+55 
+56   public static long bubbleCount(int[] a, int l, int r)
+57   {
+58       if(r - l <= 1)return 0;
+59       int m = (l+r)/2;
+60       long ret = bubbleCount(a, l, m) + bubbleCount(a, m, r);
+61       int[] temp = Arrays.copyOfRange(a, l, r);
+62       for(int p0 = 0, p1 = m-l, p = l;p < r;){
+63           if(p0 == m-l){
+64               a[p++] = temp[p1++];
+65           }else if(p1 == r-l){
+66               a[p++] = temp[p0++];
+67           }else if(temp[p0] <= temp[p1]){
+68               a[p++] = temp[p0++];
+69           }else{
+70               a[p++] = temp[p1++];
+71               ret += m-l-p0;
+72           }
+73       }
+74       return ret;
+75   }
+76 
+77   public static void main(String[] args) {
+78     new Thread(null, new Runnable() {
+79       @Override
+80       public void run() {
+81         long start = System.currentTimeMillis();
+82         String debug = args.length > 0 ? args[0] : null;
+83         if (debug != null) {
+84           try {
+85             is = java.nio.file.Files.newInputStream(java.nio.file.Paths.get(debug));
+86           } catch (Exception e) {
+87             throw new RuntimeException(e);
+88           }
+89         }
+90         reader = new java.io.BufferedReader(new java.io.InputStreamReader(is), 32768);
+91         solve();
+92         out.flush();
+93         tr((System.currentTimeMillis() - start) + "ms");
+94       }
+95     }, "", 64000000).start();
+96   }
+97 
+98   private static java.io.InputStream is = System.in;
+99   private static java.io.PrintWriter out = new java.io.PrintWriter(System.out);
+100   private static java.util.StringTokenizer tokenizer = null;
+101   private static java.io.BufferedReader reader;
+102 
+103   public static String next() {
+104     while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+105       try {
+106         tokenizer = new java.util.StringTokenizer(reader.readLine());
+107       } catch (Exception e) {
+108         throw new RuntimeException(e);
+109       }
+110     }
+111     return tokenizer.nextToken();
+112   }
+113 
+114   private static double nd() {
+115     return Double.parseDouble(next());
+116   }
+117 
+118   private static long nl() {
+119     return Long.parseLong(next());
+120   }
+121 
+122   private static int[] na(int n) {
+123     int[] a = new int[n];
+124     for (int i = 0; i < n; i++)
+125       a[i] = ni();
+126     return a;
+127   }
+128 
+129   private static char[] ns() {
+130     return next().toCharArray();
+131   }
+132 
+133   private static long[] nal(int n) {
+134     long[] a = new long[n];
+135     for (int i = 0; i < n; i++)
+136       a[i] = nl();
+137     return a;
+138   }
+139 
+140   private static int[][] ntable(int n, int m) {
+141     int[][] table = new int[n][m];
+142     for (int i = 0; i < n; i++) {
+143       for (int j = 0; j < m; j++) {
+144         table[i][j] = ni();
+145       }
+146     }
+147     return table;
+148   }
+149 
+150   private static int[][] nlist(int n, int m) {
+151     int[][] table = new int[m][n];
+152     for (int i = 0; i < n; i++) {
+153       for (int j = 0; j < m; j++) {
+154         table[j][i] = ni();
+155       }
+156     }
+157     return table;
+158   }
+159 
+160   private static int ni() {
+161     return Integer.parseInt(next());
+162   }
+163 
+164   private static void tr(Object... o) {
+165     if (is != System.in)
+166       System.out.println(java.util.Arrays.deepToString(o));
+167   }
+168 }
+169 
+170 

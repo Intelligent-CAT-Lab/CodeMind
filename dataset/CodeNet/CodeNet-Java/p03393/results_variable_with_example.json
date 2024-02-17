@@ -1,0 +1,189 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6    public static void main(String[] args) {\n7\t\t try {\n7\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nQuestion: What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the sataes and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN",
+        "predict": "20\nEND-OF-STATE"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.IOException;\n3 import java.io.InputStreamReader;\n4 import java.io.PrintWriter;\n5 import java.util.Set;\n6 import java.util.TreeSet;\n7 \n8 public class Main {\n9 \tfinal int _intMax = Integer.MAX_VALUE; // =2147483647>10^9\n10 \tfinal int _intMin = Integer.MIN_VALUE;\n11 \tfinal long _longMax = Long.MAX_VALUE; // =9223372036854775807L>10^18\n12 \tfinal long _longMin = Long.MIN_VALUE;\n13 \n14 \tvoid solve() {\n15 \t\tSet<Character> set = new TreeSet<>();\n16 \t\tfor (char ch = 'a'; ch <= 'z'; ch++)\n17 \t\t\tset.add(ch);\n18 \t\tString line = readLine();\n19 \t\tfor (int i = 0; i < line.length(); i++) {\n20 \t\t\tchar ch = line.charAt(i);\n21 \t\t\tset.remove(ch);\n22 \t\t}\n23 \t\tif (set.size() > 0) {\n24 \t\t\tStringBuilder sb = new StringBuilder();\n25 \t\t\tsb.append(line);\n26 \t\t\tsb.append(set.iterator().next());\n27 \t\t\tpln(sb.toString());\n28 \t\t\treturn;\n29 \t\t}\n30 \t\tif (\"zyxwvutsrqponmlkjihgfedcba\".equals(line)) {\n31 \t\t\tpln(-1);\n32 \t\t\treturn;\n33 \t\t}\n34 \t\tnext(line, \"\");\n35 \t}\n36 \n37 \tboolean next(String line, String cur) {\n38 \t\tif (line.substring(0, cur.length()).compareTo(cur) > 0)\n39 \t\t\treturn false;\n40 \t\tif (line.length() == cur.length()) {\n41 \t\t\tif (line.compareTo(cur) < 0) {\n42 \t\t\t\tfor (int i = 0; i < line.length(); i++) {\n43 \t\t\t\t\tp(cur.charAt(i));\n44 \t\t\t\t\tif (line.charAt(i) != cur.charAt(i)) {\n45 \t\t\t\t\t\tbreak;\n46 \t\t\t\t\t}\n47 \t\t\t\t}\n48 \t\t\t\tpln(\"\");\n49 \t\t\t\treturn true;\n50 \t\t\t} else\n51 \t\t\t\treturn false;\n52 \t\t}\n53 \t\tfor (char ch = 'a'; ch <= 'z'; ch++) {\n54 \t\t\tif (cur.indexOf(ch) < 0) {\n55 \t\t\t\tif (next(line, cur + String.valueOf(ch)))\n56 \t\t\t\t\treturn true;\n57 \t\t\t}\n58 \t\t}\n59 \t\treturn false;\n60 \t}\n61 \n62 \t// -----------------------------------------------------\n63 \t// 2018/04/26 r2\n64 \t// -----------------------------------------------------\n65 \tint abs(int a) {\n66 \t\treturn (a >= 0) ? a : -a;\n67 \t}\n68 \n69 \tlong abs(long a) {\n70 \t\treturn (a >= 0) ? a : -a;\n71 \t}\n72 \n73 \tint max(int a, int b) {\n74 \t\treturn (a > b) ? a : b;\n75 \t}\n76 \n77 \tlong max(long a, long b) {\n78 \t\treturn (a > b) ? a : b;\n79 \t}\n80 \n81 \tint min(int a, int b) {\n82 \t\treturn (a < b) ? a : b;\n83 \t}\n84 \n85 \tlong min(long a, long b) {\n86 \t\treturn (a < b) ? a : b;\n87 \t}\n88 \n89 \tint pint(String s) {\n90 \t\treturn Integer.parseInt(s);\n91 \t}\n92 \n93 \tlong plong(String s) {\n94 \t\treturn Long.parseLong(s);\n95 \t}\n96 \n97 \tString readLine() {\n98 \t\ttry {\n99 \t\t\treturn _in.readLine();\n100 \t\t} catch (IOException e) {\n101 \t\t\tthrow new RuntimeException(e);\n102 \t\t}\n103 \t}\n104 \n105 \tint readNum() {\n106 \t\tString line = readLine();\n107 \t\treturn pint(line);\n108 \t}\n109 \n110 \tlong readLong() {\n111 \t\tString line = readLine();\n112 \t\treturn plong(line);\n113 \t}\n114 \n115 \tString[] readFlds() {\n116 \t\tString line = readLine();\n117 \t\treturn line.split(\" \");\n118 \t}\n119 \n120 \tint[] readNums() {\n121 \t\tString[] flds = readFlds();\n122 \t\tint[] nums = new int[flds.length];\n123 \t\tfor (int i = 0; i < flds.length; i++)\n124 \t\t\tnums[i] = pint(flds[i]);\n125 \t\treturn nums;\n126 \t}\n127 \n128 \tlong[] readLongs() {\n129 \t\tString[] flds = readFlds();\n130 \t\tlong[] nums = new long[flds.length];\n131 \t\tfor (int i = 0; i < flds.length; i++)\n132 \t\t\tnums[i] = plong(flds[i]);\n133 \t\treturn nums;\n134 \t}\n135 \n136 \tvoid p(char c) {\n137 \t\t_out.print(c);\n138 \t}\n139 \n140 \tvoid pln(char c) {\n141 \t\t_out.println(c);\n142 \t}\n143 \n144 \tvoid p(double d) {\n145 \t\t_out.print(d);\n146 \t}\n147 \n148 \tvoid pln(double d) {\n149 \t\t_out.println(d);\n150 \t}\n151 \n152 \tvoid p(long l) {\n153 \t\t_out.print(l);\n154 \t}\n155 \n156 \tvoid pln(long l) {\n157 \t\t_out.println(l);\n158 \t}\n159 \n160 \tvoid p(String s) {\n161 \t\t_out.print(s);\n162 \t}\n163 \n164 \tvoid pln(String s) {\n165 \t\t_out.println(s);\n166 \t}\n167 \n168 \tvoid pln(int[] ia) {\n169 \t\tfor (int i = 0; i < ia.length; i++)\n170 \t\t\tpln(ia[i]);\n171 \t}\n172 \n173 \tvoid pln(long[] la) {\n174 \t\tfor (int i = 0; i < la.length; i++)\n175 \t\t\tpln(la[i]);\n176 \t}\n177 \n178 \tstatic BufferedReader _in;\n179 \tstatic PrintWriter _out;\n180 \tstatic boolean _bElapsed = false;\n181 \n182 \tpublic static void main(String[] args) {\n183 \t\tlong start = System.currentTimeMillis();\n184 \t\t_in = new BufferedReader(new InputStreamReader(System.in));\n185 \t\t_out = new PrintWriter(System.out);\n186 \t\tnew Main().solve();\n187 \t\t_out.flush();\n188 \t\tlong end = System.currentTimeMillis();\n189 \t\tif (_bElapsed)\n190 \t\t\tSystem.err.println((end - start) + \"ms\");\n191 \t}\n192 }\n\nGiven the following input:\natcoder\n\n\nQuestion:\n What would be the states of variable start in line 183? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1693825189239"
+        ],
+        "variable": "start",
+        "line": "183",
+        "predict": "0\nEND-OF-STATE"
+    },
+    "2": {
+        "prompt": "Question:\n What would be the states of variable ch in line 16? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "g",
+            "h",
+            "i",
+            "j",
+            "k",
+            "l",
+            "m",
+            "n",
+            "o",
+            "p",
+            "q",
+            "r",
+            "s",
+            "t",
+            "u",
+            "v",
+            "w",
+            "x",
+            "y",
+            "z"
+        ],
+        "variable": "ch",
+        "line": "16",
+        "predict": "a\nb\nc\nd\ne\nf\ng\nh\ni\nj\nk\nl\nm\nn\no\np\nq\nr\ns\nt\nu\nv\nw\nx\ny\nz\nEND-OF-STATE"
+    },
+    "3": {
+        "prompt": "Question:\n What would be the states of variable ch in line 17? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "g",
+            "h",
+            "i",
+            "j",
+            "k",
+            "l",
+            "m",
+            "n",
+            "o",
+            "p",
+            "q",
+            "r",
+            "s",
+            "t",
+            "u",
+            "v",
+            "w",
+            "x",
+            "y",
+            "z"
+        ],
+        "variable": "ch",
+        "line": "17",
+        "predict": "END-OF-STATE"
+    },
+    "4": {
+        "prompt": "Question:\n What would be the states of variable line in line 18? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "\"atcoder\""
+        ],
+        "variable": "line",
+        "line": "18",
+        "predict": "atcoder\nEND-OF-STATE"
+    },
+    "5": {
+        "prompt": "Question:\n What would be the states of variable i in line 19? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+        ],
+        "variable": "i",
+        "line": "19",
+        "predict": "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\nEND-OF-STATE"
+    },
+    "6": {
+        "prompt": "Question:\n What would be the states of variable line in line 19? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "\"atcoder\"",
+            "\"atcoder\"",
+            "\"atcoder\"",
+            "\"atcoder\"",
+            "\"atcoder\"",
+            "\"atcoder\"",
+            "\"atcoder\"",
+            "\"atcoder\""
+        ],
+        "variable": "line",
+        "line": "19",
+        "predict": "END-OF-STATE"
+    },
+    "7": {
+        "prompt": "Question:\n What would be the states of variable i in line 20? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+        ],
+        "variable": "i",
+        "line": "20",
+        "predict": "END-OF-STATE"
+    },
+    "8": {
+        "prompt": "Question:\n What would be the states of variable line in line 20? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "\"atcoder\"",
+            "\"atcoder\"",
+            "\"atcoder\"",
+            "\"atcoder\"",
+            "\"atcoder\"",
+            "\"atcoder\"",
+            "\"atcoder\""
+        ],
+        "variable": "line",
+        "line": "20",
+        "predict": "END-OF-STATE"
+    },
+    "9": {
+        "prompt": "Question:\n What would be the states of variable ch in line 20? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "a",
+            "t",
+            "c",
+            "o",
+            "d",
+            "e",
+            "r"
+        ],
+        "variable": "ch",
+        "line": "20",
+        "predict": "END-OF-STATE"
+    },
+    "10": {
+        "prompt": "Question:\n What would be the states of variable line in line 25? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "\"atcoder\""
+        ],
+        "variable": "line",
+        "line": "25",
+        "predict": "atcodera\nEND-OF-STATE"
+    },
+    "11": {
+        "prompt": "Question:\n What would be the states of variable end in line 188? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1693825228484"
+        ],
+        "variable": "end",
+        "line": "188",
+        "predict": "END-OF-STATE"
+    }
+}

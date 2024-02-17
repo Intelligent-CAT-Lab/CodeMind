@@ -1,0 +1,36 @@
+1 import java.util.Scanner;
+2 
+3 public class Main {
+4     static final long mod = 1000000007;
+5     static long dp[][] = new long[100010][2];
+6 
+7     public static void main(String[] args) {
+8         Scanner sc = new Scanner(System.in);
+9         int n = sc.nextInt();
+10         int m = sc.nextInt();
+11 
+12         dp[0][0] = 1;
+13         for (int i = 1; i <= n; ++i) {
+14             dp[i][0] += dp[i - 1][0] + dp[i - 1][1];
+15             dp[i][0] %= mod;
+16             dp[i][1] += dp[i - 1][0] + dp[i - 1][1];
+17             dp[i][1] %= mod;
+18             if (i - m >= 0) {
+19                 dp[i][1] = (dp[i][1] - dp[i - m][0] + mod) % mod;
+20             }
+21         }
+22 
+23         System.out.println((pow2(n) - (dp[n][0] + dp[n][1]) + mod * mod) % mod);
+24     }
+25 
+26     static long pow2(int k) {
+27         //v = 2^n mod 1e9+7
+28         long v = 1L;
+29         for (int i = 0; i < k; i++) {
+30             v *= 2L;
+31             v %= mod;
+32         }
+33         return v;
+34     }
+35 }
+36 

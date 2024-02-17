@@ -1,7 +1,8 @@
 from constants import Dataset, Model, PromptType,PromptBuilder,OpenAIModel
 import openai
 import time
-openai.api_key = "Your-API-KEY"
+import os
+openai.api_key = os.getenv("OPENAIKEY")
 def chatgpt_wrapper(model,message, temp=0.0, max_len=1000):
     openai_model = OpenAIModel()
     model_identifier = openai_model(Model(model))

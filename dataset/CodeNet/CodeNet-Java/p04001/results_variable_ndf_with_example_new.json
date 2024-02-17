@@ -1,0 +1,239 @@
+{
+    "0": {
+        "prompt": "Instruction: You will be given a piece of Java code and input to the function. \nYou will need to answer questions related to variable states.\nBelow is an example.\n[[[Example Start ]]]\nConsider the following code:\n<<Code>>\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6        public static void main(String[] args) {\n7                try {\n8                        InputStreamReader isr = new InputStreamReader(System.in);\n9                        BufferedReader br = new BufferedReader(isr);\n10                       String strArr[] = br.readLine().split(\" \");\n11 \n12                       int n = Integer.parseInt(strArr[0]);\n13                       int a = Integer.parseInt(strArr[1]);\n14                       int b = Integer.parseInt(strArr[2]);\n15                       int answer = 0;\n16 \n17                       for (int i = 1; i < n + 1; i++) {\n18                               int num = i;\n19                               int sum = 0;\n20 \n21                               while (num != 0) {\n22                                       sum += num % 10;\n23                                       num /= 10;\n24                               }\n25 \n26                               if (sum >= a && sum <= b ) {\n27                                       answer = answer + i;\n28                               }\n29                       }\n30                       System.out.println(answer);\n31               } catch (Exception e) {\n32                       e.printStackTrace();\n33               }\n34       }\n35 \n36 }\n\n<<Input>>\n20 2 5\n\n<<Round 1>>\n[Question]\nWhat would be the states of variable `n` in line 12? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n20\nEND-OF-STATE\n\n<<Round 2>>\n[Question]\nWhat would be the states of variable `a` in line 13? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n2\nEND-OF-STATE\n\n<<Round 3>>\n[Question]\nWhat would be the states of variable `num` in line 18? Print all the states and end your response with \\\"END-OF-STATE\\\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\n<<Round 4>>\n[Question]\nWhat would be the states of variable `sum` in line 26? Print all the states and end your response with \\\"END-OF-STATE\\\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n2\n3\n4\n5\n2\n3\n4\n5\n2\nEND-OF-STATE\n[[[Example End]]]",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN",
+        "predict": "Consider the following code:\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\n\npublic class Main {\n\n       public static void main(String[] args) {\n               try {\n                       InputStreamReader isr = new InputStreamReader(System.in);\n                       BufferedReader br = new BufferedReader(isr);\n                       String strArr[] = br.readLine().split(\" \");\n\n                       int n = Integer.parseInt(strArr[0]);\n                       int a = Integer.parseInt(strArr[1]);\n                       int b = Integer.parseInt(strArr[2]);\n                       int answer = 0;\n\n                       for (int i = 1; i < n + 1; i++) {\n                               int num = i;\n                               int sum = 0;\n\n                               while (num != 0) {\n                                       sum += num % 10;\n                                       num /= 10;\n                               }\n\n                               if (sum >= a && sum <= b ) {\n                                       answer = answer + i;\n                               }\n                       }\n                       System.out.println(answer);\n               } catch (Exception e) {\n                       e.printStackTrace();\n               }\n       }\n\n}\n\nInput\n20 2 5\n\nRound 1\n[Question]\nWhat would be the states of variable `n` in line 12? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n20\nEND-OF-STATE\n\nRound 2\n[Question]\nWhat would be the states of variable `a` in line 13? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n2\nEND-OF-STATE\n\nRound 3\n[Question]\nWhat would be the states of variable `num` in line 18? Print all the states and end your response with \"END-OF-STATE\".\n**Note:"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n<<Code>>\n1 import java.util.Scanner;\n2 \n3 public class Main {\n4 \n5 \tpublic static void main(String[] args) {\n6 \t\tScanner scan = new Scanner(System.in);\n7 \t\tString S = scan.nextLine();\n8 \t\tif(S.length()==1) {\n9 \t\t\tSystem.out.println(S);\n10 \t\t\tSystem.exit(0);\n11 \t\t}\n12 \t\tint[] N = new int[S.length()];\n13 \n14 \t\tint patternCount = 1;\n15 \t\tString tmpBit = \"\";\n16 \t\tfor(int i=0; i<N.length; i++) {\n17 \t\t\tN[i] = Integer.parseInt(String.valueOf(S.charAt(i)));\n18 \t\t\tif(i>0) {\n19 \t\t\t\tpatternCount*=2;\n20 \t\t\t\ttmpBit = tmpBit + \"1\";\n21 \t\t\t}\n22 \t\t}\n23 \n24 \t\tlong sum=0;\n25 \t\tfor(int i=0; i<patternCount; i++) {\n26 \t\t\tString bin = Integer.toBinaryString(i);\n27 \t\t\twhile(bin.length()<tmpBit.length()) {\n28 \t\t\t\tbin = \"0\" + bin;\n29 \t\t\t}\n30 \t\t\tString add = String.valueOf(N[0]);\n31 \t\t\tfor(int j=0; j<bin.length(); j++) {\n32 \t\t\t\tif(bin.charAt(j)=='1') {\n33 \t\t\t\t\tsum+=Integer.parseInt(add);\n34 \t\t\t\t\tadd = \"\";\n35 \t\t\t\t}\n36 \t\t\t\tadd = add + N[j+1];\n37 \t\t\t}\n38 \t\t\tif(add.length()>0) {\n39 \t\t\t\t//System.out.printf(\"sum:%d + add:%s = \",sum, add);\n40 \t\t\t\tsum+=Long.parseLong(add);\n41 \t\t\t\t//System.out.println(sum);\n42 \t\t\t}\n43 \t\t}\n44 \t\tSystem.out.println(sum);\n45 \n46 \t}\n47 \n48 }\n\n\n<<Input>>\n125\n\n\n<<Round 1>>\nWhat would be the states of variable `S` in line 8? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "\"125\""
+        ],
+        "variable": "S",
+        "line": 8,
+        "predict": "125\nEND-OF-STATE"
+    },
+    "2": {
+        "prompt": "<<Round 2>>\nWhat would be the states of variable `S` in line 12? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "\"125\""
+        ],
+        "variable": "S",
+        "line": 12,
+        "predict": "125\nEND-OF-STATE"
+    },
+    "3": {
+        "prompt": "<<Round 3>>\nWhat would be the states of variable `patternCount` in line 14? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "1"
+        ],
+        "variable": "patternCount",
+        "line": 14,
+        "predict": "1\nEND-OF-STATE"
+    },
+    "4": {
+        "prompt": "<<Round 4>>\nWhat would be the states of variable `tmpBit` in line 15? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "\"\""
+        ],
+        "variable": "tmpBit",
+        "line": 15,
+        "predict": "1\n11\n111\nEND-OF-STATE"
+    },
+    "5": {
+        "prompt": "<<Round 5>>\nWhat would be the states of variable `i` in line 18? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "0",
+            "1",
+            "2"
+        ],
+        "variable": "i",
+        "line": 18,
+        "predict": "0\n1\n2\n3\n4\n5\n6\n7\nEND-OF-STATE"
+    },
+    "6": {
+        "prompt": "<<Round 6>>\nWhat would be the states of variable `patternCount` in line 19? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "2",
+            "4"
+        ],
+        "variable": "patternCount",
+        "line": 19,
+        "predict": "2\n4\n8\n16\n32\n64\n128\n256\nEND-OF-STATE"
+    },
+    "7": {
+        "prompt": "<<Round 7>>\nWhat would be the states of variable `tmpBit` in line 20? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "\"1\"",
+            "\"11\""
+        ],
+        "variable": "tmpBit",
+        "line": 20,
+        "predict": "1\n11\n111\n1111\n11111\n111111\n1111111\n11111111\nEND-OF-STATE"
+    },
+    "8": {
+        "prompt": "<<Round 8>>\nWhat would be the states of variable `i` in line 25? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "0",
+            "1",
+            "2",
+            "3"
+        ],
+        "variable": "i",
+        "line": 25,
+        "predict": "0\n1\n2\n3\n4\n5\n6\n7\nEND-OF-STATE"
+    },
+    "9": {
+        "prompt": "<<Round 9>>\nWhat would be the states of variable `patternCount` in line 25? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "4",
+            "4",
+            "4",
+            "4",
+            "4"
+        ],
+        "variable": "patternCount",
+        "line": 25,
+        "predict": "2\n4\n8\n16\n32\n64\n128\n256\nEND-OF-STATE"
+    },
+    "10": {
+        "prompt": "<<Round 10>>\nWhat would be the states of variable `bin` in line 26? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "\"0\"",
+            "\"1\"",
+            "\"10\"",
+            "\"11\""
+        ],
+        "variable": "bin",
+        "line": 26,
+        "predict": "0\n1\n10\n11\n100\n101\n110\n111\nEND-OF-STATE"
+    },
+    "11": {
+        "prompt": "<<Round 11>>\nWhat would be the states of variable `i` in line 26? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "0",
+            "1",
+            "2",
+            "3"
+        ],
+        "variable": "i",
+        "line": 26,
+        "predict": "0\n1\n2\n3\n4\n5\n6\n7\nEND-OF-STATE"
+    },
+    "12": {
+        "prompt": "<<Round 12>>\nWhat would be the states of variable `bin` in line 27? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "\"0\"",
+            "\"00\"",
+            "\"1\"",
+            "\"01\"",
+            "\"10\"",
+            "\"11\""
+        ],
+        "variable": "bin",
+        "line": 27,
+        "predict": "000\n001\n010\n011\n100\n101\n110\n111\nEND-OF-STATE"
+    },
+    "13": {
+        "prompt": "<<Round 13>>\nWhat would be the states of variable `tmpBit` in line 27? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "\"11\"",
+            "\"11\"",
+            "\"11\"",
+            "\"11\"",
+            "\"11\"",
+            "\"11\""
+        ],
+        "variable": "tmpBit",
+        "line": 27,
+        "predict": "1\n11\n111\n1111\n11111\n111111\n1111111\n11111111\nEND-OF-STATE"
+    },
+    "14": {
+        "prompt": "<<Round 14>>\nWhat would be the states of variable `bin` in line 28? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "\"00\"",
+            "\"01\""
+        ],
+        "variable": "bin",
+        "line": 28,
+        "predict": "000\n001\n010\n011\n100\n101\n110\n111\nEND-OF-STATE"
+    },
+    "15": {
+        "prompt": "<<Round 15>>\nWhat would be the states of variable `bin` in line 31? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "\"00\"",
+            "\"00\"",
+            "\"00\"",
+            "\"01\"",
+            "\"01\"",
+            "\"01\"",
+            "\"10\"",
+            "\"10\"",
+            "\"10\"",
+            "\"11\"",
+            "\"11\"",
+            "\"11\""
+        ],
+        "variable": "bin",
+        "line": 31,
+        "predict": "0\n1\n10\n11\n100\n101\n110\n111\nEND-OF-STATE"
+    },
+    "16": {
+        "prompt": "<<Round 16>>\nWhat would be the states of variable `bin` in line 32? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "\"00\"",
+            "\"00\"",
+            "\"01\"",
+            "\"01\"",
+            "\"10\"",
+            "\"10\"",
+            "\"11\"",
+            "\"11\""
+        ],
+        "variable": "bin",
+        "line": 32,
+        "predict": "0\n1\n10\n11\n100\n101\n110\n111\nEND-OF-STATE"
+    },
+    "17": {
+        "prompt": "<<Round 17>>\nWhat would be the states of variable `j` in line 32? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "0",
+            "1",
+            "0",
+            "1",
+            "0",
+            "1",
+            "0",
+            "1"
+        ],
+        "variable": "j",
+        "line": 32,
+        "predict": "0\n1\n2\n3\n4\n5\n6\n7\nEND-OF-STATE"
+    },
+    "18": {
+        "prompt": "<<Round 18>>\nWhat would be the states of variable `add` in line 38? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "\"125\"",
+            "\"5\"",
+            "\"25\"",
+            "\"5\""
+        ],
+        "variable": "add",
+        "line": 38,
+        "predict": "1\n2\n3\n4\n5\n6\n7\n8\nEND-OF-STATE"
+    },
+    "19": {
+        "prompt": "<<Round 19>>\nWhat would be the states of variable `add` in line 34? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "\"\"",
+            "\"\"",
+            "\"\"",
+            "\"\""
+        ],
+        "variable": "add",
+        "line": 34,
+        "predict": "1\n2\n3\n4\n5\n6\n7\n8\nEND-OF-STATE"
+    }
+}

@@ -1,0 +1,1 @@
+print((str(eval(input()))[::2]))

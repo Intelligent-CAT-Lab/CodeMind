@@ -1,0 +1,5 @@
+N = int("54")
+count = 1
+while count <= N:
+    count *= 2
+print(round(count/2))

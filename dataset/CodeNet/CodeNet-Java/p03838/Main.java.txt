@@ -1,0 +1,111 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.PrintWriter;
+4 import java.util.NoSuchElementException;
+5 
+6 public class Main {
+7 	int x,y;
+8 	public void solve() {
+9 		x = nextInt();
+10 		y = nextInt();
+11 
+12 		if(x >= 0){
+13 			if(y >= 0){
+14 				if(x > y){
+15 					if(y == 0){
+16 						out.println(x-y+1);
+17 					}else{
+18 						out.println(x-y+2);
+19 					}
+20 				}else{
+21 					out.println(y-x);
+22 				}
+23 			}else{
+24 				out.println(Math.abs(Math.abs(y)-x)+1);
+25 			}
+26 		}else{
+27 			if(y >= 0){
+28 				if(y == 0){
+29 					out.println(Math.abs(Math.abs(x)-y));
+30 				}else{
+31 					out.println(Math.abs(Math.abs(x)-y)+1);
+32 				}
+33 			}else{
+34 				if(x > y){
+35 					out.println(x-y+2);
+36 				}else{
+37 					out.println(y-x);
+38 				}
+39 			}
+40 		}
+41 	}
+42 
+43 	public static void main(String[] args) {
+44 		out.flush();
+45 		new Main().solve();
+46 		out.close();
+47 	}
+48 
+49 	/* Input */
+50 	private static final InputStream in = System.in;
+51 	private static final PrintWriter out = new PrintWriter(System.out);
+52 	private final byte[] buffer = new byte[2048];
+53 	private int p = 0;
+54 	private int buflen = 0;
+55 
+56 	private boolean hasNextByte() {
+57 		if (p < buflen)
+58 			return true;
+59 		p = 0;
+60 		try {
+61 			buflen = in.read(buffer);
+62 		} catch (IOException e) {
+63 			e.printStackTrace();
+64 		}
+65 		if (buflen <= 0)
+66 			return false;
+67 		return true;
+68 	}
+69 
+70 	public boolean hasNext() {
+71 		while (hasNextByte() && !isPrint(buffer[p])) {
+72 			p++;
+73 		}
+74 		return hasNextByte();
+75 	}
+76 
+77 	private boolean isPrint(int ch) {
+78 		if (ch >= '!' && ch <= '~')
+79 			return true;
+80 		return false;
+81 	}
+82 
+83 	private int nextByte() {
+84 		if (!hasNextByte())
+85 			return -1;
+86 		return buffer[p++];
+87 	}
+88 
+89 	public String next() {
+90 		if (!hasNext())
+91 			throw new NoSuchElementException();
+92 		StringBuilder sb = new StringBuilder();
+93 		int b = -1;
+94 		while (isPrint((b = nextByte()))) {
+95 			sb.appendCodePoint(b);
+96 		}
+97 		return sb.toString();
+98 	}
+99 
+100 	public int nextInt() {
+101 		return Integer.parseInt(next());
+102 	}
+103 
+104 	public long nextLong() {
+105 		return Long.parseLong(next());
+106 	}
+107 
+108 	public double nextDouble() {
+109 		return Double.parseDouble(next());
+110 	}
+111 }

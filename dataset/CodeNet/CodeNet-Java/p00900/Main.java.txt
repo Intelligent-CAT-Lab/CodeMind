@@ -1,0 +1,123 @@
+1 
+2 import java.util.*;
+3 import java.io.*;
+4 import static java.util.Arrays.*;
+5 import static java.util.Collections.*;
+6 import static java.lang.Math.*;
+7 
+8 public class Main {
+9 
+10 	int INF = 1 << 28;
+11 	//long INF = 1L << 62;
+12 	double EPS = 1e-10;
+13 	int h, w, size;
+14 	int[][] map;
+15 	boolean[][] bomb;
+16 	P[] ps;
+17 	
+18 	void run() {
+19 		Scanner sc = new Scanner(System.in);
+20 		for(;;) {
+21 			h = sc.nextInt(); w = sc.nextInt();
+22 			if((h|w) == 0) break;
+23 			
+24 			map = new int[h][w];
+25 			bomb = new boolean[h][w];
+26 			ArrayList<P> ps = new ArrayList<P>();
+27 			for(int i=0;i<h;i++) {
+28 				String l = sc.next();
+29 				for(int j=0;j<w;j++) {
+30 					switch ( l.charAt(j) ) {
+31 						case '.': map[i][j] = -1; break;
+32 						case '*': map[i][j] = 0;  break;
+33 						default:  map[i][j] = l.charAt(j) - '0';
+34 								  ps.add(new P(j, i));
+35 					}
+36 				}
+37 			}
+38 			
+39 			this.ps = ps.toArray(new P[]{});
+40 			size = ps.size();
+41 			memo = new HashMap<Long, Integer>();
+42 			pow10 = new long[size];
+43 			pow10[0] = 100L; 
+44 			long S = pow10[0] * map[this.ps[0].y][this.ps[0].x];
+45 			for(int i=1;i<size;i++) {
+46 				pow10[i] = pow10[i-1] * 10L;
+47 				S += pow10[i] * map[this.ps[i].y][this.ps[i].x];
+48 			}
+49 //			debug(pow10);
+50 			System.out.println(solve(S, 0));
+51 		}
+52 	}
+53 	
+54 	int[] dx = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
+55 	int[] dy = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
+56 	long[] pow10;
+57 	HashMap<Long, Integer> memo;
+58 	int solve(long S, int cnt) {
+59 		int p = (int)(S % 100);
+60 //		debug(S, cnt, p);
+61 		if(memo.containsKey(S)) return memo.get(S);
+62 		if(S % 100 == size) {
+63 			if(S / 100 == 0) return 0;
+64 			return INF;
+65 		}
+66 		
+67 		if(cnt == 9) {
+68 			if(S / pow10[p] % 10 == 0) {
+69 				int ret = solve(S+1, 0);
+70 				memo.put(S, ret);
+71 				return ret;
+72 			}
+73 			else return INF;
+74 		}
+75 		
+76 		int min = solve(S, cnt+1);
+77 		int x = ps[p].x + dx[cnt], y = ps[p].y + dy[cnt];
+78 		
+79 		if(out(x, y) || bomb[y][x] || map[y][x] < 0) return min;
+80 		long next = S;
+81 		bomb[y][x] = true;
+82 		
+83 		boolean ng = false;
+84 		for(int i=0;i<size;i++) for(int j=0;j<9;j++){
+85 			int tx = x + dx[j], ty = y + dy[j];
+86 			if(out(tx, ty)) continue;
+87 			P tar = new P(tx, ty);
+88 			if(!ps[i].isEquals(tar)) continue;
+89 			if(next / pow10[i] % 10 > 0) next -= pow10[i];
+90 			else ng = true;
+91 		}
+92 
+93 		if(!ng) min = min(min, solve(next, cnt+1) + 1);
+94 		
+95 		bomb[y][x] = false;
+96 //		debug("", x, y, next, min);
+97 		return min;
+98 	}
+99 	
+100 	boolean out(int x, int y) {
+101 		return x < 0 || y < 0 || x >= w || y >= h;
+102 	}
+103 	
+104 	class P {
+105 		int x, y;
+106 		P(int x, int y) {
+107 			this.x = x;
+108 			this.y = y;
+109 		}
+110 		
+111 		boolean isEquals(P p) {
+112 			return x == p.x && y == p.y;
+113 		}
+114 	}
+115 
+116 	void debug(Object... os) {
+117 		System.err.println(Arrays.deepToString(os));
+118 	}
+119 
+120 	public static void main(String[] args) {
+121 		new Main().run();
+122 	}
+123 }

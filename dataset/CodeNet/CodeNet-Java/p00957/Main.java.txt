@@ -1,0 +1,64 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 
+5 class Main {
+6     public static void main(String[] args) {
+7         MyScanner sc = new MyScanner();
+8         out = new PrintWriter(new BufferedOutputStream(System.out));
+9         int l=sc.nextInt();
+10         int k=sc.nextInt();
+11         long[][]dp=new long[2][l+1];
+12         dp[0][0]=1;
+13         for(int i=1;i<=l;++i){
+14             dp[0][i]+=dp[1][i-1];
+15             dp[1][i]+=dp[0][i-1];
+16             if(i>=k)
+17                 dp[1][i]+=dp[0][i-k];
+18         }
+19         long ans=0;
+20         for(int i=1;i<=l;++i)
+21             ans+=dp[1][i];
+22         out.println(ans);
+23         out.close();
+24     }
+25     // http://codeforces.com/blog/entry/7018
+26     //-----------PrintWriter for faster output---------------------------------
+27     public static PrintWriter out;
+28     //-----------MyScanner class for faster input----------
+29     public static class MyScanner {
+30         BufferedReader br;
+31         StringTokenizer st;
+32         public MyScanner() {
+33             br = new BufferedReader(new InputStreamReader(System.in));
+34         }
+35         String next() {
+36             while (st == null || !st.hasMoreElements()) {
+37                 try {
+38                     st = new StringTokenizer(br.readLine());
+39                 } catch (IOException e) {
+40                     e.printStackTrace();
+41                 }
+42             }
+43             return st.nextToken();
+44         }
+45         int nextInt() {
+46             return Integer.parseInt(next());
+47         }
+48         long nextLong() {
+49             return Long.parseLong(next());
+50         }
+51         double nextDouble() {
+52             return Double.parseDouble(next());
+53         }
+54         String nextLine(){
+55             String str = "";
+56             try {
+57                 str = br.readLine();
+58             } catch (IOException e) {
+59                 e.printStackTrace();
+60             }
+61             return str;
+62         }
+63     }
+64 }

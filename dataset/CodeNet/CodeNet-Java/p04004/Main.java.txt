@@ -1,0 +1,253 @@
+1 // package atcoder.arc.arc061;
+2 
+3 import java.io.IOException;
+4 import java.io.InputStream;
+5 import java.io.PrintWriter;
+6 import java.util.Arrays;
+7 import java.util.InputMismatchException;
+8 
+9 /**
+10  * Created by hama_du on 2016/09/11.
+11  */
+12 public class Main {
+13     public static void main(String[] args) {
+14         InputReader in = new InputReader(System.in);
+15         PrintWriter out = new PrintWriter(System.out);
+16 
+17         int x = in.nextInt();
+18         int y = in.nextInt();
+19         int z = in.nextInt();
+20         int B = Math.min(y, z);
+21         int C = Math.max(y, z);
+22         prec(1000000);
+23 
+24         long[] pow3 = new long[1000000];
+25         pow3[0] = 1;
+26         for (int i = 1 ; i < pow3.length; i++) {
+27             pow3[i] = pow3[i-1] * 3 % MOD;
+28         }
+29         
+30         long[] ans = new long[x+y+z+2];
+31         long last = 0;
+32         for (int l = x+1 ; l <= x+y+z+1 ; l++) {
+33             int space = l-2;
+34             long base = comb(space, x-1);
+35             int row = space-(x-1);
+36             if (row == 0) {
+37                 last = 1;
+38             } else if (row <= B) {
+39                 last = (last * 2) % MOD;
+40             } else if (row <= C) {
+41                 last = (last * 2 - comb(row-1, B) + MOD) % MOD;
+42             } else {
+43                 int d = (row-1)-C;
+44                 last = (last * 2 - comb(row-1, B) - comb(row-1, d) + MOD + MOD) % MOD;
+45             }
+46             ans[l] = base * last % MOD * pow3[x+y+z+1-l] % MOD;
+47         }
+48 
+49         long sum = 0;
+50         for (int i = 0; i < ans.length ; i++) {
+51             sum += ans[i];
+52         }
+53         out.println(sum % MOD);
+54         out.flush();
+55     }
+56 
+57     static final int MOD = 1000000007;
+58 
+59     static long pow(long a, long x) {
+60         long res = 1;
+61         while (x > 0) {
+62             if (x % 2 != 0) {
+63             res = (res * a) % MOD;
+64             }
+65             a = (a * a) % MOD;
+66             x /= 2;
+67         }
+68         return res;
+69     }
+70 
+71     static long inv(long a) {
+72         return pow(a, MOD - 2) % MOD;
+73     }
+74 
+75     static long[] _fact;
+76     static long[] _invfact;
+77     static long comb(long ln, long lr) {
+78         int n = (int)ln;
+79         int r = (int)lr;
+80         if (n < 0 || r < 0 || r > n) {
+81             return 0;
+82         }
+83         if (r > n / 2) {
+84             r = n - r;
+85         }
+86         return (((_fact[n] * _invfact[n - r]) % MOD) * _invfact[r]) % MOD;
+87     }
+88 
+89     static void prec(int n) {
+90         _fact = new long[n + 1];
+91         _invfact = new long[n + 1];
+92         _fact[0] = 1;
+93         _invfact[0] = 1;
+94         for (int i = 1; i <= n; i++) {
+95             _fact[i] = _fact[i - 1] * i % MOD;
+96             _invfact[i] = inv(_fact[i]);
+97         }
+98     }
+99 
+100 
+101     static class InputReader {
+102         private InputStream stream;
+103         private byte[] buf = new byte[1024];
+104         private int curChar;
+105         private int numChars;
+106 
+107         public InputReader(InputStream stream) {
+108             this.stream = stream;
+109         }
+110 
+111         private int[] nextInts(int n) {
+112             int[] ret = new int[n];
+113             for (int i = 0; i < n; i++) {
+114                 ret[i] = nextInt();
+115             }
+116             return ret;
+117         }
+118 
+119 
+120         private int[][] nextIntTable(int n, int m) {
+121             int[][] ret = new int[n][m];
+122             for (int i = 0; i < n; i++) {
+123                 for (int j = 0; j < m; j++) {
+124                     ret[i][j] = nextInt();
+125                 }
+126             }
+127             return ret;
+128         }
+129 
+130         private long[] nextLongs(int n) {
+131             long[] ret = new long[n];
+132             for (int i = 0; i < n; i++) {
+133                 ret[i] = nextLong();
+134             }
+135             return ret;
+136         }
+137 
+138         private long[][] nextLongTable(int n, int m) {
+139             long[][] ret = new long[n][m];
+140             for (int i = 0; i < n; i++) {
+141                 for (int j = 0; j < m; j++) {
+142                     ret[i][j] = nextLong();
+143                 }
+144             }
+145             return ret;
+146         }
+147 
+148         private double[] nextDoubles(int n) {
+149             double[] ret = new double[n];
+150             for (int i = 0; i < n; i++) {
+151                 ret[i] = nextDouble();
+152             }
+153             return ret;
+154         }
+155 
+156         private int next() {
+157             if (numChars == -1)
+158                 throw new InputMismatchException();
+159             if (curChar >= numChars) {
+160                 curChar = 0;
+161                 try {
+162                     numChars = stream.read(buf);
+163                 } catch (IOException e) {
+164                     throw new InputMismatchException();
+165                 }
+166                 if (numChars <= 0)
+167                     return -1;
+168             }
+169             return buf[curChar++];
+170         }
+171 
+172         public char nextChar() {
+173             int c = next();
+174             while (isSpaceChar(c))
+175                 c = next();
+176             if ('a' <= c && c <= 'z') {
+177                 return (char) c;
+178             }
+179             if ('A' <= c && c <= 'Z') {
+180                 return (char) c;
+181             }
+182             throw new InputMismatchException();
+183         }
+184 
+185         public String nextToken() {
+186             int c = next();
+187             while (isSpaceChar(c))
+188                 c = next();
+189             StringBuilder res = new StringBuilder();
+190             do {
+191                 res.append((char) c);
+192                 c = next();
+193             } while (!isSpaceChar(c));
+194             return res.toString();
+195         }
+196 
+197         public int nextInt() {
+198             int c = next();
+199             while (isSpaceChar(c))
+200                 c = next();
+201             int sgn = 1;
+202             if (c == '-') {
+203                 sgn = -1;
+204                 c = next();
+205             }
+206             int res = 0;
+207             do {
+208                 if (c < '0' || c > '9')
+209                     throw new InputMismatchException();
+210                 res *= 10;
+211                 res += c-'0';
+212                 c = next();
+213             } while (!isSpaceChar(c));
+214             return res*sgn;
+215         }
+216 
+217         public long nextLong() {
+218             int c = next();
+219             while (isSpaceChar(c))
+220                 c = next();
+221             long sgn = 1;
+222             if (c == '-') {
+223                 sgn = -1;
+224                 c = next();
+225             }
+226             long res = 0;
+227             do {
+228                 if (c < '0' || c > '9')
+229                     throw new InputMismatchException();
+230                 res *= 10;
+231                 res += c-'0';
+232                 c = next();
+233             } while (!isSpaceChar(c));
+234             return res*sgn;
+235         }
+236 
+237         public double nextDouble() {
+238             return Double.valueOf(nextToken());
+239         }
+240 
+241         public boolean isSpaceChar(int c) {
+242             return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+243         }
+244 
+245         public interface SpaceCharFilter {
+246             public boolean isSpaceChar(int ch);
+247         }
+248     }
+249 
+250     static void debug(Object... o) {
+251         System.err.println(Arrays.deepToString(o));
+252     }
+253 }

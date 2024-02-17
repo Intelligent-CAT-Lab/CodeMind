@@ -1,0 +1,45 @@
+1 import java.util.Scanner;
+2 
+3 public class Main {
+4 
+5 	public static void main(String[] args) {
+6 		Scanner sc = new Scanner(System.in);
+7 		int[] a = ni(sc);
+8 		int[] b = ni(sc);
+9 		int k = sc.nextInt();
+10 		long max = 0;
+11 		for(int i=0;i<(1<<10);i++) {
+12 			if (Integer.bitCount(i) > k) {
+13 				continue;
+14 			}
+15 			int[] borrow = new int[11];
+16 			int[] c = new int[10];
+17 			for(int j=0;j<10;j++) {
+18 				if (a[j] - borrow[j] >= b[j]) {
+19 					c[j] = a[j] - borrow[j] - b[j];
+20 					borrow[j+1] = 0;
+21 				}else{
+22 					c[j] = a[j] - borrow[j] + 10 - b[j];
+23 					borrow[j+1] = (i&(1<<j)) > 0 ? 0 : 1;
+24 				}
+25 			}
+26 			long ans = 0;
+27 			for(int j=9;j>=0;j--) {
+28 				ans *= 10;
+29 				ans += c[j];
+30 			}
+31 			max = Math.max(max,ans);
+32 		}
+33 		System.out.println(max);
+34 	}
+35 
+36 	public static int[] ni(Scanner sc) {
+37 		int[] a = new int[10];
+38 		char[] c = sc.next().toCharArray();
+39 		for(int i=0;i<c.length;i++) {
+40 			a[i] = c[c.length-1-i] - '0';
+41 		}
+42 		return a;
+43 	}
+44 
+45 }

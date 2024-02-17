@@ -1,0 +1,234 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.InputStreamReader;
+5 import java.io.OutputStream;
+6 import java.io.PrintWriter;
+7 import java.util.Arrays;
+8 
+9 public class Main {
+10 
+11 	public static void main(String[] args) {
+12 		InputStream inputStream = System.in;
+13 		OutputStream outputStream = System.out;
+14 		MyInput in = new MyInput(inputStream);
+15 		PrintWriter out = new PrintWriter(outputStream);
+16 		TaskX solver = new TaskX();
+17 		solver.solve(1, in, out);
+18 		out.close();
+19 	}
+20 
+21 	static int INF = 1 << 30;
+22 	static long LINF = 1L << 55;
+23 	static int MOD = 1000000007;
+24 	static int[] mh4 = { 0, -1, 1, 0 };
+25 	static int[] mw4 = { -1, 0, 0, 1 };
+26 	static int[] mh8 = { -1, -1, -1, 0, 0, 1, 1, 1 };
+27 	static int[] mw8 = { -1, 0, 1, -1, 1, -1, 0, 1 };
+28 
+29 	static class TaskX {
+30 
+31 		public void solve(int testNumber, MyInput in, PrintWriter out) {
+32 
+33 			long n = in.nextLong();
+34 			if (n % 2 == 1) {
+35 				out.println(0);
+36 				return;
+37 			}
+38 
+39 			long ans = 0;
+40 			long base = 10;
+41 			while (true) {
+42 				if (base > n) break;
+43 				ans += n / base;
+44 				base *= 5;
+45 			}
+46 			out.println(ans);
+47 		}
+48 	}
+49 
+50 	static class MyInput {
+51 		private final BufferedReader in;
+52 		private static int pos;
+53 		private static int readLen;
+54 		private static final char[] buffer = new char[1024 * 8];
+55 		private static char[] str = new char[500 * 8 * 2];
+56 		private static boolean[] isDigit = new boolean[256];
+57 		private static boolean[] isSpace = new boolean[256];
+58 		private static boolean[] isLineSep = new boolean[256];
+59 
+60 		static {
+61 			for (int i = 0; i < 10; i++) {
+62 				isDigit['0' + i] = true;
+63 			}
+64 			isDigit['-'] = true;
+65 			isSpace[' '] = isSpace['\r'] = isSpace['\n'] = isSpace['\t'] = true;
+66 			isLineSep['\r'] = isLineSep['\n'] = true;
+67 		}
+68 
+69 		public MyInput(InputStream is) {
+70 			in = new BufferedReader(new InputStreamReader(is));
+71 		}
+72 
+73 		public int read() {
+74 			if (pos >= readLen) {
+75 				pos = 0;
+76 				try {
+77 					readLen = in.read(buffer);
+78 				} catch (IOException e) {
+79 					throw new RuntimeException();
+80 				}
+81 				if (readLen <= 0) {
+82 					throw new MyInput.EndOfFileRuntimeException();
+83 				}
+84 			}
+85 			return buffer[pos++];
+86 		}
+87 
+88 		public int nextInt() {
+89 			int len = 0;
+90 			str[len++] = nextChar();
+91 			len = reads(len, isSpace);
+92 			int i = 0;
+93 			int ret = 0;
+94 			if (str[0] == '-') {
+95 				i = 1;
+96 			}
+97 			for (; i < len; i++)
+98 				ret = ret * 10 + str[i] - '0';
+99 			if (str[0] == '-') {
+100 				ret = -ret;
+101 			}
+102 			return ret;
+103 		}
+104 
+105 		public long nextLong() {
+106 			int len = 0;
+107 			str[len++] = nextChar();
+108 			len = reads(len, isSpace);
+109 			int i = 0;
+110 			long ret = 0;
+111 			if (str[0] == '-') {
+112 				i = 1;
+113 			}
+114 			for (; i < len; i++)
+115 				ret = ret * 10 + str[i] - '0';
+116 			if (str[0] == '-') {
+117 				ret = -ret;
+118 			}
+119 			return ret;
+120 		}
+121 
+122 		public char nextChar() {
+123 			while (true) {
+124 				final int c = read();
+125 				if (!isSpace[c]) {
+126 					return (char) c;
+127 				}
+128 			}
+129 		}
+130 
+131 		public String nextString() {
+132 			return new String(nextChars());
+133 		}
+134 
+135 		public char[] nextChars() {
+136 			int len = 0;
+137 			str[len++] = nextChar();
+138 			len = reads(len, isSpace);
+139 			return Arrays.copyOf(str, len);
+140 		}
+141 
+142 		public char[][] next2DChars(int h, int w) {
+143 			char[][] s = new char[h][w];
+144 			for (int i = 0; i < h; i++) {
+145 				s[i] = nextChars();
+146 			}
+147 			return s;
+148 		}
+149 
+150 		int reads(int len, boolean[] accept) {
+151 			try {
+152 				while (true) {
+153 					final int c = read();
+154 					if (accept[c]) {
+155 						break;
+156 					}
+157 					if (str.length == len) {
+158 						char[] rep = new char[str.length * 3 / 2];
+159 						System.arraycopy(str, 0, rep, 0, str.length);
+160 						str = rep;
+161 					}
+162 					str[len++] = (char) c;
+163 				}
+164 			} catch (MyInput.EndOfFileRuntimeException e) {
+165 			}
+166 			return len;
+167 		}
+168 
+169 		public int[] nextIntArray(final int n) {
+170 			final int[] res = new int[n];
+171 			for (int i = 0; i < n; i++) {
+172 				res[i] = nextInt();
+173 			}
+174 			return res;
+175 		}
+176 
+177 		public int[] nextIntArray1Index(final int n) {
+178 			final int[] res = new int[n + 1];
+179 			for (int i = 1; i < n + 1; i++) {
+180 				res[i] = nextInt();
+181 			}
+182 			return res;
+183 		}
+184 
+185 		public int[] nextIntArrayDec(final int n) {
+186 			final int[] res = new int[n];
+187 			for (int i = 0; i < n; i++) {
+188 				res[i] = nextInt() - 1;
+189 			}
+190 			return res;
+191 		}
+192 
+193 		public long[] nextLongArray(final int n) {
+194 			final long[] res = new long[n];
+195 			for (int i = 0; i < n; i++) {
+196 				res[i] = nextLong();
+197 			}
+198 			return res;
+199 		}
+200 
+201 		public long[] nextLongArray1Index(final int n) {
+202 			final long[] res = new long[n + 1];
+203 			for (int i = 1; i < n + 1; i++) {
+204 				res[i] = nextLong();
+205 			}
+206 			return res;
+207 		}
+208 
+209 		public long[] nextLongArrayDec(final int n) {
+210 			final long[] res = new long[n];
+211 			for (int i = 0; i < n; i++) {
+212 				res[i] = nextLong() - 1;
+213 			}
+214 			return res;
+215 		}
+216 
+217 		public double nextDouble() {
+218 			return Double.parseDouble(nextString());
+219 		}
+220 
+221 		public double[] nextDoubleArray(int n) {
+222 			double[] res = new double[n];
+223 			for (int i = 0; i < n; i++) {
+224 				res[i] = nextDouble();
+225 			}
+226 			return res;
+227 		}
+228 
+229 		static class EndOfFileRuntimeException extends RuntimeException {
+230 		}
+231 
+232 	}
+233 
+234 }

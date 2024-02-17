@@ -1,0 +1,65 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStreamReader;
+4 import java.io.PrintWriter;
+5 import java.util.Arrays;
+6 import java.util.StringTokenizer;
+7 
+8 public class Main {
+9 	
+10 	static int MOD, N;
+11 	static int[][] table;
+12 	
+13 	public static void main(String[] args) throws IOException {
+14 		MyScanner sc = new MyScanner();
+15 		PrintWriter out = new PrintWriter(System.out);
+16 		N = sc.nextInt();
+17 		MOD = sc.nextInt();
+18 		
+19 		table = new int[N + 1][N + 1];
+20 		for (int rem = 0; rem < N + 1 ; rem++) {
+21 			table[N][rem] = rem;
+22 		}
+23 		for (int pos = N - 1; pos >= 1; pos--) {
+24 			for (int rem = 0; rem < N + 1; rem++) {
+25 				table[pos][rem] = table[pos + 1][rem];
+26 				int factor = Math.min(pos, N + 1 - pos);
+27 				if (factor < rem) {
+28 					table[pos][rem] += table[pos][rem-factor];
+29 					table[pos][rem] %= MOD;
+30 				}
+31 			}
+32 		}
+33 		out.println(table[1][N]);
+34 		
+35 		out.flush();
+36 	}
+37 	
+38 	static class MyScanner {
+39 		private BufferedReader br;
+40 		private StringTokenizer tokenizer;
+41 		
+42 		public MyScanner() {
+43 			br = new BufferedReader(new InputStreamReader(System.in));
+44 		}
+45 		
+46 		public String next() {
+47 			while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+48 				try {
+49 					tokenizer = new StringTokenizer(br.readLine());
+50 				} catch (IOException e) {
+51 					throw new RuntimeException(e);
+52 				}
+53 			}
+54 			return tokenizer.nextToken();
+55 		}
+56 		
+57 		public int nextInt() {
+58 			return Integer.parseInt(next());
+59 		}
+60 		
+61 		public long nextLong() {
+62 			return Long.parseLong(next());
+63 		}
+64 	}
+65 }

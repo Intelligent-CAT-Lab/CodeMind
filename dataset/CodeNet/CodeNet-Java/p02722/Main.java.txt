@@ -1,0 +1,181 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStreamReader;
+4 import java.io.PrintWriter;
+5 import java.util.HashMap;
+6 import java.util.Map;
+7 import java.util.StringJoiner;
+8 import java.util.StringTokenizer;
+9 import java.util.function.IntUnaryOperator;
+10 import java.util.function.LongUnaryOperator;
+11 
+12 public class Main {
+13     static In in = new In();
+14     static Out out = new Out();
+15     static long mod = 1000000007;
+16     static long inf = 0xfffffffffffffffL;
+17 
+18     void solve() {
+19         long n = in.nextLong();
+20         long ans = 0;
+21         Map<Long, Integer> primeFactors2 = getPrimeFactors(n - 1);
+22         for (long p = 2; p * p <= n; p++) {
+23             if (p * p == n) {
+24                 ans++;
+25                 continue;
+26             }
+27             if (n % p == 0) {
+28                 if (check(p, n)) {
+29                     ans++;
+30                 }
+31                 if (check(n / p, n)) {
+32                     ans++;
+33                 }
+34             }
+35         }
+36         long a1 = 1;
+37         for (Map.Entry<Long, Integer> entry : primeFactors2.entrySet()) {
+38             a1 *= entry.getValue() + 1;
+39         }
+40         out.println(a1 + ans);
+41     }
+42 
+43     static boolean check(long p, long n) {
+44         while (n % p == 0) {
+45             n /= p;
+46             if (n % p == 1) {
+47                 return true;
+48             }
+49         }
+50         return false;
+51     }
+52 
+53     static Map<Long, Integer> getPrimeFactors(long n) {
+54         Map<Long, Integer> primeFactors = new HashMap<>();
+55         long c = n;
+56         for (long i = 2; i * i <= n && 1 < c; i++) {
+57             int count = 0;
+58             while (c % i == 0) {
+59                 count++;
+60                 c /= i;
+61             }
+62             if (count > 0) {
+63                 primeFactors.put(i, count);
+64             }
+65         }
+66         if (c > 1) {
+67             primeFactors.put(c, 1);
+68         }
+69         return primeFactors;
+70     }
+71 
+72     public static void main(String[]$) {
+73         new Main().solve();
+74         out.flush();
+75     }
+76 }
+77 
+78 class In {
+79     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in), 0x10000);
+80     private StringTokenizer tokenizer;
+81 
+82     String next() {
+83         try {
+84             while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+85                 tokenizer = new StringTokenizer(reader.readLine());
+86             }
+87         } catch (IOException ignored) {
+88         }
+89         return tokenizer.nextToken();
+90     }
+91 
+92     int nextInt() {
+93         return Integer.parseInt(next());
+94     }
+95 
+96     long nextLong() {
+97         return Long.parseLong(next());
+98     }
+99 
+100     char[][] nextCharArray(int n, int m) {
+101         char[][] a = new char[n][m];
+102         for (int i = 0; i < n; i++) {
+103             a[i] = next().toCharArray();
+104         }
+105         return a;
+106     }
+107 
+108     int[] nextIntArray(int n) {
+109         int[] a = new int[n];
+110         for (int i = 0; i < n; i++) {
+111             a[i] = nextInt();
+112         }
+113         return a;
+114     }
+115 
+116     int[] nextIntArray(int n, IntUnaryOperator op) {
+117         int[] a = new int[n];
+118         for (int i = 0; i < n; i++) {
+119             a[i] = op.applyAsInt(nextInt());
+120         }
+121         return a;
+122     }
+123 
+124     long[] nextLongArray(int n) {
+125         long[] a = new long[n];
+126         for (int i = 0; i < n; i++) {
+127             a[i] = nextLong();
+128         }
+129         return a;
+130     }
+131 
+132     long[] nextLongArray(int n, LongUnaryOperator op) {
+133         long[] a = new long[n];
+134         for (int i = 0; i < n; i++) {
+135             a[i] = op.applyAsLong(nextLong());
+136         }
+137         return a;
+138     }
+139 }
+140 
+141 class Out {
+142     private PrintWriter out = new PrintWriter(System.out);
+143     boolean autoFlush = false;
+144 
+145     void println(Object... a) {
+146         StringJoiner joiner = new StringJoiner(" ");
+147         for (Object obj : a) {
+148             joiner.add(String.valueOf(obj));
+149         }
+150         out.println(joiner);
+151         if (autoFlush) {
+152             out.flush();
+153         }
+154     }
+155 
+156     void println(int[] a) {
+157         StringJoiner joiner = new StringJoiner(" ");
+158         for (int i : a) {
+159             joiner.add(Integer.toString(i));
+160         }
+161         out.println(joiner);
+162         if (autoFlush) {
+163             out.flush();
+164         }
+165     }
+166 
+167     void println(long[] a) {
+168         StringJoiner joiner = new StringJoiner(" ");
+169         for (long i : a) {
+170             joiner.add(Long.toString(i));
+171         }
+172         out.println(joiner);
+173         if (autoFlush) {
+174             out.flush();
+175         }
+176     }
+177 
+178     void flush() {
+179         out.flush();
+180     }
+181 }

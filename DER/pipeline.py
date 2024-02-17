@@ -1,13 +1,4 @@
-
-'''
-Protocol:
-    1. Input:
-        - Natural Language Description
-        - Test Cases
-    2. List
-'''
-
-
+import argparse
 import sys
 import os
 import json
@@ -17,23 +8,27 @@ from tqdm import tqdm
 import jsonlines
 from typing import Optional, Tuple
 from util import chatgpt_wrapper
-from mutator import gen_mutated_assertion
+
+
 class CodeGenerationPipeline:
-    def __init__(self, config_file):
-        with open(config_file, 'r') as file:
+    def __init__(self, model, data_dir, dataset, out_dir):
+        config_path = f"./config/{model}.json"
+        # print(os.path.abspath(config_path))
+        with open(config_path, 'r') as file:
             self.config = json.load(file)
-        self.root_dir = self.config['root_directory']
-        self.model_name = self.config['model_name']
-        self.dataset_name = self.config['dataset_name']
-        self.output_root = self.config['output_directory']
+        self.root_dir = data_dir
+        self.model_name = model
+        self.dataset_name = dataset
+        self.output_root = out_dir
         self.generation_config = self.config['generation_config']
         self.include_test = self.config['include_test']
-        self.mutate = self.config['mutate'] if 'mutate' in self.config else False
-        self.output_dir = os.path.join(self.output_root, self.model_name, self.dataset_name) if not self.mutate else os.path.join(self.output_root, self.model_name, self.dataset_name, "mutate")
+        # self.mutate = self.config['mutate'] if 'mutate' in self.config else False
+        self.output_dir = os.path.join(self.output_root, self.model_name, self.dataset_name)
         self.prompt_builder = PromptBuilder(Model(self.model_name), Dataset(self.dataset_name))
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir, exist_ok=True)
         self.resume_file = os.path.join(self.output_dir, 'resume_state.txt')
+    
     def run(self):
         if Model(self.model_name).is_huggingface():
             model = self.load_model()
@@ -42,28 +37,26 @@ class CodeGenerationPipeline:
         for subfolder in tqdm(os.listdir(self.root_dir)):
             subdir = os.path.join(self.root_dir, subfolder)
             problem_name = os.path.basename(subdir)
+            if ".jsonl" in subdir or '.json' in subdir:
+                continue
             if not self._should_process(problem_name):
                 continue
             nl, input_data, expected_output, assertion, signature = self._read_problem_files(subdir)
-            if self.mutate and assertion:
-                assertion_ = gen_mutated_assertion(assertion)
-
-            
-                formatted_prompt = self.format_prompt(nl, input_data, expected_output, assertion_, signature)
-            else:
-                mutate = False
-                assertion_ = None
-                formatted_prompt = self.format_prompt(nl, input_data, expected_output, assertion, signature)
+            mutate = False
+            assertion_ = None
+            formatted_prompt = self.format_prompt(nl, input_data, expected_output, assertion, signature)
             # print(formatted_prompt)
-            format_correct = False
+            # continue
+            # format_correct = False
             # while not format_correct:
             #     print(formatted_prompt)
             generated_code = self.generate(formatted_prompt, model)
-            print(formatted_prompt)
-            print(generated_code)
+            # print(formatted_prompt)
+            # print(generated_code)
                 # format_correct = self.check_code_format(generated_code,signature)
-            self._save_output(problem_name, generated_code,nl,input_data,expected_output, assertion, assertion_)
+            self._save_output(problem_name, generated_code,nl,input_data,expected_output, assertion)
             self._update_resume_state(problem_name)
+    
     def check_code_format(self, generated_code, signature):
         print(generated_code)
         if signature:
@@ -137,12 +130,12 @@ class CodeGenerationPipeline:
             signature = None
         return nl, input_data, expected_output, assertion, signature
 
-    def _save_output(self, problem_name, generated_code,nl,input_data,expected_output, assertion, assertion_):
+    def _save_output(self, problem_name, generated_code,nl,input_data,expected_output, assertion):
         with jsonlines.open(os.path.join(self.output_dir, 'output.jsonl'), 'a') as writer:
             writer.write({'problem_name': problem_name, 'generated_code': generated_code,
                           'model_name': self.model_name, 'dataset_name': self.dataset_name,
                           'nl':nl,'input_data':input_data,'expected_output':expected_output,
-                          'assertion': assertion, 'assertion_': assertion_
+                          'assertion': assertion
                           })
 
     def _update_resume_state(self, problem_name):
@@ -161,13 +154,25 @@ class CodeGenerationPipeline:
         else:
             return True
         
-        
-
-# # Example usage
-# config_file = '/home/changshu/LLM_REASONING/pipeline/config/humaneval_GPT4.json'
-# pipeline = CodeGenerationPipeline(config_file)
-# pipeline.run()
 
 if __name__ == "__main__":
-    pipeline = CodeGenerationPipeline(sys.argv[1])
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model", type=str, default='none')
+    parser.add_argument("--dataDir", type=str, default='none')
+    parser.add_argument("--dataset", type=str, default='none')
+    parser.add_argument("--outDir", type=str, default='none')
+
+    args = parser.parse_args()
+    
+    model = args.model
+    dataset = args.dataset
+    data_dir = args.dataDir
+    out_dir = args.outDir
+    # write_dir = args.writeDir
+    # print(model, dataset, data_dir)
+    
+    pipeline = CodeGenerationPipeline(model, data_dir, dataset, out_dir)
     pipeline.run()
+    
+    
+    

@@ -1,0 +1,331 @@
+1 import java.io.ByteArrayInputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.Arrays;
+6 import java.util.InputMismatchException;
+7 
+8 public class Main {
+9 	static InputStream is;
+10 	static PrintWriter out;
+11 	static String INPUT = "";
+12 	
+13 	static void solve()
+14 	{
+15 		int S = ni();
+16 		
+17 		int mod = 1000000007;
+18 		long ans = 0;
+19 		outer:
+20 		for(int midl = 2;midl <= 8;midl++){
+21 			long mid = 0;
+22 			for(int midr = midl;midr <= 8;midr++){
+23 				mid += (long)Math.pow(10, midr-1)*9*midr;
+24 				if(mid >= S)continue outer;
+25 				
+26 				long rem = S - mid;
+27 				long l = midl-1, r = midr+1;
+28 				long lnum = (long)Math.pow(10, l-1)*9;
+29 				long rnum = (long)Math.pow(10, r-1)*9;
+30 				// l*a + r*b = rem
+31 				// 1 <= a <= lnum, 1 <= b <= rnum
+32 				
+33 //				long lans = 0;
+34 //				for(long a = 1;a <= lnum;a++){
+35 //					if((rem-l*a)%r == 0 && (rem-l*a)/r <= rnum && (rem-l*a)/r >= 1){
+36 //						lans++;
+37 //					}
+38 //				}
+39 				long res = count(l, r, rem, lnum, rnum);
+40 //				if(res != lans){
+41 //					tr("!!", l, r, rem, lnum, rnum, res, lans);
+42 //				}
+43 				ans += res;
+44 				ans %= mod;
+45 			}
+46 		}
+47 		
+48 		for(int l = 1;l <= 10000;l++){
+49 			// l,l+1
+50 			// la+(l+1)b = S
+51 			long lnum = l > 10 ? Long.MAX_VALUE/2 : (long)Math.pow(10, l-1)*9;
+52 			long rnum = l+1 > 10 ? Long.MAX_VALUE/2 : (long)Math.pow(10, l+1-1)*9;
+53 			ans += count(l, l+1, S, lnum, rnum);
+54 			ans %= mod;
+55 		}
+56 		for(int k = 1;S/k > 10000;k++){
+57 			int l = S/k;
+58 			long lnum = l > 10 ? Long.MAX_VALUE/2 : (long)Math.pow(10, l-1)*9;
+59 			long rnum = l+1 > 10 ? Long.MAX_VALUE/2 : (long)Math.pow(10, l+1-1)*9;
+60 			ans += count(l, l+1, S, lnum, rnum);
+61 			ans %= mod;
+62 		}
+63 		
+64 //		tr(ans);
+65 		for(int d = 1;d*d <= S;d++){
+66 			if(S % d == 0){
+67 				// d * (S/d)
+68 				{
+69 					long lnum = d > 10 ? Long.MAX_VALUE/2 : (long)Math.pow(10, d-1)*9;
+70 					if(S/d <= lnum){
+71 						ans += (pow(10, d-1, mod)*9 - S/d + mod + 1);
+72 						ans %= mod;
+73 					}
+74 				}
+75 				if(d*d < S){
+76 					long lnum = S/d > 10 ? Long.MAX_VALUE/2 : (long)Math.pow(10, S/d-1)*9;
+77 					if(d <= lnum){
+78 						ans += (pow(10, S/d-1, mod)*9 - d + mod + 1);
+79 						ans %= mod;
+80 					}
+81 				}
+82 			}
+83 		}
+84 		
+85 		out.println(ans%mod);
+86 	}
+87 	
+88 	public static long pow(long a, long n, long mod) {
+89 		//		a %= mod;
+90 		long ret = 1;
+91 		int x = 63 - Long.numberOfLeadingZeros(n);
+92 		for (; x >= 0; x--) {
+93 			ret = ret * ret % mod;
+94 			if (n << 63 - x < 0)
+95 				ret = ret * a % mod;
+96 		}
+97 		return ret;
+98 	}
+99 	
+100 	static long check(long l, long r, long rem, long lnum, long rnum)
+101 	{
+102 		long lans = 0;
+103 		for(long a = 1;a <= lnum;a++){
+104 			if((rem-l*a)%r == 0 && (rem-l*a)/r <= rnum && (rem-l*a)/r >= 1){
+105 				lans++;
+106 			}
+107 		}
+108 		return lans;
+109 	}
+110 
+111 	
+112 	static long count(long l, long r, long rem, long lnum, long rnum)
+113 	{
+114 //		if((double)l*lnum + (double)r*rnum < rem)return 0;
+115 		
+116 		// l*a + r*b = rem
+117 		// 1 <= a <= lnum, 1 <= b <= rnum
+118 		
+119 		long a = 0, b = 0, da = 0, db = 0;
+120 		
+121 		if(r-l > 1){
+122 			long[] gpr = exgcd(l, r);
+123 			if(rem % gpr[0] != 0)return 0;
+124 			a = gpr[1]*(rem/gpr[0]); b = gpr[2]*(rem/gpr[0]);
+125 			da = r / gpr[0]; db = l / gpr[0];
+126 		}else{
+127 			// l*-1+(l+1)*1=1
+128 			a = -rem; b = rem;
+129 			da = r; db = l;
+130 		}
+131 		{
+132 			if(a <= 0){
+133 				long need = -a/(da)+1;
+134 				a += need*(da);
+135 				b -= need*(db);
+136 			}
+137 			{
+138 				long need = (a-1)/(da);
+139 				a -= need*(da);
+140 				b += need*(db);
+141 			}
+142 //			tr(a, b);
+143 			if(b > rnum){
+144 				long need = (b-(rnum+1))/(db)+1;
+145 				b -= need*(db);
+146 				a += need*(da);
+147 			}
+148 		}
+149 		
+150 		long mina = a;
+151 		
+152 		{
+153 			if(b <= 0){
+154 				long need = -b/(db)+1;
+155 				b += need*(db);
+156 				a -= need*(da);
+157 			}
+158 			{
+159 				long need = (b-1)/(db);
+160 				b -= need*(db);
+161 				a += need*(da);
+162 			}
+163 			if(a > lnum){
+164 				long need = (a-(lnum+1))/(da)+1;
+165 				a -= need*(da);
+166 				b += need*(db);
+167 			}
+168 		}
+169 		long maxa = a;
+170 		long ret = mina > maxa ? 0 : (maxa-mina)/da+1;
+171 		
+172 //		if(r <= 9 && ret != check(l, r, rem, lnum, rnum)){
+173 //			tr("error", mina, maxa, l, r, rem, lnum, rnum, check(l, r, rem, lnum, rnum));
+174 //			assert false;
+175 //		}
+176 		return ret;
+177 	}
+178 	
+179 	public static long[] exgcd(long a, long b)
+180 	{
+181 		if(a == 0 || b == 0)return null;
+182 		int as = Long.signum(a);
+183 		int bs = Long.signum(b);
+184 		a = Math.abs(a); b = Math.abs(b);
+185 		long p = 1, q = 0, r = 0, s = 1;
+186 		while(b > 0){
+187 			long c = a / b;
+188 			long d;
+189 			d = a; a = b; b = d % b;
+190 			d = p; p = q; q = d - c * q;
+191 			d = r; r = s; s = d - c * s;
+192 		}
+193 		return new long[]{a, p * as, r * bs};
+194 	}
+195 
+196 	
+197 	public static void main(String[] args) throws Exception
+198 	{
+199 		long S = System.currentTimeMillis();
+200 		is = INPUT.isEmpty() ? System.in : new ByteArrayInputStream(INPUT.getBytes());
+201 		out = new PrintWriter(System.out);
+202 		
+203 		solve();
+204 		out.flush();
+205 		long G = System.currentTimeMillis();
+206 		tr(G-S+"ms");
+207 	}
+208 	
+209 	private static boolean eof()
+210 	{
+211 		if(lenbuf == -1)return true;
+212 		int lptr = ptrbuf;
+213 		while(lptr < lenbuf)if(!isSpaceChar(inbuf[lptr++]))return false;
+214 		
+215 		try {
+216 			is.mark(1000);
+217 			while(true){
+218 				int b = is.read();
+219 				if(b == -1){
+220 					is.reset();
+221 					return true;
+222 				}else if(!isSpaceChar(b)){
+223 					is.reset();
+224 					return false;
+225 				}
+226 			}
+227 		} catch (IOException e) {
+228 			return true;
+229 		}
+230 	}
+231 	
+232 	private static byte[] inbuf = new byte[1024];
+233 	static int lenbuf = 0, ptrbuf = 0;
+234 	
+235 	private static int readByte()
+236 	{
+237 		if(lenbuf == -1)throw new InputMismatchException();
+238 		if(ptrbuf >= lenbuf){
+239 			ptrbuf = 0;
+240 			try { lenbuf = is.read(inbuf); } catch (IOException e) { throw new InputMismatchException(); }
+241 			if(lenbuf <= 0)return -1;
+242 		}
+243 		return inbuf[ptrbuf++];
+244 	}
+245 	
+246 	private static boolean isSpaceChar(int c) { return !(c >= 33 && c <= 126); }
+247 //	private static boolean isSpaceChar(int c) { return !(c >= 32 && c <= 126); }
+248 	private static int skip() { int b; while((b = readByte()) != -1 && isSpaceChar(b)); return b; }
+249 	
+250 	private static double nd() { return Double.parseDouble(ns()); }
+251 	private static char nc() { return (char)skip(); }
+252 	
+253 	private static String ns()
+254 	{
+255 		int b = skip();
+256 		StringBuilder sb = new StringBuilder();
+257 		while(!(isSpaceChar(b))){
+258 			sb.appendCodePoint(b);
+259 			b = readByte();
+260 		}
+261 		return sb.toString();
+262 	}
+263 	
+264 	private static char[] ns(int n)
+265 	{
+266 		char[] buf = new char[n];
+267 		int b = skip(), p = 0;
+268 		while(p < n && !(isSpaceChar(b))){
+269 			buf[p++] = (char)b;
+270 			b = readByte();
+271 		}
+272 		return n == p ? buf : Arrays.copyOf(buf, p);
+273 	}
+274 	
+275 	private static char[][] nm(int n, int m)
+276 	{
+277 		char[][] map = new char[n][];
+278 		for(int i = 0;i < n;i++)map[i] = ns(m);
+279 		return map;
+280 	}
+281 	
+282 	private static int[] na(int n)
+283 	{
+284 		int[] a = new int[n];
+285 		for(int i = 0;i < n;i++)a[i] = ni();
+286 		return a;
+287 	}
+288 	
+289 	private static int ni()
+290 	{
+291 		int num = 0, b;
+292 		boolean minus = false;
+293 		while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+294 		if(b == '-'){
+295 			minus = true;
+296 			b = readByte();
+297 		}
+298 		
+299 		while(true){
+300 			if(b >= '0' && b <= '9'){
+301 				num = num * 10 + (b - '0');
+302 			}else{
+303 				return minus ? -num : num;
+304 			}
+305 			b = readByte();
+306 		}
+307 	}
+308 	
+309 	private static long nl()
+310 	{
+311 		long num = 0;
+312 		int b;
+313 		boolean minus = false;
+314 		while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+315 		if(b == '-'){
+316 			minus = true;
+317 			b = readByte();
+318 		}
+319 		
+320 		while(true){
+321 			if(b >= '0' && b <= '9'){
+322 				num = num * 10 + (b - '0');
+323 			}else{
+324 				return minus ? -num : num;
+325 			}
+326 			b = readByte();
+327 		}
+328 	}
+329 	
+330 	private static void tr(Object... o) { if(INPUT.length() != 0)System.out.println(Arrays.deepToString(o)); }
+331 }

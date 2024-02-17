@@ -1,0 +1,113 @@
+1 import java.util.*;
+2 import java.lang.*;
+3 import java.math.*;
+4 import java.io.*;
+5 import static java.lang.Math.*;
+6 import static java.util.Arrays.*;
+7 import static java.util.Collections.*;
+8 
+9 public class Main{
+10 	Scanner sc=new Scanner(System.in);
+11 
+12 	int INF=1<<28;
+13 	double EPS=1e-12;
+14 
+15 	int n, w;
+16 
+17 	void run(){
+18 		n=sc.nextInt();
+19 		w=sc.nextInt();
+20 		solve();
+21 	}
+22 
+23 	boolean[] flag;
+24 	int[] count;
+25 	int sum, left, right;
+26 
+27 	void solve(){
+28 		flag=new boolean[n+1];
+29 		count=new int[n+1];
+30 		sum=0;
+31 		left=1;
+32 		right=w+1;
+33 		for(int i=1; i<w; i++){
+34 			for(int k=1; k*k<=i; k++){
+35 				if(i%k==0){
+36 					count[k]++;
+37 					update(k);
+38 					if(i/k!=k){
+39 						count[i/k]++;
+40 						update(i/k);
+41 					}
+42 				}
+43 			}
+44 		}
+45 		for(int i=0; i<n-w+1; i++){
+46 			left=i+1;
+47 			right=i+w+1;
+48 			for(int k=1; k*k<=i; k++){
+49 				if(i%k==0){
+50 					count[k]--;
+51 					update(k);
+52 					if(i/k!=k){
+53 						count[i/k]--;
+54 						update(i/k);
+55 					}
+56 				}
+57 			}
+58 			for(int k=1; k*k<=i+w; k++){
+59 				if((i+w)%k==0){
+60 					count[k]++;
+61 					update(k);
+62 					if((i+w)/k!=k){
+63 						count[(i+w)/k]++;
+64 						update((i+w)/k);
+65 					}
+66 				}
+67 			}
+68 			update(left-1);
+69 			update(right-1);
+70 //			debug("i", i, "i+w-1", i+w-1);
+71 //			debug("count", count);
+72 //			debug("flag", flag);
+73 //			debug("sum", sum);
+74 //			debug(sum);
+75 //			debug();
+76 			print(sum+(i<n-w?" ":"\n"));
+77 		}
+78 		// iの約数が減って
+79 		// i+wの約数が増える
+80 		// iが確定じゃなくなった
+81 		// i+wが確定する
+82 	}
+83 
+84 	void update(int i){
+85 		boolean det=left<=i&&i<right;
+86 		if(flag[i]&&!det&&count[i]<2){
+87 			flag[i]=false;
+88 			sum--;
+89 		}
+90 		if(!flag[i]&&(det||count[i]>=2)){
+91 			flag[i]=true;
+92 			sum++;
+93 		}
+94 	}
+95 
+96 	void debug(Object... os){
+97 		System.err.println(Arrays.deepToString(os));
+98 	}
+99 
+100 	void print(String s){
+101 		System.out.print(s);
+102 	}
+103 
+104 	void println(String s){
+105 		System.out.println(s);
+106 	}
+107 
+108 	public static void main(String[] args){
+109 		System.setOut(new PrintStream(new BufferedOutputStream(System.out)));
+110 		new Main().run();
+111 		System.out.flush();
+112 	}
+113 }

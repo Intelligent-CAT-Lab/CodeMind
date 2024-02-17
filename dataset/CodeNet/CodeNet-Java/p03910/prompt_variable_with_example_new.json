@@ -1,0 +1,259 @@
+{
+    "0": {
+        "prompt": "Instruction: You will be given a piece of Java code and input to the function. \nYou will need to answer questions related to variable states.\nBelow is an example.\n[[[Example Start ]]]\nConsider the following code:\n<<Code>>\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6        public static void main(String[] args) {\n7                try {\n8                        InputStreamReader isr = new InputStreamReader(System.in);\n9                        BufferedReader br = new BufferedReader(isr);\n10                       String strArr[] = br.readLine().split(\" \");\n11 \n12                       int n = Integer.parseInt(strArr[0]);\n13                       int a = Integer.parseInt(strArr[1]);\n14                       int b = Integer.parseInt(strArr[2]);\n15                       int answer = 0;\n16 \n17                       for (int i = 1; i < n + 1; i++) {\n18                               int num = i;\n19                               int sum = 0;\n20 \n21                               while (num != 0) {\n22                                       sum += num % 10;\n23                                       num /= 10;\n24                               }\n25 \n26                               if (sum >= a && sum <= b ) {\n27                                       answer = answer + i;\n28                               }\n29                       }\n30                       System.out.println(answer);\n31               } catch (Exception e) {\n32                       e.printStackTrace();\n33               }\n34       }\n35 \n36 }\n\n<<Input>>\n20 2 5\n\n<<Round 1>>\n[Question]\nWhat would be the states of variable `n` in line 12? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n20\nEND-OF-STATE\n\n<<Round 2>>\n[Question]\nWhat would be the states of variable `i` in line 17? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\n<<Round 3>>\n[Question]\nWhat would be the states of variable `answer` in line 27? Print all the states and end your response with \\\"END-OF-STATE\\\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE\n[[[Example End]]]",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n<<Code>>\n1 import java.util.*;\n2 import java.io.*;\n3 \n4 \n5 public class Main{\n6     public static void main(String[] args) {\n7         FastScanner sc = new FastScanner();\n8         PrintWriter out = new PrintWriter(System.out);\n9         int N = sc.nextInt();\n10         int[] table = new int[N+1];\n11         table[0] = 0;\n12         int M = 0;\n13         for(int i=1;i<=N;i++){\n14             table[i] = table[i-1] + i;\n15             if(table[i]>=N){\n16                 M = i;\n17                 break;\n18             }\n19         }\n20         HashSet<Integer> s = new HashSet<>();\n21         for(int i=1;i<=M;i++){\n22             s.add(i);\n23         }\n24         s.remove(table[M]-N);\n25         for(int a : s){\n26             out.println(a);\n27         }\n28 \n29         // out.println(result);\n30 \n31         out.flush();\n32     }\n33         \n34 }\n35 \n36 \n37 \n38 class FastScanner {\n39     private final InputStream in = System.in;\n40     private final byte[] buffer = new byte[1024];\n41     private int ptr = 0;\n42     private int buflen = 0;\n43     private boolean hasNextByte() {\n44         if (ptr < buflen) {\n45             return true;\n46         }else{\n47             ptr = 0;\n48             try {\n49                 buflen = in.read(buffer);\n50             } catch (IOException e) {\n51                 e.printStackTrace();\n52             }\n53             if (buflen <= 0) {\n54                 return false;\n55             }\n56         }\n57         return true;\n58     }\n59     private int readByte() { if (hasNextByte()) return buffer[ptr++]; else return -1;}\n60     private static boolean isPrintableChar(int c) { return 33 <= c && c <= 126;}\n61     public boolean hasNext() { while(hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++; return hasNextByte();}\n62     public String next() {\n63         if (!hasNext()) throw new NoSuchElementException();\n64         StringBuilder sb = new StringBuilder();\n65         int b = readByte();\n66         while(isPrintableChar(b)) {\n67             sb.appendCodePoint(b);\n68             b = readByte();\n69         }\n70         return sb.toString();\n71     }\n72     public long nextLong() {\n73         if (!hasNext()) throw new NoSuchElementException();\n74         long n = 0;\n75         boolean minus = false;\n76         int b = readByte();\n77         if (b == '-') {\n78             minus = true;\n79             b = readByte();\n80         }\n81         if (b < '0' || '9' < b) {\n82             throw new NumberFormatException();\n83         }\n84         while(true){\n85             if ('0' <= b && b <= '9') {\n86                 n *= 10;\n87                 n += b - '0';\n88             }else if(b == -1 || !isPrintableChar(b)){\n89                 return minus ? -n : n;\n90             }else{\n91                 throw new NumberFormatException();\n92             }\n93             b = readByte();\n94         }\n95     }\n96     public int nextInt() {\n97         long nl = nextLong();\n98         if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE) throw new NumberFormatException();\n99         return (int) nl;\n100     }\n101     public double nextDouble() { return Double.parseDouble(next());}\n102 }\n\n<<Input>>\n4\n\n\n<<Round 1>>\n[Question]\nWhat would be the states of variable `n` in line 74? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "0"
+        ],
+        "variable": "n",
+        "line": "74"
+    },
+    "2": {
+        "prompt": "<<Round 2>>\n[Question]\nWhat would be the states of variable `minus` in line 75? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "false"
+        ],
+        "variable": "minus",
+        "line": "75"
+    },
+    "3": {
+        "prompt": "<<Round 3>>\n[Question]\nWhat would be the states of variable `b` in line 76? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "52"
+        ],
+        "variable": "b",
+        "line": "76"
+    },
+    "4": {
+        "prompt": "<<Round 4>>\n[Question]\nWhat would be the states of variable `b` in line 77? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "52"
+        ],
+        "variable": "b",
+        "line": "77"
+    },
+    "5": {
+        "prompt": "<<Round 5>>\n[Question]\nWhat would be the states of variable `b` in line 81? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "52"
+        ],
+        "variable": "b",
+        "line": "81"
+    },
+    "6": {
+        "prompt": "<<Round 6>>\n[Question]\nWhat would be the states of variable `b` in line 85? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "52",
+            "10"
+        ],
+        "variable": "b",
+        "line": "85"
+    },
+    "7": {
+        "prompt": "<<Round 7>>\n[Question]\nWhat would be the states of variable `n` in line 86? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "0"
+        ],
+        "variable": "n",
+        "line": "86"
+    },
+    "8": {
+        "prompt": "<<Round 8>>\n[Question]\nWhat would be the states of variable `b` in line 87? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "52"
+        ],
+        "variable": "b",
+        "line": "87"
+    },
+    "9": {
+        "prompt": "<<Round 9>>\n[Question]\nWhat would be the states of variable `n` in line 87? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "4"
+        ],
+        "variable": "n",
+        "line": "87"
+    },
+    "10": {
+        "prompt": "<<Round 10>>\n[Question]\nWhat would be the states of variable `b` in line 93? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "10"
+        ],
+        "variable": "b",
+        "line": "93"
+    },
+    "11": {
+        "prompt": "<<Round 11>>\n[Question]\nWhat would be the states of variable `b` in line 88? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "10"
+        ],
+        "variable": "b",
+        "line": "88"
+    },
+    "12": {
+        "prompt": "<<Round 12>>\n[Question]\nWhat would be the states of variable `nl` in line 97? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "4"
+        ],
+        "variable": "nl",
+        "line": "97"
+    },
+    "13": {
+        "prompt": "<<Round 13>>\n[Question]\nWhat would be the states of variable `nl` in line 98? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "4"
+        ],
+        "variable": "nl",
+        "line": "98"
+    },
+    "14": {
+        "prompt": "<<Round 14>>\n[Question]\nWhat would be the states of variable `N` in line 9? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "4"
+        ],
+        "variable": "N",
+        "line": "9"
+    },
+    "15": {
+        "prompt": "<<Round 15>>\n[Question]\nWhat would be the states of variable `N` in line 10? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "4"
+        ],
+        "variable": "N",
+        "line": "10"
+    },
+    "16": {
+        "prompt": "<<Round 16>>\n[Question]\nWhat would be the states of variable `M` in line 12? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "0"
+        ],
+        "variable": "M",
+        "line": "12"
+    },
+    "17": {
+        "prompt": "<<Round 17>>\n[Question]\nWhat would be the states of variable `N` in line 13? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "4",
+            "4",
+            "4"
+        ],
+        "variable": "N",
+        "line": "13"
+    },
+    "18": {
+        "prompt": "<<Round 18>>\n[Question]\nWhat would be the states of variable `i` in line 13? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "1",
+            "2",
+            "3"
+        ],
+        "variable": "i",
+        "line": "13"
+    },
+    "19": {
+        "prompt": "<<Round 19>>\n[Question]\nWhat would be the states of variable `i` in line 14? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "1",
+            "2",
+            "3"
+        ],
+        "variable": "i",
+        "line": "14"
+    },
+    "20": {
+        "prompt": "<<Round 20>>\n[Question]\nWhat would be the states of variable `i` in line 15? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "1",
+            "2",
+            "3"
+        ],
+        "variable": "i",
+        "line": "15"
+    },
+    "21": {
+        "prompt": "<<Round 21>>\n[Question]\nWhat would be the states of variable `N` in line 15? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "4",
+            "4",
+            "4"
+        ],
+        "variable": "N",
+        "line": "15"
+    },
+    "22": {
+        "prompt": "<<Round 22>>\n[Question]\nWhat would be the states of variable `i` in line 16? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "3"
+        ],
+        "variable": "i",
+        "line": "16"
+    },
+    "23": {
+        "prompt": "<<Round 23>>\n[Question]\nWhat would be the states of variable `M` in line 16? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "3"
+        ],
+        "variable": "M",
+        "line": "16"
+    },
+    "24": {
+        "prompt": "<<Round 24>>\n[Question]\nWhat would be the states of variable `M` in line 21? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "3",
+            "3",
+            "3",
+            "3"
+        ],
+        "variable": "M",
+        "line": "21"
+    },
+    "25": {
+        "prompt": "<<Round 25>>\n[Question]\nWhat would be the states of variable `i` in line 21? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "1",
+            "2",
+            "3"
+        ],
+        "variable": "i",
+        "line": "21"
+    },
+    "26": {
+        "prompt": "<<Round 26>>\n[Question]\nWhat would be the states of variable `i` in line 22? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "1",
+            "2",
+            "3"
+        ],
+        "variable": "i",
+        "line": "22"
+    },
+    "27": {
+        "prompt": "<<Round 27>>\n[Question]\nWhat would be the states of variable `M` in line 24? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "3"
+        ],
+        "variable": "M",
+        "line": "24"
+    },
+    "28": {
+        "prompt": "<<Round 28>>\n[Question]\nWhat would be the states of variable `N` in line 24? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "4"
+        ],
+        "variable": "N",
+        "line": "24"
+    },
+    "29": {
+        "prompt": "<<Round 29>>\n[Question]\nWhat would be the states of variable `a` in line 25? Print all the states and end your response with \"END-OF-STATE\".\n**Note: If the variable is in the loop, you should print the states in each iteration of the loop.**\n[Answer]\n",
+        "status": [
+            "1",
+            "3"
+        ],
+        "variable": "a",
+        "line": "25"
+    }
+}

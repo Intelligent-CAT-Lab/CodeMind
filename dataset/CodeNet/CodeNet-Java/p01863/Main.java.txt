@@ -1,0 +1,309 @@
+1 import java.util.Arrays;
+2 import java.util.Scanner;
+3 
+4 public class Main {
+5 	MyScanner sc = new MyScanner();
+6 	Scanner sc2 = new Scanner(System.in);
+7 	long start = System.currentTimeMillis();
+8 	long fin = System.currentTimeMillis();
+9 	final int MOD = 1000000007;
+10 	int[] dx = { 1, 0, 0, -1 };
+11 	int[] dy = { 0, 1, -1, 0 };
+12 
+13 	void run() {
+14 		String s = sc.next();
+15 		int N = s.length();
+16 		RollingHash rh = new RollingHash();
+17 		rh.init(s);
+18 		int ans = Integer.MAX_VALUE;
+19 		String res = "mitomerarenaiWA";
+20 		int l = 0;
+21 		int r = 0;
+22 		for (int i = 0; i < N; i++) {
+23 			int t = N - (i + 1) * 3;
+24 			if (t > 0 && t % 2 == 0) {
+25 				int A = i + 1;
+26 				int B = t / 2;
+27 				long a1 = rh.getHash2(0, A - 1);
+28 				long b1 = rh.getHash2(A, A + B - 1);
+29 				long a2 = rh.getHash2(A + B, A + B + A - 1);
+30 				long b2 = rh.getHash2(A + B + A, A + B + A + B - 1);
+31 				long a3 = rh.getHash2(A + B + A + B, N - 1);
+32 				if (a1 == a2 && a2 == a3 && b1 == b2) {
+33 					ans = Math.min(ans, i + t);
+34 					l = A;
+35 					r = B;
+36 				}
+37 			}
+38 		}
+39 		if (l != 0 && r != 0) res = "Love " + s.substring(0, l) + s.substring(l, l + r) + "!";
+40 		System.out.println(res);
+41 	}
+42 
+43 	public class RollingHash {
+44 
+45 		String S;
+46 		int N, l, r;
+47 
+48 		long B1 = 1007;
+49 		long B2 = 1009;
+50 		long H1 = 1000000007;
+51 		long H2 = 1000000009;
+52 
+53 		long[] Base1, Base2;
+54 		long[] Hash1, Hash2;
+55 
+56 		void init(String s) {
+57 			S = s;
+58 			N = s.length();
+59 			l = 0;
+60 			r = s.length() - 1;
+61 			Base1 = new long[N + 1];
+62 			Base2 = new long[N + 1];
+63 			Hash1 = new long[N];
+64 			Hash2 = new long[N];
+65 
+66 			Base1[0] = Base2[0] = 1;
+67 			Hash1[0] = Hash2[0] = s.charAt(0);
+68 			for (int i = 1; i <= N; i++) Base1[i] = (Base1[i - 1] * B1) % H1;
+69 			for (int i = 1; i <= N; i++) Base2[i] = (Base2[i - 1] * B2) % H2;
+70 			for (int i = 1; i < N; i++) Hash1[i] = (Hash1[i - 1] * B1 + s.charAt(i)) % H1;
+71 			for (int i = 1; i < N; i++) Hash2[i] = (Hash2[i - 1] * B2 + s.charAt(i)) % H2;
+72 		}
+73 
+74 		/*
+75 		 * S(this)???T??????????????????(?????¬??????RollingHash)
+76 		 */
+77 		boolean contain1(String T) {
+78 			int sl = S.length();
+79 			int tl = T.length();
+80 			if (tl > sl) return false;
+81 
+82 			long b = 1;
+83 			for (int i = 0; i < tl; i++) b = (b * B1) % H1;
+84 
+85 			long sh = 0;
+86 			long th = 0;
+87 			for (int i = 0; i < tl; i++) sh = (sh * B1 + (S.charAt(i))) % H1;
+88 			for (int i = 0; i < tl; i++) th = (th * B1 + (T.charAt(i))) % H1;
+89 
+90 			for (int i = 0; i + tl <= sl; i++) {
+91 				if (sh == th) return true;
+92 				if (i + tl < sl) sh = sh * B1 - (S.charAt(i)) * b + (S.charAt(i + tl));
+93 				sh = (sh + H1) % H1;
+94 			}
+95 			return false;
+96 		}
+97 
+98 		boolean contain2(String T) {
+99 			int sl = N;
+100 			int tl = T.length();
+101 			if (tl > sl) return false;
+102 
+103 			long th = 0;
+104 			for (int i = 0; i < tl; i++) th = (th * B1 + (T.charAt(i))) % H1;
+105 
+106 			r = tl - 1;
+107 			l = 0;
+108 			for (; r < N; r++, l++) {
+109 				if (getHash1() == th) return true;
+110 			}
+111 			l = 0;
+112 			r = S.length() - 1;
+113 			return false;
+114 		}
+115 
+116 		long getHash1() {
+117 			long res = Hash1[r] - ((l == 0) ? 0 : Hash1[l - 1] * Base1[r - l + 1]);
+118 			if (res < 0) res = (res + ((-res / H1) + 1) * H1) % H1;
+119 			return res;
+120 		}
+121 
+122 		long getHash1(int l, int r) {
+123 			long res = Hash1[r] - ((l == 0) ? 0 : Hash1[l - 1] * Base1[r - l + 1]);
+124 			if (res < 0) res = (res + ((-res / H1) + 1) * H1) % H1;
+125 			return res;
+126 		}
+127 
+128 		long getHash2() {
+129 			long res = Hash2[r] - ((l == 0) ? 0 : Hash2[l - 1] * Base2[r - l + 1]);
+130 			if (res < 0) res = (res + ((-res / H2) + 1) * H2) % H2;
+131 			return res;
+132 		}
+133 
+134 		long getHash2(int l, int r) {
+135 			long res = Hash2[r] - ((l == 0) ? 0 : Hash2[l - 1] * Base2[r - l + 1]);
+136 			if (res < 0) res = (res + ((-res / H2) + 1) * H2) % H2;
+137 			return res;
+138 		}
+139 
+140 		void show() {
+141 			System.out.println("---------show---------");
+142 			System.out.println("String = " + S.substring(l, r + 1));
+143 			System.out.println("l = " + l + " r = " + r);
+144 			System.out.println("Hash1 = " + getHash1() + " Hash2 = " + getHash2());
+145 			System.out.println("----------------------");
+146 		}
+147 	}
+148 
+149 	public static void main(String[] args) {
+150 		new Main().run();
+151 	}
+152 
+153 	void debug(Object... o) {
+154 		System.out.println(Arrays.deepToString(o));
+155 	}
+156 
+157 	void debug2(char[][] array) {
+158 		for (int i = 0; i < array.length; i++) {
+159 			for (int j = 0; j < array[i].length; j++) {
+160 				System.out.print(array[i][j]);
+161 			}
+162 			System.out.println();
+163 		}
+164 	}
+165 
+166 	boolean inner(int h, int w, int limH, int limW) {
+167 		return 0 <= h && h < limH && 0 <= w && w < limW;
+168 	}
+169 
+170 	void swap(int[] x, int a, int b) {
+171 		int tmp = x[a];
+172 		x[a] = x[b];
+173 		x[b] = tmp;
+174 	}
+175 
+176 	// find minimum i (k <= a[i])
+177 	int lower_bound(int a[], int k) {
+178 		int l = -1;
+179 		int r = a.length;
+180 		while (r - l > 1) {
+181 			int mid = (l + r) / 2;
+182 			if (k <= a[mid])
+183 				r = mid;
+184 			else
+185 				l = mid;
+186 		}
+187 		// r = l + 1
+188 		return r;
+189 	}
+190 
+191 	// find minimum i (k < a[i])
+192 	int upper_bound(int a[], int k) {
+193 		int l = -1;
+194 		int r = a.length;
+195 		while (r - l > 1) {
+196 			int mid = (l + r) / 2;
+197 			if (k < a[mid])
+198 				r = mid;
+199 			else
+200 				l = mid;
+201 		}
+202 		// r = l + 1
+203 		return r;
+204 	}
+205 
+206 	long gcd(long a, long b) {
+207 		return a % b == 0 ? b : gcd(b, a % b);
+208 	}
+209 
+210 	long lcm(long a, long b) {
+211 		return a * b / gcd(a, b);
+212 	}
+213 
+214 	boolean palindrome(String s) {
+215 		for (int i = 0; i < s.length() / 2; i++) {
+216 			if (s.charAt(i) != s.charAt(s.length() - 1 - i)) {
+217 				return false;
+218 			}
+219 		}
+220 		return true;
+221 	}
+222 
+223 	class MyScanner {
+224 		int nextInt() {
+225 			try {
+226 				int c = System.in.read();
+227 				while (c != '-' && (c < '0' || '9' < c))
+228 					c = System.in.read();
+229 				if (c == '-')
+230 					return -nextInt();
+231 				int res = 0;
+232 				do {
+233 					res *= 10;
+234 					res += c - '0';
+235 					c = System.in.read();
+236 				} while ('0' <= c && c <= '9');
+237 				return res;
+238 			} catch (Exception e) {
+239 				return -1;
+240 			}
+241 		}
+242 
+243 		double nextDouble() {
+244 			return Double.parseDouble(next());
+245 		}
+246 
+247 		long nextLong() {
+248 			return Long.parseLong(next());
+249 		}
+250 
+251 		String next() {
+252 			try {
+253 				StringBuilder res = new StringBuilder("");
+254 				int c = System.in.read();
+255 				while (Character.isWhitespace(c))
+256 					c = System.in.read();
+257 				do {
+258 					res.append((char) c);
+259 				} while (!Character.isWhitespace(c = System.in.read()));
+260 				return res.toString();
+261 			} catch (Exception e) {
+262 				return null;
+263 			}
+264 		}
+265 
+266 		int[] nextIntArray(int n) {
+267 			int[] in = new int[n];
+268 			for (int i = 0; i < n; i++) {
+269 				in[i] = nextInt();
+270 			}
+271 			return in;
+272 		}
+273 
+274 		int[][] nextInt2dArray(int n, int m) {
+275 			int[][] in = new int[n][m];
+276 			for (int i = 0; i < n; i++) {
+277 				in[i] = nextIntArray(m);
+278 			}
+279 			return in;
+280 		}
+281 
+282 		double[] nextDoubleArray(int n) {
+283 			double[] in = new double[n];
+284 			for (int i = 0; i < n; i++) {
+285 				in[i] = nextDouble();
+286 			}
+287 			return in;
+288 		}
+289 
+290 		long[] nextLongArray(int n) {
+291 			long[] in = new long[n];
+292 			for (int i = 0; i < n; i++) {
+293 				in[i] = nextLong();
+294 			}
+295 			return in;
+296 		}
+297 
+298 		char[][] nextCharField(int n, int m) {
+299 			char[][] in = new char[n][m];
+300 			for (int i = 0; i < n; i++) {
+301 				String s = sc.next();
+302 				for (int j = 0; j < m; j++) {
+303 					in[i][j] = s.charAt(j);
+304 				}
+305 			}
+306 			return in;
+307 		}
+308 	}
+309 }

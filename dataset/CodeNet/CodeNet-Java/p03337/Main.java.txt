@@ -1,0 +1,127 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.PrintWriter;
+6 import java.io.BufferedWriter;
+7 import java.io.Writer;
+8 import java.io.OutputStreamWriter;
+9 import java.util.InputMismatchException;
+10 import java.io.IOException;
+11 import java.io.InputStream;
+12 
+13 /**
+14  * Built using CHelper plug-in
+15  * Actual solution is at the top
+16  */
+17 public class Main {
+18     public static void main(String[] args) {
+19         InputStream inputStream = System.in;
+20         OutputStream outputStream = System.out;
+21         InputReader in = new InputReader(inputStream);
+22         OutputWriter out = new OutputWriter(outputStream);
+23         TaskA solver = new TaskA();
+24         solver.solve(1, in, out);
+25         out.close();
+26     }
+27 
+28     static class TaskA {
+29         public void solve(int testNumber, InputReader in, OutputWriter out) {
+30             int a = in.nextInt();
+31             int b = in.nextInt();
+32             out.println(Math.max(Math.max(a + b, a - b), a * b));
+33         }
+34 
+35     }
+36 
+37     static class OutputWriter {
+38         private final PrintWriter writer;
+39 
+40         public OutputWriter(OutputStream outputStream) {
+41             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+42         }
+43 
+44         public OutputWriter(Writer writer) {
+45             this.writer = new PrintWriter(writer);
+46         }
+47 
+48         public void close() {
+49             writer.close();
+50         }
+51 
+52         public void println(int i) {
+53             writer.println(i);
+54         }
+55 
+56     }
+57 
+58     static class InputReader {
+59         private InputStream stream;
+60         private byte[] buf = new byte[1024];
+61         private int curChar;
+62         private int numChars;
+63         private InputReader.SpaceCharFilter filter;
+64 
+65         public InputReader(InputStream stream) {
+66             this.stream = stream;
+67         }
+68 
+69         public int read() {
+70             if (numChars == -1) {
+71                 throw new InputMismatchException();
+72             }
+73             if (curChar >= numChars) {
+74                 curChar = 0;
+75                 try {
+76                     numChars = stream.read(buf);
+77                 } catch (IOException e) {
+78                     throw new InputMismatchException();
+79                 }
+80                 if (numChars <= 0) {
+81                     return -1;
+82                 }
+83             }
+84             return buf[curChar++];
+85         }
+86 
+87         public int nextInt() {
+88             int c = read();
+89             while (isSpaceChar(c)) {
+90                 c = read();
+91             }
+92             int sgn = 1;
+93             if (c == '-') {
+94                 sgn = -1;
+95                 c = read();
+96             }
+97             int res = 0;
+98             do {
+99                 if (c < '0' || c > '9') {
+100                     throw new InputMismatchException();
+101                 }
+102                 res *= 10;
+103                 res += c - '0';
+104                 c = read();
+105             } while (!isSpaceChar(c));
+106             return res * sgn;
+107         }
+108 
+109         public boolean isSpaceChar(int c) {
+110             if (filter != null) {
+111                 return filter.isSpaceChar(c);
+112             }
+113             return isWhitespace(c);
+114         }
+115 
+116         public static boolean isWhitespace(int c) {
+117             return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+118         }
+119 
+120         public interface SpaceCharFilter {
+121             public boolean isSpaceChar(int ch);
+122 
+123         }
+124 
+125     }
+126 }
+127 

@@ -1,0 +1,104 @@
+1 import static java.lang.Integer.parseInt;
+2 import static java.lang.Long.parseLong;
+3 import static java.lang.System.exit;
+4 
+5 import java.io.BufferedReader;
+6 import java.io.IOException;
+7 import java.io.InputStreamReader;
+8 import java.io.PrintWriter;
+9 import java.util.StringTokenizer;
+10 
+11 public class Main {
+12 
+13 	static final int MOD = 998244353;
+14 
+15 	static int add(int a, int b) {
+16 		int res = a + b;
+17 		return res >= MOD ? res - MOD : res;
+18 	}
+19 
+20 	static void solve() throws Exception {
+21 		String s = scanString();
+22 		int n = s.length();
+23 		boolean dyn1[][][] = new boolean[n + 1][n + 1][n + 1];
+24 		dyn1[0][0][0] = true;
+25 		for (int i = 0; i < n; i++) {
+26 			for (int j = 0; j <= n; j++) {
+27 				for (int k = 0; k <= n; k++) {
+28 					if (dyn1[i][j][k]) {
+29 						dyn1[i + 1][j][k] = true;
+30 						if (j > 0 && s.charAt(i) == '1') {
+31 							dyn1[i + 1][j - 1][k + 1] = true;
+32 						}
+33 						if (k > 0 && s.charAt(i) == '0') {
+34 							dyn1[i + 1][j + 1][k - 1] = true;
+35 						}
+36 						if (i + 1 < n) {
+37 							if (s.charAt(i) == '0' || s.charAt(i + 1) == '0') {
+38 								dyn1[i + 2][j + 1][k] = true;
+39 							}
+40 							if (s.charAt(i) == '1' || s.charAt(i + 1) == '1') {
+41 								dyn1[i + 2][j][k + 1] = true;
+42 							}
+43 						}
+44 					}
+45 				}
+46 			}
+47 		}
+48 		int dyn2[][][] = new int[n + 1][n + 1][n + 1];
+49 		dyn2[n][0][0] = 1;
+50 		int ans = MOD - 1;
+51 		for (int i = n; i >= 0; i--) {
+52 			for (int j = 0; j <= n; j++) {
+53 				for (int k = 0; k <= n; k++) {
+54 					if (dyn1[i][j][k]) {
+55 						ans = add(ans, dyn2[i][j][k]);
+56 					}
+57 					if (i > 0 && s.charAt(i - 1) == '0') {
+58 						dyn2[i - 1][j][k] = add(dyn2[i - 1][j][k], dyn2[i][j][k]);
+59 					} else if (j < n) {
+60 						dyn2[i][j + 1][k] = add(dyn2[i][j + 1][k], dyn2[i][j][k]);
+61 					}
+62 					if (i > 0 && s.charAt(i - 1) == '1') {
+63 						dyn2[i - 1][j][k] = add(dyn2[i - 1][j][k], dyn2[i][j][k]);
+64 					} else if (k < n) {
+65 						dyn2[i][j][k + 1] = add(dyn2[i][j][k + 1], dyn2[i][j][k]);
+66 					}
+67 				}
+68 			}
+69 		}
+70 		out.print(ans);
+71 	}
+72 
+73 	static int scanInt() throws IOException {
+74 		return parseInt(scanString());
+75 	}
+76 
+77 	static long scanLong() throws IOException {
+78 		return parseLong(scanString());
+79 	}
+80 
+81 	static String scanString() throws IOException {
+82 		while (tok == null || !tok.hasMoreTokens()) {
+83 			tok = new StringTokenizer(in.readLine());
+84 		}
+85 		return tok.nextToken();
+86 	}
+87 
+88 	static BufferedReader in;
+89 	static PrintWriter out;
+90 	static StringTokenizer tok;
+91 
+92 	public static void main(String[] args) {
+93 		try {
+94 			in = new BufferedReader(new InputStreamReader(System.in));
+95 			out = new PrintWriter(System.out);
+96 			solve();
+97 			in.close();
+98 			out.close();
+99 		} catch (Throwable e) {
+100 			e.printStackTrace();
+101 			exit(1);
+102 		}
+103 	}
+104 }

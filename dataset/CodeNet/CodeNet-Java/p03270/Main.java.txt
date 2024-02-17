@@ -1,0 +1,270 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.PrintWriter;
+6 import java.io.BufferedWriter;
+7 import java.io.Writer;
+8 import java.io.OutputStreamWriter;
+9 import java.util.InputMismatchException;
+10 import java.io.IOException;
+11 import java.io.InputStream;
+12 
+13 /**
+14  * Built using CHelper plug-in
+15  * Actual solution is at the top
+16  */
+17 public class Main {
+18     public static void main(String[] args) {
+19         InputStream inputStream = System.in;
+20         OutputStream outputStream = System.out;
+21         InputReader in = new InputReader(inputStream);
+22         OutputWriter out = new OutputWriter(outputStream);
+23         EStopOtherwise solver = new EStopOtherwise();
+24         solver.solve(1, in, out);
+25         out.close();
+26     }
+27 
+28     static class EStopOtherwise {
+29         public void solve(int testNumber, InputReader in, OutputWriter out) {
+30             int k = in.readInt();
+31             int n = in.readInt();
+32 
+33             Modulo.mod = MiscUtils.MODF;
+34             Modulo.buildCombination(5000);
+35 
+36             for (int i = 2; i <= 2 * k; i++) {
+37                 Modulo ans = new Modulo(0);
+38                 ans.add(calc(i, n, k));
+39                 if (i % 2 == 0) ans.add(calc(i, n - 1, k));
+40                 out.printLine(ans);
+41             }
+42         }
+43 
+44         private long calc(int i, int n, int k) {
+45             Modulo ret = new Modulo(0);
+46             int p = 0;
+47             for (int j = 1; j < i - j; j++) {
+48                 if (i - j <= k) p++;
+49             }
+50             int l = k - 2 * p - (i % 2 == 0 ? 1 : 0);
+51             for (int q = 0; q <= Math.min(n, p); q++) {
+52                 if (l == 0 && q == 0) continue;
+53                 Modulo tmp = new Modulo(1);
+54                 tmp.mlt(Modulo.c(p, q));
+55                 tmp.mlt(Modulo.pow(2, q));
+56                 tmp.mlt(Modulo.h(n - q, q + l));
+57                 ret.add(tmp);
+58             }
+59             return ret.getValue();
+60         }
+61 
+62     }
+63 
+64     static class InputReader {
+65         private InputStream stream;
+66         private byte[] buf = new byte[1024];
+67         private int curChar;
+68         private int numChars;
+69         private InputReader.SpaceCharFilter filter;
+70 
+71         public InputReader(InputStream stream) {
+72             this.stream = stream;
+73         }
+74 
+75         public int read() {
+76             if (numChars == -1) {
+77                 throw new InputMismatchException();
+78             }
+79             if (curChar >= numChars) {
+80                 curChar = 0;
+81                 try {
+82                     numChars = stream.read(buf);
+83                 } catch (IOException e) {
+84                     throw new InputMismatchException();
+85                 }
+86                 if (numChars <= 0) {
+87                     return -1;
+88                 }
+89             }
+90             return buf[curChar++];
+91         }
+92 
+93         public int readInt() {
+94             int c = read();
+95             while (isSpaceChar(c)) {
+96                 c = read();
+97             }
+98             int sgn = 1;
+99             if (c == '-') {
+100                 sgn = -1;
+101                 c = read();
+102             }
+103             int res = 0;
+104             do {
+105                 if (c < '0' || c > '9') {
+106                     throw new InputMismatchException();
+107                 }
+108                 res *= 10;
+109                 res += c - '0';
+110                 c = read();
+111             } while (!isSpaceChar(c));
+112             return res * sgn;
+113         }
+114 
+115         public boolean isSpaceChar(int c) {
+116             if (filter != null) {
+117                 return filter.isSpaceChar(c);
+118             }
+119             return isWhitespace(c);
+120         }
+121 
+122         public static boolean isWhitespace(int c) {
+123             return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+124         }
+125 
+126         public interface SpaceCharFilter {
+127             public boolean isSpaceChar(int ch);
+128 
+129         }
+130 
+131     }
+132 
+133     static class OutputWriter {
+134         private final PrintWriter writer;
+135 
+136         public OutputWriter(OutputStream outputStream) {
+137             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+138         }
+139 
+140         public OutputWriter(Writer writer) {
+141             this.writer = new PrintWriter(writer);
+142         }
+143 
+144         public void print(Object... objects) {
+145             for (int i = 0; i < objects.length; i++) {
+146                 if (i != 0) {
+147                     writer.print(' ');
+148                 }
+149                 writer.print(objects[i]);
+150             }
+151         }
+152 
+153         public void printLine(Object... objects) {
+154             print(objects);
+155             writer.println();
+156         }
+157 
+158         public void close() {
+159             writer.close();
+160         }
+161 
+162     }
+163 
+164     static class Euclid {
+165         public static long[] extgcd(long a, long b, long[] is) {
+166             if (a == 0) {
+167                 is[0] = 0;
+168                 is[1] = 1;
+169                 is[2] = b;
+170             } else {
+171                 extgcd(b % a, a, is);
+172                 long x = is[1] - b / a * is[0];
+173                 is[1] = is[0];
+174                 is[0] = x;
+175             }
+176             return is;
+177         }
+178 
+179     }
+180 
+181     static class Modulo {
+182         public static long mod;
+183         private long value;
+184         public static long[] nors;
+185         public static long[] revs;
+186 
+187         public Modulo(long value) {
+188             this.value = value;
+189         }
+190 
+191         public static long add(long a, long b) {
+192             return ((a + b) % mod + mod) % mod;
+193         }
+194 
+195         public static long mlt(long a, long b) {
+196             return (a * b) % mod;
+197         }
+198 
+199         public static long rev(long a) {
+200             return (Euclid.extgcd(a, mod, new long[3])[0] % mod + mod) % mod;
+201         }
+202 
+203         public static long pow(long a, long x) {
+204             long ans = 1 % mod;
+205             while (x > 0) {
+206                 if ((x & 1) != 0) ans = (ans * a) % mod;
+207                 x >>= 1;
+208                 a = (a * a) % mod;
+209             }
+210             return ans;
+211         }
+212 
+213         public Modulo add(long a) {
+214             setValue(add(value, a));
+215             return this;
+216         }
+217 
+218         public Modulo add(Modulo m) {
+219             setValue(add(value, m.getValue()));
+220             return this;
+221         }
+222 
+223         public Modulo mlt(long a) {
+224             setValue(mlt(value, a));
+225             return this;
+226         }
+227 
+228         public static void buildCombination(int n) {
+229             nors = new long[n + 1];
+230             revs = new long[n + 1];
+231 
+232             nors[0] = 1;
+233             for (int i = 1; i <= n; i++) {
+234                 nors[i] = mlt(nors[i - 1], i);
+235             }
+236 
+237             revs[n] = rev(nors[n]);
+238             for (int i = n - 1; i >= 0; i--) {
+239                 revs[i] = mlt(revs[i + 1], i + 1);
+240             }
+241         }
+242 
+243         public static long h(int n, int k) {
+244             return k <= 0 ? 1 : new Modulo(nors[n + k - 1]).mlt(revs[n]).mlt(revs[k - 1]).getValue();
+245         }
+246 
+247         public static long c(int n, int k) {
+248             return n - k < 0 ? 0 : new Modulo(nors[n]).mlt(revs[k]).mlt(revs[n - k]).getValue();
+249         }
+250 
+251         public long getValue() {
+252             return value;
+253         }
+254 
+255         public void setValue(long value) {
+256             this.value = value;
+257         }
+258 
+259         public String toString() {
+260             return "" + value;
+261         }
+262 
+263     }
+264 
+265     static class MiscUtils {
+266         public static final int MODF = 998244353;
+267 
+268     }
+269 }
+270 

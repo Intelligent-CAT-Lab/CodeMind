@@ -1,0 +1,249 @@
+1 
+2 import java.io.FileInputStream;
+3 import java.io.FileNotFoundException;
+4 import java.io.IOException;
+5 import java.io.InputStream;
+6 import java.io.PrintWriter;
+7 import java.util.ArrayList;
+8 import java.util.Arrays;
+9 import java.util.HashMap;
+10 import java.util.InputMismatchException;
+11 import java.util.TreeMap;
+12 
+13 public class Main {
+14 	InputStream is;
+15 
+16 	int __t__ = 1;
+17 	int __f__ = 0;
+18 	int __FILE_DEBUG_FLAG__ = __f__;
+19 	String __DEBUG_FILE_NAME__ = "src/D1";
+20 
+21 	FastScanner in;
+22 	PrintWriter out;
+23 	
+24 	boolean isAll8(long d) {
+25 		while (d > 0) {
+26 			if (d % 10 != 8) return false;
+27 			d /= 10;
+28 		}
+29 		return true;
+30 	}
+31 	
+32 	HashMap<Long, Long> hash = new HashMap<>();
+33 	long func(long n) {
+34 		if (hash.containsKey(n)) return hash.get(n);
+35 		
+36 		boolean same = false;
+37 		long now = n;
+38 		long res = -1;
+39 		int maxLen = Long.toString(n).length();
+40 		for (int dlen = maxLen; dlen >= 1; dlen--) {
+41 			for (int i = 0; i < (1 << dlen); i++) {
+42 				long d = 0;
+43 				long ten = 1;
+44 				for (int j = 0; j < dlen; j++) {
+45 					if ((i & (1 << j)) == 0)
+46 						d += ten * 8;
+47 					else
+48 						d += ten * 2;
+49 					ten *= 10;
+50 				}
+51 				if (n == d) {
+52 					same = true;
+53 					continue;
+54 				}
+55 				if (now < d) continue;
+56 				if (now % d == 0) {
+57 					res = Math.max(res, func(now / d) + func(d));
+58 				}
+59 			}
+60 		}
+61 		
+62 		if (same) res = Math.max(res, 1);
+63 		else if (res == -1) res = -100000000;
+64 		
+65 		hash.put(n, res);
+66 		// System.out.println(n + " " + now + " "  +res);
+67 		return res;
+68 	}
+69 	
+70 	public void solve() {
+71 		long n = in.nextLong();
+72 		if (n == 1) {
+73 			System.out.println(-1);
+74 			return;
+75 		}
+76 		
+77 		long res = func(n);
+78 		System.out.println(res <= -1 ? -1 : res);
+79 	}
+80 	
+81 	public void run() {
+82 		if (__FILE_DEBUG_FLAG__ == __t__) {
+83 			try {
+84 				is = new FileInputStream(__DEBUG_FILE_NAME__);
+85 			} catch (FileNotFoundException e) {
+86 				// TODO ????????????????????? catch ????????????
+87 				e.printStackTrace();
+88 			}
+89 			System.out.println("FILE_INPUT!");
+90 		} else {
+91 			is = System.in;
+92 		}
+93 		in = new FastScanner(is);
+94 		out = new PrintWriter(System.out);
+95 
+96 		solve();
+97 	}
+98 
+99 	public static void main(String[] args) {
+100 		new Main().run();
+101 	}
+102 
+103 	public void mapDebug(int[][] a) {
+104 		System.out.println("--------map display---------");
+105 
+106 		for (int i = 0; i < a.length; i++) {
+107 			for (int j = 0; j < a[i].length; j++) {
+108 				System.out.printf("%3d ", a[i][j]);
+109 			}
+110 			System.out.println();
+111 		}
+112 
+113 		System.out.println("----------------------------");
+114 		System.out.println();
+115 	}
+116 
+117 	public void debug(Object... obj) {
+118 		System.out.println(Arrays.deepToString(obj));
+119 	}
+120 
+121 	class FastScanner {
+122 		private InputStream stream;
+123 		private byte[] buf = new byte[1024];
+124 		private int curChar;
+125 		private int numChars;
+126 
+127 		public FastScanner(InputStream stream) {
+128 			this.stream = stream;
+129 			//stream = new FileInputStream(new File("dec.in"));
+130 
+131 		}
+132 
+133 		int read() {
+134 			if (numChars == -1)
+135 				throw new InputMismatchException();
+136 			if (curChar >= numChars) {
+137 				curChar = 0;
+138 				try {
+139 					numChars = stream.read(buf);
+140 				} catch (IOException e) {
+141 					throw new InputMismatchException();
+142 				}
+143 				if (numChars <= 0)
+144 					return -1;
+145 			}
+146 			return buf[curChar++];
+147 		}
+148 
+149 		boolean isSpaceChar(int c) {
+150 			return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+151 		}
+152 
+153 		boolean isEndline(int c) {
+154 			return c == '\n' || c == '\r' || c == -1;
+155 		}
+156 
+157 		int nextInt() {
+158 			return Integer.parseInt(next());
+159 		}
+160 
+161 		int[] nextIntArray(int n) {
+162 			int[] array = new int[n];
+163 			for (int i = 0; i < n; i++)
+164 				array[i] = nextInt();
+165 
+166 			return array;
+167 		}
+168 
+169 		int[][] nextIntMap(int n, int m) {
+170 			int[][] map = new int[n][m];
+171 			for (int i = 0; i < n; i++) {
+172 				map[i] = in.nextIntArray(m);
+173 			}
+174 			return map;
+175 		}
+176 
+177 		long nextLong() {
+178 			return Long.parseLong(next());
+179 		}
+180 
+181 		long[] nextLongArray(int n) {
+182 			long[] array = new long[n];
+183 			for (int i = 0; i < n; i++)
+184 				array[i] = nextLong();
+185 
+186 			return array;
+187 		}
+188 
+189 		long[][] nextLongMap(int n, int m) {
+190 			long[][] map = new long[n][m];
+191 			for (int i = 0; i < n; i++) {
+192 				map[i] = in.nextLongArray(m);
+193 			}
+194 			return map;
+195 		}
+196 
+197 		double nextDouble() {
+198 			return Double.parseDouble(next());
+199 		}
+200 
+201 		double[] nextDoubleArray(int n) {
+202 			double[] array = new double[n];
+203 			for (int i = 0; i < n; i++)
+204 				array[i] = nextDouble();
+205 
+206 			return array;
+207 		}
+208 
+209 		double[][] nextDoubleMap(int n, int m) {
+210 			double[][] map = new double[n][m];
+211 			for (int i = 0; i < n; i++) {
+212 				map[i] = in.nextDoubleArray(m);
+213 			}
+214 			return map;
+215 		}
+216 
+217 		String next() {
+218 			int c = read();
+219 			while (isSpaceChar(c))
+220 				c = read();
+221 			StringBuilder res = new StringBuilder();
+222 			do {
+223 				res.appendCodePoint(c);
+224 				c = read();
+225 			} while (!isSpaceChar(c));
+226 			return res.toString();
+227 		}
+228 
+229 		String[] nextStringArray(int n) {
+230 			String[] array = new String[n];
+231 			for (int i = 0; i < n; i++)
+232 				array[i] = next();
+233 
+234 			return array;
+235 		}
+236 
+237 		String nextLine() {
+238 			int c = read();
+239 			while (isEndline(c))
+240 				c = read();
+241 			StringBuilder res = new StringBuilder();
+242 			do {
+243 				res.appendCodePoint(c);
+244 				c = read();
+245 			} while (!isEndline(c));
+246 			return res.toString();
+247 		}
+248 	}
+249 }

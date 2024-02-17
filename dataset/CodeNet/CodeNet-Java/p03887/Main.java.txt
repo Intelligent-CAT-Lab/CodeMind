@@ -1,0 +1,332 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 public class Main {
+5   private static long solve(int n, int a, int b, int c) {
+6     if (b % 2 == 1) {
+7       return 0;
+8     }
+9     
+10     ModCalculator mc = new ModCalculator(1_000_000_007L);
+11     ModCombinationCache mcc = new ModCombinationCache(mc);
+12     long answer = 0;
+13     for (int x = a; x >= 0; x--) {
+14       int group1 = x;
+15       
+16       int restA = a - x;
+17       int group2 = restA;
+18       
+19       int restC1 = c - restA;
+20       if (restC1 < 0) {
+21         break;
+22       }
+23       if (b > 0) {
+24         for (int y = 0; y <= restC1 / 3; y++) {
+25           int group3 = y;
+26           int restC2 = restC1 - 3 * y;
+27           int group4 = b / 2;
+28           
+29           long count = mcc.getC(b / 2 + restC2 - 1, b / 2 - 1);
+30           count = mc.mul(count, mcc.getC(group1 + group2 + group3 + group4, group4));
+31           count = mc.mul(count, mcc.getC(group1 + group2 + group3, group3));
+32           count = mc.mul(count, mcc.getC(group1 + group2, group2));
+33           answer = mc.add(answer, count);
+34         }
+35       } else if (restC1 % 3 == 0) {
+36         int group3 = restC1 / 3;
+37         long count = mcc.getC(group1 + group2 + group3, group3);
+38         count = mc.mul(count, mcc.getC(group1 + group2, group2));
+39         answer = mc.add(answer, count);
+40       }
+41     }
+42     return answer;
+43   }
+44   
+45   private static void execute(ContestReader reader, PrintWriter out) {
+46     int n = reader.nextInt();
+47     int a = reader.nextInt();
+48     int b = reader.nextInt();
+49     int c = reader.nextInt();
+50     out.println(solve(n, a, b, c));
+51   }
+52   
+53   public static void main(String[] args) {
+54     ContestReader reader = new ContestReader(System.in);
+55     PrintWriter out = new PrintWriter(System.out);
+56     execute(reader, out);
+57     out.flush();
+58   }
+59 }
+60 
+61 class ContestReader {
+62   private BufferedReader reader;
+63   private StringTokenizer tokenizer;
+64   
+65   ContestReader(InputStream in) {
+66     reader = new BufferedReader(new InputStreamReader(in));
+67   }
+68   
+69   public String next() {
+70     while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+71       try {
+72         tokenizer = new java.util.StringTokenizer(reader.readLine());
+73       } catch (Exception e) {
+74         throw new RuntimeException(e);
+75       }
+76     }
+77     return tokenizer.nextToken();
+78   }
+79   
+80   public int nextInt() {
+81     return Integer.parseInt(next());
+82   }
+83   
+84   public long nextLong() {
+85     return Long.parseLong(next());
+86   }
+87   
+88   public double nextDouble() {
+89     return Double.parseDouble(next());
+90   }
+91   
+92   public String[] nextArray(int n) {
+93     String[] array = new String[n];
+94     for (int i = 0; i < n; i++) {
+95       array[i] = next();
+96     }
+97     return array;
+98   }
+99   
+100   public int[] nextIntArray(int n) {
+101     int[] array = new int[n];
+102     for (int i = 0; i < n; i++) {
+103       array[i] = nextInt();
+104     }
+105     return array;
+106   }
+107   
+108   public long[] nextLongArray(int n) {
+109     long[] array = new long[n];
+110     for (int i = 0; i < n; i++) {
+111       array[i] = nextLong();
+112     }
+113     return array;
+114   }
+115   
+116   public double[] nextDoubleArray(int n) {
+117     double[] array = new double[n];
+118     for (int i = 0; i < n; i++) {
+119       array[i] = nextDouble();
+120     }
+121     return array;
+122   }
+123   
+124   public int[][] nextIntMatrix(int n, int m) {
+125     int[][] matrix = new int[n][m];
+126     for (int i = 0; i < n; i++) {
+127       for (int j = 0; j < m; j++) {
+128         matrix[i][j] = nextInt();
+129       }
+130     }
+131     return matrix;
+132   }
+133   
+134   public long[][] nextLongMatrix(int n, int m) {
+135     long[][] matrix = new long[n][m];
+136     for (int i = 0; i < n; i++) {
+137       for (int j = 0; j < m; j++) {
+138         matrix[i][j] = nextLong();
+139       }
+140     }
+141     return matrix;
+142   }
+143   
+144   public double[][] nextDoubleMatrix(int n, int m) {
+145     double[][] matrix = new double[n][m];
+146     for (int i = 0; i < n; i++) {
+147       for (int j = 0; j < m; j++) {
+148         matrix[i][j] = nextDouble();
+149       }
+150     }
+151     return matrix;
+152   }
+153 }
+154 
+155 class ModCalculator {
+156   private final long mod;
+157   
+158   ModCalculator(long mod) {
+159     this.mod = mod;
+160   }
+161   
+162   public long add(long a, long b) {
+163     return (a + b) % mod;
+164   }
+165   
+166   public long sub(long a, long b) {
+167     return (a - b + mod) % mod;
+168   }
+169   
+170   public long mul(long a, long b) {
+171     return (a * b) % mod;
+172   }
+173   
+174   public long pow(long a, long b) {
+175     if (b == 0) {
+176       return 1;
+177     }
+178     long v = pow(mul(a, a), b / 2);
+179     if (b % 2 == 1) {
+180       return mul(v, a);
+181     } else {
+182       return v;
+183     }
+184   }
+185   
+186   public long inverse(long a) {
+187     return pow(a, mod - 2);
+188   }
+189   
+190   public long div(long a, long b) {
+191     return mul(a, inverse(b));
+192   }
+193 }
+194  
+195 class ModCombinationCache {
+196   private final ModCalculator modCalculator;
+197   private final List<Long> factorialCache;
+198   private final List<Long> factorialInverseCache;
+199   
+200   public ModCombinationCache(ModCalculator modCalculator) {
+201     this.modCalculator = modCalculator;
+202     factorialCache = new ArrayList<>();
+203     factorialCache.add(1L);
+204     factorialInverseCache = new ArrayList<>();
+205     factorialInverseCache.add(1L);
+206   }
+207   
+208   private void resize(int n) {
+209     for (int i = factorialCache.size() - 1; i < n; i++) {
+210       long v = modCalculator.mul(factorialCache.get(i), i + 1);
+211       factorialCache.add(v);
+212       factorialInverseCache.add(modCalculator.inverse(v));
+213     }
+214   }
+215   
+216   public long getP(int n) {
+217     resize(n);
+218     return factorialCache.get(n);
+219   }
+220   
+221   public long getC(int n, int k) {
+222     resize(n);
+223     return modCalculator.mul(factorialCache.get(n), modCalculator.mul(factorialInverseCache.get(k), factorialInverseCache.get(n-k)));
+224   }
+225 }
+226 
+227 class Algorithm {
+228   private static void swap(Object[] list, int a, int b) {
+229     Object tmp = list[a];
+230     list[a] = list[b];
+231     list[b] = tmp;
+232   }
+233   
+234   public static <T extends Comparable<? super T>> boolean nextPermutation(T[] ts) {
+235     int rightMostAscendingOrderIndex = ts.length - 2;
+236     while (rightMostAscendingOrderIndex >= 0 &&
+237         ts[rightMostAscendingOrderIndex].compareTo(ts[rightMostAscendingOrderIndex + 1]) >= 0) {
+238       rightMostAscendingOrderIndex--;
+239     }
+240     if (rightMostAscendingOrderIndex < 0) {
+241       return false;
+242     }
+243     
+244     int rightMostGreatorIndex = ts.length - 1;
+245     while (ts[rightMostAscendingOrderIndex].compareTo(ts[rightMostGreatorIndex]) >= 0) {
+246       rightMostGreatorIndex--;
+247     }
+248     
+249     swap(ts, rightMostAscendingOrderIndex, rightMostGreatorIndex);
+250     for (int i = 0; i < (ts.length - rightMostAscendingOrderIndex - 1) / 2; i++) {
+251       swap(ts, rightMostAscendingOrderIndex + 1 + i, ts.length - 1 - i);
+252     }
+253     return true;
+254   }
+255   
+256   public static void shuffle(int[] array) {
+257     Random random = new Random();
+258     int n = array.length;
+259     for (int i = 0; i < n; i++) {
+260       int randomIndex = i + random.nextInt(n - i);
+261       
+262       int temp = array[i];
+263       array[i] = array[randomIndex];
+264       array[randomIndex] = temp;
+265     }
+266   }
+267   
+268   public static void shuffle(long[] array) {
+269     Random random = new Random();
+270     int n = array.length;
+271     for (int i = 0; i < n; i++) {
+272       int randomIndex = i + random.nextInt(n - i);
+273       
+274       long temp = array[i];
+275       array[i] = array[randomIndex];
+276       array[randomIndex] = temp;
+277     }
+278   }
+279   
+280   public static void sort(int[] array) {
+281     shuffle(array);
+282     Arrays.sort(array);
+283   }
+284   
+285   public static void sort(long[] array) {
+286     shuffle(array);
+287     Arrays.sort(array);
+288   }
+289 }
+290 
+291 class UnionFind {
+292   int[] parents;
+293   int[] ranks;
+294 
+295   UnionFind(int n) {
+296     parents = new int[n];
+297     ranks = new int[n];
+298 
+299     for (int i = 0; i < n; i++) {
+300       parents[i] = i;
+301     }
+302   }
+303 
+304   public int getRoot(int index) {
+305     if (parents[index] == index) {
+306       return index;
+307     } else {
+308       parents[index] = getRoot(parents[index]);
+309       return parents[index];
+310     }
+311   }
+312 
+313   public boolean sameGroup(int a, int b) {
+314     return getRoot(a) == getRoot(b);
+315   }
+316 
+317   public void merge(int a, int b) {
+318     int rootA = getRoot(a);
+319     int rootB = getRoot(b);
+320     if (rootA == rootB) {
+321       return;
+322     }
+323     if (ranks[rootA] < ranks[rootB]) {
+324       parents[rootA] = rootB;
+325     } else if (ranks[rootB] < ranks[rootA]) {
+326       parents[rootB] = rootA;
+327     } else {
+328       parents[rootA] = rootB;
+329       ranks[rootB]++;
+330     }
+331   }
+332 }

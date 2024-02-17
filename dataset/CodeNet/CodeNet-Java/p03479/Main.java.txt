@@ -1,0 +1,165 @@
+1 import java.io.ByteArrayInputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.math.BigDecimal;
+6 import java.math.BigInteger;
+7 import java.util.ArrayDeque;
+8 import java.util.ArrayList;
+9 import java.util.Arrays;
+10 import java.util.Collections;
+11 import java.util.HashSet;
+12 import java.util.InputMismatchException;
+13 import java.util.Stack;
+14 import java.util.TreeMap;
+15 import java.util.TreeSet;
+16 
+17 public class Main
+18 {
+19 	InputStream is;
+20 	PrintWriter out;
+21 	String INPUT = "";
+22 	void solve()
+23 	{
+24 		long x=nl(),y=nl();
+25 		int ans=0;
+26 		for(long i=x;i<=y;i=i*2) {
+27 			ans++;
+28 		}
+29 		out.println(ans);
+30 
+31 	}
+32 	
+33 	
+34 		
+35 	void run() throws Exception
+36 	{
+37 		is = INPUT.isEmpty() ? System.in : new ByteArrayInputStream(INPUT.getBytes());
+38 		out = new PrintWriter(System.out);
+39 		
+40 		long s = System.currentTimeMillis();
+41 		solve();
+42 		out.flush();
+43 		if(!INPUT.isEmpty())tr(System.currentTimeMillis()-s+"ms");
+44 	}
+45 	
+46 	public static void main(String[] args) throws Exception 
+47 	{ new Main().run(); }
+48 	
+49 	private byte[] inbuf = new byte[1024];
+50 	public int lenbuf = 0, ptrbuf = 0;
+51 	
+52 	private int readByte()
+53 	{
+54 		if(lenbuf == -1)throw new InputMismatchException();
+55 		if(ptrbuf >= lenbuf)
+56 		{
+57 			ptrbuf = 0;
+58 			try 
+59 			{ lenbuf = is.read(inbuf); } 
+60 			catch (IOException e) 
+61 			{ throw new InputMismatchException(); }
+62 			if(lenbuf <= 0)return -1;
+63 		}
+64 		return inbuf[ptrbuf++];
+65 	}
+66 	
+67 	private boolean isSpaceChar(int c)
+68 	{ return !(c >= 33 && c <= 126); }
+69 	private int skip() 
+70 	{ int b; while((b = readByte()) != -1 && isSpaceChar(b)); return b; }
+71 	
+72 	private double nd() 
+73 	{ return Double.parseDouble(ns()); }
+74 	private char nc()
+75 	{ return (char)skip(); }
+76 	
+77 	private String ns()
+78 	{
+79 		int b = skip();
+80 		StringBuilder sb = new StringBuilder();
+81 		while(!(isSpaceChar(b)))
+82 		{ // when nextLine, (isSpaceChar(b) && b != ' ')
+83 			sb.appendCodePoint(b);
+84 			b = readByte();
+85 		}
+86 		return sb.toString();
+87 	}
+88 	
+89 	private char[] ns(int n)
+90 	{
+91 		char[] buf = new char[n];
+92 		int b = skip(), p = 0;
+93 		while(p < n && !(isSpaceChar(b)))
+94 		{
+95 			buf[p++] = (char)b;
+96 			b = readByte();
+97 		}
+98 		return n == p ? buf : Arrays.copyOf(buf, p);
+99 	}
+100 	
+101 	private char[][] nm(int n, int m)
+102 	{
+103 		char[][] map = new char[n][];
+104 		for(int i = 0;i < n;i++)map[i] = ns(m);
+105 		return map;
+106 	}
+107 	
+108 	private int[] na(int n)
+109 	{
+110 		int[] a = new int[n];
+111 		for(int i = 0;i < n;i++)a[i] = ni();
+112 		return a;
+113 	}
+114 	
+115 	private int ni()
+116 	{
+117 		int num = 0, b;
+118 		boolean minus = false;
+119 		while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+120 		if(b == '-')
+121 		{
+122 			minus = true;
+123 			b = readByte();
+124 		}
+125 		
+126 		while(true)
+127 		{
+128 			if(b >= '0' && b <= '9')
+129 			{
+130 				num = num * 10 + (b - '0');
+131 			}else
+132 			{
+133 				return minus ? -num : num;
+134 			}
+135 			b = readByte();
+136 		}
+137 	}
+138 	
+139 	private long nl()
+140 	{
+141 		long num = 0;
+142 		int b;
+143 		boolean minus = false;
+144 		while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+145 		if(b == '-')
+146 		{
+147 			minus = true;
+148 			b = readByte();
+149 		}
+150 		
+151 		while(true){
+152 			if(b >= '0' && b <= '9')
+153 			{
+154 				num = num * 10 + (b - '0');
+155 			}else
+156 			{
+157 				return minus ? -num : num;
+158 			}
+159 			b = readByte();
+160 		}
+161 	}
+162 	
+163 	private static void tr(Object... o) 
+164 	{ System.out.println(Arrays.deepToString(o)); }
+165 }

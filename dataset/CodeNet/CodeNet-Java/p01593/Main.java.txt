@@ -1,0 +1,41 @@
+1 import java.util.*;
+2 import java.lang.*;
+3 import java.math.*;
+4 import java.io.*;
+5 import static java.lang.Math.*;
+6 import static java.util.Arrays.*;
+7 import static java.util.Collections.*;
+8 
+9 public class Main{
+10 	Scanner sc=new Scanner(System.in);
+11 
+12 	int INF=1<<28;
+13 	double EPS=1e-12;
+14 
+15 	int n, m;
+16 
+17 	void run(){
+18 		n=sc.nextInt();
+19 		m=sc.nextInt();
+20 		solve();
+21 	}
+22 
+23 	void solve(){
+24 		double[] dp=new double[n+1];
+25 		dp[0]=1;
+26 		for(int j=1; j<=n; j++){
+27 			for(int i=1; i<=min(m, j); i++){
+28 				dp[j]+=dp[j-i]/j;
+29 			}
+30 		}
+31 		println(String.format("%.12f", dp[n]));
+32 	}
+33 
+34 	void println(String s){
+35 		System.out.println(s);
+36 	}
+37 
+38 	public static void main(String[] args){
+39 		new Main().run();
+40 	}
+41 }

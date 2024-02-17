@@ -1,0 +1,23 @@
+<<<Analysis>>>
+The input string `?12345678901` is reversed to `10987654321?` before being passed to the `check` function.
+The `check` function finds the index of the "?" character, which is at the end of the reversed string (index 11).
+The `check` function then iterates over the digits 0 to 9, replacing the "?" with each digit in turn and checking if the resulting number is "collect" by calling the `is_collect` function.
+
+The `is_collect` function calculates a score based on the digits of the fixed_number, with different weights for the first 6 and the next 5 digits.
+The last digit (the one that was a "?") is supposed to be a check digit, calculated as 11 minus the remainder of the score divided by 11.
+If the calculated check digit matches the last digit of the fixed_number, or if the calculated check digit is 10 or 11 and the last digit is "0", the function returns True, indicating that the number is "collect".
+
+The `check` function counts how many times a digit replacement results in a "collect" number. If exactly one replacement works, it returns that digit. If none or multiple replacements work, it returns None.
+
+Let's calculate the score for each possible replacement of "?":
+
+For "?12345678901" reversed to "10987654321?":
+- Replace "?" with "0": Score = 1*8 + 2*9 + 3*10 + 4*11 + 5*12 + 6*13 + 7*8 + 8*9 + 9*10 + 0*11 = 583, last = 11 - 583 % 11 = 6, not a match.
+- Replace "?" with "1": Score = 1*8 + 2*9 + 3*10 + 4*11 + 5*12 + 6*13 + 7*8 + 8*9 + 9*10 + 1*11 = 594, last = 11 - 594 % 11 = 5, not a match.
+- Replace "?" with "2": Score = 1*8 + 2*9 + 3*10 + 4*11 + 5*12 + 6*13 + 7*8 + 8*9 + 9*10 + 2*11 = 605, last = 11 - 605 % 11 = 4, not a match.
+- Replace "?" with "3": Score = 1*8 + 2*9 + 3*10 + 4*11 + 5*12 + 6*13 + 7*8 + 8*9 + 9*10 + 3*11 = 616, last = 11 - 616 % 11 = 3, not a match.
+- Replace "?" with "4": Score = 1*8 + 2*9 + 3*10 + 4*11 + 5*12 + 6*13 + 7*8 + 8*9 + 9*10 + 4*11 = 627, last = 11 - 627 % 11 = 2, not a match.
+- Replace "?" with "5": Score = 1*8 + 2*9 + 3*10 + 4*11 + 5*12 + 6*13 + 7*8 + 8*9 + 9*10 + 5*11 = 638, last = 11 - 638 % 11 = 1, not a match.
+- Replace "?" with "6": Score = 1*8 + 2*9 + 3*10 + 4*11 + 5*12 + 6*13 + 7*8 + 8*9 + 9*10 + 6*11 = 649, last = 11 - 649 % 11 = 0, match (since last is 0 and the last digit is "0").
+- Replace "?" with "7": Score = 1*8 + 2*9 + 3*10 + 4*11 + 5*12 + 6*13 + 7*8 + 8*9 + 9*10 + 7*11 = 660, last = 11 - 660 % 11 = 11, not a match (since last is 11 but the last digit is not "0").
+- Replace "?" with "8": Score = 1*8 + 2*9 + 3*10 + 4*11 + 5*12 + 6*13 + 7*8 + 8

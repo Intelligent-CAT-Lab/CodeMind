@@ -1,0 +1,3134 @@
+1 
+2 
+3 
+4 
+5 import java.awt.Point;
+6 import java.io.File;
+7 import java.io.FileInputStream;
+8 import java.io.FileNotFoundException;
+9 import java.io.FileOutputStream;
+10 import java.io.IOException;
+11 import java.io.InputStream;
+12 import java.io.PrintStream;
+13 import java.io.PrintWriter;
+14 import java.io.Serializable;
+15 import java.util.AbstractList;
+16 import java.util.Arrays;
+17 import java.util.Collection;
+18 import java.util.Comparator;
+19 import java.util.HashMap;
+20 import java.util.Iterator;
+21 import java.util.Locale;
+22 import java.util.Map.Entry;
+23 import java.util.NoSuchElementException;
+24 import java.util.RandomAccess;
+25 import java.util.Set;
+26 import java.util.function.BinaryOperator;
+27 import java.util.function.UnaryOperator;
+28 
+29 public class Main implements Runnable{
+30 
+31 	private void solve(FastIO io, String[] args) {
+32 		/*
+33 		 * author: 31536000
+34 		 * AGC041 C問題
+35 		 * 考察メモ
+36 		 * まずは、構築可能な条件を考える
+37 		 * 手元で検証結果、N=3,4,5,6は構築可能
+38 		 * とりあえず、N=2を除いてほぼ構築可能と考える
+39 		 * さて、まず構築できない場合の条件を考える
+40 		 * 縦と横が等しいということはどういうことか？
+41 		 * 分からないね、とりあえずテストケース特定していくか
+42 		 *
+43 		 */
+44 		int N = io.nextInt();
+45 		if (N == 2) {
+46 			io.println(-1);
+47 		} else if (N == 3) {
+48 			io.println("aab");
+49 			io.println("b.b");
+50 			io.println("baa");
+51 		} else if (N == 5) {
+52 			io.println("aabba");
+53 			io.println("bc..a");
+54 			io.println("bc..b");
+55 			io.println("a.ccb");
+56 			io.println("abbaa");
+57 		} else if (N % 2 == 0) {
+58 			for (int y = 0;y < N;++ y) {
+59 				for (int x = 0;x < N;++ x) {
+60 					if (y / 2 == x / 2) io.print(y % 2 == 0 ? 'a' : 'b');
+61 					else if ((y + 2) % N / 2 == x / 2) io.print(x % 2 == 0 ? 'c' : 'd');
+62 					else io.print('.');
+63 				}
+64 				io.println();
+65 			}
+66 		} else if ((N - 1) % 6 != 0) {
+67 			char[][] ans = new char[N][N];
+68 			for (char[] i : ans) Arrays.fill(i, '.');
+69 			boolean isInner = (N - 5) % 6 == 0;
+70 			if (isInner) {
+71 				N -= 2;
+72 				for (int x = 0;x < N;x += 2) {
+73 					ans[0][x] = ans[0][x + 1] = x % 4 == 0 ? 'e' : 'f';
+74 					ans[N + 1][N - x + 1] = ans[N + 1][N - x] = x % 4 == 0 ? 'e' : 'f';
+75 				}
+76 				for (int y = 0;y < N;y += 2) {
+77 					ans[y][N + 1] = ans[y + 1][N + 1] = y % 4 == 0 ? 'g' : 'h';
+78 					ans[N - y + 1][0] = ans[N - y][0] = y % 4 == 0 ? 'g' : 'h';
+79 				}
+80 			}
+81 			for (int n = 0;n < (N - 1) / 6;++ n) {
+82 				for (int y = isInner ? 1 : 0;y < (N - 1);y += 2) {
+83 					int x = (y + 4 * n) % (N - 1);
+84 					ans[y][x] = ans[y][x + 1] = 'a';
+85 					ans[y + 1][x] = ans[y + 1][x + 1] = 'b';
+86 					x = (y + 2 + 4 * n) % (N - 1);
+87 					ans[y][x] = ans[y + 1][x] = 'c';
+88 					ans[y][x + 1] = ans[y + 1][x + 1] = 'd';
+89 				}
+90 			}
+91 			for (int x = 0;x < (N - 1);x += 2) {
+92 				ans[isInner ? N : N - 1][isInner ? 1 + x : x] = ans[isInner ? N : N - 1][isInner ? 2 + x : 1 + x] = x % 4 == 0 ? 'i' : 'j';
+93 			}
+94 			for (int y = 0;y < (N - 1);y += 2) {
+95 				ans[isInner ? 1 + y : y][isInner ? N : N - 1] = ans[isInner ? 2 + y : 1 + y][isInner ? N : N - 1] = y % 4 == 0 ? 'i' : 'j';
+96 			}
+97 			io.println(ans, "\n", "");
+98 		} else {
+99 			char[][] ans = new char[N][N];
+100 			for (char[] i : ans) Arrays.fill(i, '.');
+101 			-- N;
+102 			for (int y1 = 0;y1 < N;y1 += 6) {
+103 				for (int x1 = 0;x1 < N;x1 += 6) {
+104 					if (x1 == y1) {
+105 						ans[y1][x1] = ans[y1 + 1][x1] = 'a';
+106 						ans[y1 + 4][x1 + 4] = ans[y1 + 5][x1 + 4] = 'a';
+107 						ans[y1][x1 + 1] = ans[y1 + 1][x1 + 1] = 'b';
+108 						ans[y1 + 4][x1 + 5] = ans[y1 + 5][x1 + 5] = 'b';
+109 						ans[y1 + 2][x1] = ans[y1 + 2][x1 + 1] = 'c';
+110 						ans[y1 + 3][x1 + 2] = ans[y1 + 3][x1 + 3] = 'c';
+111 						ans[y1 + 2][x1 + 2] = ans[y1 + 2][x1 + 3] = 'd';
+112 						ans[y1 + 3][x1 + 4] = ans[y1 + 3][x1 + 5] = 'd';
+113 					} else {
+114 						ans[y1][x1] = ans[y1 + 1][x1] = (y1 + x1) % 2 == 0 ? 'i' : 'e';
+115 						ans[y1 + 2][x1 + 2] = ans[y1 + 3][x1 + 2] = (y1 + x1) % 2 == 0 ? 'i' : 'e';
+116 						ans[y1 + 4][x1 + 4] = ans[y1 + 5][x1 + 4] = (y1 + x1) % 2 == 0 ? 'i' : 'e';
+117 						ans[y1][x1 + 1] = ans[y1 + 1][x1 + 1] = (y1 + x1) % 2 == 0 ? 'j' : 'f';
+118 						ans[y1 + 2][x1 + 3] = ans[y1 + 3][x1 + 3] = (y1 + x1) % 2 == 0 ? 'j' : 'f';
+119 						ans[y1 + 4][x1 + 5] = ans[y1 + 5][x1 + 5] = (y1 + x1) % 2 == 0 ? 'j' : 'f';
+120 						ans[y1 + 2][x1] = ans[y1 + 2][x1 + 1] = (y1 + x1) % 2 == 0 ? 'k' : 'g';
+121 						ans[y1 + 4][x1 + 2] = ans[y1 + 4][x1 + 3] = (y1 + x1) % 2 == 0 ? 'k' : 'g';
+122 						ans[y1][x1 + 4] = ans[y1][x1 + 5] = (y1 + x1) % 2 == 0 ? 'k' : 'g';
+123 						ans[y1 + 3][x1] = ans[y1 + 3][x1 + 1] = (y1 + x1) % 2 == 0 ? 'l' : 'h';
+124 						ans[y1 + 5][x1 + 2] = ans[y1 + 5][x1 + 3] = (y1 + x1) % 2 == 0 ? 'l' : 'h';
+125 						ans[y1 + 1][x1 + 4] = ans[y1 + 1][x1 + 5] =  (y1 + x1) % 2 == 0 ? 'l' : 'h';
+126 					}
+127 				}
+128 			}
+129 			for (int x = 0;x < N;x += 2) {
+130 				ans[N][x] = ans[N][x + 1] = x % 4 == 0 ? 'm' : 'n';
+131 			}
+132 			for (int y = 0;y < N;y += 2) {
+133 				ans[y][N] = ans[y + 1][N] = y % 4 == 0 ? 'm' : 'n';
+134 			}
+135 			io.println(ans, "\n", "");
+136 		}
+137 
+138 	}
+139 
+140 	/** デバッグ用コードのお供に */
+141 	private static boolean DEBUG = false;
+142 	/** 確保するメモリの大きさ(単位: MB)*/
+143 	private static final long MEMORY = 64;
+144 	private final FastIO io;
+145 	private final String[] args;
+146 
+147 	public static void main(String[] args) {
+148 	        Thread.setDefaultUncaughtExceptionHandler((t, e) -> e.printStackTrace());
+149 	        new Thread(null, new Main(args), "", MEMORY * 1048576).start();
+150 	}
+151 
+152 	public Main(String[] args) {
+153 		this(new FastIO(), args);
+154 	}
+155 
+156 	public Main(FastIO io, String... args) {
+157 		this.io = io;
+158 		this.args = args;
+159 		if (DEBUG) io.setAutoFlush(true);
+160 	}
+161 
+162 	@Override
+163 	public void run() {
+164 		solve(io, args);
+165 		io.flush();
+166 	}
+167 
+168 	// 以下、ライブラリ
+169 
+170 	/**
+171 	 * 高速な入出力を提供します。
+172 	 * @author 31536000
+173 	 *
+174 	 */
+175 	public static class FastIO {
+176 		private InputStream in;
+177 		private final byte[] buffer = new byte[1024];
+178 		private int read = 0;
+179 		private int length = 0;
+180 		private PrintWriter out;
+181 		private PrintWriter err;
+182 		private boolean autoFlush = false;
+183 
+184 		public FastIO() {
+185 			this(System.in, System.out, System.err);
+186 		}
+187 
+188 		public FastIO(InputStream in, PrintStream out, PrintStream err) {
+189 			this.in = in;
+190 			this.out = new PrintWriter(out, false);
+191 			this.err = new PrintWriter(err, false);
+192 		}
+193 
+194 		public final void setInputStream(InputStream in) {
+195 			this.in = in;
+196 		}
+197 
+198 		public final void setInputStream(File in) {
+199 			try {
+200 				this.in = new FileInputStream(in);
+201 			} catch (FileNotFoundException e) {
+202 				e.printStackTrace();
+203 			}
+204 		}
+205 
+206 		public final void setOutputStream(PrintStream out) {
+207 			this.out = new PrintWriter(out, false);
+208 		}
+209 
+210 		public final void setOutputStream(File out) {
+211 			try {
+212 				this.out = new PrintWriter(new FileOutputStream(out), false);
+213 			} catch (FileNotFoundException e) {
+214 				e.printStackTrace();
+215 			}
+216 		}
+217 
+218 		public final void setErrorStream(PrintStream err) {
+219 			this.err = new PrintWriter(err, false);
+220 		}
+221 
+222 		public final void setErrorStream(File err) {
+223 			try {
+224 				this.err = new PrintWriter(new FileOutputStream(err), false);
+225 			} catch (FileNotFoundException e) {
+226 				e.printStackTrace();
+227 			}
+228 		}
+229 
+230 		public final void setAutoFlush(boolean flush) {
+231 			autoFlush = flush;
+232 		}
+233 
+234 		private boolean hasNextByte() {
+235 			if (read < length) return true;
+236 			read = 0;
+237 			try {
+238 				length = in.read(buffer);
+239 			} catch (IOException e) {
+240 				e.printStackTrace();
+241 			}
+242 			return length > 0;
+243 		}
+244 
+245 		private int readByte() {
+246 			return hasNextByte() ? buffer[read++] : -1;
+247 		}
+248 
+249 		private static boolean isPrintableChar(int c) {
+250 			return 33 <= c && c <= 126;
+251 		}
+252 
+253 		private static boolean isNumber(int c) {
+254 			return '0' <= c && c <= '9';
+255 		}
+256 
+257 		public final boolean hasNext() {
+258 			while (hasNextByte() && !isPrintableChar(buffer[read])) read++;
+259 			return hasNextByte();
+260 		}
+261 
+262 		public final char nextChar() {
+263 			if (!hasNextByte())  throw new NoSuchElementException();
+264 			return (char)readByte();
+265 		}
+266 
+267 		public final char[][] nextChar(int height) {
+268 			char[][] ret = new char[height][];
+269 			for (int i = 0;i < ret.length;++ i) ret[i] = next().toCharArray();
+270 			return ret;
+271 		}
+272 
+273 		public final String next() {
+274 			if (!hasNext()) throw new NoSuchElementException();
+275 			StringBuilder sb = new StringBuilder();
+276 			int b;
+277 			while (isPrintableChar(b = readByte())) sb.appendCodePoint(b);
+278 			return sb.toString();
+279 		}
+280 
+281 		public final String nextLine() {
+282 			StringBuilder sb = new StringBuilder();
+283 			int b;
+284 			while(!isPrintableChar(b = readByte()));
+285 			do sb.appendCodePoint(b); while(isPrintableChar(b = readByte()) || b == ' ');
+286 			return sb.toString();
+287 		}
+288 
+289 		public final long nextLong() {
+290 			if (!hasNext()) throw new NoSuchElementException();
+291 			long n = 0;
+292 			boolean minus = false;
+293 			int b = readByte();
+294 			if (b == '-') {
+295 				minus = true;
+296 				b = readByte();
+297 			}
+298 			if (!isNumber(b)) throw new NumberFormatException();
+299 			while (true) {
+300 				if (isNumber(b)) {
+301 					n *= 10;
+302 					n += b - '0';
+303 				} else if (b == -1 || !isPrintableChar(b)) return minus ? -n : n;
+304 				else throw new NumberFormatException();
+305 				b = readByte();
+306 			}
+307 		}
+308 
+309 		public final int nextInt() {
+310 			long nl = nextLong();
+311 			if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE) throw new NumberFormatException();
+312 			return (int) nl;
+313 		}
+314 
+315 		public final double nextDouble() {
+316 			return Double.parseDouble(next());
+317 		}
+318 
+319 		public final int[] nextInt(int width) {
+320 			int[] ret = new int[width];
+321 			for (int i = 0;i < width;++ i) ret[i] = nextInt();
+322 			return ret;
+323 		}
+324 
+325 		public final int[] nextInts() {
+326 			return nextInts(" ");
+327 		}
+328 
+329 		public final int[] nextInts(String parse) {
+330 			String[] get = nextLine().split(parse);
+331 			int[] ret = new int[get.length];
+332 			for (int i = 0;i < ret.length;++ i) ret[i] = Integer.valueOf(get[i]);
+333 			return ret;
+334 		}
+335 
+336 		public final long[] nextLong(int width) {
+337 			long[] ret = new long[width];
+338 			for (int i = 0;i < width;++ i) ret[i] = nextLong();
+339 			return ret;
+340 		}
+341 
+342 		public final long[] nextLongs() {
+343 			return nextLongs(" ");
+344 		}
+345 
+346 		public final long[] nextLongs(String parse) {
+347 			String[] get = nextLine().split(parse);
+348 			long[] ret = new long[get.length];
+349 			for (int i = 0;i < ret.length;++ i) ret[i] = Long.valueOf(get[i]);
+350 			return ret;
+351 		}
+352 
+353 		public final int[][] nextInt(int width, int height) {
+354 			int[][] ret = new int[height][width];
+355 			for (int i = 0, j;i < height;++ i) for (j = 0;j < width;++ j) ret[i][j] = nextInt();
+356 			return ret;
+357 		}
+358 
+359 		public final long[][] nextLong(int width, int height) {
+360 			long[][] ret = new long[height][width];
+361 			for (int i = 0, j;i < height;++ i) for (j = 0;j < width;++ j) ret[j][i] = nextLong();
+362 			return ret;
+363 		}
+364 
+365 		public final boolean[] nextBoolean(char T) {
+366 			char[] s = next().toCharArray();
+367 			boolean[] ret = new boolean[s.length];
+368 			for (int i = 0;i < ret.length;++ i) ret[i] = s[i] == T;
+369 			return ret;
+370 		}
+371 
+372 		public final boolean[][] nextBoolean(char T, int height) {
+373 			boolean[][] ret = new boolean[height][];
+374 			for (int i = 0;i < ret.length;++ i) {
+375 				char[] s = next().toCharArray();
+376 				ret[i] = new boolean[s.length];
+377 				for (int j = 0;j < ret[i].length;++ j) ret[i][j] = s[j] == T;
+378 			}
+379 			return ret;
+380 		}
+381 
+382 		public final Point nextPoint() {
+383 			return new Point(nextInt(), nextInt());
+384 		}
+385 
+386 		public final Point[] nextPoint(int width) {
+387 			Point[] ret = new Point[width];
+388 			for (int i = 0;i < width;++ i) ret[i] = nextPoint();
+389 			return ret;
+390 		}
+391 
+392 		@Override
+393 		protected void finalize() throws Throwable {
+394 			try {
+395 				super.finalize();
+396 			} finally {
+397 				in.close();
+398 				out.close();
+399 				err.close();
+400 			}
+401 		}
+402 
+403 		public final boolean print(boolean b) {
+404 			out.print(b);
+405 			if (autoFlush) flush();
+406 			return b;
+407 		}
+408 
+409 		public final Object print(boolean b, Object t, Object f) {
+410 			return b ? print(t) : print(f);
+411 		}
+412 
+413 		public final char print(char c) {
+414 			out.print(c);
+415 			if (autoFlush) flush();
+416 			return c;
+417 		}
+418 
+419 		public final char[] print(char[] s) {
+420 			out.print(s);
+421 			return s;
+422 		}
+423 
+424 		public final double print(double d) {
+425 			out.print(d);
+426 			if (autoFlush) flush();
+427 			return d;
+428 		}
+429 
+430 		public final double print(double d, int length) {
+431 			if (d < 0) {
+432 				out.print('-');
+433 				d = -d;
+434 			}
+435 			d += Math.pow(10, -length) / 2;
+436 			out.print((long)d);
+437 			out.print('.');
+438 			d -= (long)d;
+439 			for (int i = 0;i < length;++ i) {
+440 				d *= 10;
+441 				out.print((int)d);
+442 				d -= (int)d;
+443 			}
+444 			if (autoFlush) flush();
+445 			return d;
+446 		}
+447 
+448 		public final float print(float f) {
+449 			out.print(f);
+450 			if (autoFlush) flush();
+451 			return f;
+452 		}
+453 
+454 		public final int print(int i) {
+455 			out.print(i);
+456 			if (autoFlush) flush();
+457 			return i;
+458 		}
+459 
+460 		public final long print(long l) {
+461 			out.print(l);
+462 			if (autoFlush) flush();
+463 			return l;
+464 		}
+465 
+466 		public final Object print(Object obj) {
+467 			if (obj.getClass().isArray()) {
+468 				if (obj instanceof boolean[][]) print(obj, "\n", " ");
+469 				else if (obj instanceof byte[][]) print(obj, "\n", " ");
+470 				else if (obj instanceof short[][]) print(obj, "\n", " ");
+471 				else if (obj instanceof int[][]) print(obj, "\n", " ");
+472 				else if (obj instanceof long[][]) print(obj, "\n", " ");
+473 				else if (obj instanceof float[][]) print(obj, "\n", " ");
+474 				else if (obj instanceof double[][]) print(obj, "\n", " ");
+475 				else if (obj instanceof char[][]) print(obj, "\n", " ");
+476 				else if (obj instanceof Object[][]) print(obj, "\n", " ");
+477 				else print(obj, " ");
+478 			} else {
+479 				out.print(obj);
+480 				if (autoFlush) flush();
+481 			}
+482 			return obj;
+483 		}
+484 
+485 		public final String print(String s) {
+486 			out.print(s);
+487 			if (autoFlush) flush();
+488 			return s;
+489 		}
+490 
+491 		public final Object print(Object array, String... parse) {
+492 			print(array, 0, parse);
+493 			if (autoFlush) flush();
+494 			return array;
+495 		}
+496 
+497 		private final Object print(Object array, int check, String... parse) {
+498 			if (check >= parse.length) {
+499 				if (array.getClass().isArray()) throw new IllegalArgumentException("not equal dimension");
+500 				print(array);
+501 				return array;
+502 			}
+503 			String str = parse[check];
+504 			if (array instanceof Object[]) {
+505 				Object[] obj = (Object[]) array;
+506 				if (obj.length == 0) return array;
+507 				print(obj[0], check + 1, parse);
+508 				for (int i = 1;i < obj.length;++ i) {
+509 					print(str);
+510 					print(obj[i], check + 1, parse);
+511 				}
+512 				return array;
+513 			}
+514 			if (array instanceof Collection) {
+515 				Iterator<?> iter = ((Collection<?>)array).iterator();
+516 				if (!iter.hasNext()) return array;
+517 				print(iter.next(), check + 1, parse);
+518 				while(iter.hasNext()) {
+519 					print(str);
+520 					print(iter.next(), check + 1, parse);
+521 				}
+522 				return array;
+523 			}
+524 			if (!array.getClass().isArray()) throw new IllegalArgumentException("not equal dimension");
+525 			if (check != parse.length - 1) throw new IllegalArgumentException("not equal dimension");
+526 			if (array instanceof boolean[]) {
+527 				boolean[] obj = (boolean[]) array;
+528 				if (obj.length == 0) return array;
+529 				print(obj[0]);
+530 				for (int i = 1;i < obj.length;++ i) {
+531 					print(str);
+532 					print(obj[i]);
+533 				}
+534 			} else if (array instanceof byte[]) {
+535 				byte[] obj = (byte[]) array;
+536 				if (obj.length == 0) return array;
+537 				print(obj[0]);
+538 				for (int i = 1;i < obj.length;++ i) {
+539 					print(str);
+540 					print(obj[i]);
+541 				}
+542 				return array;
+543 			} else if (array instanceof short[]) {
+544 				short[] obj = (short[]) array;
+545 				if (obj.length == 0) return array;
+546 				print(obj[0]);
+547 				for (int i = 1;i < obj.length;++ i) {
+548 					print(str);
+549 					print(obj[i]);
+550 				}
+551 			} else if (array instanceof int[]) {
+552 				int[] obj = (int[]) array;
+553 				if (obj.length == 0) return array;
+554 				print(obj[0]);
+555 				for (int i = 1;i < obj.length;++ i) {
+556 					print(str);
+557 					print(obj[i]);
+558 				}
+559 			} else if (array instanceof long[]) {
+560 				long[] obj = (long[]) array;
+561 				if (obj.length == 0) return array;
+562 				print(obj[0]);
+563 				for (int i = 1;i < obj.length;++ i) {
+564 					print(str);
+565 					print(obj[i]);
+566 				}
+567 			} else if (array instanceof float[]) {
+568 				float[] obj = (float[]) array;
+569 				if (obj.length == 0) return array;
+570 				print(obj[0]);
+571 				for (int i = 1;i < obj.length;++ i) {
+572 					print(str);
+573 					print(obj[i]);
+574 				}
+575 			} else if (array instanceof double[]) {
+576 				double[] obj = (double[]) array;
+577 				if (obj.length == 0) return array;
+578 				print(obj[0]);
+579 				for (int i = 1;i < obj.length;++ i) {
+580 					print(str);
+581 					print(obj[i]);
+582 				}
+583 			} else if (array instanceof char[]) {
+584 				char[] obj = (char[]) array;
+585 				if (obj.length == 0) return array;
+586 				print(obj[0]);
+587 				for (int i = 1;i < obj.length;++ i) {
+588 					print(str);
+589 					print(obj[i]);
+590 				}
+591 			} else throw new AssertionError();
+592 			return array;
+593 		}
+594 
+595 		public final Object[] print(String parse, Object... args) {
+596 			print(args[0]);
+597 			for (int i = 1;i < args.length;++ i) {
+598 				print(parse);
+599 				print(args[i]);
+600 			}
+601 			return args;
+602 		}
+603 
+604 		public final Object[] printf(String format, Object... args) {
+605 			out.printf(format, args);
+606 			if (autoFlush) flush();
+607 			return args;
+608 		}
+609 
+610 		public final Object printf(Locale l, String format, Object... args) {
+611 			out.printf(l, format, args);
+612 			if (autoFlush) flush();
+613 			return args;
+614 		}
+615 
+616 		public final void println() {
+617 			out.println();
+618 			if (autoFlush) flush();
+619 		}
+620 
+621 		public final boolean println(boolean b) {
+622 			out.println(b);
+623 			if (autoFlush) flush();
+624 			return b;
+625 		}
+626 
+627 		public final Object println(boolean b, Object t, Object f) {
+628 			return b ? println(t) : println(f);
+629 		}
+630 
+631 		public final char println(char c) {
+632 			out.println(c);
+633 			if (autoFlush) flush();
+634 			return c;
+635 		}
+636 
+637 		public final char[] println(char[] s) {
+638 			out.println(s);
+639 			if (autoFlush) flush();
+640 			return s;
+641 		}
+642 
+643 		public final double println(double d) {
+644 			out.println(d);
+645 			if (autoFlush) flush();
+646 			return d;
+647 		}
+648 
+649 		public final double println(double d, int length) {
+650 			print(d, length);
+651 			println();
+652 			return d;
+653 		}
+654 
+655 		public final float println(float f) {
+656 			out.println(f);
+657 			if (autoFlush) flush();
+658 			return f;
+659 		}
+660 
+661 		public final int println(int i) {
+662 			out.println(i);
+663 			if (autoFlush) flush();
+664 			return i;
+665 		}
+666 
+667 		public final long println(long l) {
+668 			out.println(l);
+669 			if (autoFlush) flush();
+670 			return l;
+671 		}
+672 
+673 		public final Object println(Object obj) {
+674 			print(obj);
+675 			println();
+676 			return obj;
+677 		}
+678 
+679 		public final String println(String s) {
+680 			out.println(s);
+681 			if (autoFlush) flush();
+682 			return s;
+683 		}
+684 
+685 		public final Object println(Object array, String... parse) {
+686 			print(array, parse);
+687 			println();
+688 			return array;
+689 		}
+690 
+691 		public final boolean debug(boolean b) {
+692 			err.print(b);
+693 			if (autoFlush) flush();
+694 			return b;
+695 		}
+696 
+697 		public final Object debug(boolean b, Object t, Object f) {
+698 			return b ? debug(t) : debug(f);
+699 		}
+700 
+701 		public final char debug(char c) {
+702 			err.print(c);
+703 			if (autoFlush) flush();
+704 			return c;
+705 		}
+706 
+707 		public final char[] debug(char[] s) {
+708 			err.print(s);
+709 			return s;
+710 		}
+711 
+712 		public final double debug(double d) {
+713 			err.print(d);
+714 			if (autoFlush) flush();
+715 			return d;
+716 		}
+717 
+718 		public final double debug(double d, int length) {
+719 			if (d < 0) {
+720 				err.print('-');
+721 				d = -d;
+722 			}
+723 			d += Math.pow(10, -length) / 2;
+724 			err.print((long)d);
+725 			err.print('.');
+726 			d -= (long)d;
+727 			for (int i = 0;i < length;++ i) {
+728 				d *= 10;
+729 				err.print((int)d);
+730 				d -= (int)d;
+731 			}
+732 			if (autoFlush) flush();
+733 			return d;
+734 		}
+735 
+736 		public final float debug(float f) {
+737 			err.print(f);
+738 			if (autoFlush) flush();
+739 			return f;
+740 		}
+741 
+742 		public final int debug(int i) {
+743 			err.print(i);
+744 			if (autoFlush) flush();
+745 			return i;
+746 		}
+747 
+748 		public final long debug(long l) {
+749 			err.print(l);
+750 			if (autoFlush) flush();
+751 			return l;
+752 		}
+753 
+754 		public final Object debug(Object obj) {
+755 			if (obj.getClass().isArray()) {
+756 				if (obj instanceof boolean[][]) debug(obj, "\n", " ");
+757 				else if (obj instanceof byte[][]) debug(obj, "\n", " ");
+758 				else if (obj instanceof short[][]) debug(obj, "\n", " ");
+759 				else if (obj instanceof int[][]) debug(obj, "\n", " ");
+760 				else if (obj instanceof long[][]) debug(obj, "\n", " ");
+761 				else if (obj instanceof float[][]) debug(obj, "\n", " ");
+762 				else if (obj instanceof double[][]) debug(obj, "\n", " ");
+763 				else if (obj instanceof char[][]) debug(obj, "\n", " ");
+764 				else if (obj instanceof Object[][]) debug(obj, "\n", " ");
+765 				else debug(obj, " ");
+766 			} else {
+767 				err.print(obj);
+768 				if (autoFlush) flush();
+769 			}
+770 			return obj;
+771 		}
+772 
+773 		public final String debug(String s) {
+774 			err.print(s);
+775 			if (autoFlush) flush();
+776 			return s;
+777 		}
+778 
+779 		public final Object debug(Object array, String... parse) {
+780 			debug(array, 0, parse);
+781 			if (autoFlush) flush();
+782 			return array;
+783 		}
+784 
+785 		private final Object debug(Object array, int check, String... parse) {
+786 			if (check >= parse.length) {
+787 				if (array.getClass().isArray()) throw new IllegalArgumentException("not equal dimension");
+788 				debug(array);
+789 				return array;
+790 			}
+791 			String str = parse[check];
+792 			if (array instanceof Object[]) {
+793 				Object[] obj = (Object[]) array;
+794 				if (obj.length == 0) return array;
+795 				debug(obj[0], check + 1, parse);
+796 				for (int i = 1;i < obj.length;++ i) {
+797 					debug(str);
+798 					debug(obj[i], check + 1, parse);
+799 				}
+800 				return array;
+801 			}
+802 			if (array instanceof Collection) {
+803 				Iterator<?> iter = ((Collection<?>)array).iterator();
+804 				if (!iter.hasNext()) return array;
+805 				debug(iter.next(), check + 1, parse);
+806 				while(iter.hasNext()) {
+807 					debug(str);
+808 					debug(iter.next(), check + 1, parse);
+809 				}
+810 				return array;
+811 			}
+812 			if (!array.getClass().isArray()) throw new IllegalArgumentException("not equal dimension");
+813 			if (check != parse.length - 1) throw new IllegalArgumentException("not equal dimension");
+814 			if (array instanceof boolean[]) {
+815 				boolean[] obj = (boolean[]) array;
+816 				if (obj.length == 0) return array;
+817 				debug(obj[0]);
+818 				for (int i = 1;i < obj.length;++ i) {
+819 					debug(str);
+820 					debug(obj[i]);
+821 				}
+822 			} else if (array instanceof byte[]) {
+823 				byte[] obj = (byte[]) array;
+824 				if (obj.length == 0) return array;
+825 				debug(obj[0]);
+826 				for (int i = 1;i < obj.length;++ i) {
+827 					debug(str);
+828 					debug(obj[i]);
+829 				}
+830 				return array;
+831 			} else if (array instanceof short[]) {
+832 				short[] obj = (short[]) array;
+833 				if (obj.length == 0) return array;
+834 				debug(obj[0]);
+835 				for (int i = 1;i < obj.length;++ i) {
+836 					debug(str);
+837 					debug(obj[i]);
+838 				}
+839 			} else if (array instanceof int[]) {
+840 				int[] obj = (int[]) array;
+841 				if (obj.length == 0) return array;
+842 				debug(obj[0]);
+843 				for (int i = 1;i < obj.length;++ i) {
+844 					debug(str);
+845 					debug(obj[i]);
+846 				}
+847 			} else if (array instanceof long[]) {
+848 				long[] obj = (long[]) array;
+849 				if (obj.length == 0) return array;
+850 				debug(obj[0]);
+851 				for (int i = 1;i < obj.length;++ i) {
+852 					debug(str);
+853 					debug(obj[i]);
+854 				}
+855 			} else if (array instanceof float[]) {
+856 				float[] obj = (float[]) array;
+857 				if (obj.length == 0) return array;
+858 				debug(obj[0]);
+859 				for (int i = 1;i < obj.length;++ i) {
+860 					debug(str);
+861 					debug(obj[i]);
+862 				}
+863 			} else if (array instanceof double[]) {
+864 				double[] obj = (double[]) array;
+865 				if (obj.length == 0) return array;
+866 				debug(obj[0]);
+867 				for (int i = 1;i < obj.length;++ i) {
+868 					debug(str);
+869 					debug(obj[i]);
+870 				}
+871 			} else if (array instanceof char[]) {
+872 				char[] obj = (char[]) array;
+873 				if (obj.length == 0) return array;
+874 				debug(obj[0]);
+875 				for (int i = 1;i < obj.length;++ i) {
+876 					debug(str);
+877 					debug(obj[i]);
+878 				}
+879 			} else throw new AssertionError();
+880 			return array;
+881 		}
+882 
+883 		public final Object[] debug(String parse, Object... args) {
+884 			debug(args[0]);
+885 			for (int i = 1;i < args.length;++ i) {
+886 				debug(parse);
+887 				debug(args[i]);
+888 			}
+889 			return args;
+890 		}
+891 
+892 		public final Object[] debugf(String format, Object... args) {
+893 			err.printf(format, args);
+894 			if (autoFlush) flush();
+895 			return args;
+896 		}
+897 
+898 		public final Object debugf(Locale l, String format, Object... args) {
+899 			err.printf(l, format, args);
+900 			if (autoFlush) flush();
+901 			return args;
+902 		}
+903 
+904 		public final void debugln() {
+905 			err.println();
+906 			if (autoFlush) flush();
+907 		}
+908 
+909 		public final boolean debugln(boolean b) {
+910 			err.println(b);
+911 			if (autoFlush) flush();
+912 			return b;
+913 		}
+914 
+915 		public final Object debugln(boolean b, Object t, Object f) {
+916 			return b ? debugln(t) : debugln(f);
+917 		}
+918 
+919 		public final char debugln(char c) {
+920 			err.println(c);
+921 			if (autoFlush) flush();
+922 			return c;
+923 		}
+924 
+925 		public final char[] debugln(char[] s) {
+926 			err.println(s);
+927 			if (autoFlush) flush();
+928 			return s;
+929 		}
+930 
+931 		public final double debugln(double d) {
+932 			err.println(d);
+933 			if (autoFlush) flush();
+934 			return d;
+935 		}
+936 
+937 		public final double debugln(double d, int length) {
+938 			debug(d, length);
+939 			debugln();
+940 			return d;
+941 		}
+942 
+943 		public final float debugln(float f) {
+944 			err.println(f);
+945 			if (autoFlush) flush();
+946 			return f;
+947 		}
+948 
+949 		public final int debugln(int i) {
+950 			err.println(i);
+951 			if (autoFlush) flush();
+952 			return i;
+953 		}
+954 
+955 		public final long debugln(long l) {
+956 			err.println(l);
+957 			if (autoFlush) flush();
+958 			return l;
+959 		}
+960 
+961 		public final Object debugln(Object obj) {
+962 			debug(obj);
+963 			debugln();
+964 			return obj;
+965 		}
+966 
+967 		public final String debugln(String s) {
+968 			err.println(s);
+969 			if (autoFlush) flush();
+970 			return s;
+971 		}
+972 
+973 		public final Object debugln(Object array, String... parse) {
+974 			debug(array, parse);
+975 			debugln();
+976 			return array;
+977 		}
+978 
+979 		public final void flush() {
+980 			out.flush();
+981 			err.flush();
+982 		}
+983 	}
+984 
+985 	public enum BoundType {
+986 		CLOSED, OPEN;
+987 	}
+988 
+989 	public static class Range<C> implements Serializable{
+990 
+991 		private static final long serialVersionUID = -4702828934863023392L;
+992 		protected C lower;
+993 		protected C upper;
+994 		protected BoundType lowerType;
+995 		protected BoundType upperType;
+996 		private Comparator<? super C> comparator;
+997 
+998 		protected Range(C lower, BoundType lowerType, C upper, BoundType upperType) {
+999 			this(lower, lowerType, upper, upperType, null);
+1000 		}
+1001 
+1002 		protected Range(C lower, BoundType lowerType, C upper, BoundType upperType, Comparator<? super C> comparator) {
+1003 			this.lower = lower;
+1004 			this.upper = upper;
+1005 			this.lowerType = lowerType;
+1006 			this.upperType = upperType;
+1007 			this.comparator = comparator;
+1008 		}
+1009 
+1010 		public static <C extends Comparable<? super C>> Range<C> range(C lower, BoundType lowerType, C upper, BoundType upperType) {
+1011 			if (lower != null && upper != null) {
+1012 				int comp = lower.compareTo(upper);
+1013 				if (comp > 0) return new Range<C>(null, BoundType.CLOSED, null, BoundType.CLOSED);
+1014 				else if (comp == 0 && (lowerType == BoundType.OPEN || upperType == BoundType.OPEN))return new Range<C>(null, BoundType.CLOSED, null, BoundType.CLOSED);
+1015 			}
+1016 			return new Range<C>(lower, lowerType, upper, upperType);
+1017 		}
+1018 
+1019 		public static <C> Range<C> range(C lower, BoundType lowerType, C upper, BoundType upperType, Comparator<? super C> comparator) {
+1020 			if (lower != null && upper != null) {
+1021 				int comp = comparator.compare(lower, upper);
+1022 				if (comp > 0) return new Range<C>(null, BoundType.CLOSED, null, BoundType.CLOSED, comparator);
+1023 				else if (comp == 0 && (lowerType == BoundType.OPEN || upperType == BoundType.OPEN)) return new Range<C>(null, BoundType.CLOSED, null, BoundType.CLOSED, comparator);
+1024 			}
+1025 			return new Range<C>(lower, lowerType, upper, upperType, comparator);
+1026 		}
+1027 
+1028 		public static <C extends Comparable<? super C>> Range<C> all() {
+1029 			return range((C)null, BoundType.OPEN, null, BoundType.OPEN);
+1030 		}
+1031 
+1032 		public static <C> Range<C> all(Comparator<? super C> comparator) {
+1033 			return range((C)null, BoundType.OPEN, null, BoundType.OPEN, comparator);
+1034 		}
+1035 
+1036 		public static <C extends Comparable<? super C>> Range<C> atMost(C upper) {
+1037 			return range(null, BoundType.OPEN, upper, BoundType.CLOSED);
+1038 		}
+1039 
+1040 		public static <C> Range<C> atMost(C upper, Comparator<? super C> comparator) {
+1041 			return range(null, BoundType.OPEN, upper, BoundType.CLOSED, comparator);
+1042 		}
+1043 
+1044 		public static <C extends Comparable<? super C>> Range<C> lessThan(C upper) {
+1045 			return range(null, BoundType.OPEN, upper, BoundType.OPEN);
+1046 		}
+1047 
+1048 		public static <C> Range<C> lessThan(C upper, Comparator<? super C> comparator) {
+1049 			return range(null, BoundType.OPEN, upper, BoundType.OPEN, comparator);
+1050 		}
+1051 
+1052 		public static <C extends Comparable<? super C>> Range<C> downTo(C upper, BoundType boundType) {
+1053 			return range(null, BoundType.OPEN, upper, boundType);
+1054 		}
+1055 
+1056 		public static <C> Range<C> downTo(C upper, BoundType boundType, Comparator<? super C> comparator) {
+1057 			return range(null, BoundType.OPEN, upper, boundType, comparator);
+1058 		}
+1059 
+1060 		public static <C extends Comparable<? super C>> Range<C> atLeast(C lower) {
+1061 			return range(lower, BoundType.CLOSED, null, BoundType.OPEN);
+1062 		}
+1063 
+1064 		public static <C> Range<C> atLeast(C lower, Comparator<? super C> comparator) {
+1065 			return range(lower, BoundType.CLOSED, null, BoundType.OPEN, comparator);
+1066 		}
+1067 
+1068 		public static <C extends Comparable<? super C>> Range<C> greaterThan(C lower) {
+1069 			return range(lower, BoundType.OPEN, null, BoundType.OPEN);
+1070 		}
+1071 
+1072 		public static <C> Range<C> greaterThan(C lower, Comparator<? super C> comparator) {
+1073 			return range(lower, BoundType.OPEN, null, BoundType.OPEN, comparator);
+1074 		}
+1075 
+1076 		public static <C extends Comparable<? super C>> Range<C> upTo(C lower, BoundType boundType) {
+1077 			return range(lower, boundType, null, BoundType.OPEN);
+1078 		}
+1079 
+1080 		public static <C> Range<C> upTo(C lower, BoundType boundType, Comparator<? super C> comparator) {
+1081 			return range(lower, boundType, null, BoundType.OPEN, comparator  );
+1082 		}
+1083 
+1084 		public static <C extends Comparable<? super C>> Range<C> open(C lower, C upper) {
+1085 			return range(lower, BoundType.OPEN, upper, BoundType.OPEN);
+1086 		}
+1087 
+1088 		public static <C> Range<C> open(C lower, C upper, Comparator<? super C> comparator) {
+1089 			return range(lower, BoundType.OPEN, upper, BoundType.OPEN, comparator);
+1090 		}
+1091 
+1092 		public static <C extends Comparable<? super C>> Range<C> openClosed(C lower, C upper) {
+1093 			return range(lower, BoundType.OPEN, upper, BoundType.CLOSED);
+1094 		}
+1095 
+1096 		public static <C> Range<C> openClosed(C lower, C upper, Comparator<? super C> comparator) {
+1097 			return range(lower, BoundType.OPEN, upper, BoundType.CLOSED, comparator);
+1098 		}
+1099 
+1100 		public static <C extends Comparable<? super C>> Range<C> closedOpen(C lower, C upper) {
+1101 			return range(lower, BoundType.CLOSED, upper, BoundType.OPEN);
+1102 		}
+1103 
+1104 		public static <C> Range<C> closedOpen(C lower, C upper, Comparator<? super C> comparator) {
+1105 			return range(lower, BoundType.CLOSED, upper, BoundType.OPEN, comparator);
+1106 		}
+1107 
+1108 		public static <C extends Comparable<? super C>> Range<C> closed(C lower, C upper) {
+1109 			return range(lower, BoundType.CLOSED, upper, BoundType.CLOSED);
+1110 		}
+1111 
+1112 		public static <C> Range<C> closed(C lower, C upper, Comparator<? super C> comparator) {
+1113 			return range(lower, BoundType.CLOSED, upper, BoundType.CLOSED, comparator);
+1114 		}
+1115 
+1116 		public static <C extends Comparable<? super C>> Range<C> singleton(C value) {
+1117 			return range(value, BoundType.CLOSED, value, BoundType.CLOSED);
+1118 		}
+1119 
+1120 		public static <C> Range<C> singleton(C value, Comparator<? super C> comparator) {
+1121 			return range(value, BoundType.CLOSED, value, BoundType.CLOSED, comparator);
+1122 		}
+1123 
+1124 		public static <C extends Comparable<? super C>> Range<C> empty() {
+1125 			return range((C)null, BoundType.CLOSED, null, BoundType.CLOSED);
+1126 		}
+1127 
+1128 		public static <C> Range<C> empty(Comparator<? super C> comparator) {
+1129 			return range((C)null, BoundType.CLOSED, null, BoundType.CLOSED, comparator);
+1130 		}
+1131 
+1132 		public static <C extends Comparable<? super C>> Range<C> encloseAll(Iterable<C> values) {
+1133 			C lower = values.iterator().next();
+1134 			C upper = lower;
+1135 			for (C i : values) {
+1136 				if (lower.compareTo(i) > 0) lower = i;
+1137 				if (upper.compareTo(i) < 0) upper = i;
+1138 			}
+1139 			return range(lower, BoundType.CLOSED, upper, BoundType.CLOSED);
+1140 		}
+1141 
+1142 		public static <C> Range<C> encloseAll(Iterable<C> values, Comparator<? super C> comparator) {
+1143 			C lower = values.iterator().next();
+1144 			C upper = lower;
+1145 			for (C i : values) {
+1146 				if (comparator.compare(lower, i) > 0) lower = i;
+1147 				if (comparator.compare(upper, i) < 0) upper = i;
+1148 			}
+1149 			return range(lower, BoundType.CLOSED, upper, BoundType.CLOSED, comparator);
+1150 		}
+1151 
+1152 		protected int compareLower(C value) {
+1153 			return compareLower(value, BoundType.CLOSED);
+1154 		}
+1155 
+1156 		protected int compareLower(C value, BoundType boundType) {
+1157 			return compareLower(lower, lowerType, value, boundType);
+1158 		}
+1159 
+1160 		protected int compareLower(C lower, BoundType lowerType, C value) {
+1161 			return compareLower(lower, lowerType, value, BoundType.CLOSED);
+1162 		}
+1163 
+1164 		protected int compareLower(C lower, BoundType lowerType, C value, BoundType boundType) {
+1165 			if (lower == null) return value == null ? 0 : -1;
+1166 			else if (value == null) return 1;
+1167 			int compare;
+1168 			if (comparator == null) {
+1169 				@SuppressWarnings("unchecked")
+1170 				Comparable<C> comp = (Comparable<C>)lower;
+1171 				compare = comp.compareTo(value);
+1172 			} else compare = comparator.compare(lower, value);
+1173 			if (compare == 0) {
+1174 				if (lowerType == BoundType.CLOSED) -- compare;
+1175 				if (boundType == BoundType.CLOSED) ++ compare;
+1176 			}
+1177 			return compare;
+1178 		}
+1179 
+1180 		protected int compareUpper(C value) {
+1181 			return compareUpper(value, BoundType.CLOSED);
+1182 		}
+1183 
+1184 		protected int compareUpper(C value, BoundType boundType) {
+1185 			return compareUpper(upper, upperType, value, boundType);
+1186 		}
+1187 
+1188 		protected int compareUpper(C upper, BoundType upperType, C value) {
+1189 			return compareUpper(upper, upperType, value, BoundType.CLOSED);
+1190 		}
+1191 
+1192 		protected int compareUpper(C upper, BoundType upperType, C value, BoundType boundType) {
+1193 			if (upper == null) return value == null ? 0 : 1;
+1194 			if (value == null) return -1;
+1195 			int compare;
+1196 			if (comparator == null) {
+1197 				@SuppressWarnings("unchecked")
+1198 				Comparable<C> comp = (Comparable<C>)upper;
+1199 				compare = comp.compareTo(value);
+1200 			} else compare = comparator.compare(upper, value);
+1201 			if (compare == 0) {
+1202 				if (upperType == BoundType.CLOSED) ++ compare;
+1203 				if (boundType == BoundType.CLOSED) -- compare;
+1204 			}
+1205 			return compare;
+1206 		}
+1207 
+1208 		public boolean hasLowerBound() {
+1209 			return lower != null;
+1210 		}
+1211 
+1212 		public C lowerEndpoint() {
+1213 			if (hasLowerBound()) return lower;
+1214 			throw new IllegalStateException();
+1215 		}
+1216 
+1217 		public BoundType lowerBoundType() {
+1218 			if (hasLowerBound()) return lowerType;
+1219 			throw new IllegalStateException();
+1220 		}
+1221 
+1222 		public boolean hasUpperBound() {
+1223 			return upper != null;
+1224 		}
+1225 
+1226 		public C upperEndpoint() {
+1227 			if (hasUpperBound()) return upper;
+1228 			throw new IllegalStateException();
+1229 		}
+1230 
+1231 		public BoundType upperBoundType() {
+1232 			if (hasUpperBound()) return upperType;
+1233 			throw new IllegalStateException();
+1234 		}
+1235 
+1236 		/**
+1237 		 * この区間が空集合か判定します。
+1238 		 * @return 空集合ならばtrue
+1239 		 */
+1240 		public boolean isEmpty() {
+1241 			return lower == null && upper == null && lowerType == BoundType.CLOSED;
+1242 		}
+1243 
+1244 		/**
+1245 		 * 与えられた引数が区間の左側に位置するか判定します。<br>
+1246 		 * 接する場合は区間の左側ではないと判定します。
+1247 		 * @param value 調べる引数
+1248 		 * @return 区間の左側に位置するならtrue
+1249 		 */
+1250 		public boolean isLess(C value) {
+1251 			return isLess(value, BoundType.CLOSED);
+1252 		}
+1253 
+1254 		protected boolean isLess(C value, BoundType boundType) {
+1255 			return compareLower(value, boundType) > 0;
+1256 		}
+1257 
+1258 		/**
+1259 		 * 与えられた引数が区間の右側に位置するか判定します。<br>
+1260 		 * 接する場合は区間の右側ではないと判定します。
+1261 		 * @param value 調べる引数
+1262 		 * @return 区間の右側に位置するならtrue
+1263 		 */
+1264 		public boolean isGreater(C value) {
+1265 			return isGreater(value, BoundType.CLOSED);
+1266 		}
+1267 
+1268 		private boolean isGreater(C value, BoundType boundType) {
+1269 			return compareUpper(value, boundType) < 0;
+1270 		}
+1271 
+1272 		/**
+1273 		 * 与えられた引数が区間内に位置するか判定します。<br>
+1274 		 * 接する場合も区間内に位置すると判定します。
+1275 		 * @param value 調べる引数
+1276 		 * @return 区間内に位置するならtrue
+1277 		 */
+1278 		public boolean contains(C value) {
+1279 			return !isLess(value) && !isGreater(value) && !isEmpty();
+1280 		}
+1281 
+1282 		/**
+1283 		 * 与えられた引数すべてが区間内に位置するか判定します。<br>
+1284 		 * 接する場合も区間内に位置すると判定します。
+1285 		 * @param value 調べる要素
+1286 		 * @return 全ての要素が区間内に位置するならtrue
+1287 		 */
+1288 		public boolean containsAll(Iterable<? extends C> values) {
+1289 			for (C i : values) if (!contains(i)) return false;
+1290 			return true;
+1291 		}
+1292 
+1293 		/**
+1294 		 * 与えられた区間がこの区間に内包されるか判定します。<br>
+1295 		 *
+1296 		 * @param other
+1297 		 * @return 与えられた区間がこの区間に内包されるならtrue
+1298 		 */
+1299 		public boolean encloses(Range<C> other) {
+1300 			return !isLess(other.lower, other.lowerType) && !isGreater(other.upper, other.upperType);
+1301 		}
+1302 
+1303 		/**
+1304 		 * 与えられた区間がこの区間と公差するか判定します。<br>
+1305 		 * 接する場合は公差するものとします。
+1306 		 * @param value 調べる引数
+1307 		 * @return 区間が交差するならtrue
+1308 		 */
+1309 		public boolean isConnected(Range<C> other) {
+1310 			if (this.isEmpty() || other.isEmpty()) return false;
+1311 			C lower, upper;
+1312 			BoundType lowerType, upperType;
+1313 			if (isLess(other.lower, other.lowerType)) {
+1314 				lower = other.lower;
+1315 				lowerType = other.lowerType;
+1316 			} else {
+1317 				lower = this.lower;
+1318 				lowerType = this.lowerType;
+1319 			}
+1320 			if (isGreater(other.upper, other.upperType)) {
+1321 				upper = other.upper;
+1322 				upperType = other.upperType;
+1323 			} else {
+1324 				upper = this.upper;
+1325 				upperType = this.upperType;
+1326 			}
+1327 			if (lower == null || upper == null) return true;
+1328 			int comp = compareLower(lower, lowerType, upper, upperType);
+1329 			return comp <= 0;
+1330 		}
+1331 		/**
+1332 		 * この区間との積集合を返します。
+1333 		 * @param connectedRange 積集合を求める区間
+1334 		 * @return 積集合
+1335 		 */
+1336 		public Range<C> intersection(Range<C> connectedRange) {
+1337 			if (this.isEmpty() || connectedRange.isEmpty()) {
+1338 				if (comparator == null) return new Range<C>(null, BoundType.CLOSED, null, BoundType.CLOSED);
+1339 				return empty(comparator);
+1340 			}
+1341 			C lower, upper;
+1342 			BoundType lowerType, upperType;
+1343 			if (isLess(connectedRange.lower, connectedRange.lowerType)) {
+1344 				lower = connectedRange.lower;
+1345 				lowerType = connectedRange.lowerType;
+1346 			} else {
+1347 				lower = this.lower;
+1348 				lowerType = this.lowerType;
+1349 			}
+1350 			if (isGreater(connectedRange.upper, connectedRange.upperType)) {
+1351 				upper = connectedRange.upper;
+1352 				upperType = connectedRange.upperType;
+1353 			} else {
+1354 				upper = this.upper;
+1355 				upperType = this.upperType;
+1356 			}
+1357 			if (comparator == null) {
+1358 				return new Range<C>(lower, lowerType, upper, upperType);
+1359 			}
+1360 			return range(lower, lowerType, upper, upperType, comparator);
+1361 		}
+1362 
+1363 		/**
+1364 		 * この区間との和集合を返します。
+1365 		 * @param other 和集合を求める区間
+1366 		 * @return 和集合
+1367 		 */
+1368 		public Range<C> span(Range<C> other) {
+1369 			if (other.isEmpty()) return new Range<C>(lower, lowerType, upper, upperType);
+1370 			C lower, upper;
+1371 			BoundType lowerType, upperType;
+1372 			if (isLess(other.lower, other.lowerType)) {
+1373 				lower = this.lower;
+1374 				lowerType = this.lowerType;
+1375 			} else {
+1376 				lower = other.lower;
+1377 				lowerType = other.lowerType;
+1378 			}
+1379 			if (isGreater(other.upper, other.upperType)) {
+1380 				upper = this.upper;
+1381 				upperType = this.upperType;
+1382 			} else {
+1383 				upper = other.upper;
+1384 				upperType = other.upperType;
+1385 			}
+1386 			return new Range<C>(lower, lowerType, upper, upperType, comparator);
+1387 		}
+1388 
+1389 		@Override
+1390 		public boolean equals(Object object) {
+1391 			if (this == object) return true;
+1392 			if (object instanceof Range) {
+1393 				@SuppressWarnings("unchecked")
+1394 				Range<C> comp = (Range<C>) object;
+1395 				return compareLower(comp.lower, comp.lowerType) == 0 && compareUpper(comp.upper, comp.upperType) == 0 && lowerType == comp.lowerType && upperType == comp.upperType;
+1396 			}
+1397 			return false;
+1398 		}
+1399 
+1400 		@Override
+1401 		public int hashCode() {
+1402 			if (lower == null && upper == null) return 0;
+1403 			else if (lower == null) return upper.hashCode();
+1404 			else if (upper == null) return lower.hashCode();
+1405 			return lower.hashCode() ^ upper.hashCode();
+1406 		}
+1407 
+1408 		@Override
+1409 		public String toString() {
+1410 			if (isEmpty()) return "()";
+1411 			return (lowerType == BoundType.OPEN ? "(" : "[") + (lower == null ? "" : lower.toString()) + ".." + (upper == null ? "" : upper.toString()) + (upperType == BoundType.OPEN ? ")" : "]");
+1412 		}
+1413 	}
+1414 
+1415 	public static class IterableRange<C> extends Range<C> implements Iterable<C>{
+1416 
+1417 		private static final long serialVersionUID = 9065915259748260688L;
+1418 		protected UnaryOperator<C> func;
+1419 
+1420 		protected IterableRange(C lower, BoundType lowerType, C upper, BoundType upperType, UnaryOperator<C> func) {
+1421 			super(lower, lowerType, upper, upperType);
+1422 			this.func = func;
+1423 		}
+1424 
+1425 		public static <C extends Comparable<? super C>> IterableRange<C> range(C lower, BoundType lowerType, C upper, BoundType upperType, UnaryOperator<C> func) {
+1426 			if (lower == null || upper == null) return new IterableRange<C>(null, BoundType.CLOSED, null, BoundType.CLOSED, func);
+1427 			int comp = lower.compareTo(upper);
+1428 			if (comp > 0) return new IterableRange<C>(null, BoundType.CLOSED, null, BoundType.CLOSED, func);
+1429 			else if (comp == 0 && (lowerType == BoundType.OPEN || upperType == BoundType.OPEN)) return new IterableRange<C>(null, BoundType.CLOSED, null, BoundType.CLOSED, func);
+1430 			return new IterableRange<C>(lower, lowerType, upper, upperType, func);
+1431 		}
+1432 
+1433 		public static <C extends Comparable<? super C>> IterableRange<C> open(C lower, C upper, UnaryOperator<C> func) {
+1434 			if (lower == null) return new IterableRange<C>(null, BoundType.CLOSED, null, BoundType.CLOSED, func);
+1435 			return range(func.apply(lower), BoundType.CLOSED, upper, BoundType.OPEN, func);
+1436 		}
+1437 
+1438 		public static <C extends Comparable<? super C>> IterableRange<C> openClosed(C lower, C upper, UnaryOperator<C> func) {
+1439 			if (lower == null) return new IterableRange<C>(null, BoundType.CLOSED, null, BoundType.CLOSED, func);
+1440 			return range(func.apply(lower), BoundType.CLOSED, upper, BoundType.CLOSED, func);
+1441 		}
+1442 
+1443 		public static <C extends Comparable<? super C>> IterableRange<C> closedOpen(C lower, C upper, UnaryOperator<C> func) {
+1444 			return range(lower, BoundType.CLOSED, upper, BoundType.OPEN, func);
+1445 		}
+1446 
+1447 		public static <C extends Comparable<? super C>> IterableRange<C> closed(C lower, C upper, UnaryOperator<C> func) {
+1448 			return range(lower, BoundType.CLOSED, upper, BoundType.CLOSED, func);
+1449 		}
+1450 
+1451 		public static <C extends Comparable<? super C>> IterableRange<C> singleton(C value, UnaryOperator<C> func) {
+1452 			return range(value, BoundType.CLOSED, value, BoundType.CLOSED, func);
+1453 		}
+1454 
+1455 		protected class Iter implements Iterator<C> {
+1456 			C now;
+1457 			Iter() {
+1458 				now = lower;
+1459 			}
+1460 			@Override
+1461 			public final boolean hasNext() {
+1462 				return !isGreater(now);
+1463 			}
+1464 
+1465 			@Override
+1466 			public final C next() {
+1467 				C ret = now;
+1468 				now = func.apply(now);
+1469 				return ret;
+1470 			}
+1471 
+1472 			@Override
+1473 			public final void remove() {
+1474 				throw new UnsupportedOperationException();
+1475 			}
+1476 		}
+1477 
+1478 		protected class EmptyIter implements Iterator<C> {
+1479 
+1480 			@Override
+1481 			public boolean hasNext() {
+1482 				return false;
+1483 			}
+1484 
+1485 			@Override
+1486 			public C next() {
+1487 				return null;
+1488 			}
+1489 
+1490 			@Override
+1491 			public final void remove() {
+1492 				throw new UnsupportedOperationException();
+1493 			}
+1494 
+1495 		}
+1496 
+1497 		@Override
+1498 		public Iterator<C> iterator() {
+1499 			return lower == null || upper == null ? new EmptyIter() : new Iter();
+1500 		}
+1501 
+1502 		public int getDistance() {
+1503 			C check = upper;
+1504 			int ret = 0;
+1505 			while (lower != check) {
+1506 				check = func.apply(check);
+1507 				++ ret;
+1508 			}
+1509 			return ret;
+1510 		}
+1511 	}
+1512 
+1513 	public static class IntRange extends IterableRange<Integer>{
+1514 
+1515 		private static final long serialVersionUID = 5623995336491967216L;
+1516 		private final boolean useFastIter;
+1517 
+1518 		private static class Next implements UnaryOperator<Integer> {
+1519 
+1520 			@Override
+1521 			public Integer apply(Integer value) {
+1522 				return value + 1;
+1523 			}
+1524 		}
+1525 
+1526 		protected IntRange() {
+1527 			super(null, BoundType.CLOSED, null, BoundType.CLOSED, new Next());
+1528 			useFastIter = true;
+1529 		}
+1530 
+1531 		protected IntRange(UnaryOperator<Integer> func) {
+1532 			super(null, BoundType.CLOSED, null, BoundType.CLOSED, func);
+1533 			useFastIter = false;
+1534 		}
+1535 
+1536 		protected IntRange(int lower, BoundType lowerType, int upper, BoundType upperType) {
+1537 			super(lower, lowerType, upper, upperType, new Next());
+1538 			useFastIter = true;
+1539 		}
+1540 
+1541 		protected IntRange(int lower, BoundType lowerType, int upper, BoundType upperType, UnaryOperator<Integer> func) {
+1542 			super(lower, lowerType, upper, upperType, func);
+1543 			useFastIter = false;
+1544 		}
+1545 
+1546 		public static IntRange range(int lower, BoundType lowerType, int upper, BoundType upperType) {
+1547 			if (lower > upper) return new IntRange();
+1548 			if (lowerType == BoundType.OPEN) ++ lower;
+1549 			if (upperType == BoundType.OPEN) -- upper;
+1550 			return new IntRange(lower, BoundType.CLOSED, upper, BoundType.CLOSED);
+1551 		}
+1552 
+1553 		public static IntRange range(int lower, BoundType lowerType, int upper, BoundType upperType, UnaryOperator<Integer> func) {
+1554 			if (lower > upper) return new IntRange(func);
+1555 			if (lowerType == BoundType.OPEN) ++ lower;
+1556 			if (upperType == BoundType.OPEN) -- upper;
+1557 			return new IntRange(lower, BoundType.CLOSED, upper, BoundType.CLOSED, func);
+1558 		}
+1559 
+1560 		public static IntRange open(int lower, int upper) {
+1561 			return range(lower, BoundType.OPEN, upper, BoundType.OPEN);
+1562 		}
+1563 
+1564 		public static IntRange open(int lower, int upper, UnaryOperator<Integer> func) {
+1565 			return range(lower, BoundType.OPEN, upper, BoundType.OPEN, func);
+1566 		}
+1567 
+1568 		public static IntRange open(int upper) {
+1569 			return range(0, BoundType.CLOSED, upper, BoundType.OPEN);
+1570 		}
+1571 
+1572 		public static IntRange open(int upper, UnaryOperator<Integer> func) {
+1573 			return range(0, BoundType.CLOSED, upper, BoundType.OPEN, func);
+1574 		}
+1575 
+1576 		public static IntRange openClosed(int lower, int upper) {
+1577 			return range(lower, BoundType.OPEN, upper, BoundType.CLOSED);
+1578 		}
+1579 
+1580 		public static IntRange openClosed(int lower, int upper, UnaryOperator<Integer> func) {
+1581 			return range(lower, BoundType.OPEN, upper, BoundType.CLOSED, func);
+1582 		}
+1583 
+1584 		public static IntRange closedOpen(int lower, int upper) {
+1585 			return range(lower, BoundType.CLOSED, upper, BoundType.OPEN);
+1586 		}
+1587 
+1588 		public static IntRange closedOpen(int lower, int upper, UnaryOperator<Integer> func) {
+1589 			return range(lower, BoundType.CLOSED, upper, BoundType.OPEN, func);
+1590 		}
+1591 
+1592 		public static IntRange closed(int lower, int upper) {
+1593 			return range(lower, BoundType.CLOSED, upper, BoundType.CLOSED);
+1594 		}
+1595 
+1596 		public static IntRange closed(int lower, int upper, UnaryOperator<Integer> func) {
+1597 			return range(lower, BoundType.CLOSED, upper, BoundType.CLOSED, func);
+1598 		}
+1599 
+1600 		public static IntRange closed(int upper) {
+1601 			return range(0, BoundType.CLOSED, upper, BoundType.CLOSED);
+1602 		}
+1603 
+1604 		public static IntRange closed(int upper, UnaryOperator<Integer> func) {
+1605 			return range(0, BoundType.CLOSED, upper, BoundType.CLOSED, func);
+1606 		}
+1607 
+1608 		public static IntRange singleton(int value) {
+1609 			return range(value, BoundType.CLOSED, value, BoundType.CLOSED);
+1610 		}
+1611 
+1612 		public static IntRange singleton(int value, UnaryOperator<Integer> func) {
+1613 			return range(value, BoundType.CLOSED, value, BoundType.CLOSED, func);
+1614 		}
+1615 
+1616 		private class FastIter implements Iterator<Integer> {
+1617 			int now;
+1618 			public FastIter() {
+1619 				now = lower;
+1620 			}
+1621 			@Override
+1622 			public final boolean hasNext() {
+1623 				return now <= upper;
+1624 			}
+1625 
+1626 			@Override
+1627 			public final Integer next() {
+1628 				return now++;
+1629 			}
+1630 
+1631 			@Override
+1632 			public final void remove() {
+1633 				throw new UnsupportedOperationException();
+1634 			}
+1635 		}
+1636 
+1637 		private class Iter implements Iterator<Integer> {
+1638 			int now;
+1639 			public Iter() {
+1640 				now = lower;
+1641 			}
+1642 			@Override
+1643 			public final boolean hasNext() {
+1644 				return now <= upper;
+1645 			}
+1646 
+1647 			@Override
+1648 			public final Integer next() {
+1649 				int ret = now;
+1650 				now = func.apply(now);
+1651 				return ret;
+1652 			}
+1653 
+1654 			@Override
+1655 			public final void remove() {
+1656 				throw new UnsupportedOperationException();
+1657 			}
+1658 		}
+1659 
+1660 		@Override
+1661 		public Iterator<Integer> iterator() {
+1662 			return lower == null || upper == null ? new EmptyIter() : useFastIter ? new FastIter() : new Iter();
+1663 		}
+1664 
+1665 		@Override
+1666 		public int getDistance() {
+1667 			int ret = upper - lower;
+1668 			if (upperType == BoundType.CLOSED) ++ ret;
+1669 			return ret;
+1670 		}
+1671 
+1672 		public int getClosedLower() {
+1673 			return lower;
+1674 		}
+1675 
+1676 		public int getOpenLower() {
+1677 			return lower - 1;
+1678 		}
+1679 
+1680 		public int getClosedUpper() {
+1681 			return upperType == BoundType.CLOSED ? upper : upper - 1;
+1682 		}
+1683 
+1684 		public int getOpenUpper() {
+1685 			return upperType == BoundType.CLOSED ? upper + 1 : upper;
+1686 		}
+1687 	}
+1688 
+1689 	/**
+1690 	 * 演算が結合法則を満たすことを示すために使用するマーカー・インターフェースです。
+1691 	 * @author 31536000
+1692 	 *
+1693 	 * @param <T> 二項演算の型
+1694 	 */
+1695 	public interface Associative<T> extends BinaryOperator<T>{
+1696 		/**
+1697 		 * repeat個のelementを順次演算した値を返します。
+1698 		 * @param element 演算する値
+1699 		 * @param repeat 繰り返す回数、1以上であること
+1700 		 * @return 演算を+として、element + element + ... + elementと演算をrepeat-1回行った値
+1701 		 */
+1702 		public default T hyper(T element, int repeat) {
+1703 			if (repeat < 1) throw new IllegalArgumentException("undefined operation");
+1704 			T ret = element;
+1705 			-- repeat;
+1706 			for (T mul = element;repeat > 0;repeat >>= 1, mul = apply(mul, mul)) if ((repeat & 1) != 0) ret = apply(ret, mul);
+1707 			return ret;
+1708 		}
+1709 	}
+1710 
+1711 	/**
+1712 	* この演算が逆元を持つことを示すために使用するマーカー・インターフェースです。
+1713 	 * @author 31536000
+1714 	 *
+1715 	 * @param <T> 二項演算の型
+1716 	 */
+1717 	public interface Inverse<T> extends BinaryOperator<T>{
+1718 		public T inverse(T element);
+1719 	}
+1720 
+1721 	/**
+1722 	 * 演算が交換法則を満たすことを示すために使用するマーカー・インターフェースです。
+1723 	 * @author 31536000
+1724 	 *
+1725 	 * @param <T> 二項演算の型
+1726 	 */
+1727 	public interface Commutative<T> extends BinaryOperator<T>{
+1728 
+1729 	}
+1730 
+1731 	/**
+1732 	 * 演算が単位元を持つことを示すために使用するマーカー・インターフェースです。
+1733 	 * @author 31536000
+1734 	 *
+1735 	 * @param <T> 二項演算の型
+1736 	 */
+1737 	public interface Identity<T> extends BinaryOperator<T>{
+1738 		/**
+1739 		 * 単位元を返します。
+1740 		 * @return 単位元
+1741 		 */
+1742 		public T identity();
+1743 	}
+1744 
+1745 	/**
+1746 	 * 演算が群であることを示すために使用するマーカー・インターフェースです。
+1747 	 * @author 31536000
+1748 	 *
+1749 	 * @param <T> 二項演算の型
+1750 	 */
+1751 	public interface Group<T> extends Monoid<T>, Inverse<T>{
+1752 		/**
+1753 		 * repeat個のelementを順次演算した値を返します。
+1754 		 * @param element 演算する値
+1755 		 * @param repeat 繰り返す回数
+1756 		 * @return 演算を+として、element + element + ... + elementと演算をrepeat-1回行った値
+1757 		 */
+1758 		@Override
+1759 		public default T hyper(T element, int repeat) {
+1760 			T ret = identity();
+1761 			if (repeat < 0) {
+1762 				repeat = -repeat;
+1763 				for (T mul = element;repeat > 0;repeat >>= 1, mul = apply(mul, mul)) if ((repeat & 1) != 0) ret = apply(ret, mul);
+1764 				return inverse(ret);
+1765 			}
+1766 			for (T mul = element;repeat > 0;repeat >>= 1, mul = apply(mul, mul)) if ((repeat & 1) != 0) ret = apply(ret, mul);
+1767 			return ret;
+1768 		}
+1769 	}
+1770 
+1771 	/**
+1772 	 * 演算がモノイドであることを示すために使用するマーカー・インターフェースです。
+1773 	 * @author 31536000
+1774 	 *
+1775 	 * @param <T> 二項演算の型
+1776 	 */
+1777 	public interface Monoid<T> extends Associative<T>, Identity<T> {
+1778 		/**
+1779 		 * repeat個のelementを順次演算した値を返します。
+1780 		 * @param element 演算する値
+1781 		 * @param repeat 繰り返す回数、0以上であること
+1782 		 * @return 演算を+として、element + element + ... + elementと演算をrepeat-1回行った値
+1783 		 */
+1784 		@Override
+1785 		public default T hyper(T element, int repeat) {
+1786 			if (repeat < 0) throw new IllegalArgumentException("undefined operation");
+1787 			T ret = identity();
+1788 			for (T mul = element;repeat > 0;repeat >>= 1, mul = apply(mul, mul)) if ((repeat & 1) != 0) ret = apply(ret, mul);
+1789 			return ret;
+1790 		}
+1791 	}
+1792 
+1793 	/**
+1794 	 * 演算が可換モノイドであることを示すために使用するマーカー・インターフェースです。
+1795 	 * @author 31536000
+1796 	 *
+1797 	 * @param <T> 二項演算の型
+1798 	 */
+1799 	public interface CommutativeMonoid<T> extends Monoid<T>, Commutative<T> {
+1800 
+1801 	}
+1802 
+1803 	/**
+1804 	 * 演算がアーベル群(可換群)であることを示すために使用するマーカー・インターフェースです。
+1805 	 * @author 31536000
+1806 	 *
+1807 	 * @param <T> 二項演算の型
+1808 	 */
+1809 	public interface Abelian<T> extends Group<T>, CommutativeMonoid<T> {
+1810 
+1811 	}
+1812 
+1813 	/**
+1814 	 * 演算が半環であることを示すために使用するマーカー・インターフェースです。
+1815 	 * @author 31536000
+1816 	 *
+1817 	 * @param <T> 二項演算の型
+1818 	 * @param <A> 和に関する演算
+1819 	 * @param <M> 積に関する演算
+1820 	 */
+1821 	public interface Semiring<T, A extends CommutativeMonoid<T>, M extends Monoid<T>> {
+1822 		public A getAddition();
+1823 		public M getMultiplication();
+1824 		public default T add(T left, T right) {
+1825 			return getAddition().apply(left, right);
+1826 		}
+1827 
+1828 		public default T multiply(T left, T right) {
+1829 			return getMultiplication().apply(left, right);
+1830 		}
+1831 
+1832 		public default T additiveIdentity() {
+1833 			return getAddition().identity();
+1834 		}
+1835 
+1836 		public default T multipleIdentity() {
+1837 			return getMultiplication().identity();
+1838 		}
+1839 
+1840 		public default int characteristic() {
+1841 			return 0;
+1842 		}
+1843 	}
+1844 
+1845 	/**
+1846 	 * 演算が環であることを示すために使用するマーカー・インターフェースです。
+1847 	 * @author 31536000
+1848 	 *
+1849 	 * @param <T> 二項演算の型
+1850 	 * @param <A> 和に関する演算
+1851 	 * @param <M> 積に関する演算
+1852 	 */
+1853 	public interface Ring<T, A extends Abelian<T>, M extends Monoid<T>> extends Semiring<T, A, M>{
+1854 
+1855 	}
+1856 
+1857 	/**
+1858 	 * 演算が可換環に属することを示すために使用するマーカー・インターフェースです。
+1859 	 * @author 31536000
+1860 	 *
+1861 	 * @param <T> 二項演算の型
+1862 	 * @param <A> 和に関する演算
+1863 	 * @param <M> 積に関する演算
+1864 	 */
+1865 	public interface CommutativeRing<T, A extends Abelian<T>, M extends CommutativeMonoid<T>> extends Ring<T, A, M>{
+1866 
+1867 	}
+1868 
+1869 	/**
+1870 	 * 演算が整域であることを示すために使用するマーカー・インターフェースです。
+1871 	 * @author 31536000
+1872 	 *
+1873 	 * @param <T> 二項演算の型
+1874 	 * @param <A> 和に関する演算
+1875 	 * @param <M> 積に関する演算
+1876 	 */
+1877 	public interface IntegralDomain<T, A extends Abelian<T>, M extends CommutativeMonoid<T>> extends CommutativeRing<T, A, M>{
+1878 		public boolean isDivisible(T left, T right);
+1879 		public T divide(T left, T right);
+1880 	}
+1881 
+1882 	/**
+1883 	 * 演算が整閉整域であることを示すために使用するマーカー・インターフェースです。
+1884 	 * @author 31536000
+1885 	 *
+1886 	 * @param <T> 二項演算の型
+1887 	 * @param <A> 和に関する演算
+1888 	 * @param <M> 積に関する演算
+1889 	 */
+1890 	public interface IntegrallyClosedDomain<T, A extends Abelian<T>, M extends CommutativeMonoid<T>> extends IntegralDomain<T, A, M>{
+1891 
+1892 	}
+1893 
+1894 	/**
+1895 	 * 演算がGCD整域であることを示すために使用するマーカー・インターフェースです。
+1896 	 * @author 31536000
+1897 	 *
+1898 	 * @param <T> 二項演算の型
+1899 	 * @param <A> 和に関する演算
+1900 	 * @param <M> 積に関する演算
+1901 	 */
+1902 	public interface GCDDomain<T, A extends Abelian<T>, M extends CommutativeMonoid<T>> extends IntegrallyClosedDomain<T, A, M>{
+1903 		public T gcd(T left, T right);
+1904 		public T lcm(T left, T right);
+1905 	}
+1906 
+1907 	/**
+1908 	 * 素元を提供します。
+1909 	 * @author 31536000
+1910 	 *
+1911 	 * @param <T> 演算の型
+1912 	 */
+1913 	public static class PrimeElement<T> {
+1914 		public final T element;
+1915 		public PrimeElement(T element) {
+1916 			this.element = element;
+1917 		}
+1918 	}
+1919 
+1920 	public interface MultiSet<E> extends Collection<E>{
+1921 		public int add(E element, int occurrences);
+1922 		public int count(Object element);
+1923 		public Set<E> elementSet();
+1924 		public boolean remove(Object element, int occurrences);
+1925 		public int setCount(E element, int count);
+1926 		public boolean setCount(E element, int oldCount, int newCount);
+1927 	}
+1928 
+1929 	/**
+1930 	 * 演算が一意分解整域であることを示すために使用するマーカー・インターフェースです。
+1931 	 * @author 31536000
+1932 	 *
+1933 	 * @param <T> 二項演算の型
+1934 	 * @param <A> 和に関する演算
+1935 	 * @param <M> 積に関する演算
+1936 	 */
+1937 	public interface UniqueFactorizationDomain<T, A extends Abelian<T>, M extends CommutativeMonoid<T>> extends GCDDomain<T, A, M>{
+1938 		public MultiSet<PrimeElement<T>> PrimeFactorization(T x);
+1939 	}
+1940 
+1941 	/**
+1942 	 * 演算が主イデアル整域であることを示すために使用するマーカー・インターフェースです。
+1943 	 * @author 31536000
+1944 	 *
+1945 	 * @param <T> 二項演算の型
+1946 	 * @param <A> 和に関する演算
+1947 	 * @param <M> 積に関する演算
+1948 	 */
+1949 	public interface PrincipalIdealDomain<T, A extends Abelian<T>, M extends CommutativeMonoid<T>> extends UniqueFactorizationDomain<T, A, M> {
+1950 
+1951 	}
+1952 
+1953 	/**
+1954 	 * 演算がユークリッド整域であることを示すために使用するマーカー・インターフェースです。
+1955 	 * @author 31536000
+1956 	 *
+1957 	 * @param <T> 二項演算の型
+1958 	 * @param <A> 和に関する演算
+1959 	 * @param <M> 積に関する演算
+1960 	 */
+1961 	public interface EuclideanDomain<T, A extends Abelian<T>, M extends CommutativeMonoid<T>> extends PrincipalIdealDomain<T, A, M>{
+1962 		public T reminder(T left, T right);
+1963 	}
+1964 
+1965 	/**
+1966 	 * 演算が体であることを示すために使用するマーカー・インターフェースです。
+1967 	 * @author 31536000
+1968 	 *
+1969 	 * @param <T> 二項演算の型
+1970 	 * @param <A> 和に関する演算
+1971 	 * @param <M> 積に関する演算
+1972 	 */
+1973 	public interface Field<T, A extends Abelian<T>, M extends Abelian<T>> extends EuclideanDomain<T, A, M>{
+1974 		@Override
+1975 		public default boolean isDivisible(T left, T right) {
+1976 			return !right.equals(additiveIdentity());
+1977 		}
+1978 
+1979 		@Override
+1980 		public default T divide(T left, T right) {
+1981 			if (isDivisible(left, right)) throw new ArithmeticException("divide by Additive Identify");
+1982 			return multiply(left, getMultiplication().inverse(right));
+1983 		}
+1984 
+1985 		@Override
+1986 		public default T reminder(T left, T right) {
+1987 			if (isDivisible(left, right)) throw new ArithmeticException("divide by Additive Identify");
+1988 			return additiveIdentity();
+1989 		}
+1990 
+1991 		@Override
+1992 		public default T gcd(T left, T right) {
+1993 			return multipleIdentity();
+1994 		}
+1995 
+1996 		@Override
+1997 		public default T lcm(T left, T right) {
+1998 			return multipleIdentity();
+1999 		}
+2000 
+2001 		@Override
+2002 		public default MultiSet<PrimeElement<T>> PrimeFactorization(T x) {
+2003 			HashMultiSet<PrimeElement<T>> ret = HashMultiSet.create(1);
+2004 			ret.add(new PrimeElement<T>(x));
+2005 			return ret;
+2006 		}
+2007 	}
+2008 
+2009 	public static class HashMultiSet<E> implements MultiSet<E>, Serializable{
+2010 
+2011 		private static final long serialVersionUID = -8378919645386251159L;
+2012 		private final transient HashMap<E, Integer> map;
+2013 		private transient int size;
+2014 
+2015 		private HashMultiSet() {
+2016 			map = new HashMap<>();
+2017 			size = 0;
+2018 		}
+2019 
+2020 		private HashMultiSet(int distinctElements) {
+2021 			map = new HashMap<>(distinctElements);
+2022 			size = 0;
+2023 		}
+2024 
+2025 		public static <E> HashMultiSet<E> create() {
+2026 			return new HashMultiSet<>();
+2027 		}
+2028 
+2029 		public static <E> HashMultiSet<E> create(int distinctElements) {
+2030 			return new HashMultiSet<>(distinctElements);
+2031 		}
+2032 
+2033 		public static <E> HashMultiSet<E> create(Iterable<? extends E> elements) {
+2034 			HashMultiSet<E> ret = new HashMultiSet<>();
+2035 			for (E i : elements) ret.map.compute(i, (v, e) -> e == null ? 1 : ++e);
+2036 			return ret;
+2037 		}
+2038 
+2039 		@Override
+2040 		public int size() {
+2041 			return size;
+2042 		}
+2043 
+2044 		@Override
+2045 		public boolean isEmpty() {
+2046 			return size == 0;
+2047 		}
+2048 
+2049 		@Override
+2050 		public boolean contains(Object o) {
+2051 			return map.containsKey(o);
+2052 		}
+2053 
+2054 		private class Iter implements Iterator<E> {
+2055 
+2056 			private final Iterator<Entry<E, Integer>> iter = map.entrySet().iterator();
+2057 			private E value;
+2058 			private int count = 0;
+2059 
+2060 			@Override
+2061 			public boolean hasNext() {
+2062 				if (count > 0) return true;
+2063 				if (iter.hasNext()) {
+2064 					Entry<E, Integer> entry = iter.next();
+2065 					value = entry.getKey();
+2066 					count = entry.getValue();
+2067 					return true;
+2068 				}
+2069 				return false;
+2070 			}
+2071 
+2072 			@Override
+2073 			public E next() {
+2074 				-- count;
+2075 				return value;
+2076 			}
+2077 
+2078 		}
+2079 
+2080 		@Override
+2081 		public Iterator<E> iterator() {
+2082 			return new Iter();
+2083 		}
+2084 
+2085 		@Override
+2086 		public Object[] toArray() {
+2087 			Object[] ret = new Object[size];
+2088 			int read = 0;
+2089 			for (Entry<E, Integer> i : map.entrySet()) Arrays.fill(ret, read, read += i.getValue(), i.getKey());
+2090 			return ret;
+2091 		}
+2092 
+2093 		@Override
+2094 		public <T> T[] toArray(T[] a) {
+2095 			Object[] src = toArray();
+2096 			if (a.length < src.length) {
+2097 				@SuppressWarnings("unchecked")
+2098 				T[] ret  = (T[])Arrays.copyOfRange(src, 0, src.length, a.getClass());
+2099 				return ret;
+2100 			}
+2101 			System.arraycopy(src, 0, a, 0, src.length);
+2102 			return a;
+2103 		}
+2104 
+2105 		@Override
+2106 		public boolean add(E e) {
+2107 			add(e, 1);
+2108 			return true;
+2109 		}
+2110 
+2111 		@Override
+2112 		public boolean remove(Object o) {
+2113 			return remove(o, 1);
+2114 		}
+2115 
+2116 		@Override
+2117 		public boolean containsAll(Collection<?> c) {
+2118 			boolean ret = true;
+2119 			for (Object i : c) ret |= contains(i);
+2120 			return ret;
+2121 		}
+2122 
+2123 		@Override
+2124 		public boolean addAll(Collection<? extends E> c) {
+2125 			boolean ret = false;
+2126 			for (E i : c) ret |= add(i);
+2127 			return ret;
+2128 		}
+2129 
+2130 		@Override
+2131 		public boolean removeAll(Collection<?> c) {
+2132 			boolean ret = false;
+2133 			for (Object i : c) ret |= remove(i);
+2134 			return ret;
+2135 		}
+2136 
+2137 		@Override
+2138 		public boolean retainAll(Collection<?> c) {
+2139 			return removeAll(c);
+2140 		}
+2141 
+2142 		@Override
+2143 		public void clear() {
+2144 			map.clear();
+2145 			size = 0;
+2146 		}
+2147 
+2148 		@Override
+2149 		public int add(E element, int occurrences) {
+2150 			size += occurrences;
+2151 			return map.compute(element, (k, v) -> v == null ? occurrences : v + occurrences) - occurrences;
+2152 		}
+2153 
+2154 		@Override
+2155 		public int count(Object element) {
+2156 			return map.getOrDefault(element, 0);
+2157 		}
+2158 
+2159 		@Override
+2160 		public Set<E> elementSet() {
+2161 			return map.keySet();
+2162 		}
+2163 
+2164 		public Set<Entry<E, Integer>> entrySet() {
+2165 			return map.entrySet();
+2166 		}
+2167 
+2168 		@Override
+2169 		public boolean remove(Object element, int occurrences) {
+2170 			try {
+2171 				@SuppressWarnings("unchecked")
+2172 				E put = (E) element;
+2173 				return map.compute(put, (k, v) -> {
+2174 					if (v == null) return null;
+2175 					if (v < occurrences) {
+2176 						size -= v;
+2177 						return null;
+2178 					}
+2179 					size -= occurrences;
+2180 					return v - occurrences;
+2181 				}) != null;
+2182 			} catch (ClassCastException E) {
+2183 				return false;
+2184 			}
+2185 		}
+2186 
+2187 		@Override
+2188 		public int setCount(E element, int count) {
+2189 			Integer ret = map.put(element, count);
+2190 			int ret2 = ret == null ? 0 : ret;
+2191 			size += count - ret2;
+2192 			return ret2;
+2193 		}
+2194 
+2195 		@Override
+2196 		public boolean setCount(E element, int oldCount, int newCount) {
+2197 			boolean ret = map.replace(element, oldCount, newCount);
+2198 			if (ret) size += newCount - oldCount;
+2199 			return ret;
+2200 		}
+2201 
+2202 	}
+2203 
+2204 	public static class ModInteger extends Number implements Field<ModInteger, Abelian<ModInteger>, Abelian<ModInteger>>{
+2205 
+2206 		private static final long serialVersionUID = -8595710127161317579L;
+2207 		private final int mod;
+2208 		private int num;
+2209 
+2210 		private final Addition add;
+2211 		private final Multiplication mul;
+2212 
+2213 		private class Addition implements Abelian<ModInteger> {
+2214 
+2215 			@Override
+2216 			public ModInteger identity() {
+2217 				return new ModInteger(mod, 0);
+2218 			}
+2219 
+2220 			@Override
+2221 			public ModInteger inverse(ModInteger element) {
+2222 				return new ModInteger(element, element.mod - element.num);
+2223 			}
+2224 
+2225 			@Override
+2226 			public ModInteger apply(ModInteger left, ModInteger right) {
+2227 				return new ModInteger(left).addEqual(right);
+2228 			}
+2229 		}
+2230 
+2231 		private class Multiplication implements Abelian<ModInteger> {
+2232 
+2233 			@Override
+2234 			public ModInteger identity() {
+2235 				return new ModInteger(mod, 1);
+2236 			}
+2237 
+2238 			@Override
+2239 			public ModInteger apply(ModInteger left, ModInteger right) {
+2240 				return new ModInteger(left).multiplyEqual(right);
+2241 			}
+2242 
+2243 			@Override
+2244 			public ModInteger inverse(ModInteger element) {
+2245 				return new ModInteger(element, element.inverse(element.num));
+2246 			}
+2247 
+2248 		}
+2249 
+2250 		@Override
+2251 		public int characteristic() {
+2252 			return mod;
+2253 		}
+2254 
+2255 		public ModInteger(int mod) {
+2256 			this.mod = mod;
+2257 			num = 0;
+2258 			add = new Addition();
+2259 			mul = new Multiplication();
+2260 		}
+2261 
+2262 		public ModInteger(int mod, int num) {
+2263 			this.mod = mod;
+2264 			this.num = validNum(num);
+2265 			add = new Addition();
+2266 			mul = new Multiplication();
+2267 		}
+2268 
+2269 		public ModInteger(ModInteger n) {
+2270 			mod = n.mod;
+2271 			num = n.num;
+2272 			add = n.add;
+2273 			mul = n.mul;
+2274 		}
+2275 
+2276 		private ModInteger(ModInteger n, int num) {
+2277 			mod = n.mod;
+2278 			this.num = num;
+2279 			add = n.add;
+2280 			mul = n.mul;
+2281 		}
+2282 
+2283 		private int validNum(int n) {
+2284 			n %= mod;
+2285 			if (n < 0) n += mod;
+2286 			return n;
+2287 		}
+2288 
+2289 		private int validNum(long n) {
+2290 			n %= mod;
+2291 			if (n < 0) n += mod;
+2292 			return (int)n;
+2293 		}
+2294 
+2295 		protected int inverse(int n) {
+2296 			int m = mod, u = 0, v = 1, t;
+2297 			while(n != 0) {
+2298 				t = m / n;
+2299 				m -= t * n;
+2300 				u -= t * v;
+2301 				if (m != 0) {
+2302 					t = n / m;
+2303 					n -= t * m;
+2304 					v -= t * u;
+2305 				} else {
+2306 					v %= mod;
+2307 					if (v < 0) v += mod;
+2308 					return v;
+2309 				}
+2310 			}
+2311 			u %= mod;
+2312 			if (u < 0) u += mod;
+2313 			return u;
+2314 		}
+2315 
+2316 		public boolean isPrime(int n) {
+2317 			if ((n & 1) == 0) return false; // 偶数
+2318 			for (int i = 3, j = 8, k = 9;k <= n;i += 2, k += j += 8) if (n % i == 0) return false;
+2319 			return true;
+2320 		}
+2321 
+2322 		@Override
+2323 		public int intValue() {
+2324 			return num;
+2325 		}
+2326 
+2327 		@Override
+2328 		public long longValue() {
+2329 			return num;
+2330 		}
+2331 
+2332 		@Override
+2333 		public float floatValue() {
+2334 			return num;
+2335 		}
+2336 
+2337 		@Override
+2338 		public double doubleValue() {
+2339 			return num;
+2340 		}
+2341 
+2342 		protected ModInteger getNewInstance(ModInteger mod) {
+2343 			return new ModInteger(mod);
+2344 		}
+2345 
+2346 		public ModInteger add(int n) {
+2347 			return getNewInstance(this).addEqual(n);
+2348 		}
+2349 
+2350 		public ModInteger add(long n) {
+2351 			return getNewInstance(this).addEqual(n);
+2352 		}
+2353 
+2354 		public ModInteger add(ModInteger n) {
+2355 			return getNewInstance(this).addEqual(n);
+2356 		}
+2357 
+2358 		public ModInteger addEqual(int n) {
+2359 			num = validNum(num + n);
+2360 			return this;
+2361 		}
+2362 
+2363 		public ModInteger addEqual(long n) {
+2364 			num = validNum(num + n);
+2365 			return this;
+2366 		}
+2367 
+2368 		public ModInteger addEqual(ModInteger n) {
+2369 			if ((num += n.num) >= mod) num -= mod;
+2370 			return this;
+2371 		}
+2372 
+2373 		public ModInteger subtract(int n) {
+2374 			return getNewInstance(this).subtractEqual(n);
+2375 		}
+2376 
+2377 		public ModInteger subtract(long n) {
+2378 			return getNewInstance(this).subtractEqual(n);
+2379 		}
+2380 
+2381 		public ModInteger subtract(ModInteger n) {
+2382 			return getNewInstance(this).subtractEqual(n);
+2383 		}
+2384 
+2385 		public ModInteger subtractEqual(int n) {
+2386 			num = validNum(num - n);
+2387 			return this;
+2388 		}
+2389 
+2390 		public ModInteger subtractEqual(long n) {
+2391 			num = validNum(num - n);
+2392 			return this;
+2393 		}
+2394 
+2395 		public ModInteger subtractEqual(ModInteger n) {
+2396 			if ((num -= n.num) < 0) num += mod;
+2397 			return this;
+2398 		}
+2399 
+2400 		public ModInteger multiply(int n) {
+2401 			return getNewInstance(this).multiplyEqual(n);
+2402 		}
+2403 
+2404 		public ModInteger multiply(long n) {
+2405 			return getNewInstance(this).multiplyEqual(n);
+2406 		}
+2407 
+2408 		public ModInteger multiply(ModInteger n) {
+2409 			return getNewInstance(this).multiplyEqual(n);
+2410 		}
+2411 
+2412 		public ModInteger multiplyEqual(int n) {
+2413 			num = (int)((long)num * n % mod);
+2414 			if (num < 0) num += mod;
+2415 			return this;
+2416 		}
+2417 
+2418 		public ModInteger multiplyEqual(long n) {
+2419 			return multiplyEqual((int) (n % mod));
+2420 		}
+2421 
+2422 		public ModInteger multiplyEqual(ModInteger n) {
+2423 			num = (int)((long)num * n.num % mod);
+2424 			return this;
+2425 		}
+2426 
+2427 		public ModInteger divide(int n) {
+2428 			return getNewInstance(this).divideEqual(n);
+2429 		}
+2430 
+2431 		public ModInteger divide(long n) {
+2432 			return getNewInstance(this).divideEqual(n);
+2433 		}
+2434 
+2435 		public ModInteger divide(ModInteger n) {
+2436 			return getNewInstance(this).divideEqual(n);
+2437 		}
+2438 
+2439 		public ModInteger divideEqual(int n) {
+2440 			num = (int)((long)num * inverse(validNum(n)) % mod);
+2441 			return this;
+2442 		}
+2443 
+2444 		public ModInteger divideEqual(long n) {
+2445 			return divideEqual((int)(n % mod));
+2446 		}
+2447 
+2448 		public ModInteger divideEqual(ModInteger n) {
+2449 			num = (int)((long)num * n.inverse(n.num) % mod);
+2450 			return this;
+2451 		}
+2452 
+2453 		public ModInteger pow(int n) {
+2454 			return getNewInstance(this).powEqual(n);
+2455 		}
+2456 
+2457 		public ModInteger pow(long n) {
+2458 			return getNewInstance(this).powEqual(n);
+2459 		}
+2460 
+2461 		public ModInteger pow(ModInteger n) {
+2462 			return getNewInstance(this).powEqual(n);
+2463 		}
+2464 
+2465 		public ModInteger powEqual(int n) {
+2466 			long ans = 1, num = this.num;
+2467 			if (n < 0) {
+2468 				n = -n;
+2469 				while (n != 0) {
+2470 					if ((n & 1) != 0) ans = ans * num % mod;
+2471 					n >>>= 1;
+2472 			num = num * num % mod;
+2473 				}
+2474 				this.num = inverse((int)ans);
+2475 				return this;
+2476 			}
+2477 			while (n != 0) {
+2478 				if ((n & 1) != 0) ans = ans * num % mod;
+2479 				n >>>= 1;
+2480 					num = num * num % mod;
+2481 			}
+2482 			this.num = (int)ans;
+2483 			return this;
+2484 		}
+2485 		public ModInteger powEqual(long n) {
+2486 			return powEqual((int)(n % (mod - 1)));
+2487 		}
+2488 
+2489 		public ModInteger powEqual(ModInteger n) {
+2490 			long num = this.num;
+2491 			this.num = 1;
+2492 			int mul = n.num;
+2493 			while (mul != 0) {
+2494 				if ((mul & 1) != 0) this.num *= num;
+2495 				mul >>>= 1;
+2496 				num *= num;
+2497 				num %= mod;
+2498 			}
+2499 			return this;
+2500 		}
+2501 
+2502 		public ModInteger equal(int n) {
+2503 			num = validNum(n);
+2504 			return this;
+2505 		}
+2506 
+2507 		public ModInteger equal(long n) {
+2508 			num = validNum(n);
+2509 			return this;
+2510 		}
+2511 
+2512 		public ModInteger equal(ModInteger n) {
+2513 			num = n.num;
+2514 			return this;
+2515 		}
+2516 
+2517 		public int toInt() {
+2518 			return num;
+2519 		}
+2520 
+2521 		public int getMod() {
+2522 			return mod;
+2523 		}
+2524 
+2525 		@Override
+2526 		public boolean equals(Object x) {
+2527 			if (x instanceof ModInteger) return ((ModInteger)x).num == num && ((ModInteger)x).mod == mod;
+2528 			return false;
+2529 		}
+2530 
+2531 		@Override
+2532 		public int hashCode() {
+2533 			return num ^ mod;
+2534 		}
+2535 
+2536 		@Override
+2537 		public String toString() {
+2538 			return String.valueOf(num);
+2539 		}
+2540 
+2541 		@Deprecated
+2542 		public String debug() {
+2543 			int min = num, ans = 1;
+2544 			for (int i = 2;i < min;++ i) {
+2545 				int tmp = multiply(i).num;
+2546 				if (min > tmp) {
+2547 					min = tmp;
+2548 					ans = i;
+2549 				}
+2550 			}
+2551 			return min + "/" + ans;
+2552 		}
+2553 
+2554 		@Override
+2555 		public Addition getAddition() {
+2556 			return add;
+2557 		}
+2558 
+2559 		@Override
+2560 		public Multiplication getMultiplication() {
+2561 			return mul;
+2562 		}
+2563 	}
+2564 
+2565 	/**
+2566 	 * 素数を法とする演算上で、組み合わせの計算を高速に行います。
+2567 	 * @author 31536000
+2568 	 *
+2569 	 */
+2570 	public static class ModUtility {
+2571 		private final int mod;
+2572 		private int[] fact, inv, invfact;
+2573 
+2574 		/**
+2575 		 * modを法として、演算を行います。
+2576 		 * @param mod 法とする素数
+2577 		 */
+2578 		public ModUtility(Prime mod) {
+2579 			this(mod, 2);
+2580 		}
+2581 
+2582 		/**
+2583 		 * modを法として、演算を行います。
+2584 		 * @param mod 法とする素数
+2585 		 * @param calc 予め前計算しておく大きさ
+2586 		 */
+2587 		public ModUtility(Prime mod, int calc) {
+2588 			this.mod = mod.prime;
+2589 			precalc(calc);
+2590 		}
+2591 
+2592 		/**
+2593 		 * calcの大きさだけ、前計算を行います。
+2594 		 * @param calc 前計算をする大きさ
+2595 		 */
+2596 		public void precalc(int calc) {
+2597 			++ calc;
+2598 			if (calc < 2) calc = 2;
+2599 			fact = new int[calc];
+2600 			inv = new int[calc];
+2601 			invfact = new int[calc];
+2602 			fact[0] = invfact[0] = fact[1] = invfact[1] = inv[1] = 1;
+2603 			for (int i = 2;i < calc;++ i) {
+2604 				fact[i] = (int)((long)fact[i - 1] * i % mod);
+2605 				inv[i] = (int)(mod - (long)inv[mod % i] * (mod / i) % mod);
+2606 				invfact[i] = (int)((long)invfact[i - 1] * inv[i] % mod);
+2607 			}
+2608 		}
+2609 
+2610 		/**
+2611 		 * modを法とする剰余環上で振舞う整数を返します。
+2612 		 * @return modを法とする整数、初期値は0
+2613 		 */
+2614 		public ModInteger create() {
+2615 			return new ModInt();
+2616 		}
+2617 
+2618 		/**
+2619 		 * modを法とする剰余環上で振舞う整数を返します。
+2620 		 * @param n 初期値
+2621 		 * @return modを法とする整数
+2622 		 */
+2623 		public ModInteger create(int n) {
+2624 			return new ModInt(n);
+2625 		}
+2626 
+2627 		private class ModInt extends ModInteger {
+2628 
+2629 			private static final long serialVersionUID = -2435281861935422575L;
+2630 
+2631 			public ModInt() {
+2632 				super(mod);
+2633 			}
+2634 
+2635 			public ModInt(int n) {
+2636 				super(mod, n);
+2637 			}
+2638 
+2639 			public ModInt(ModInteger mod) {
+2640 				super(mod);
+2641 			}
+2642 
+2643 			@Override
+2644 			protected ModInteger getNewInstance(ModInteger mod) {
+2645 				return new ModInt(mod);
+2646 			}
+2647 
+2648 			@Override
+2649 			protected int inverse(int n) {
+2650 				return ModUtility.this.inverse(n);
+2651 			}
+2652 		}
+2653 
+2654 		/**
+2655 		 * modを法として、nの逆元を返します。<br>
+2656 		 * 計算量はO(log n)です。
+2657 		 * @param n 逆元を求めたい値
+2658 		 * @return 逆元
+2659 		 */
+2660 		public int inverse(int n) {
+2661 			try {
+2662 				if (inv.length > n) return inv[n];
+2663 				 int m = mod, u = 0, v = 1, t;
+2664 				 while(n != 0) {
+2665 					 t = m / n;
+2666 					 m -= t * n;
+2667 					 u -= t * v;
+2668 					 if (m != 0) {
+2669 						 t = n / m;
+2670 						 n -= t * m;
+2671 						 v -= t * u;
+2672 					 } else {
+2673 						 v %= mod;
+2674 						 if (v < 0) v += mod;
+2675 						 return v;
+2676 					 }
+2677 				 }
+2678 				 u %= mod;
+2679 				 if (u < 0) u += mod;
+2680 				 return u;
+2681 			} catch (ArrayIndexOutOfBoundsException e) {
+2682 				throw new IllegalArgumentException();
+2683 			}
+2684 		}
+2685 
+2686 		/**
+2687 		 * n!を、modを法として求めた値を返します。<br>
+2688 		 * 計算量はO(n)です。
+2689 		 * @param n 階乗を求めたい値
+2690 		 * @return nの階乗をmodで割った余り
+2691 		 */
+2692 		public int factorial(int n) {
+2693 			try {
+2694 				if (fact.length > n) return fact[n];
+2695 				long ret = fact[fact.length - 1];
+2696 				for (int i = fact.length;i <= n;++ i) ret = ret * i % mod;
+2697 				return (int)ret;
+2698 			} catch (ArrayIndexOutOfBoundsException e) {
+2699 				throw new IllegalArgumentException();
+2700 			}
+2701 		}
+2702 
+2703 		/**
+2704 		 * nPkをmodで割った余りを求めます。<br>
+2705 		 * 計算量はO(n-k)です。
+2706 		 * @param n 左辺
+2707 		 * @param k 右辺
+2708 		 * @return nPkをmodで割った余り
+2709 		 */
+2710 		public int permutation(int n, int k) {
+2711 			if (k < 0) throw new IllegalArgumentException();
+2712 			if (n < k) return 0;
+2713 			if (fact.length > n) return (int)((long)fact[n] * invfact[n - k] % mod);
+2714 			long ret = 1;
+2715 			for (int i = n - k + 1;i <= n;++ i) ret = ret * i % mod;
+2716 			return (int)ret;
+2717 		}
+2718 
+2719 		/**
+2720 		 * nCkをmodで割った余りを求めます。<br>
+2721 		 * 計算量はO(n-k)です。
+2722 		 * @param n 左辺
+2723 		 * @param k 右辺
+2724 		 * @return nCkをmodで割った余り
+2725 		 */
+2726 		public int combination(int n, int k) {
+2727 			if (k < 0) throw new IllegalArgumentException();
+2728 			if (n < k) return 0;
+2729 			if (fact.length > n) return (int)((long)fact[n] * invfact[k] % mod * invfact[n - k] % mod);
+2730 			long ret = 1;
+2731 			if (n < 2 * k) k = n - k;
+2732 			if (invfact.length > k) ret = invfact[k];
+2733 			else ret = inverse(factorial(k));
+2734 			for (int i = n - k + 1;i <= n;++ i) ret = ret * i % mod;
+2735 			return (int)ret;
+2736 		}
+2737 
+2738 		/**
+2739 		 * 他項係数をmodで割った余りを求めます。<br>]
+2740 		 * 計算量はO(n)です。
+2741 		 * @param n 左辺
+2742 		 * @param k 右辺、合計がn以下である必要がある
+2743 		 * @return 他項係数
+2744 		 */
+2745 		public int multinomial(int n, int... k) {
+2746 			int sum = 0;
+2747 			for (int i : k) sum += i;
+2748 			long ret = factorial(n);
+2749 			if (fact.length > n) {
+2750 				for (int i : k) {
+2751 					if (i < 0) throw new IllegalArgumentException();
+2752 					ret = ret * invfact[i] % mod;
+2753 					sum += i;
+2754 				}
+2755 				if (sum > n) return 0;
+2756 				ret = ret * invfact[n - sum] % mod;
+2757 			} else {
+2758 				for (int i : k) {
+2759 					if (i < 0) throw new IllegalArgumentException();
+2760 					if (invfact.length > i) ret = ret * invfact[i] % mod;
+2761 					else ret = ret * inverse(factorial(i)) % mod;
+2762 					sum += i;
+2763 				}
+2764 				if (sum > n) return 0;
+2765 				if (invfact.length > n - sum) ret = ret * invfact[n - sum] % mod;
+2766 				else ret = ret * inverse(factorial(n - sum)) % mod;
+2767 			}
+2768 			return (int)ret;
+2769 		}
+2770 
+2771 		/**
+2772 		 * n個からk個を選ぶ重複組み合わせnHkをmodで割った余りを求めます。<br>
+2773 		 * 計算量はO(min(n, k))です。
+2774 		 * @param n 左辺
+2775 		 * @param k 右辺
+2776 		 * @return nHkをmodで割った余り
+2777 		 */
+2778 		public int multichoose(int n, int k) {
+2779 			return combination(mod(n + k - 1), k);
+2780 		}
+2781 
+2782 		/**
+2783 		 * カタラン数C(n)をmodで割った余りを求めます。<br>
+2784 		 * 計算量はO(n)です。
+2785 		 * @param n 求めたいカタラン数の番号
+2786 		 * @return カタラン数
+2787 		 */
+2788 		public int catalan(int n) {
+2789 			return divide(combination(mod(2 * n), n), mod(n + 1));
+2790 		}
+2791 
+2792 		/**
+2793 		 * nのm乗をmodで割った余りを求めます。<br>
+2794 		 * 計算量はO(log m)です。
+2795 		 * @param n 床
+2796 		 * @param m 冪指数
+2797 		 * @return n^mをmodで割った余り
+2798 		 */
+2799 		public int pow(int n, int m) {
+2800 			long ans = 1, num = n;
+2801 			if (m < 0) {
+2802 				m = -m;
+2803 				while (m != 0) {
+2804 					if ((m & 1) != 0) ans = ans * num % mod;
+2805 					m >>>= 1;
+2806 					num = num * num % mod;
+2807 				}
+2808 				return inverse((int)ans);
+2809 			}
+2810 			while (m != 0) {
+2811 				if ((m & 1) != 0) ans = ans * num % mod;
+2812 				m >>>= 1;
+2813 				num = num * num % mod;
+2814 			}
+2815 			return (int)ans;
+2816 		}
+2817 
+2818 		/**
+2819 		 * nのm乗をmodで割った余りを求めます。<br>
+2820 		 * 計算量はO(log m)です。
+2821 		 * @param n 床
+2822 		 * @param m 冪指数
+2823 		 * @return n^mをmodで割った余り
+2824 		 */
+2825 		public int pow(long n, long m) {
+2826 			return pow((int)(n % mod), (int)(n % (mod - 1)));
+2827 		}
+2828 
+2829 		/**
+2830 		 * 現在のmod値のトーシェント数を返します。<br>
+2831 		 * なお、これはmod-1に等しいです。
+2832 		 * @return トーシェント数
+2833 		 */
+2834 		public int totient() {
+2835 			return mod - 1;
+2836 		}
+2837 
+2838 		/**
+2839 		 * nのトーシェント数を返します。<br>
+2840 		 * 計算量はO(sqrt n)です。
+2841 		 * @param n トーシェント数を求めたい値
+2842 		 * @return nのトーシェント数
+2843 		 */
+2844 		public static int totient(int n) {
+2845 			int totient = n;
+2846 			for (int i = 2;i * i <= n;++ i) {
+2847 				if (n % i == 0) {
+2848 					totient = totient / i * (i - 1);
+2849 					while ((n %= i) % i == 0);
+2850 				}
+2851 			}
+2852 			if (n != 1) totient = totient / n * (n - 1);
+2853 			return totient;
+2854 		}
+2855 
+2856 		/**
+2857 		 * nをmodで割った余りを返します。
+2858 		 * @param n 演算する値
+2859 		 * @return nをmodで割った余り
+2860 		 */
+2861 		public int mod(int n) {
+2862 			return (n %= mod) < 0 ? n + mod : n;
+2863 		}
+2864 
+2865 		/**
+2866 		 * nをmodで割った余りを返します。
+2867 		 * @param n 演算する値
+2868 		 * @return nをmodで割った余り
+2869 		 */
+2870 		public int mod(long n) {
+2871 			return (int)((n %= mod) < 0 ? n + mod : n);
+2872 		}
+2873 
+2874 		/**
+2875 		 * n+mをmodで割った余りを返します。
+2876 		 * @param n 足される値
+2877 		 * @param m 足す値
+2878 		 * @return n+mをmodで割った余り
+2879 		 */
+2880 		public int add(int n, int m) {
+2881 			return mod(n + m);
+2882 		}
+2883 
+2884 		/**
+2885 		 * n-mをmodで割った余りを返します。
+2886 		 * @param n 引かれる値
+2887 		 * @param m 引く値
+2888 		 * @return n-mをmodで割った余り
+2889 		 */
+2890 		public int subtract(int n, int m) {
+2891 			return mod(n - m);
+2892 		}
+2893 
+2894 		/**
+2895 		 * n*mをmodで割った余りを返します。
+2896 		 * @param n 掛けられる値
+2897 		 * @param m 掛ける値
+2898 		 * @return n*mをmodで割った余り
+2899 		 */
+2900 		public int multiply(int n, int m) {
+2901 			int ans = (int)((long)n * m % mod);
+2902 			return ans < 0 ? ans + mod : ans;
+2903 		}
+2904 
+2905 		/**
+2906 		 * n/mをmodで割った余りを返します。
+2907 		 * @param n 割られる値
+2908 		 * @param m 割る値
+2909 		 * @return n/mをmodで割った余り
+2910 		 */
+2911 		public int divide(int n, int m) {
+2912 			return multiply(n, inverse(m));
+2913 		}
+2914 
+2915 		/**
+2916 		 * fを通ることが分かっているfの要素数-1次の関数について、xの位置における値をmodで割った余りを返します。<br>
+2917 		 * 計算量はO(f)です。
+2918 		 * @param f 関数の形
+2919 		 * @param x 求める位置
+2920 		 * @return 求めたい値をmodで割った余り
+2921 		 */
+2922 		public ModInteger lagrangePolynomial(ModInteger[] f, int x) {
+2923 			if (f.length > x) return f[x];
+2924 			if (x > fact.length) precalc(x);
+2925 			ModInteger ret = create(0);
+2926 			ModInteger[] dp = new ModInteger[f.length], dp2 = new ModInteger[f.length];
+2927 			dp[0] = create(1);
+2928 			dp2[f.length - 1] = create(1);
+2929 			for (int i = 1;i < f.length;++ i) {
+2930 				dp[i] = dp[i - 1].multiply(x - i - 1);
+2931 				dp2[f.length - i - 1] = dp2[f.length - i].multiply(x - f.length + i);
+2932 			}
+2933 			for (int i = 0;i < f.length;++ i) {
+2934 				ModInteger tmp = f[i].multiply(dp[i]).multiplyEqual(dp2[i]).multiplyEqual(inv[i]).multiplyEqual(inv[f.length - 1 - i]);
+2935 				if ((f.length - i & 1) == 0) ret.addEqual(tmp);
+2936 				else ret.subtractEqual(tmp);
+2937 			}
+2938 			return ret;
+2939 		}
+2940 	}
+2941 
+2942 	/**
+2943 	 * 素数を渡すためのクラスです。<br>
+2944 	 * 中身が確実に素数であることを保証するときに使ってください。
+2945 	 *
+2946 	 * @author 31536000
+2947 	 *
+2948 	 */
+2949 	public static class Prime extends Number{
+2950 
+2951 		private static final long serialVersionUID = 8216169308184181643L;
+2952 		public final int prime;
+2953 
+2954 		/**
+2955 		 * 素数を設定します。
+2956 		 *
+2957 		 * @param prime 素数
+2958 		 * @throws IllegalArgumentException 素数以外を渡した時
+2959 		 */
+2960 		public Prime(int prime) {
+2961 			if (!isPrime(prime)) throw new IllegalArgumentException(prime + " is not prime");
+2962 			this.prime = prime;
+2963 		}
+2964 
+2965 		private static final int bases[] = {15591, 2018, 166, 7429, 8064, 16045, 10503, 4399, 1949, 1295, 2776, 3620, 560, 3128, 5212, 2657, 2300, 2021, 4652, 1471, 9336, 4018, 2398, 20462, 10277, 8028, 2213, 6219, 620, 3763, 4852, 5012, 3185, 1333, 6227, 5298, 1074, 2391, 5113, 7061, 803, 1269, 3875, 422, 751, 580, 4729, 10239, 746, 2951, 556, 2206, 3778, 481, 1522, 3476, 481, 2487, 3266, 5633, 488, 3373, 6441, 3344, 17, 15105, 1490, 4154, 2036, 1882, 1813, 467, 3307, 14042, 6371, 658, 1005, 903, 737, 1887, 7447, 1888, 2848, 1784, 7559, 3400, 951, 13969, 4304, 177, 41, 19875, 3110, 13221, 8726, 571, 7043, 6943, 1199, 352, 6435, 165, 1169, 3315, 978, 233, 3003, 2562, 2994, 10587, 10030, 2377, 1902, 5354, 4447, 1555, 263, 27027, 2283, 305, 669, 1912, 601, 6186, 429, 1930, 14873, 1784, 1661, 524, 3577, 236, 2360, 6146, 2850, 55637, 1753, 4178, 8466, 222, 2579, 2743, 2031, 2226, 2276, 374, 2132, 813, 23788, 1610, 4422, 5159, 1725, 3597, 3366, 14336, 579, 165, 1375, 10018, 12616, 9816, 1371, 536, 1867, 10864, 857, 2206, 5788, 434, 8085, 17618, 727, 3639, 1595, 4944, 2129, 2029, 8195, 8344, 6232, 9183, 8126, 1870, 3296, 7455, 8947, 25017, 541, 19115, 368, 566, 5674, 411, 522, 1027, 8215, 2050, 6544, 10049, 614, 774, 2333, 3007, 35201, 4706, 1152, 1785, 1028, 1540, 3743, 493, 4474, 2521, 26845, 8354, 864, 18915, 5465, 2447, 42, 4511, 1660, 166, 1249, 6259, 2553, 304, 272, 7286, 73, 6554, 899, 2816, 5197, 13330, 7054, 2818, 3199, 811, 922, 350, 7514, 4452, 3449, 2663, 4708, 418, 1621, 1171, 3471, 88, 11345, 412, 1559, 194};
+2966 
+2967 		private static boolean isSPRP(int n, int a) {
+2968 			int d = n - 1, s = 0;
+2969 			while ((d & 1) == 0) {
+2970 				++s;
+2971 				d >>= 1;
+2972 			}
+2973 			long cur = 1, pw = d;
+2974 			while (pw != 0) {
+2975 				if ((pw & 1) != 0) cur = (cur * a) % n;
+2976 				a = (int)(((long)a * a) % n);
+2977 				pw >>= 1;
+2978 			}
+2979 			if (cur == 1) return true;
+2980 			for (int r = 0; r < s; r++ ) {
+2981 				if (cur == n - 1) return true;
+2982 				cur = (cur * cur) % n;
+2983 			}
+2984 			return false;
+2985 		}
+2986 
+2987 		/**
+2988 		 * 与えられた値が素数か否かを判定します。<br>
+2989 		 * この実装はhttp://ceur-ws.org/Vol-1326/020-Forisek.pdfに基づきます。
+2990 		 * @param x 判定したい値
+2991 		 * @return xが素数ならtrue
+2992 		 */
+2993 		public static boolean isPrime(int x) {
+2994 			if (x == 2 || x == 3 || x == 5 || x == 7) return true;
+2995 			if ((x & 1) == 0 || x % 3 == 0 || x % 5 == 0 || x % 7 == 0) return false;
+2996 			if (x < 121) return x > 1;
+2997 			long h = x;
+2998 			h = ((h >> 16) ^ h) * 0x45d9f3b;
+2999 			h = ((h >> 16) ^ h) * 0x45d9f3b;
+3000 			h = ((h >> 16) ^ h) & 0xFF;
+3001 			return isSPRP(x, bases[(int)h]);
+3002 		}
+3003 
+3004 		@Override
+3005 		public int intValue() {
+3006 			return prime;
+3007 		}
+3008 
+3009 		@Override
+3010 		public long longValue() {
+3011 			return prime;
+3012 		}
+3013 
+3014 		@Override
+3015 		public float floatValue() {
+3016 			return prime;
+3017 		}
+3018 
+3019 		@Override
+3020 		public double doubleValue() {
+3021 			return prime;
+3022 		}
+3023 
+3024 		@Override
+3025 		public String toString() {
+3026 			return String.valueOf(prime);
+3027 		}
+3028 	}
+3029 
+3030 	public static class AbstractArray<T> extends AbstractList<T> implements RandomAccess{
+3031 
+3032 		private final Object[] array;
+3033 
+3034 		public AbstractArray(int size) {
+3035 			array = new Object[size];
+3036 		}
+3037 
+3038 		public AbstractArray(T[] array) {
+3039 			this(array.length);
+3040 			System.arraycopy(array, 0, this.array, 0, array.length);
+3041 		}
+3042 
+3043 		@Override
+3044 		public T set(int index, T element) {
+3045 			T ret = get(index);
+3046 			array[index] = element;
+3047 			return ret;
+3048 		}
+3049 
+3050 		@Override
+3051 		public T get(int index) {
+3052 			@SuppressWarnings("unchecked")
+3053 			T ret = (T)array[index];
+3054 			return ret;
+3055 		}
+3056 
+3057 		public Object[] get() {
+3058 			return array;
+3059 		}
+3060 
+3061 		public T[] get(T[] array) {
+3062 			if (array.length < this.array.length) {
+3063 				@SuppressWarnings("unchecked")
+3064 				T[] ret  = (T[])Arrays.copyOfRange(this.array, 0, this.array.length, array.getClass());
+3065 				return ret;
+3066 			}
+3067 			System.arraycopy(this.array, 0, array, 0, this.array.length);
+3068 			return array;
+3069 		}
+3070 
+3071 		@Override
+3072 		public int size() {
+3073 			return array.length;
+3074 		}
+3075 
+3076 		public int length() {
+3077 			return size();
+3078 		}
+3079 
+3080 		@Override
+3081 		public int hashCode() {
+3082 			return Arrays.hashCode(array);
+3083 		}
+3084 
+3085 		private class Iter implements Iterator<T> {
+3086 			private int index;
+3087 
+3088 			private Iter() {
+3089 				index = 0;
+3090 			}
+3091 
+3092 			@Override
+3093 			public boolean hasNext() {
+3094 				return index < array.length;
+3095 			}
+3096 
+3097 			@Override
+3098 			public T next() {
+3099 				return get(index++);
+3100 			}
+3101 
+3102 			@Override
+3103 			public void remove() {
+3104 				throw new UnsupportedOperationException();
+3105 			}
+3106 		}
+3107 
+3108 		@Override
+3109 		public Iterator<T> iterator() {
+3110 			return new Iter();
+3111 		}
+3112 	}
+3113 
+3114 	public static class Array<T> extends AbstractArray<T> implements Serializable{
+3115 
+3116 		private static final long serialVersionUID = 2749604433067098063L;
+3117 
+3118 		public Array(int size) {
+3119 			super(size);
+3120 		}
+3121 
+3122 		public Array(T[] array) {
+3123 			super(array);
+3124 		}
+3125 
+3126 		public T front() {
+3127 			return get(0);
+3128 		}
+3129 
+3130 		public T back() {
+3131 			return get(size() - 1);
+3132 		}
+3133 	}
+3134 }

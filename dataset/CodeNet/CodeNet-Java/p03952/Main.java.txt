@@ -1,0 +1,61 @@
+1 import java.util.*;
+2 import java.io.*;
+3 
+4 /*
+5    AtCoder contest code
+6    coder : yoichidon
+7  */
+8 
+9 public class Main {
+10     public static int[] solve(int N, int x){
+11         int[] ans = new int[2*N-1];
+12         if(N==2){
+13             return new int[]{1,2,3};
+14         }
+15 
+16         if(x==2){
+17             ans[N-2] = 2*N-1;
+18             ans[N-1] = 2;
+19             ans[N]   = 1;
+20             ans[N+1] = 2*N-2;
+21             int elm = 3;
+22             for(int index=0; index<2*N-1; index++){
+23                 if(ans[index]==0){
+24                     ans[index]=elm;
+25                     elm++;
+26                 }
+27             }
+28         }else{
+29             ans[N-2] = 1;
+30             ans[N-1] = x;
+31             ans[N]   = 2*N-1;
+32             ans[N+1] = 2;
+33             int elm = 3;
+34             for(int index=0; index<2*N-1; index++){
+35                 if(elm==x) elm++;
+36                 if(ans[index]==0){
+37                     ans[index]=elm;
+38                     elm++;
+39                 }
+40             }
+41         }
+42         return ans;
+43     }
+44     public static void main(String[] args) {
+45         Scanner sc = new Scanner(System.in);
+46         int N = sc.nextInt();
+47         int x = sc.nextInt();
+48 
+49         if(x==1 ||  x==2*N-1){
+50             System.out.println("No");
+51             return;
+52         }
+53         else{
+54             System.out.println("Yes");
+55         }
+56         int[] ans = solve(N,x);
+57         for(int i=0; i<ans.length; i++) System.out.println(ans[i]);
+58 
+59 
+60     }
+61 }

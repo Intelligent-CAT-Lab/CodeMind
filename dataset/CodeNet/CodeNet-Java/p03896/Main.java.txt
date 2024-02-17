@@ -1,0 +1,160 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.BufferedWriter;
+6 import java.io.IOException;
+7 import java.io.InputStreamReader;
+8 import java.io.UncheckedIOException;
+9 import java.nio.charset.Charset;
+10 import java.util.StringTokenizer;
+11 import java.io.Writer;
+12 import java.io.OutputStreamWriter;
+13 import java.io.BufferedReader;
+14 import java.io.InputStream;
+15 
+16 /**
+17  * Built using CHelper plug-in
+18  * Actual solution is at the top
+19  *
+20  * @author mikit
+21  */
+22 public class Main {
+23     public static void main(String[] args) {
+24         InputStream inputStream = System.in;
+25         OutputStream outputStream = System.out;
+26         LightScanner in = new LightScanner(inputStream);
+27         LightWriter out = new LightWriter(outputStream);
+28         I3y3sChallenge solver = new I3y3sChallenge();
+29         solver.solve(1, in, out);
+30         out.close();
+31     }
+32 
+33     static class I3y3sChallenge {
+34         public void solve(int testNumber, LightScanner in, LightWriter out) {
+35             // out.setBoolLabel(LightWriter.BoolLabel.YES_NO_FIRST_UP);
+36             int n = in.ints();
+37             if (n == 2) {
+38                 out.ans(-1).ln();
+39                 return;
+40             }
+41             int[][] ans = new int[n][n - 1];
+42             for (int i = 0; i < n - 1; i++) {
+43                 for (int j = 0; j < n - 1; j++) {
+44                     if (i == j) {
+45                         ans[i][j] = n;
+46                     } else {
+47                         ans[i][j] = j + 1;
+48                     }
+49                 }
+50             }
+51             for (int i = 0; i < n - 1; i++) {
+52                 ans[n - 1][i] = (i + 1) % (n - 1) + 1;
+53             }
+54             for (int i = 0; i < n; i++) {
+55                 out.ans(ans[i]).ln();
+56             }
+57         }
+58 
+59     }
+60 
+61     static class LightWriter implements AutoCloseable {
+62         private final Writer out;
+63         private boolean autoflush = false;
+64         private boolean breaked = true;
+65 
+66         public LightWriter(Writer out) {
+67             this.out = out;
+68         }
+69 
+70         public LightWriter(OutputStream out) {
+71             this(new BufferedWriter(new OutputStreamWriter(out, Charset.defaultCharset())));
+72         }
+73 
+74         public LightWriter print(char c) {
+75             try {
+76                 out.write(c);
+77                 breaked = false;
+78             } catch (IOException ex) {
+79                 throw new UncheckedIOException(ex);
+80             }
+81             return this;
+82         }
+83 
+84         public LightWriter print(String s) {
+85             try {
+86                 out.write(s, 0, s.length());
+87                 breaked = false;
+88             } catch (IOException ex) {
+89                 throw new UncheckedIOException(ex);
+90             }
+91             return this;
+92         }
+93 
+94         public LightWriter ans(String s) {
+95             if (!breaked) {
+96                 print(' ');
+97             }
+98             return print(s);
+99         }
+100 
+101         public LightWriter ans(int i) {
+102             return ans(Integer.toString(i));
+103         }
+104 
+105         public LightWriter ans(int... n) {
+106             for (int n1 : n) {
+107                 ans(n1);
+108             }
+109             return this;
+110         }
+111 
+112         public LightWriter ln() {
+113             print(System.lineSeparator());
+114             breaked = true;
+115             if (autoflush) {
+116                 try {
+117                     out.flush();
+118                 } catch (IOException ex) {
+119                     throw new UncheckedIOException(ex);
+120                 }
+121             }
+122             return this;
+123         }
+124 
+125         public void close() {
+126             try {
+127                 out.close();
+128             } catch (IOException ex) {
+129                 throw new UncheckedIOException(ex);
+130             }
+131         }
+132 
+133     }
+134 
+135     static class LightScanner {
+136         private BufferedReader reader = null;
+137         private StringTokenizer tokenizer = null;
+138 
+139         public LightScanner(InputStream in) {
+140             reader = new BufferedReader(new InputStreamReader(in));
+141         }
+142 
+143         public String string() {
+144             if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+145                 try {
+146                     tokenizer = new StringTokenizer(reader.readLine());
+147                 } catch (IOException e) {
+148                     throw new UncheckedIOException(e);
+149                 }
+150             }
+151             return tokenizer.nextToken();
+152         }
+153 
+154         public int ints() {
+155             return Integer.parseInt(string());
+156         }
+157 
+158     }
+159 }
+160 

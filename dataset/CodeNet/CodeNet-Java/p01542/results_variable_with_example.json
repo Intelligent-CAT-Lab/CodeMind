@@ -1,0 +1,54 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6    public static void main(String[] args) {\n7\t\t try {\n7\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nQuestion: What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the sataes and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN",
+        "predict": "20\nEND-OF-STATE"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.util.*;\n2 import java.lang.*;\n3 import java.math.*;\n4 import java.io.*;\n5 import static java.lang.Math.*;\n6 import static java.util.Arrays.*;\n7 import static java.util.Collections.*;\n8 \n9 public class Main{\n10 \tScanner sc=new Scanner(System.in);\n11 \n12 \tint INF=1<<28;\n13 \tdouble EPS=1e-12;\n14 \n15 \tString s;\n16 \n17 \tvoid run(){\n18 \t\ts=sc.nextLine();\n19 \t\tsolve();\n20 \t}\n21 \n22 \tchar[] cs;\n23 \tint max;\n24 \n25 \tvoid solve(){\n26 \t\ts+=\"$\";\n27 \t\tcs=s.toCharArray();\n28 \t\tmax=-1;\n29 \t\tdfs(0);\n30 \t\tprintln(max+\"\");\n31 \t}\n32 \n33 \tvoid dfs(int i){\n34 \t\tchar[] op={'0', '1', '+', '-', '*', '(', ')'};\n35 \t\tif(i==cs.length){\n36 \t\t\tmax=max(max, calc());\n37 \t\t\treturn;\n38 \t\t}\n39 \t\tif(cs[i]=='.'){\n40 \t\t\tfor(char c : op){\n41 \t\t\t\tcs[i]=c;\n42 \t\t\t\tdfs(i+1);\n43 \t\t\t\tcs[i]='.';\n44 \t\t\t}\n45 \t\t}else{\n46 \t\t\tdfs(i+1);\n47 \t\t}\n48 \t}\n49 \n50 \tint calc(){\n51 \t\tResult r=E(0);\n52 \t\tr.good&=r.p==cs.length-1;\n53 \t\tif(r.good){\n54 \t\t\tint n=cs.length;\n55 \t\t\tfor(int i=0; i<n; i++){\n56 \t\t\t\tif(cs[i]!='('){\n57 \t\t\t\t\tcontinue;\n58 \t\t\t\t}\n59 \t\t\t\tint left=i, right=left+1;\n60 \t\t\t\tint stack=0;\n61 \t\t\t\tboolean op=false;\n62 \t\t\t\tfor(; cs[right]!=')'||stack!=0; right++){\n63 \t\t\t\t\tif(cs[right]=='('){\n64 \t\t\t\t\t\tstack++;\n65 \t\t\t\t\t}else if(cs[right]==')'){\n66 \t\t\t\t\t\tstack--;\n67 \t\t\t\t\t}\n68 \t\t\t\t\tif(stack==0)\n69 \t\t\t\t\t\top|=cs[right]=='+'||cs[right]=='-'||cs[right]=='*';\n70 \t\t\t\t}\n71 \t\t\t\tr.good&=op;\n72 \t\t\t}\n73 \t\t}\n74 \t\treturn r.good?r.value:-1;\n75 \t}\n76 \n77 \tResult E(int p){\n78 \t\tResult r=F(p);\n79 \t\tif(!r.good){\n80 \t\t\treturn r;\n81 \t\t}\n82 \t\tfor(; cs[r.p]=='+'||cs[r.p]=='-';){\n83 \t\t\tResult r2=F(r.p+1);\n84 \t\t\tif(!r2.good){\n85 \t\t\t\treturn r2;\n86 \t\t\t}\n87 \t\t\tif(cs[r.p]=='+'){\n88 \t\t\t\tr.value+=r2.value;\n89 \t\t\t}else{\n90 \t\t\t\tr.value-=r2.value;\n91 \t\t\t}\n92 \t\t\tr.update();\n93 \t\t\tif(!r.good){\n94 \t\t\t\treturn r;\n95 \t\t\t}\n96 \t\t\tr.p=r2.p;\n97 \t\t}\n98 \t\treturn r;\n99 \t}\n100 \n101 \tResult F(int p){\n102 \t\tResult r=T(p);\n103 \t\tif(!r.good){\n104 \t\t\treturn r;\n105 \t\t}\n106 \t\tfor(; cs[r.p]=='*';){\n107 \t\t\tResult r2=T(r.p+1);\n108 \t\t\tif(!r2.good){\n109 \t\t\t\treturn r2;\n110 \t\t\t}\n111 \t\t\tr.value*=r2.value;\n112 \t\t\tr.update();\n113 \t\t\tif(!r.good){\n114 \t\t\t\treturn r;\n115 \t\t\t}\n116 \t\t\tr.p=r2.p;\n117 \t\t}\n118 \t\treturn r;\n119 \t}\n120 \n121 \tResult T(int p){\n122 \t\tif(cs[p]=='('){\n123 \t\t\tResult r=E(p+1);\n124 \t\t\tif(!r.good||cs[r.p]!=')'){\n125 \t\t\t\tr.good=false;\n126 \t\t\t\treturn r;\n127 \t\t\t}\n128 \t\t\tr.p++;\n129 \t\t\treturn r;\n130 \t\t}else if(cs[p]=='0'||cs[p]=='1'){\n131 \t\t\tResult r=new Result(p, 0);\n132 \t\t\tfor(; Character.isDigit(cs[r.p]); r.p++){\n133 \t\t\t\tr.value=r.value*2+cs[r.p]-'0';\n134 \t\t\t\tr.update();\n135 \t\t\t}\n136 \t\t\treturn r;\n137 \t\t}else{\n138 \t\t\treturn new Result(0, -1);\n139 \t\t}\n140 \t}\n141 \n142 \tclass Result{\n143 \t\tint p, value;\n144 \t\tboolean good;\n145 \n146 \t\tResult(int p, int value){\n147 \t\t\tthis.p=p;\n148 \t\t\tthis.value=value;\n149 \t\t\tgood=true;\n150 \t\t\tupdate();\n151 \t\t}\n152 \n153 \t\tvoid update(){\n154 \t\t\tgood&=0<=value&&value<1024;\n155 \t\t}\n156 \t}\n157 \n158 \tvoid println(String s){\n159 \t\tSystem.out.println(s);\n160 \t}\n161 \n162 \tpublic static void main(String[] args){\n163 \t\tnew Main().run();\n164 \t}\n165 }\nGiven the following input:\n000\n\n\nQuestion:\n What would be the states of variable n in line 54? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "4"
+        ],
+        "variable": "n",
+        "line": "54",
+        "predict": "There is no variable named \"n\" in the given code."
+    },
+    "2": {
+        "prompt": "Question:\n What would be the states of variable n in line 55? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "4",
+            "4",
+            "4",
+            "4"
+        ],
+        "variable": "n",
+        "line": "55",
+        "predict": "There is no variable named \"n\" in the given code."
+    },
+    "3": {
+        "prompt": "Question:\n What would be the states of variable i in line 55? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "1",
+            "2",
+            "3"
+        ],
+        "variable": "i",
+        "line": "55",
+        "predict": "There is no variable named \"i\" in the given code."
+    },
+    "4": {
+        "prompt": "Question:\n What would be the states of variable i in line 56? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "1",
+            "2",
+            "3"
+        ],
+        "variable": "i",
+        "line": "56",
+        "predict": "There is no variable named \"i\" in the given code."
+    }
+}

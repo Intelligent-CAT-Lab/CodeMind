@@ -1,0 +1,32 @@
+ <<<Analysis>>>
+The variable n, variable x and variable y are initialized with 3, 5 and 7 respectively according to the input. And variable z is not given in the input.
+The variable sum is calculated as x+y+z+1 = 16.
+The variable mask is calculated as 1<<sum = 1<<16 = 65536.
+The variable ng is calculated as 1<<z = 1<<7 = 128 and 1<<(y+z) = 1<<(5+7) = 1<<12 = 4096 and 1<<(x+y+z) = 1<<(5+7+1) = 1<<13 = 8192.
+The variable dp is a 2D array of size n+1 and mask+1. It is initialized with 1 at position (0,1) and 0 at all other positions.
+The variable ans is initialized with 1.
+The solve() method is called which performs the following steps:
+1. It initializes the variables n, x, y and z with the values passed as input.
+2. It calculates the sum of the digits of the current interger sum = x+y+z+1 = 16.
+3. It calculates the variable mask as 1<<sum = 1<<16 = 65536.
+4. It initializes the variable ng with the values 1<<z, 1<<(y+z) and 1<<(x+y+z)
+5. It initializes the variable dp with 1 at position (0,1) and 0 at all other positions.
+6. It iterates through all the values of i from 0 to n-1.
+7. For each value of i, it iterates through all the values of state from 0 to mask.
+8. For each value of state, it iterates through all the values of j from 1 to 10.
+9. It calculates the value of res as ((state<<j)&mask) + 1.
+10. If ((res&ng)==ng) continue;
+11. It adds the value of dp[i][state] to dp[i+1][res].
+12. It calculates the value of ans as 10^n.
+13. It iterates through all the values of i from 0 to mask.
+14. For each value of i, it subtracts the value of dp[n][i] from ans.
+15. It calculates the final value of ans as (ans+MOD)%MOD.
+The run() method is called which performs the following steps:
+1. It reads the input from the standard input stream.
+2. It calls the solve() method.
+3. It prints the output to the standard output stream.
+The main() method is called which calls the run() method.
+The return value of the code is the value of ans which is 10^n = 10^3 = 1000.
+<<<Output>>>
+1000
+[END-OF-RESPONSE]

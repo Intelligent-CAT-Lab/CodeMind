@@ -1,0 +1,373 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6    public static void main(String[] args) {\n7\t\t try {\n7\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nQuestion: What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the sataes and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import static java.lang.Integer.parseInt;\n2 import static java.lang.Long.parseLong;\n3 import static java.lang.System.exit;\n4 \n5 import java.io.BufferedReader;\n6 import java.io.IOException;\n7 import java.io.InputStreamReader;\n8 import java.io.PrintWriter;\n9 import java.util.StringTokenizer;\n10 \n11 public class Main {\n12 \n13 \tstatic void solve() throws Exception {\n14 \t\tint n = scanInt();\n15 \t\tint d1 = scanInt();\n16 \t\tint d2 = scanInt();\n17 \t\tint d1s = 0, d2s = 0;\n18 \t\twhile ((d1 & 3) == 0) {\n19 \t\t\t++d1s;\n20 \t\t\td1 >>= 2;\n21 \t\t}\n22 \t\twhile ((d2 & 3) == 0) {\n23 \t\t\t++d2s;\n24 \t\t\td2 >>= 2;\n25 \t\t}\n26 \t\tint need = n * n;\n27 \t\tfor (int i = 0; i < 2 * n; i++) {\n28 \t\t\tfor (int j = 0; j < 2 * n; j++) {\n29 \t\t\t\tif ((d1 & 3) == 1 && (((i >> d1s) ^ (j >> d1s)) & 1) != 0) {\n30 \t\t\t\t\tcontinue;\n31 \t\t\t\t}\n32 \t\t\t\tif ((d1 & 3) == 2 && ((i >> d1s) & 1) != 0) {\n33 \t\t\t\t\tcontinue;\n34 \t\t\t\t}\n35 \t\t\t\tif ((d2 & 3) == 1 && (((i >> d2s) ^ (j >> d2s)) & 1) != 0) {\n36 \t\t\t\t\tcontinue;\n37 \t\t\t\t}\n38 \t\t\t\tif ((d2 & 3) == 2 && ((i >> d2s) & 1) != 0) {\n39 \t\t\t\t\tcontinue;\n40 \t\t\t\t}\n41 \t\t\t\tout.println(i + \" \" + j);\n42 \t\t\t\tif (--need == 0) {\n43 \t\t\t\t\treturn;\n44 \t\t\t\t}\n45 \t\t\t}\n46 \t\t}\n47 \t\tthrow new AssertionError();\n48 \t}\n49 \n50 \tstatic int scanInt() throws IOException {\n51 \t\treturn parseInt(scanString());\n52 \t}\n53 \n54 \tstatic long scanLong() throws IOException {\n55 \t\treturn parseLong(scanString());\n56 \t}\n57 \n58 \tstatic String scanString() throws IOException {\n59 \t\twhile (tok == null || !tok.hasMoreTokens()) {\n60 \t\t\ttok = new StringTokenizer(in.readLine());\n61 \t\t}\n62 \t\treturn tok.nextToken();\n63 \t}\n64 \n65 \tstatic BufferedReader in;\n66 \tstatic PrintWriter out;\n67 \tstatic StringTokenizer tok;\n68 \n69 \tpublic static void main(String[] args) {\n70 \t\ttry {\n71 \t\t\tin = new BufferedReader(new InputStreamReader(System.in));\n72 \t\t\tout = new PrintWriter(System.out);\n73 \t\t\tsolve();\n74 \t\t\tin.close();\n75 \t\t\tout.close();\n76 \t\t} catch (Throwable e) {\n77 \t\t\te.printStackTrace();\n78 \t\t\texit(1);\n79 \t\t}\n80 \t}\n81 }\nGiven the following input:\n2 1 2\n\n\nQuestion:\n What would be the states of variable n in line 14? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "n",
+        "line": "14"
+    },
+    "2": {
+        "prompt": "Question:\n What would be the states of variable d1 in line 15? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "d1",
+        "line": "15"
+    },
+    "3": {
+        "prompt": "Question:\n What would be the states of variable d2 in line 16? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "d2",
+        "line": "16"
+    },
+    "4": {
+        "prompt": "Question:\n What would be the states of variable d1s in line 17? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "d1s",
+        "line": "17"
+    },
+    "5": {
+        "prompt": "Question:\n What would be the states of variable d2s in line 17? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "d2s",
+        "line": "17"
+    },
+    "6": {
+        "prompt": "Question:\n What would be the states of variable d1 in line 18? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "d1",
+        "line": "18"
+    },
+    "7": {
+        "prompt": "Question:\n What would be the states of variable d2 in line 22? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "d2",
+        "line": "22"
+    },
+    "8": {
+        "prompt": "Question:\n What would be the states of variable need in line 26? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "4"
+        ],
+        "variable": "need",
+        "line": "26"
+    },
+    "9": {
+        "prompt": "Question:\n What would be the states of variable n in line 26? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "n",
+        "line": "26"
+    },
+    "10": {
+        "prompt": "Question:\n What would be the states of variable i in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "1",
+            "2"
+        ],
+        "variable": "i",
+        "line": "27"
+    },
+    "11": {
+        "prompt": "Question:\n What would be the states of variable n in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2",
+            "2",
+            "2"
+        ],
+        "variable": "n",
+        "line": "27"
+    },
+    "12": {
+        "prompt": "Question:\n What would be the states of variable j in line 28? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "0",
+            "1",
+            "2",
+            "3",
+            "0",
+            "1",
+            "2"
+        ],
+        "variable": "j",
+        "line": "28"
+    },
+    "13": {
+        "prompt": "Question:\n What would be the states of variable n in line 28? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2",
+            "2",
+            "2",
+            "2",
+            "2",
+            "2",
+            "2",
+            "2",
+            "2",
+            "2",
+            "2",
+            "2",
+            "2"
+        ],
+        "variable": "n",
+        "line": "28"
+    },
+    "14": {
+        "prompt": "Question:\n What would be the states of variable j in line 29? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "0",
+            "1",
+            "2",
+            "3",
+            "0",
+            "1",
+            "2"
+        ],
+        "variable": "j",
+        "line": "29"
+    },
+    "15": {
+        "prompt": "Question:\n What would be the states of variable d1 in line 29? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1"
+        ],
+        "variable": "d1",
+        "line": "29"
+    },
+    "16": {
+        "prompt": "Question:\n What would be the states of variable i in line 29? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2",
+            "2"
+        ],
+        "variable": "i",
+        "line": "29"
+    },
+    "17": {
+        "prompt": "Question:\n What would be the states of variable d1s in line 29? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+        ],
+        "variable": "d1s",
+        "line": "29"
+    },
+    "18": {
+        "prompt": "Question:\n What would be the states of variable d1 in line 32? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1"
+        ],
+        "variable": "d1",
+        "line": "32"
+    },
+    "19": {
+        "prompt": "Question:\n What would be the states of variable i in line 32? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "0",
+            "1",
+            "1",
+            "2",
+            "2"
+        ],
+        "variable": "i",
+        "line": "32"
+    },
+    "20": {
+        "prompt": "Question:\n What would be the states of variable d1s in line 32? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+        ],
+        "variable": "d1s",
+        "line": "32"
+    },
+    "21": {
+        "prompt": "Question:\n What would be the states of variable j in line 35? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "2",
+            "1",
+            "3",
+            "0",
+            "2"
+        ],
+        "variable": "j",
+        "line": "35"
+    },
+    "22": {
+        "prompt": "Question:\n What would be the states of variable d2 in line 35? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2",
+            "2",
+            "2",
+            "2",
+            "2",
+            "2"
+        ],
+        "variable": "d2",
+        "line": "35"
+    },
+    "23": {
+        "prompt": "Question:\n What would be the states of variable i in line 35? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "0",
+            "1",
+            "1",
+            "2",
+            "2"
+        ],
+        "variable": "i",
+        "line": "35"
+    },
+    "24": {
+        "prompt": "Question:\n What would be the states of variable d2s in line 35? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+        ],
+        "variable": "d2s",
+        "line": "35"
+    },
+    "25": {
+        "prompt": "Question:\n What would be the states of variable d2 in line 38? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2",
+            "2",
+            "2",
+            "2",
+            "2",
+            "2"
+        ],
+        "variable": "d2",
+        "line": "38"
+    },
+    "26": {
+        "prompt": "Question:\n What would be the states of variable i in line 38? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "0",
+            "1",
+            "1",
+            "2",
+            "2"
+        ],
+        "variable": "i",
+        "line": "38"
+    },
+    "27": {
+        "prompt": "Question:\n What would be the states of variable d2s in line 38? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+        ],
+        "variable": "d2s",
+        "line": "38"
+    },
+    "28": {
+        "prompt": "Question:\n What would be the states of variable j in line 41? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "2",
+            "0",
+            "2"
+        ],
+        "variable": "j",
+        "line": "41"
+    },
+    "29": {
+        "prompt": "Question:\n What would be the states of variable i in line 41? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "0",
+            "2",
+            "2"
+        ],
+        "variable": "i",
+        "line": "41"
+    },
+    "30": {
+        "prompt": "Question:\n What would be the states of variable need in line 42? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "3",
+            "2",
+            "1",
+            "0"
+        ],
+        "variable": "need",
+        "line": "42"
+    }
+}

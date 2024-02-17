@@ -1,0 +1,430 @@
+1 import java.io.ByteArrayInputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.Arrays;
+6 import java.util.InputMismatchException;
+7 
+8 public class Main {
+9 	static InputStream is;
+10 	static PrintWriter out;
+11 	static String INPUT = "";
+12 	
+13 	static void solve()
+14 	{
+15 		int n = ni(), K = ni();
+16 		int mod = 924844033;
+17 		
+18 		int[][][] dp = new int[n+1][2][n+1];
+19 		// RIRI
+20 		dp[0][0][0] = 1;
+21 		for(int i = 0;i <= n-1;i++){
+22 			for(int j = 0;j <= n-1;j++){
+23 				if(dp[i][0][j] == 0 && dp[i][0][j] == 1)continue;
+24 				dp[i+1][0][j] += dp[i][0][j];
+25 				if(dp[i+1][0][j] >= mod)dp[i+1][0][j] -= mod;
+26 				dp[i+1][0][j] += dp[i][1][j];
+27 				if(dp[i+1][0][j] >= mod)dp[i+1][0][j] -= mod;
+28 				
+29 				dp[i+1][1][j+1] += dp[i][0][j];
+30 				if(dp[i+1][1][j+1] >= mod)dp[i+1][1][j+1] -= mod;
+31 				dp[i+1][1][j+1] += dp[i][1][j];
+32 				if(dp[i+1][1][j+1] >= mod)dp[i+1][1][j+1] -= mod;
+33 				
+34 				if(i > 0){
+35 					dp[i+1][0][j+1] += dp[i][0][j];
+36 					if(dp[i+1][0][j+1] >= mod)dp[i+1][0][j+1] -= mod;
+37 				}
+38 			}
+39 		}
+40 		
+41 		int[][][] ep = new int[n+1][2][n+1];
+42 		// RIRI
+43 		ep[0][0][0] = 1;
+44 		for(int i = 0;i <= n-1;i++){
+45 			for(int j = 0;j <= n-1;j++){
+46 				if(ep[i][0][j] == 0 && ep[i][0][j] == 1)continue;
+47 				ep[i+1][0][j] += ep[i][0][j];
+48 				if(ep[i+1][0][j] >= mod)ep[i+1][0][j] -= mod;
+49 				ep[i+1][0][j] += ep[i][1][j];
+50 				if(ep[i+1][0][j] >= mod)ep[i+1][0][j] -= mod;
+51 				
+52 				ep[i+1][1][j+1] += ep[i][0][j];
+53 				if(ep[i+1][1][j+1] >= mod)ep[i+1][1][j+1] -= mod;
+54 				ep[i+1][1][j+1] += ep[i][1][j];
+55 				if(ep[i+1][1][j+1] >= mod)ep[i+1][1][j+1] -= mod;
+56 				
+57 				ep[i+1][0][j+1] += ep[i][0][j];
+58 				if(ep[i+1][0][j+1] >= mod)ep[i+1][0][j+1] -= mod;
+59 			}
+60 		}
+61 		
+62 		long[] fp = new long[n+1];
+63 		fp[0] = 1;
+64 		long[] temp = new long[n+1];
+65 		for(int i = 0;i < 2*K && i < n;i++){
+66 			int len = (n-i+2*K-1)/(2*K);
+67 			if(i < K){
+68 				if(i+2*K*(len-1)+K < n){
+69 					for(int v = 0;v <= n;v++){
+70 						temp[v] = dp[len][0][v]+dp[len][1][v];
+71 					}
+72 					fp = Arrays.copyOf(convoluteSimply(fp, temp, mod, 5), n+1);
+73 				}else{
+74 					for(int v = 0;v <= n;v++){
+75 						temp[v] = dp[len][0][v];
+76 					}
+77 					fp = Arrays.copyOf(convoluteSimply(fp, temp, mod, 5), n+1);
+78 				}
+79 			}else{
+80 				if(i+2*K*(len-1)+K < n){
+81 					for(int v = 0;v <= n;v++){
+82 						temp[v] = ep[len][0][v]+ep[len][1][v];
+83 					}
+84 					fp = Arrays.copyOf(convoluteSimply(fp, temp, mod, 5), n+1);
+85 				}else{
+86 					for(int v = 0;v <= n;v++){
+87 						temp[v] = ep[len][0][v];
+88 					}
+89 					fp = Arrays.copyOf(convoluteSimply(fp, temp, mod, 5), n+1);
+90 				}
+91 			}
+92 		}
+93 		long F = 1;
+94 		for(int i = n-1;i >= 1;i--){
+95 			F = F * (n-i) % mod;
+96 			fp[i] = fp[i] * F % mod;
+97 		}
+98 		F = F * n % mod;
+99 		for(int i = 1, sig = -1;i <= n;i++, sig = -sig){
+100 			F += sig * fp[i];
+101 		}
+102 		F %= mod;
+103 		if(F < 0)F += mod;
+104 		out.println(F);
+105 	}
+106 	
+107 	public static long[] convoluteSimply(long[] a, long[] b, int P, int g)
+108 	{
+109 		int m = Math.max(2, Integer.highestOneBit(Math.max(a.length, b.length)-1)<<2);
+110 		long[] fa = nttmb(a, m, false, P, g);
+111 		long[] fb = a == b ? fa : nttmb(b, m, false, P, g);
+112 		for(int i = 0;i < m;i++){
+113 			fa[i] = fa[i]*fb[i]%P;
+114 		}
+115 		return nttmb(fa, m, true, P, g);
+116 	}
+117 	
+118 	// Modifed Montgomery + Barrett
+119 	private static long[] nttmb(long[] src, int n, boolean inverse, int P, int g)
+120 	{
+121 		long[] dst = Arrays.copyOf(src, n);
+122 		
+123 		int h = Integer.numberOfTrailingZeros(n);
+124 		long K = Integer.highestOneBit(P)<<1;
+125 		int H = Long.numberOfTrailingZeros(K)*2;
+126 		long M = K*K/P;
+127 		
+128 		int[] wws = new int[1<<h-1];
+129 		long dw = inverse ? pow(g, P-1-(P-1)/n, P) : pow(g, (P-1)/n, P);
+130 		long w = (1L<<32)%P;
+131 		for(int k = 0;k < 1<<h-1;k++){
+132 			wws[k] = (int)w;
+133 			w = modh(w*dw, M, H, P);
+134 		}
+135 		long J = invl(P, 1L<<32);
+136 		for(int i = 0;i < h;i++){
+137 			for(int j = 0;j < 1<<i;j++){
+138 				for(int k = 0, s = j<<h-i, t = s|1<<h-i-1;k < 1<<h-i-1;k++,s++,t++){
+139 					long u = (dst[s] - dst[t] + 2*P)*wws[k];
+140 					dst[s] += dst[t];
+141 					if(dst[s] >= 2*P)dst[s] -= 2*P;
+142 //					long Q = (u&(1L<<32)-1)*J&(1L<<32)-1;
+143 					long Q = (u<<32)*J>>>32;
+144 					dst[t] = (u>>>32)-(Q*P>>>32)+P;
+145 				}
+146 			}
+147 			if(i < h-1){
+148 				for(int k = 0;k < 1<<h-i-2;k++)wws[k] = wws[k*2];
+149 			}
+150 		}
+151 		for(int i = 0;i < n;i++){
+152 			if(dst[i] >= P)dst[i] -= P;
+153 		}
+154 		for(int i = 0;i < n;i++){
+155 			int rev = Integer.reverse(i)>>>-h;
+156 			if(i < rev){
+157 				long d = dst[i]; dst[i] = dst[rev]; dst[rev] = d;
+158 			}
+159 		}
+160 		
+161 		if(inverse){
+162 			long in = invl(n, P);
+163 			for(int i = 0;i < n;i++)dst[i] = modh(dst[i]*in, M, H, P);
+164 		}
+165 		
+166 		return dst;
+167 	}
+168 	
+169 	// Modified Shoup + Barrett
+170 	private static long[] nttsb(long[] src, int n, boolean inverse, int P, int g)
+171 	{
+172 		long[] dst = Arrays.copyOf(src, n);
+173 		
+174 		int h = Integer.numberOfTrailingZeros(n);
+175 		long K = Integer.highestOneBit(P)<<1;
+176 		int H = Long.numberOfTrailingZeros(K)*2;
+177 		long M = K*K/P;
+178 		
+179 		long dw = inverse ? pow(g, P-1-(P-1)/n, P) : pow(g, (P-1)/n, P);
+180 		long[] wws = new long[1<<h-1];
+181 		long[] ws = new long[1<<h-1];
+182 		long w = 1;
+183 		for(int k = 0;k < 1<<h-1;k++){
+184 			wws[k] = (w<<32)/P;
+185 			ws[k] = w;
+186 			w = modh(w*dw, M, H, P);
+187 		}
+188 		for(int i = 0;i < h;i++){
+189 			for(int j = 0;j < 1<<i;j++){
+190 				for(int k = 0, s = j<<h-i, t = s|1<<h-i-1;k < 1<<h-i-1;k++,s++,t++){
+191 					long ndsts = dst[s] + dst[t];
+192 					if(ndsts >= 2*P)ndsts -= 2*P;
+193 					long T = dst[s] - dst[t] + 2*P;
+194 					long Q = wws[k]*T>>>32;
+195 					dst[s] = ndsts;
+196 					dst[t] = ws[k]*T-Q*P&(1L<<32)-1;
+197 				}
+198 			}
+199 //			dw = dw * dw % P;
+200 			if(i < h-1){
+201 				for(int k = 0;k < 1<<h-i-2;k++){
+202 					wws[k] = wws[k*2];
+203 					ws[k] = ws[k*2];
+204 				}
+205 			}
+206 		}
+207 		for(int i = 0;i < n;i++){
+208 			if(dst[i] >= P)dst[i] -= P;
+209 		}
+210 		for(int i = 0;i < n;i++){
+211 			int rev = Integer.reverse(i)>>>-h;
+212 			if(i < rev){
+213 				long d = dst[i]; dst[i] = dst[rev]; dst[rev] = d;
+214 			}
+215 		}
+216 		
+217 		if(inverse){
+218 			long in = invl(n, P);
+219 			for(int i = 0;i < n;i++){
+220 				dst[i] = modh(dst[i] * in, M, H, P);
+221 			}
+222 		}
+223 		
+224 		return dst;
+225 	}
+226 	
+227 	static final long mask = (1L<<31)-1;
+228 	
+229 	public static long modh(long a, long M, int h, int mod)
+230 	{
+231 		long r = a-((M*(a&mask)>>>31)+M*(a>>>31)>>>h-31)*mod;
+232 		return r < mod ? r : r-mod;
+233 	}
+234 	
+235 	private static long[] garnerPrepare(int[] m)
+236 	{
+237 		int n = m.length;
+238 		assert n == m.length;
+239 		if(n == 0)return new long[0];
+240 		long[] gamma = new long[n];
+241 		for(int k = 1;k < n;k++){
+242 			long prod = 1;
+243 			for(int i = 0;i < k;i++){
+244 				prod = prod * m[i] % m[k];
+245 			}
+246 			gamma[k] = invl(prod, m[k]);
+247 		}
+248 		return gamma;
+249 	}
+250 	
+251 	private static long[] garnerBatch(int[] u, int[] m, long[] gamma)
+252 	{
+253 		int n = u.length;
+254 		assert n == m.length;
+255 		long[] v = new long[n];
+256 		v[0] = u[0];
+257 		for(int k = 1;k < n;k++){
+258 			long temp = v[k-1];
+259 			for(int j = k-2;j >= 0;j--){
+260 				temp = (temp * m[j] + v[j]) % m[k];
+261 			}
+262 			v[k] = (u[k] - temp) * gamma[k] % m[k];
+263 			if(v[k] < 0)v[k] += m[k];
+264 		}
+265 		return v;
+266 	}
+267 	
+268 	private static long pow(long a, long n, long mod) {
+269 		//		a %= mod;
+270 		long ret = 1;
+271 		int x = 63 - Long.numberOfLeadingZeros(n);
+272 		for (; x >= 0; x--) {
+273 			ret = ret * ret % mod;
+274 			if (n << 63 - x < 0)
+275 				ret = ret * a % mod;
+276 		}
+277 		return ret;
+278 	}
+279 	
+280 	private static long invl(long a, long mod) {
+281 		long b = mod;
+282 		long p = 1, q = 0;
+283 		while (b > 0) {
+284 			long c = a / b;
+285 			long d;
+286 			d = a;
+287 			a = b;
+288 			b = d % b;
+289 			d = p;
+290 			p = q;
+291 			q = d - c * q;
+292 		}
+293 		return p < 0 ? p + mod : p;
+294 	}
+295 	
+296 	public static void main(String[] args) throws Exception
+297 	{
+298 		long S = System.currentTimeMillis();
+299 		is = INPUT.isEmpty() ? System.in : new ByteArrayInputStream(INPUT.getBytes());
+300 		out = new PrintWriter(System.out);
+301 		
+302 		solve();
+303 		out.flush();
+304 		long G = System.currentTimeMillis();
+305 		tr(G-S+"ms");
+306 	}
+307 	
+308 	private static boolean eof()
+309 	{
+310 		if(lenbuf == -1)return true;
+311 		int lptr = ptrbuf;
+312 		while(lptr < lenbuf)if(!isSpaceChar(inbuf[lptr++]))return false;
+313 		
+314 		try {
+315 			is.mark(1000);
+316 			while(true){
+317 				int b = is.read();
+318 				if(b == -1){
+319 					is.reset();
+320 					return true;
+321 				}else if(!isSpaceChar(b)){
+322 					is.reset();
+323 					return false;
+324 				}
+325 			}
+326 		} catch (IOException e) {
+327 			return true;
+328 		}
+329 	}
+330 	
+331 	private static byte[] inbuf = new byte[1024];
+332 	static int lenbuf = 0, ptrbuf = 0;
+333 	
+334 	private static int readByte()
+335 	{
+336 		if(lenbuf == -1)throw new InputMismatchException();
+337 		if(ptrbuf >= lenbuf){
+338 			ptrbuf = 0;
+339 			try { lenbuf = is.read(inbuf); } catch (IOException e) { throw new InputMismatchException(); }
+340 			if(lenbuf <= 0)return -1;
+341 		}
+342 		return inbuf[ptrbuf++];
+343 	}
+344 	
+345 	private static boolean isSpaceChar(int c) { return !(c >= 33 && c <= 126); }
+346 //	private static boolean isSpaceChar(int c) { return !(c >= 32 && c <= 126); }
+347 	private static int skip() { int b; while((b = readByte()) != -1 && isSpaceChar(b)); return b; }
+348 	
+349 	private static double nd() { return Double.parseDouble(ns()); }
+350 	private static char nc() { return (char)skip(); }
+351 	
+352 	private static String ns()
+353 	{
+354 		int b = skip();
+355 		StringBuilder sb = new StringBuilder();
+356 		while(!(isSpaceChar(b))){
+357 			sb.appendCodePoint(b);
+358 			b = readByte();
+359 		}
+360 		return sb.toString();
+361 	}
+362 	
+363 	private static char[] ns(int n)
+364 	{
+365 		char[] buf = new char[n];
+366 		int b = skip(), p = 0;
+367 		while(p < n && !(isSpaceChar(b))){
+368 			buf[p++] = (char)b;
+369 			b = readByte();
+370 		}
+371 		return n == p ? buf : Arrays.copyOf(buf, p);
+372 	}
+373 	
+374 	private static char[][] nm(int n, int m)
+375 	{
+376 		char[][] map = new char[n][];
+377 		for(int i = 0;i < n;i++)map[i] = ns(m);
+378 		return map;
+379 	}
+380 	
+381 	private static int[] na(int n)
+382 	{
+383 		int[] a = new int[n];
+384 		for(int i = 0;i < n;i++)a[i] = ni();
+385 		return a;
+386 	}
+387 	
+388 	private static int ni()
+389 	{
+390 		int num = 0, b;
+391 		boolean minus = false;
+392 		while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+393 		if(b == '-'){
+394 			minus = true;
+395 			b = readByte();
+396 		}
+397 		
+398 		while(true){
+399 			if(b >= '0' && b <= '9'){
+400 				num = num * 10 + (b - '0');
+401 			}else{
+402 				return minus ? -num : num;
+403 			}
+404 			b = readByte();
+405 		}
+406 	}
+407 	
+408 	private static long nl()
+409 	{
+410 		long num = 0;
+411 		int b;
+412 		boolean minus = false;
+413 		while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+414 		if(b == '-'){
+415 			minus = true;
+416 			b = readByte();
+417 		}
+418 		
+419 		while(true){
+420 			if(b >= '0' && b <= '9'){
+421 				num = num * 10 + (b - '0');
+422 			}else{
+423 				return minus ? -num : num;
+424 			}
+425 			b = readByte();
+426 		}
+427 	}
+428 	
+429 	private static void tr(Object... o) { if(INPUT.length() != 0)System.out.println(Arrays.deepToString(o)); }
+430 }

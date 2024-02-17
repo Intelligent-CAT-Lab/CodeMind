@@ -1,0 +1,60 @@
+he variable n is initialized with 2 and variable x is initialized with 7.
+It enters a while loop and it iterates from 0 to 1 to check each integer i in this range. The value of variable i is also passed to variable n.
+Inside the while loop, it calculates the sum of the digits of the current interger n by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [2, 5]. If it does, it adds the current interger i to variable answer. The condition is met when i is 2,3,4,5,11,12,13,14 and 20.
+After the loop finishes, it print the fianl value of variable answer as output, which is 84.
+<<<Output>>>
+1
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner();
+		int n = sc.nextInt();
+		long x = sc.nextLong();
+
+		System.out.println(calc(n, x));
+	}
+
+
+	static long calc(int n, long x){
+		if(n == 0)
+			return 1;
+		long sum = 0;
+		x--;
+		long length = length(n-1);
+		long p = p(n-1);
+		if(x > 0){
+			if(length <= x)
+				sum += p;
+			else
+				sum += calc(n-1, x);
+			x -= length;
+		}
+		if(x > 0){
+			x--;
+			sum++;
+		}
+		if(x > 0){
+			if(length <= x)
+				sum += p;
+			else
+				sum += calc(n-1, x);
+		}
+
+		return sum;
+	}
+
+	static long length(int n){
+		return 1 + 4 * ((long)Math.pow(2, n) -1);
+	

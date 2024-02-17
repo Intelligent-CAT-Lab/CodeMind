@@ -1,0 +1,113 @@
+1 import java.util.Arrays;
+2 import java.util.Scanner;
+3 
+4 class Main{
+5 
+6     static char[][] ans;
+7     static int N;
+8     static int M;
+9 
+10     static boolean evenSolver(int n,int m,int a,int b,int sy,int sx){
+11         if(n*m<2*(a+b))return false;
+12         if(n*m==2*(a+b) && a%2==1)return false;
+13         int i=0,j=0;
+14         while(a>0){
+15             ans[sy+i][sx+j]='<';
+16             ans[sy+i][sx+1+j]='>';
+17             --a;
+18             if(a>0){
+19                 ans[sy+1+i][sx+j]='<';
+20                 ans[sy+1+i][sx+1+j]='>';
+21             }
+22             --a;
+23             j+=2;
+24             if(j>=m){
+25                 j=0;
+26                 i+=2;
+27             }
+28         }
+29 
+30         while(b>0){
+31             ans[sy+i][sx+j]='^';
+32             ans[sy+i+1][sx+j]='v';
+33             --b;
+34             if(b>0){
+35                 ans[sy+i][sx+j+1]='^';
+36                 ans[sy+1+i][sx+1+j]='v';
+37             }
+38             --b;
+39             j+=2;
+40             if(j>=m){
+41                 j=0;
+42                 i+=2;
+43             }
+44         }
+45         return true;
+46     }
+47 
+48 
+49     static void printSolve(boolean t){
+50         if(t){
+51             System.out.println("YES");
+52             for(char[] carray : ans){
+53                 System.out.println(String.valueOf(carray));
+54                 System.out.println();
+55             }
+56         }else{
+57             System.out.println("NO");
+58         }
+59 
+60     }
+61 
+62     public static void main(String[] args){
+63         Scanner scan = new Scanner(System.in);
+64         N = scan.nextInt();
+65         M = scan.nextInt();
+66         int A=scan.nextInt();
+67         int B=scan.nextInt();
+68         ans = new char[N][M];
+69         for(char[] c : ans)Arrays.fill(c, '.');
+70         
+71         if(N%2 == 0 && M%2 == 0)printSolve(evenSolver(N, M, A, B, 0, 0));
+72         else if(N%2==0 || M%2==0){
+73             if(N%2==0){
+74                 for(int i=0;i<N;i+=2)if(B>0){
+75                     --B;
+76                     ans[i][0]='^';
+77                     ans[i+1][0]='v';
+78                 }
+79                 printSolve(evenSolver(N, M-1, A, B, 0, 1));
+80             }else{
+81                 for(int j=0;j<M;j+=2)if(A>0){
+82                     --A;
+83                     ans[0][j]='<';
+84                     ans[0][j+1]='>';
+85                 }
+86                 printSolve(evenSolver(N-1, M, A, B, 1, 0));
+87             }
+88         }else{
+89             char ans_[][] = {{'<','>','^'},
+90             {'^','.','v'},
+91             {'v','<','>'}};
+92             for(int i=0;i<N-1;i+=2)if(B>0){
+93                 --B;
+94                 ans[i][M-1]='^';
+95                 ans[i+1][M-1]='v';
+96             }
+97             for(int j=0;j<M-1;j+=2)if(A>0){
+98                 --A;
+99                 ans[N-1][j]='<';
+100                 ans[N-1][j+1]='>';
+101             }
+102             if(A>0 && B>0 && A%2==1){
+103                 for(int i=0;i<3;++i)for(int j=0;j<3;++j)ans[N-3+i][M-3+j]=ans_[i][j];
+104                 A-=1;B-=1;
+105                 printSolve(2*(A+B)<=(N-1)*(M-1)-4 && evenSolver(N-1,M-1,A,B,0,0));
+106             }else{
+107                 printSolve(evenSolver(N-1,M-1,A,B,0,0));
+108             }
+109         }
+110 
+111 
+112     }
+113 }

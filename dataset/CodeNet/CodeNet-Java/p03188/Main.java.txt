@@ -1,0 +1,126 @@
+1 
+2 public class Main {
+3   private static void solve() {
+4     int k = ni();
+5 
+6     if (k == 1)  {
+7       System.out.println(1);
+8       System.out.println(1);
+9       return;
+10     }
+11     int n = (k + 3) / 4 * 2;
+12     
+13     int[][] ret = new int[n][n];
+14     for (int i = 0; i < n; i ++) {
+15       for (int j = 0; j < n; j ++) {
+16         ret[i][j] = (i % 2 == 0 ? 0 : n) + (i + j) % n;
+17       }
+18     }
+19     
+20     for (int i = 0; i < n; i ++) {
+21       for (int j = 0; j < n; j ++) {
+22         if (ret[i][j] >= k) ret[i][j] = (ret[i][j]  - n) % k;
+23       }
+24     }
+25     
+26     System.out.println(n);
+27     for (int i = 0; i < n; i ++) {
+28       for (int j = 0; j < n; j ++) {
+29         System.out.print((ret[i][j] + 1) + " ");
+30       }
+31       System.out.println();
+32     }
+33   }
+34 
+35   public static void main(String[] args) {
+36     new Thread(null, new Runnable() {
+37       @Override
+38       public void run() {
+39         long start = System.currentTimeMillis();
+40         String debug = args.length > 0 ? args[0] : null;
+41         if (debug != null) {
+42           try {
+43             is = java.nio.file.Files.newInputStream(java.nio.file.Paths.get(debug));
+44           } catch (Exception e) {
+45             throw new RuntimeException(e);
+46           }
+47         }
+48         reader = new java.io.BufferedReader(new java.io.InputStreamReader(is), 32768);
+49         solve();
+50         out.flush();
+51         tr((System.currentTimeMillis() - start) + "ms");
+52       }
+53     }, "", 64000000).start();
+54   }
+55 
+56   private static java.io.InputStream is = System.in;
+57   private static java.io.PrintWriter out = new java.io.PrintWriter(System.out);
+58   private static java.util.StringTokenizer tokenizer = null;
+59   private static java.io.BufferedReader reader;
+60 
+61   public static String next() {
+62     while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+63       try {
+64         tokenizer = new java.util.StringTokenizer(reader.readLine());
+65       } catch (Exception e) {
+66         throw new RuntimeException(e);
+67       }
+68     }
+69     return tokenizer.nextToken();
+70   }
+71 
+72   private static double nd() {
+73     return Double.parseDouble(next());
+74   }
+75 
+76   private static long nl() {
+77     return Long.parseLong(next());
+78   }
+79 
+80   private static int[] na(int n) {
+81     int[] a = new int[n];
+82     for (int i = 0; i < n; i++)
+83       a[i] = ni();
+84     return a;
+85   }
+86 
+87   private static char[] ns() {
+88     return next().toCharArray();
+89   }
+90 
+91   private static long[] nal(int n) {
+92     long[] a = new long[n];
+93     for (int i = 0; i < n; i++)
+94       a[i] = nl();
+95     return a;
+96   }
+97 
+98   private static int[][] ntable(int n, int m) {
+99     int[][] table = new int[n][m];
+100     for (int i = 0; i < n; i++) {
+101       for (int j = 0; j < m; j++) {
+102         table[i][j] = ni();
+103       }
+104     }
+105     return table;
+106   }
+107 
+108   private static int[][] nlist(int n, int m) {
+109     int[][] table = new int[m][n];
+110     for (int i = 0; i < n; i++) {
+111       for (int j = 0; j < m; j++) {
+112         table[j][i] = ni();
+113       }
+114     }
+115     return table;
+116   }
+117 
+118   private static int ni() {
+119     return Integer.parseInt(next());
+120   }
+121 
+122   private static void tr(Object... o) {
+123     if (is != System.in)
+124       System.out.println(java.util.Arrays.deepToString(o));
+125   }
+126 }

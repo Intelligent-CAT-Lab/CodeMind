@@ -1,0 +1,92 @@
+1 import java.util.ArrayList;
+2 import java.util.Arrays;
+3 import java.util.Scanner;
+4 
+5 public class Main {
+6 	static Scanner sc = new Scanner(System.in);
+7 	static int N, K, M;
+8 
+9 	public static void main(String[] args) {
+10 		N = sc.nextInt();
+11 		K = sc.nextInt();
+12 		M = sc.nextInt();
+13 		int MASK = (1 << K) - 1;
+14 		if (N < K) {
+15 			System.out.println(naive());
+16 			return;
+17 		}
+18 		long[][][] dp = new long[2][K + 1][1 << K];
+19 		for (int i = 0; i < (1 << K); i++) {
+20 			int c = 0;
+21 			boolean ok = true;
+22 			for (int j = 0; j < K; j++) {
+23 				if ((i & (1 << (K - 1 - j))) == 0) {
+24 					c--;
+25 				} else {
+26 					c++;
+27 				}
+28 				if (c < 0) {
+29 					ok = false;
+30 					break;
+31 				}
+32 			}
+33 			if (!ok) continue;
+34 			int u = Integer.bitCount(i);
+35 			int l = K - u;
+36 			if (u < l) continue;
+37 			dp[0][u - l][i] = 1;
+38 		}
+39 		int t = 1;
+40 		for (int i = K; i < 2 * N; i++, t = 1 - t) {
+41 			for (long[] a : dp[t]) {
+42 				Arrays.fill(a, 0);
+43 			}
+44 			for (int j = i % 2; j <= K; j += 2) {
+45 				int l = (i - j) / 2;
+46 				int u = l + j;
+47 				for (int k = 0; k < (1 << K); k++) {
+48 					int uc = Integer.bitCount(k);
+49 					if (0 < j && j <= uc && (l == 0 || k != MASK)) { // put lower row
+50 						dp[t][j - 1][(k << 1) & MASK] += dp[1 - t][j][k];
+51 						dp[t][j - 1][(k << 1) & MASK] %= M;
+52 					}
+53 					if (u < N && j < K && k != 0) { // put upper row
+54 						dp[t][j + 1][((k << 1) + 1) & MASK] += dp[1 - t][j][k];
+55 						dp[t][j + 1][((k << 1) + 1) & MASK] %= M;
+56 					}
+57 				}
+58 			}
+59 //			System.err.println(Arrays.deepToString(dp[t]));
+60 		}
+61 		long ans = 0;
+62 		for (long v : dp[1 - t][0]) {
+63 			ans += v;
+64 		}
+65 		System.out.println(ans % M);
+66 	}
+67 
+68 	static long naive() {
+69 		ArrayList<Integer> u = new ArrayList<>();
+70 		ArrayList<Integer> l = new ArrayList<>();
+71 		u.add(0);
+72 		return rec(u, l, 1);
+73 	}
+74 
+75 	static long rec(ArrayList<Integer> u, ArrayList<Integer> l, int cur) {
+76 		if (cur == 2 * N) return 1;
+77 		long ret = 0;
+78 		if (u.size() < N) {
+79 			u.add(cur);
+80 			ret += rec(u, l, cur + 1);
+81 			u.remove(u.size() - 1);
+82 		}
+83 		if (l.size() < u.size() && cur <= u.get(l.size()) + K) {
+84 			l.add(cur);
+85 			ret += rec(u, l, cur + 1);
+86 			l.remove(l.size() - 1);
+87 		}
+88 		return ret % M;
+89 	}
+90 
+91 }
+92 

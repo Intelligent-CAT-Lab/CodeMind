@@ -1,0 +1,46 @@
+1 
+2 import java.util.HashMap;
+3 import java.util.Map;
+4 import java.util.Scanner;
+5 
+6 public class Main {
+7 
+8     public static void main(String[] args) {
+9         Scanner scan = new Scanner(System.in);
+10         long n = Long.parseLong(scan.next());
+11         scan.close();
+12 
+13         if (n == 1) {
+14             System.out.println(0);
+15             return;
+16         }
+17 
+18         Map<Long, Integer> pMap = new HashMap<Long, Integer>();
+19         for (long i = 2; i < Math.sqrt(n); i++) {
+20             int count = 0;
+21             while (n % i == 0) {
+22                 count++;
+23                 n /= i;
+24             }
+25             if (count > 0) {
+26                 pMap.put(i, count);
+27             }
+28         }
+29         if (n != 1) {
+30             pMap.put(n, 1);
+31         }
+32 
+33         int ans = 0;
+34         for (int pCount : pMap.values()) {
+35             int i = 1;
+36             while (pCount >= i) {
+37                 pCount -= i;
+38                 ans++;
+39                 i++;
+40             }
+41         }
+42 
+43         System.out.println(ans);
+44     }
+45 
+46 }

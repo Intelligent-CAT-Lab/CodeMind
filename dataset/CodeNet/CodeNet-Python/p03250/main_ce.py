@@ -1,0 +1,3 @@
+abc = list(map(int, "1 5 2".split()))
+abc.sort()
+print(int(str(abc[2]) + str(abc[1])) + abc[0])

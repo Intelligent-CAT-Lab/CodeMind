@@ -1,0 +1,62 @@
+1 import java.util.*;
+2 
+3 class Main{
+4     int val(char ch){ return ch-'0';}
+5 
+6     int sub(String maxs, String mins){
+7         for ( int i = 0; i < maxs.length(); i++ ){
+8             if ( maxs.charAt(i) != mins.charAt(i) ) {
+9                 if ( i == maxs.length()-1 )
+10                     return val(maxs.charAt(i)) - val(mins.charAt(i));
+11                 if ( i == maxs.length()-2 )
+12                     return (10*val(maxs.charAt(i))+val(maxs.charAt(i+1))) - (10*val(mins.charAt(i))+val(mins.charAt(i+1)));
+13                 return 10;
+14             }
+15         }
+16         return 0;
+17     }
+18 
+19   int checkEqual(String S){
+20         String mins, maxs;
+21         int ans = 8;
+22         for ( int k = 1; k < S.length(); k++ ){
+23             if ( S.length()%k != 0 ) continue;
+24             mins = maxs = S.substring(0, k);
+25             for ( int s = 0; s < S.length(); s += k ){
+26                 String tmp = S.substring(s, s + k);
+27                 if ( tmp.compareTo(maxs) > 0 ) maxs = tmp;
+28                 if ( tmp.compareTo(mins) < 0 ) mins = tmp;
+29             }
+30             ans = Math.min(ans, sub(maxs, mins));
+31         }
+32         return ans;
+33     }
+34 
+35     int check12(String S){
+36         int maxv = 0;
+37         int minv = 10;
+38         for( int p = 0; p < S.length(); p++){
+39             int v = val(S.charAt(p));
+40             if ( S.charAt(p) == '1' && p+1 < S.length()) {
+41                 v = 10 + val(S.charAt(p+1));
+42                 p++;
+43             }
+44             maxv = Math.max(maxv, v);
+45             minv = Math.min(minv, v);
+46         }
+47         return maxv - minv;
+48     }
+49 
+50     void solve(){
+51         String S;
+52         Scanner sc = new Scanner(System.in);
+53         S = sc.next();
+54         System.out.println(Math.min(checkEqual(S), check12(S)));
+55     }
+56 
+57     public static void main(String[] args){
+58         new Main().solve();
+59     }
+60 }
+61 
+62 

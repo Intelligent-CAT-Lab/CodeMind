@@ -1,0 +1,72 @@
+1 import java.util.*;
+2 import static java.lang.Math.*;
+3 public class Main {
+4 	final Scanner sc=new Scanner(System.in);
+5 	public static void main(String[] args) {
+6 		new Main().init();
+7 	}
+8 	void init(){
+9 		final long STACK_SIZE=8*1024*1024;
+10 		new Thread(null, new AOJ1320(), "RUN", STACK_SIZE).start();
+11 	}
+12 	
+13 	class AOJ1320 implements Runnable{
+14 		AOJ1320(){}
+15 		@Override public void run(){
+16 			while(sc.hasNext()){
+17 				N=sc.nextInt();
+18 				if(N==0)	break;
+19 				solve();
+20 			}
+21 		}
+22 		
+23 		int N,N2;
+24 		final int INF=1<<29;
+25 		
+26 		void solve(){
+27 			String[] str=new String[N];
+28 			for(int i=0; i<N; ++i)	str[i]=sc.next();
+29 			
+30 			boolean[] eq=new boolean[N];
+31 			for(int i=0; i<N; ++i){
+32 				if(eq[i])	continue;
+33 				for(int j=0; j<N; ++j){
+34 					if(i!=j && !eq[j] && str[i].matches(".*?"+str[j]+".*?"))	eq[j]=true;
+35 				}
+36 			}
+37 			ArrayList<String> str2=new ArrayList<String>();
+38 			for(int i=0; i<N; ++i)if(!eq[i])	str2.add(str[i]);
+39 			N2=str2.size();
+40 			
+41 			int[][] len=new int[N2][N2];
+42 			for(int i=0; i<N2; ++i){
+43 				for(int j=0; j<N2; ++j){
+44 					if(i==j)	continue;
+45 					int offset=0, l=str2.get(i).length();
+46 					for( ; offset<l; ++offset){
+47 						if( str2.get(j).startsWith( str2.get(i).substring(offset) ) )	break;
+48 					}
+49 					len[i][j]=str2.get(j).length()-(l-offset);
+50 				}
+51 			}
+52 			
+53 			int[][] dp=new int[1<<N2][N2];
+54 			for(int i=0; i<(1<<N2); ++i)for(int j=0; j<N2; ++j)dp[i][j]=INF;
+55 			for(int i=0; i<N2; ++i)	dp[1<<i][i]=str2.get(i).length();
+56 			for(int i=0; i<(1<<N2); ++i){
+57 				for(int j=0; j<N2; ++j){
+58 					if(dp[i][j]>=INF)	continue;
+59 					for(int k=0; k<N2; ++k){
+60 						if( (i&(1<<k)) > 0 )	continue;
+61 						int newIdx=i|(1<<k);
+62 						dp[newIdx][k]=min(dp[newIdx][k], dp[i][j]+len[j][k]);
+63 					}
+64 				}
+65 			}
+66 			
+67 			int ans=INF, tmp=(1<<N2)-1;
+68 			for(int i=0; i<N2; ++i)	ans=min(ans,dp[tmp][i]);
+69 			System.out.println(ans);
+70 		}
+71 	}
+72 }

@@ -1,0 +1,50 @@
+e variable n is initialized with 4.
+It enters a for loop and it iterates from 1 to 4 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [2, 5]. If it does, it adds the current interger i to variable answer. The condition is met when i is 2,3,4,5,11,12,13,14 and 20.
+After the loop finishes, it print the fianl value of variable answer as output, which is 84.
+<<<Output>>>
+84
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.util.*;
+import java.io.*;
+
+// Template for atcoder
+public class Main {
+
+    BufferedReader br;
+    PrintWriter out;
+    StringTokenizer st;
+    boolean eof;
+    final long MOD = 1000L * 1000L * 1000L + 7;
+    private static final int[] dx = {0, -1, 0, 1};
+    private static final int[] dy = {1, 0, -1, 0};
+
+    void solve() throws IOException {
+        int LIMIT = 1000 * 10000 + 10;
+        int[] div = new int[LIMIT];
+        Arrays.fill(div, 1);
+        for (int i = 2; i < LIMIT; i++) {
+            for (int j = i; j < LIMIT; j += i) {
+                div[j]++;
+            }
+        }
+
+        long res = 0;
+        int n = nextInt();
+        for (int i = 1; i <= n; i++) {
+            res += 1L * i * div[i];
+        }
+        outln(res);
+    }
+
+    void shuffle(int[] a) {
+        int n = a.length;
+        for(int i = 0; i < n; i++) {
+            int r = i + (int) (Math.random() * (n - i));

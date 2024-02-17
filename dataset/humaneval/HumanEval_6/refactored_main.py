@@ -1,0 +1,15 @@
+paren_string = '(()()) ((())) () ((())()())'
+
+def parse_paren_group(s):
+    depth = 0
+    max_depth = 0
+    for c in s:
+        if c == '(':
+            depth += 1
+            max_depth = max(depth, max_depth)
+        else:
+            depth -= 1
+
+    return max_depth
+
+print([parse_paren_group(x) for x in paren_string.split(' ') if x])

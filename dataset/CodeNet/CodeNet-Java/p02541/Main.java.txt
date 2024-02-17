@@ -1,0 +1,262 @@
+1 import java.util.*;
+2 
+3 @SuppressWarnings("unused")
+4 public class Main {
+5 
+6   private static void solve() {
+7     long n = nl();
+8     if (n == 1) {
+9       System.out.println(1);
+10       return;
+11     } else if (n == 2) {
+12       System.out.println(3);
+13       return;
+14     }
+15     int[] primes = sieveEratosthenes(100000000);
+16     n *= 2;
+17     long[] divs = enumDivisors(n, primes);
+18 
+19     // k(k+1) = p * d * e
+20     long ret = Long.MAX_VALUE;
+21     for (long d : divs) {
+22       long e = n / d;
+23       long[] g = exgcd(d, e);
+24 
+25       if (g[0] != 1) {
+26         continue;
+27       }
+28       long x = g[1];
+29       long y = g[2];
+30       // dx + ey = 1
+31       // x = x - ek
+32       // y = y + dk
+33       if (x < 0) {
+34         // ey = 1 + d(-x) = k
+35         long k = d * (-x);
+36         ret = Math.min(k, ret);
+37       }
+38 
+39       if (y < 0) {
+40         // dx = 1 + e(-y) = k
+41         long k = e * (-y);
+42         ret = Math.min(k, ret);
+43       }
+44     }
+45     System.out.println(ret);
+46   }
+47 
+48   public static long[] exgcd(long a, long b) {
+49     if (a == 0 || b == 0)
+50       return null;
+51     int as = Long.signum(a);
+52     int bs = Long.signum(b);
+53     a = Math.abs(a);
+54     b = Math.abs(b);
+55     long p = 1, q = 0, r = 0, s = 1;
+56     while (b > 0) {
+57       long c = a / b;
+58       long d;
+59       d = a;
+60       a = b;
+61       b = d % b;
+62       d = p;
+63       p = q;
+64       q = d - c * q;
+65       d = r;
+66       r = s;
+67       s = d - c * s;
+68     }
+69     return new long[] { a, p * as, r * bs };
+70   }
+71 
+72   public static int[] sieveEratosthenes(int n) {
+73     if (n <= 32) {
+74       int[] primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31 };
+75       for (int i = 0; i < primes.length; i++) {
+76         if (n < primes[i]) {
+77           return Arrays.copyOf(primes, i);
+78         }
+79       }
+80       return primes;
+81     }
+82 
+83     int u = n + 32;
+84     double lu = Math.log(u);
+85     int[] ret = new int[(int) (u / lu + u / lu / lu * 1.5)];
+86     ret[0] = 2;
+87     int pos = 1;
+88 
+89     int[] isnp = new int[(n + 1) / 32 / 2 + 1];
+90     int sup = (n + 1) / 32 / 2 + 1;
+91 
+92     int[] tprimes = { 3, 5, 7, 11, 13, 17, 19, 23, 29, 31 };
+93     for (int tp : tprimes) {
+94       ret[pos++] = tp;
+95       int[] ptn = new int[tp];
+96       for (int i = (tp - 3) / 2; i < tp << 5; i += tp)
+97         ptn[i >> 5] |= 1 << i;
+98       for (int j = 0; j < sup; j += tp) {
+99         for (int i = 0; i < tp && i + j < sup; i++) {
+100           isnp[j + i] |= ptn[i];
+101         }
+102       }
+103     }
+104 
+105     // 3,5,7
+106     // 2x+3=n
+107     int[] magic = { 0, 1, 23, 2, 29, 24, 19, 3, 30, 27, 25, 11, 20, 8, 4, 13, 31, 22, 28, 18, 26, 10, 7, 12, 21, 17, 9,
+108         6, 16, 5, 15, 14 };
+109     int h = n / 2;
+110     for (int i = 0; i < sup; i++) {
+111       for (int j = ~isnp[i]; j != 0; j &= j - 1) {
+112         int pp = i << 5 | magic[(j & -j) * 0x076be629 >>> 27];
+113         int p = 2 * pp + 3;
+114         if (p > n)
+115           break;
+116         ret[pos++] = p;
+117         if ((long) p * p > n)
+118           continue;
+119         for (int q = (p * p - 3) / 2; q <= h; q += p)
+120           isnp[q >> 5] |= 1 << q;
+121       }
+122     }
+123 
+124     return Arrays.copyOf(ret, pos);
+125   }
+126 
+127   public static long[] enumDivisors(long n, int[] primes) {
+128     int m = 1;
+129     long[] divs = { 1L };
+130     int t = 1;
+131     long u = n;
+132     for (int p : primes) {
+133       if ((long) p * p > u)
+134         break;
+135       int e = 0;
+136       while (u % p == 0) {
+137         u /= p;
+138         e++;
+139       }
+140       if (e > 0) {
+141         divs = Arrays.copyOf(divs, t * (e + 1));
+142         for (int q = t - 1; q >= 0; q--) {
+143           long b = divs[q];
+144           for (int k = 0; k < e; k++) {
+145             b *= p;
+146             // if((long)b*b <= n)divs[t++] = b;
+147             divs[t++] = b;
+148           }
+149         }
+150         m *= e + 1;
+151       }
+152     }
+153     if (u > 1) {
+154       long p = u;
+155       int e = 1;
+156       divs = Arrays.copyOf(divs, t * (e + 1));
+157       for (int q = t - 1; q >= 0; q--) {
+158         long b = divs[q];
+159         for (int k = 0; k < e; k++) {
+160           b *= p;
+161           // if((long)b*b <= n)divs[t++] = b;
+162           divs[t++] = b;
+163         }
+164       }
+165       m *= e + 1;
+166     }
+167 
+168     return Arrays.copyOf(divs, t);
+169   }
+170 
+171   public static void main(String[] args) {
+172     new Thread(null, new Runnable() {
+173       @Override
+174       public void run() {
+175         long start = System.currentTimeMillis();
+176         String debug = args.length > 0 ? args[0] : null;
+177         if (debug != null) {
+178           try {
+179             is = java.nio.file.Files.newInputStream(java.nio.file.Paths.get(debug));
+180           } catch (Exception e) {
+181             throw new RuntimeException(e);
+182           }
+183         }
+184         reader = new java.io.BufferedReader(new java.io.InputStreamReader(is), 32768);
+185         solve();
+186         out.flush();
+187         tr((System.currentTimeMillis() - start) + "ms");
+188       }
+189     }, "", 64000000).start();
+190   }
+191 
+192   private static java.io.InputStream is = System.in;
+193   private static java.io.PrintWriter out = new java.io.PrintWriter(System.out);
+194   private static java.util.StringTokenizer tokenizer = null;
+195   private static java.io.BufferedReader reader;
+196 
+197   public static String next() {
+198     while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+199       try {
+200         tokenizer = new java.util.StringTokenizer(reader.readLine());
+201       } catch (Exception e) {
+202         throw new RuntimeException(e);
+203       }
+204     }
+205     return tokenizer.nextToken();
+206   }
+207 
+208   private static double nd() {
+209     return Double.parseDouble(next());
+210   }
+211 
+212   private static long nl() {
+213     return Long.parseLong(next());
+214   }
+215 
+216   private static int[] na(int n) {
+217     int[] a = new int[n];
+218     for (int i = 0; i < n; i++)
+219       a[i] = ni();
+220     return a;
+221   }
+222 
+223   private static char[] ns() {
+224     return next().toCharArray();
+225   }
+226 
+227   private static long[] nal(int n) {
+228     long[] a = new long[n];
+229     for (int i = 0; i < n; i++)
+230       a[i] = nl();
+231     return a;
+232   }
+233 
+234   private static int[][] ntable(int n, int m) {
+235     int[][] table = new int[n][m];
+236     for (int i = 0; i < n; i++) {
+237       for (int j = 0; j < m; j++) {
+238         table[i][j] = ni();
+239       }
+240     }
+241     return table;
+242   }
+243 
+244   private static int[][] nlist(int n, int m) {
+245     int[][] table = new int[m][n];
+246     for (int i = 0; i < n; i++) {
+247       for (int j = 0; j < m; j++) {
+248         table[j][i] = ni();
+249       }
+250     }
+251     return table;
+252   }
+253 
+254   private static int ni() {
+255     return Integer.parseInt(next());
+256   }
+257 
+258   private static void tr(Object... o) {
+259     if (is != System.in)
+260       System.out.println(java.util.Arrays.deepToString(o));
+261   }
+262 }

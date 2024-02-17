@@ -1,0 +1,73 @@
+
+<<<Analysis>>>
+The code is a simple implementation of the Longest Common Subsequence problem.
+The input is a string array.
+The code first initializes a boolean array to check if the strings are equal.
+Then it initializes an ArrayList to store the strings that are not equal to the first string.
+Then it initializes an int array to store the length of the longest common subsequence.
+The code then iterates through the array of strings and calculates the length of the longest common subsequence.
+It does this by iterating through the array of strings and checking if the current string is equal to the previous string.
+If it is, it calculates the length of the longest common subsequence by iterating through the array of strings and checking if the current string is a substring of the previous string.
+If it is, it adds the length of the substring to the length of the longest common subsequence.
+The code then prints the length of the longest common subsequence.
+<<<Output>>>
+3
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.util.*;
+import static java.lang.Math.*;
+public class Main {
+	final Scanner sc=new Scanner(System.in);
+	public static void main(String[] args) {
+		new Main().init();
+	}
+	void init(){
+		final long STACK_SIZE=8*1024*1024;
+		new Thread(null, new AOJ1320(), "RUN", STACK_SIZE).start();
+	}
+	
+	class AOJ1320 implements Runnable{
+		AOJ1320(){}
+		@Override public void run(){
+			while(sc.hasNext()){
+				N=sc.nextInt();
+				if(N==0)	break;
+				solve();
+			}
+		}
+		
+		int N,N2;
+		final int INF=1<<29;
+		
+		void solve(){
+			String[] str=new String[N];
+			for(int i=0; i<N; ++i)	str[i]=sc.next();
+			
+			boolean[] eq=new boolean[N];
+			for(int i=0; i<N; ++i){
+				if(eq[i])	continue;
+				for(int j=0; j<N; ++j){
+					if(i!=j &&!eq[j] && str[i].matches(".*?"+str[j]+".*?"))	eq[j]=true;
+				}
+			}
+			ArrayList<String> str2=new ArrayList<String>();
+			for(int i=0; i<N; ++i)if(!eq[i])	str2.add(str[i]);
+			N2=str2.size();
+			
+			int[][] len=new int[N2][N2];
+			for(int i=0; i<N2; ++i){
+				for(int j=0; j<N2; ++j){
+					if(i==j)	continue;
+					int offset=0, l=str2.get(i).length();
+					for( ; offset<l; ++offset){
+						if( str2.get(j).startsWith( str2.get(i).substring(offset) ) )	break;
+					}
+					len[i][j]=str2.get(j).length()-(l-offset);
+				}
+			}
+			
+			int[][] dp=new int[1<<N2][N2];
+			for(int i=0; i<(1<<N2); ++i)for(int j=0; j<N2; ++j)dp[i][j]=INF;
+			for(int i=0; i<N2; ++i)	dp[1<<i][i]=str2.

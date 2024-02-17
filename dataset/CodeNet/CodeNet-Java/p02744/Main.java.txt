@@ -1,0 +1,45 @@
+1 
+2 
+3 import java.util.ArrayList;
+4 import java.util.List;
+5 import java.util.Scanner;
+6 
+7 public class Main {
+8 
+9     public static void main(String[] args) {
+10         Scanner scan = new Scanner(System.in);
+11         int n = Integer.parseInt(scan.next());
+12         scan.close();
+13 
+14         List<String> list = func(n);
+15 
+16         for (String s : list) {
+17             System.out.println(s);
+18         }
+19 
+20     }
+21 
+22     private static List<String> func(int n) {
+23         List<String> list = new ArrayList<String>();
+24         if (n == 1) {
+25             list.add("a");
+26         } else {
+27             List<String> prevList = func(n - 1);
+28             for (String s : prevList) {
+29                 // 含まれている最大の文字を探索
+30                 char max = 'a';
+31                 for (int i = 0; i < s.length(); i++) {
+32                     if (max < s.charAt(i)) {
+33                         max = s.charAt(i);
+34                     }
+35                 }
+36 
+37                 for (char c = 'a'; c <= max + 1; c++) {
+38                     String newString = s + c;
+39                     list.add(newString);
+40                 }
+41             }
+42         }
+43         return list;
+44     }
+45 }

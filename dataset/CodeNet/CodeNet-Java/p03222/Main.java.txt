@@ -1,0 +1,56 @@
+1 import java.util.*;
+2 public class Main {
+3 	
+4 	static int mod = (int)1e9+7;
+5 	static int memo[] = new int[9];
+6 	public static void main(String[] args) {		
+7 		Scanner sc = new Scanner(System.in);
+8 		int H = sc.nextInt();
+9 		int W = sc.nextInt();
+10 		int K = sc.nextInt();
+11 		sc.close();
+12 
+13 		makeMemo();
+14 		
+15 		long dp[][] = new long[H+1][W];
+16 		dp[0][0]=1;
+17 		for(int h=0;h<H;h++) {
+18 			for(int w=0;w<W;w++) {
+19 				//右
+20 				if(w+1<W) {
+21 					dp[h+1][w+1]+=dp[h][w]*memo[w]%mod*memo[(W-1)-(w+1)]%mod;
+22 					dp[h+1][w+1]%=mod;
+23 				}
+24 				//左
+25 				if(w-1>=0) {
+26 					dp[h+1][w-1]+=dp[h][w]*memo[w-1]%mod*memo[(W-1)-w]%mod;
+27 					dp[h+1][w-1]%=mod;
+28 				}
+29 				//下
+30 				dp[h+1][w] += dp[h][w]*memo[w]%mod*memo[(W-1)-w]%mod;
+31 				dp[h+1][w]%=mod;
+32 				
+33 			}
+34 		}
+35 		long ans = dp[H][K-1];
+36 		System.out.println(ans);
+37 	}
+38 	//縦棒の数を引数にする
+39 	static void makeMemo(){	
+40 		memo[0]=1;
+41 		memo[1]=1;
+42 		for(int i=2;i<9;i++) {
+43 			for(int bit = 0;bit<2<<(i-2);bit++) {
+44 				int before = 0;
+45 				for(int j=0;j<9;j++) {
+46 					int now = (bit>>j&1);
+47 					if(before==1&&now==1) break;
+48 					before = now;
+49 					if(j==8)memo[i]++;
+50 				}
+51 			}
+52 		}
+53 		
+54 		
+55 	}
+56 }

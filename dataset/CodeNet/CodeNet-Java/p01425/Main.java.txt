@@ -1,0 +1,97 @@
+1 
+2 import java.util.*;
+3 
+4 public class Main{
+5 	static int N, V, X, Y;
+6 	static int[] L, B, R, T;
+7 	static double g = 9.8;
+8 	static double EPS = 1e-6;
+9 
+10 //	根据y&#36724;方向的初速度vy和重力g，返回t&#26102;&#38388;点&#26102;的位置y
+11 	private static double calc(double vy, double t) {
+12 		return vy*t - g*t*t/2;
+13 	}
+14 	
+15 	private static int cmp(int lb, int ub, double a) {
+16 		return a < lb+EPS ? -1 : a > ub-EPS ? 1 : 0;
+17 	}
+18 	
+19 	private static boolean check(double qx, double qy){
+20 		double a = g*g/4;
+21 		double b = g*qy - V*V;
+22 		double c = qx*qx + qy*qy;
+23 		double D = b*b - 4*a*c;
+24 		if(D<0 & D>-EPS) D=0;
+25 		if(D < 0) return false;
+26 		
+27 		for(int d = -1; d < 2; d=d+2){
+28 			double t2 = (-b + d*Math.sqrt(D)) / (2*a);	
+29 
+30 //			System.out.println(t2);
+31 			if(t2 < 0) continue;
+32 			double t = Math.sqrt(t2);
+33 			double vx = qx / t;
+34 			double vy = Math.sqrt(V*V - vx*vx);
+35 			
+36 			double yt = calc(vy, X/vx);
+37 			if(yt < Y - EPS) continue;
+38 			
+39 			boolean ok = true;
+40 			for(int i = 0; i < N; i++){
+41 //				石&#22836;在pig右&#36793;，直接&#36807;&#28388;
+42 				if(L[i] >= X) continue;
+43 //				当来到pig正上方&#26102;，与pig之&#38388;有没有障碍物
+44 				if(R[i] >= X & T[i] >= Y & yt >= B[i]) ok = false;				
+45 //				中途会不会遇到障碍
+46 //				一共要判定4条
+47 //				一：与&#27599;个障碍物的左&#36793;界的相&#23545;位置
+48 				int yL = cmp(B[i], T[i], calc(vy, L[i]/vx));
+49 //				二：与&#27599;个障碍物的右&#36793;界的相&#23545;位置
+50 				int yR = cmp(B[i], T[i], calc(vy, R[i]/vx));
+51 //				三：bird升到最高点&#26102;与&#27599;个障碍物的左右界的相&#23545;位置
+52 				int xH = cmp(L[i], R[i], vx*(vy/g));
+53 //				四：bird升到最高点&#26102;与&#27599;个障碍物的上下界的相&#23545;位置（？）
+54 				int yH = cmp(B[i], T[i], calc(vy, vy/g));
+55 				
+56 //				System.out.println(yL+" "+yR+" "+xH+" "+yH);
+57 				if(yL* yR <= 0) ok = false;
+58 				if(xH == 0 & yH >= 0 & yL < 0) ok = false;
+59 			}
+60 			if(ok) return true;
+61 		}		
+62 		return false;
+63 	}	
+64 
+65 	public static void main(String[] args) {
+66 		Scanner s = new Scanner(System.in);
+67 		
+68 		N = s.nextInt();
+69 		V = s.nextInt();
+70 		X = s.nextInt();
+71 		Y = s.nextInt();
+72 		
+73 		L = new int[N];
+74 		B = new int[N];
+75 		R = new int[N];
+76 		T = new int[N];
+77 		
+78 		for(int i = 0; i < N; i ++){
+79 			L[i] = s.nextInt();
+80 			B[i] = s.nextInt();
+81 			R[i] = s.nextInt();
+82 			T[i] = s.nextInt();
+83 			if(R[i] > X) R[i] = X;
+84 		}
+85 		
+86 		boolean ok = check(X,Y);
+87 		for(int i = 0; i < N; i++){
+88 			ok |= check(L[i], T[i]);
+89 			ok |= check(R[i], T[i]);
+90 		}
+91 		
+92 		if(ok)
+93 			System.out.println("Yes");
+94 		else
+95 			System.out.println("No");
+96 	}
+97 }

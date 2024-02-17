@@ -1,0 +1,27 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the states of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6\t public static void main(String[] args) {\n7\t\t try {\n8\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nWhat would be the states of variables given the following input:\n20 2 5\n\nQuestion:\nPrint all the states of variable answer in line 15 and end your response with \"END-OF-STATE\":\nAnswer:\n0\nEND-OF-STATE\n\n\nQuestion:\nPrint all the states of variable i in line 17 and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nPrint all the states of variable i in line 27 and end your response with \"END-OF-STATE\":\nAnswer:\n2\n3\n4\n5\n11\n12\n13\n14\n20\nEND-OF-STATE\n\n\n\nQuestion:\nPrint all the states of variable answer in line 27 and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN",
+        "predict": "2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.util.*;\n2 \n3 class Main{\n4     int val(char ch){ return ch-'0';}\n5 \n6     int sub(String maxs, String mins){\n7         for ( int i = 0; i < maxs.length(); i++ ){\n8             if ( maxs.charAt(i) != mins.charAt(i) ) {\n9                 if ( i == maxs.length()-1 )\n10                     return val(maxs.charAt(i)) - val(mins.charAt(i));\n11                 if ( i == maxs.length()-2 )\n12                     return (10*val(maxs.charAt(i))+val(maxs.charAt(i+1))) - (10*val(mins.charAt(i))+val(mins.charAt(i+1)));\n13                 return 10;\n14             }\n15         }\n16         return 0;\n17     }\n18 \n19   int checkEqual(String S){\n20         String mins, maxs;\n21         int ans = 8;\n22         for ( int k = 1; k < S.length(); k++ ){\n23             if ( S.length()%k != 0 ) continue;\n24             mins = maxs = S.substring(0, k);\n25             for ( int s = 0; s < S.length(); s += k ){\n26                 String tmp = S.substring(s, s + k);\n27                 if ( tmp.compareTo(maxs) > 0 ) maxs = tmp;\n28                 if ( tmp.compareTo(mins) < 0 ) mins = tmp;\n29             }\n30             ans = Math.min(ans, sub(maxs, mins));\n31         }\n32         return ans;\n33     }\n34 \n35     int check12(String S){\n36         int maxv = 0;\n37         int minv = 10;\n38         for( int p = 0; p < S.length(); p++){\n39             int v = val(S.charAt(p));\n40             if ( S.charAt(p) == '1' && p+1 < S.length()) {\n41                 v = 10 + val(S.charAt(p+1));\n42                 p++;\n43             }\n44             maxv = Math.max(maxv, v);\n45             minv = Math.min(minv, v);\n46         }\n47         return maxv - minv;\n48     }\n49 \n50     void solve(){\n51         String S;\n52         Scanner sc = new Scanner(System.in);\n53         S = sc.next();\n54         System.out.println(Math.min(checkEqual(S), check12(S)));\n55     }\n56 \n57     public static void main(String[] args){\n58         new Main().solve();\n59     }\n60 }\n61 \n62 \n\nGiven the following input:\n11121314\n\n\nQuestion:\nWhat would be the states of variable S in line 53? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "\"11121314\""
+        ],
+        "variable": "S",
+        "line": 53,
+        "predict": "1\n11\n111\n1112\n11121\n111213\n1112131\n11121314\nEND-OF-STATE"
+    },
+    "2": {
+        "prompt": "Question:\nWhat would be the states of variable S in line 54? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "\"11121314\""
+        ],
+        "variable": "S",
+        "line": 54,
+        "predict": "1\n11\n111\n1112\n11121\n111213\n1112131\n11121314\nEND-OF-STATE"
+    }
+}

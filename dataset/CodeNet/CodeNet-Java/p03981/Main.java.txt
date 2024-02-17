@@ -1,0 +1,264 @@
+1 
+2 import java.util.Arrays;
+3 
+4 
+5 class SuffixArray {
+6 
+7   
+8   public static int[] suffixArray(char[] str, int W)
+9   {
+10       int n = str.length;
+11       if(n <= 1)return new int[n];
+12       int[] sa = new int[n];
+13       int[] s = new int[n+3];
+14       for(int i = 0;i < n;i++)s[i] = str[i] - 'a' + 1;
+15       suffixArray(s, sa, n, W+1);
+16       return sa;
+17   }
+18   
+19   public static void suffixArray(int[] s, int[] sa, int n, int K)
+20   {
+21       int n0 = (n+2)/3, n1 = (n+1)/3, n2 = n/3, n02 = n0 + n2;
+22       int[] s12 = new int[n02+3]; 
+23       int[] sa12 = new int[n02+3];
+24       int[] s0 = new int[n0];
+25       int[] sa0 = new int[n0];
+26       
+27       // generate positions of mod 1 and mod 2 suffixes
+28       // the "+(n0-n1)" adds a dummy mod 1 suffix if n%3 == 1
+29       int sup = n+(n0-n1);
+30       for(int i = 0, j = 0;i < sup;i+=3){
+31           if(i+1 < sup)s12[j++] = i+1;
+32           if(i+2 < sup)s12[j++] = i+2;
+33       }
+34       
+35       // lsb radix sort the mod 1 and mod 2 triples
+36       radixPass(s12, sa12, s, 2, n02, K);
+37       radixPass(sa12, s12, s, 1, n02, K);
+38       radixPass(s12, sa12, s, 0, n02, K);
+39 
+40       // find lexicographic names of triples
+41       int name = 0, c0 = -1, c1 = -1, c2 = -1;
+42       for(int i = 0;i < n02;i++){
+43           if(s[sa12[i]] != c0 || s[sa12[i]+1] != c1 || s[sa12[i]+2] != c2){
+44               name++;
+45               c0 = s[sa12[i]];
+46               c1 = s[sa12[i]+1];
+47               c2 = s[sa12[i]+2];
+48           }
+49           if(sa12[i] % 3 == 1){
+50               s12[sa12[i]/3] = name; // left half
+51           }else{
+52               s12[sa12[i]/3 + n0] = name; // right half
+53           }
+54       }
+55       
+56       // recurse if names are not yet unique
+57       if(name < n02){
+58           suffixArray(s12, sa12, n02, name);
+59           // store unique names in s12 using the suffix array
+60           for(int i = 0;i < n02;i++)s12[sa12[i]] = i+1;
+61       }else{
+62           // generate the suffix array of s12 directly
+63           for(int i = 0;i < n02;i++)sa12[s12[i]-1] = i;
+64       }
+65       
+66       // stably sort the mod 0 suffixes from sa12 by their first character
+67       for(int i = 0, j = 0;i < n02;i++){
+68           if(sa12[i] < n0)s0[j++] = 3 * sa12[i];
+69       }
+70       radixPass(s0, sa0, s, 0, n0, K);
+71       
+72       // merge sorted sa0 suffixes and sorted sa12 suffixes
+73       for(int p = 0, t = n0-n1, k = 0;k < n;k++){
+74           int i = sa12[t] < n0 ? sa12[t] * 3 + 1 : (sa12[t] - n0) * 3 + 2; // pos of current offset 12 suffix
+75           int j = sa0[p]; // pos of current offset 0 suffix
+76           if(sa12[t] < n0 ?
+77                   (s[i] < s[j] || s[i] == s[j] && s12[sa12[t]+n0] <= s12[j/3]) :
+78                   (s[i] < s[j] || s[i] == s[j] && (s[i+1] < s[j+1] || s[i+1] == s[j+1] && s12[sa12[t]-n0+1] <= s12[j/3+n0]))
+79                   ){
+80               // suffix from a12 is smaller
+81               sa[k] = i;
+82               t++;
+83               if(t == n02){
+84                   // done --- only sa0 suffixes left
+85                   for(k++;p < n0;p++,k++)sa[k] = sa0[p];
+86               }
+87           }else{
+88               // suffix from sa0 is smaller
+89               sa[k] = j; p++;
+90               if(p == n0){
+91                   // done --- only sa12 suffixes left
+92                   for(k++; t < n02;t++,k++)sa[k] = sa12[t] < n0 ? sa12[t] * 3 + 1 : (sa12[t] - n0) * 3 + 2;
+93               }
+94           }
+95       }
+96   }
+97   
+98   /**
+99    * radixsort a by r's value, and store a's index to b.
+100    * @param a
+101    * @param b
+102    * @param r
+103    * @param l
+104    * @param n
+105    * @param K
+106    */
+107   public static void radixPass(int[] a, int[] b, int[] r, int l, int n, int K)
+108   {
+109       int[] c = new int[K+1]; // counter array
+110       for(int i = 0;i < n;i++)c[r[l+a[i]]]++; // count occurrences
+111       for(int i = 0, sum = 0;i <= K;i++){ // exclusive prefix sums
+112           int t = c[i]; c[i] = sum; sum += t;
+113       }
+114       for(int i = 0;i < n;i++)b[c[r[l+a[i]]]++] = a[i];
+115   }
+116   
+117   static void tr(Object... o) { System.out.println(Arrays.deepToString(o)); }
+118 
+119   /**
+120    * 速いSuffixArrayのLCP作成
+121    * @param str
+122    * @param sa
+123    * @return
+124    */
+125   public static int[] buildLCP0(char[] str, int[] sa)
+126   {
+127       int n = str.length;
+128       int h = 0;
+129       int[] lcp = new int[n];
+130       int[] b = new int[n];
+131       for(int i = 0;i < n;i++)b[sa[i]] = i;
+132       for(int i = 0;i < n;i++){
+133           if(b[i] > 0){
+134               for(int j = sa[b[i]-1]; j+h<n && i+h<n && str[j+h] == str[i+h]; h++);
+135               lcp[b[i]] = h;
+136           }else{
+137               lcp[b[i]] = 0;
+138           }
+139           if(h > 0)h--;
+140       }
+141       return lcp;
+142   }   
+143 }
+144 
+145 public class Main {
+146 
+147   private static void solve() {
+148     char[] s = ns();
+149     int[] sa = SuffixArray.suffixArray(s, 50);
+150     int[] lcp = SuffixArray.buildLCP0(s, sa);
+151     
+152     int n = s.length;
+153     int[] imos = new int[n + 1];
+154     
+155     for (int i = 0; i < n; i ++) {
+156       imos[lcp[i]] ++;
+157     }
+158     
+159     for (int i = 0; i < n; i ++) {
+160       imos[i + 1] += imos[i];
+161     }
+162     
+163     int max = 0;
+164     for (int i = 0; i < n; i ++) {
+165       max = Math.max(max, imos[i] - i);
+166     }
+167     
+168     System.out.println(max);
+169   }
+170 
+171 
+172 
+173   public static void main(String[] args) {
+174     new Thread(null, new Runnable() {
+175       @Override
+176       public void run() {
+177         long start = System.currentTimeMillis();
+178         String debug = System.getProperty("debug");
+179         if (debug != null) {
+180           try {
+181             is = java.nio.file.Files.newInputStream(java.nio.file.Paths.get(debug));
+182           } catch (Exception e) {
+183             throw new RuntimeException(e);
+184           }
+185         }
+186         reader = new java.io.BufferedReader(new java.io.InputStreamReader(is), 32768);
+187         solve();
+188         out.flush();
+189         tr((System.currentTimeMillis() - start) + "ms");
+190       }
+191     }, "", 64000000).start();
+192   }
+193 
+194   private static java.io.InputStream is = System.in;
+195   private static java.io.PrintWriter out = new java.io.PrintWriter(System.out);
+196   private static java.util.StringTokenizer tokenizer = null;
+197   private static java.io.BufferedReader reader;
+198 
+199   public static String next() {
+200     while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+201       try {
+202         tokenizer = new java.util.StringTokenizer(reader.readLine());
+203       } catch (Exception e) {
+204         throw new RuntimeException(e);
+205       }
+206     }
+207     return tokenizer.nextToken();
+208   }
+209 
+210   private static double nd() {
+211     return Double.parseDouble(next());
+212   }
+213 
+214   private static long nl() {
+215     return Long.parseLong(next());
+216   }
+217 
+218   private static int[] na(int n) {
+219     int[] a = new int[n];
+220     for (int i = 0; i < n; i++)
+221       a[i] = ni();
+222     return a;
+223   }
+224 
+225   private static char[] ns() {
+226     return next().toCharArray();
+227   }
+228 
+229   private static long[] nal(int n) {
+230     long[] a = new long[n];
+231     for (int i = 0; i < n; i++)
+232       a[i] = ni();
+233     return a;
+234   }
+235 
+236   private static int[][] ntable(int n, int m) {
+237     int[][] table = new int[n][m];
+238     for (int i = 0; i < n; i++) {
+239       for (int j = 0; j < m; j++) {
+240         table[i][j] = ni();
+241       }
+242     }
+243     return table;
+244   }
+245 
+246   private static int[][] nlist(int n, int m) {
+247     int[][] table = new int[m][n];
+248     for (int i = 0; i < n; i++) {
+249       for (int j = 0; j < m; j++) {
+250         table[j][i] = ni();
+251       }
+252     }
+253     return table;
+254   }
+255 
+256   private static int ni() {
+257     return Integer.parseInt(next());
+258   }
+259 
+260   private static void tr(Object... o) {
+261     if (is != System.in)
+262       System.out.println(java.util.Arrays.deepToString(o));
+263   }
+264 }

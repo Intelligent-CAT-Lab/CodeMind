@@ -1,7 +1,9 @@
 from utils import Dataset, Model,OpenAIModel
 import openai
 import time
-openai.api_key = "Your_API_KEY"
+import os
+openai.api_key = os.getenv("OPENAIKEY")
+
 def chatgpt_generator(model,message, temp=0.0, max_len=1000):
     openai_model = OpenAIModel()
     model_identifier = openai_model(Model(model))

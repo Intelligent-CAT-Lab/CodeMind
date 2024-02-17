@@ -1,0 +1,90 @@
+
+<<<Analysis>>>
+The variable n is initialized with 2 and variable mod is initialized with 1000000007.
+It enters a for loop and it iterates from 1 to 2 to check each integer i in this range.
+The value of variable i is also passed to variable n.
+Inside the for loop, it calculates the value of stirlingSecond(n, mod) by repeatedlly extracting the digits of number with a while loop and adding it to variable ret[i][j].
+Then it checks if the calculated value of stirlingSecond(n, mod) falls within the range [0, 1000000007]. If it does, it adds the current interger i to variable ret[i][j]. The condition is met when i is 2.
+After the loop finishes, it print the fianl value of variable ret[2][2] as output, which is 1000000007.
+<<<Output>>>
+1000000007
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+// package arc.arc096;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.InputMismatchException;
+
+public class Main {
+    public static void main(String[] args) {
+        InputReader in = new InputReader(System.in);
+        PrintWriter out = new PrintWriter(System.out);
+
+        int n = in.nextInt();
+        MOD = in.nextInt();
+        prec(12000);
+
+        long[][] stir = stirlingSecond(n, MOD);
+
+        long[] pow2 = new long[n+10];
+        pow2[0] = 1;
+        for (int i = 1 ; i < pow2.length ; i++) {
+            pow2[i] = pow2[i-1] * 2 % MOD;
+        }
+        long[] other2 = new long[n+10];
+        other2[0] = 2;
+        for (int i = 1 ; i < other2.length ; i++) {
+            other2[i] = (other2[i-1] * other2[i-1]) % MOD;
+        }
+
+        long[] p2p = new long[n+10];
+
+        long total = 0;
+        for (int i = 1 ; i <= n ; i++) {
+            long o2 = other2[n-i];
+            long p2 = pow2[n-i];
+
+            p2p[0] = 1;
+            for (int j = 1 ; j < p2p.length ; j++) {
+                p2p[j] = p2p[j-1] * p2 % MOD;
+            }
+
+            long co = comb(n, i);
+            long sum = 0;
+            for (int j = 1 ; j <= i ; j++) {
+                long way = stir[i][j] % MOD;
+
+                // one of them is zero
+                sum += way * j % MOD * p2p[j-1] % MOD;
+
+                // all of them is one
+                sum += way * p2p[j] % MOD;
+
+                sum %= MOD;
+            }
+            sum = sum * co % MOD * o2 % MOD;
+
+            if (i % 2 == 1) {
+                total += sum;
+            } else {
+                total += MOD - sum;
+            }
+        }
+        total %= MOD;
+
+        out.println((other2[n] + MOD - total) % MOD);
+        out.flush();
+    }
+
+    static int MOD = 1000000007;
+
+    public static long[][] stirlingSecond(int n, long mod) {
+        long[][] ret = new long[n+1][n+1];
+        ret[0][0] = 1;
+        for (int i = 1 ; i <= n ; i++) {
+           

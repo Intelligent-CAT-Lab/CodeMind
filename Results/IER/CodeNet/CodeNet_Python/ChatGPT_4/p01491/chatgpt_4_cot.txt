@@ -1,0 +1,27 @@
+<<<Analysis>>>
+The input `2 3 1 3 1 0` initializes the variables M, N, m0, md, n0, nd to 2, 3, 1, 3, 1, 0 respectively.
+
+The list S is initialized with M+1 zeros and then the first element is set to m0, which is 1. The loop calculates the next M-1 elements of S using the formula `(mi * 58 + md) % (N + 1)`. The list S after the loop and before sorting is [1, 4]. After sorting, S remains [1, 4]. The cumulative sum is then calculated, resulting in S = [1, 5].
+
+The list T is initialized with N+1 zeros and then the first element is set to n0, which is 1. The loop calculates the next N-1 elements of T using the formula `(ni * 58 + nd) % (M + 1)`. Since nd is 0, T will be filled with 1's. The list T after the loop and before sorting is [1, 1, 1, 1]. After sorting, T remains [1, 1, 1, 1]. The cumulative sum is then calculated, resulting in T = [1, 2, 3, 4].
+
+The `gen` function is defined to yield the minimum value of the function `calc(a, b)` which is defined as `(M - a)*(N - b) + S[a] + T[b]`. The function yields 10**18 initially and then iterates over the range M+1 for i and adjusts j to find the minimum value of `calc(i, j)`.
+
+The loop in `gen` function works as follows:
+- For i = 0, j starts at 3 and is decremented to 0 because `calc(0, j)` is smaller for smaller j. The yielded values are `calc(0, 3)`, `calc(0, 2)`, `calc(0, 1)`, and `calc(0, 0)`.
+- For i = 1, j starts at 0 (from the previous iteration) and remains there because `calc(1, 0)` is already the smallest possible for i = 1. The yielded value is `calc(1, 0)`.
+- For i = 2, j is 0 and `calc(2, 0)` is yielded.
+
+The values of `calc(a, b)` are calculated as follows:
+- `calc(0, 3)` = (2 - 0)*(3 - 3) + S[0] + T[3] = 0 + 1 + 4 = 5
+- `calc(0, 2)` = (2 - 0)*(3 - 2) + S[0] + T[2] = 2 + 1 + 3 = 6
+- `calc(0, 1)` = (2 - 0)*(3 - 1) + S[0] + T[1] = 4 + 1 + 2 = 7
+- `calc(0, 0)` = (2 - 0)*(3 - 0) + S[0] + T[0] = 6 + 1 + 1 = 8
+- `calc(1, 0)` = (2 - 1)*(3 - 0) + S[1] + T[0] = 3 + 5 + 1 = 9
+- `calc(2, 0)` = (2 - 2)*(3 - 0) + S[2] + T[0] = 0 + 5 + 1 = 6
+
+The minimum value yielded by `gen` is 5, and this is written to the standard output.
+
+<<<Output>>>
+5
+[END-OF-RESPONSE]

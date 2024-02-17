@@ -1,0 +1,48 @@
+riable k is initialized with the length of the input string S.
+It enters a for loop and it iterates from 0 to k-1 to check each integer i in this range. The value of variable i is also passed to variable d.
+Inside the for loop, it enters another for loop and it iterates from 0 to k-i-1 to check each integer d in this range. The value of variable d is also passed to variable p.
+Inside the second for loop, it calculates the value of variable add by multiplying the value of variable p with the value of variable d.
+Then it adds the value of variable add to variable sum.
+After the loop finishes, it print the fianl value of variable sum as output, which is 125.
+<<<Output>>>
+125
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+		int k = Integer.parseInt(st.nextToken());
+		int[] arr = new int[n];
+		for (int i = 0; i < n; i++) {
+			arr[i] = Integer.parseInt(br.readLine());
+		}
+		int[] dp = new int[m + 1];
+		for (int i = 1; i <= m; i++) {
+			int max = 0;
+			for (int j = 0; j < n; j++) {
+				if (i - arr[j] >= 0) {
+					max = Math.max(max, dp[i - arr[j]] + 1);
+				}
+			}
+			dp[i] = max;
+		}
+		System.out.println(dp[m] <= k? "YES" : "NO");
+	}
+
+}
+</Code>
+<<<Question>>>

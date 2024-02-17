@@ -1,0 +1,148 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.util.*;
+4  
+5 public class Main implements Runnable {
+6 	
+7     public static void main(String[] args) {
+8     	new Thread(null, new Main(), "", 16 * 1024 * 1024).start();
+9     }
+10     
+11     public void run() {
+12         FastScanner sc = new FastScanner();
+13         
+14         int n = sc.nextInt();
+15         int k = sc.nextInt();
+16 
+17     	System.out.println(partition(n-k,k));
+18 
+19     }
+20     
+21 	//分割数をdpで求める
+22 	//nをk個の非負整数の和で表す（⇔k個以下の自然数の和で表す）場合の数
+23 	static int partition(int n, int k){
+24 		if(n<0){return 0;} //こうしておくことで、partition(n-k,k)でnを丁度k個の自然数で表す組合せの数を計算できる
+25 		if(n==0){return 1;}
+26 		int mod = 1000000007;
+27 		if(k>n){k=n;} //無駄な計算を省ける。テーブルごと使う場合は注意。
+28 		int[][] dp = new int[n+1][k+1];
+29 		dp[0][0] = 1;
+30 		for(int i=0;i<=n;i++){
+31 			dp[i][1] = 1; 
+32 		}
+33 		for(int i=2;i<=k;i++){
+34 			dp[0][i] = 1;
+35 			dp[1][i] = 1; 
+36 		}
+37 		
+38 		for(int i=1;i<=n;i++){
+39 			for(int j=2;j<=k;j++){
+40 				if(i-j>=0){
+41 					dp[i][j] = dp[i][j-1] + dp[i-j][j]; //0を最低1つ含む + 丁度k個の自然数の和
+42 					dp[i][j] %= mod;
+43 				}
+44 				else{
+45 					dp[i][j] = dp[i][j-1];
+46 				}
+47 			}
+48 		}
+49 		
+50 		return dp[n][k];
+51 	}
+52 }
+53 
+54 class FastScanner {
+55 	private final InputStream in = System.in;
+56 	private final byte[] buffer = new byte[1024];
+57 	private int ptr = 0;
+58 	private int buflen = 0;
+59 	private boolean hasNextByte() {
+60 		if (ptr < buflen) {
+61 			return true;
+62 		} else {
+63 			ptr = 0;
+64 			try {
+65 				buflen = in.read(buffer);
+66 			} catch (IOException e) {
+67 				e.printStackTrace();
+68 			}
+69 			if (buflen <= 0) {
+70 				return false;
+71 			}
+72 		}
+73 		return true;
+74 	}
+75 	private int readByte() {
+76 		if (hasNextByte())
+77 			return buffer[ptr++];
+78 		else
+79 			return -1;
+80 	}
+81 	private static boolean isPrintableChar(int c) {
+82 		return 33 <= c && c <= 126;
+83 	}
+84 	public boolean hasNext() {
+85 		while (hasNextByte() && !isPrintableChar(buffer[ptr]))
+86 			ptr++;
+87 		return hasNextByte();
+88 	}
+89 	public String next() {
+90 		if (!hasNext())
+91 			throw new NoSuchElementException();
+92 		StringBuilder sb = new StringBuilder();
+93 		int b = readByte();
+94 		while (isPrintableChar(b)) {
+95 			sb.appendCodePoint(b);
+96 			b = readByte();
+97 		}
+98 		return sb.toString();
+99 	}
+100 	public long nextLong() {
+101 		if (!hasNext())
+102 			throw new NoSuchElementException();
+103 		long n = 0;
+104 		boolean minus = false;
+105 		int b = readByte();
+106 		if (b == '-') {
+107 			minus = true;
+108 			b = readByte();
+109 		}
+110 		if (b < '0' || '9' < b) {
+111 			throw new NumberFormatException();
+112 		}
+113 		while (true) {
+114 			if ('0' <= b && b <= '9') {
+115 				n *= 10;
+116 				n += b - '0';
+117 			} else if (b == -1 || !isPrintableChar(b)) {
+118 				return minus ? -n : n;
+119 			} else {
+120 				throw new NumberFormatException();
+121 			}
+122 			b = readByte();
+123 		}
+124 	}
+125 	public int nextInt() {
+126 		long nl = nextLong();
+127 		if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE)
+128 			throw new NumberFormatException();
+129 		return (int) nl;
+130 	}
+131 	public int[] nextIntArray(int n){
+132 		int[] a = new int[n];
+133 		for(int i=0;i<n;i++){
+134 			a[i] = nextInt();
+135 		}
+136 		return a;
+137 	}
+138 	public Integer[] nextIntegerArray(int n){
+139 		Integer[] a = new Integer[n];
+140 		for(int i=0;i<n;i++){
+141 			a[i] = nextInt();
+142 		}
+143 		return a;
+144 	}
+145 	public double nextDouble() {
+146 		return Double.parseDouble(next());
+147 	}
+148 }

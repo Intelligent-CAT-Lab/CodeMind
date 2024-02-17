@@ -1,0 +1,453 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.OutputStream;
+4 import java.lang.reflect.Field;
+5 import java.util.Arrays;
+6 import java.util.NoSuchElementException;
+7 import java.util.function.IntUnaryOperator;
+8 import java.util.function.LongUnaryOperator;
+9 
+10 
+11 public class Main {
+12     public static void main(String[] args) throws Exception {
+13         Field f = System.out.getClass().getDeclaredField("autoFlush");
+14         f.setAccessible(true);
+15         f.set(System.out, false);
+16         execute(System.in, System.out);
+17     }
+18 
+19     public static void execute(InputStream in, OutputStream out) {
+20         ExtendedScanner s = new ExtendedScanner(in);
+21         Out o = new Out(out);
+22         solve(s, o);
+23         o.flush();
+24         o.close();
+25     }
+26 
+27     public static void solve(ExtendedScanner sc, Out out) {
+28         int n = sc.nextInt();
+29         if ((n & -n) == n) {
+30             out.writeln("No");
+31             return;
+32         }
+33         out.writeln("Yes");
+34         if (n == 3) {
+35             out.writeln("1 2\n2 3\n3 4\n4 5\n5 6");
+36             return;
+37         }
+38         int k = BitUtil.bsr(n);
+39         for (int i = 1; i <= (1 << k) - 2; i++) {
+40             out.write(i).writeSpace().writeln(i + 1);
+41         }
+42         out.write((1 << k) - 1).writeSpace().writeln(n + 1);
+43         for (int i = 1; i <= (1 << k) - 2; i++) {
+44             out.write(n + i).writeSpace().writeln(n + i + 1);
+45         }
+46         out.write((1 << k) + 1).writeSpace().writeln(n + (1 << k));
+47         out.write(n + (1 << k)).writeSpace().writeln(n + 1);
+48         out.write(n + 1).writeSpace().writeln(n + (1 << k) + 1);
+49         out.write(n + (1 << k) + 1).writeSpace().writeln(1 << k);
+50         for (int j = 2; j + (1 << k) <= n; j++) {
+51             out.write(n + j).writeSpace().writeln(n + (1 << k) + j);
+52             out.write(n + (1 << k) + j - 1).writeSpace().writeln((1 << k) + j);
+53         }
+54     }
+55 }
+56 
+57 
+58 /**
+59  * @author https://atcoder.jp/users/suisen
+60  */
+61 class BasicScanner {
+62     private final InputStream in;
+63     private final byte[] buf = new byte[1024];
+64     private int ptr = 0;
+65     private int buflen = 0;
+66     public BasicScanner(InputStream in) {this.in = in;}
+67     private boolean hasNextByte() {
+68         if (ptr < buflen) return true;
+69         ptr = 0;
+70         try {buflen = in.read(buf);}
+71         catch (final IOException e) {e.printStackTrace();}
+72         return buflen > 0;
+73     }
+74     private int readByte() {return hasNextByte() ? buf[ptr++] : -1;}
+75     public boolean hasNext() {
+76         while (hasNextByte() && !(33 <= buf[ptr] && buf[ptr] <= 126)) ptr++;
+77         return hasNextByte();
+78     }
+79     private StringBuilder nextSequence() {
+80         if (!hasNext()) throw new NoSuchElementException();
+81         final StringBuilder sb = new StringBuilder();
+82         int b = readByte();
+83         while (33 <= b && b <= 126) {sb.appendCodePoint(b); b = readByte();}
+84         return sb;
+85     }
+86     public char nextChar() {
+87         return (char) readByte();
+88     }
+89     public String next() {
+90         return nextSequence().toString();
+91     }
+92     public String next(int len) {
+93         return new String(nextChars(len));
+94     }
+95     public char[] nextChars() {
+96         final StringBuilder sb = nextSequence();
+97         int l = sb.length();
+98         char[] dst = new char[l];
+99         sb.getChars(0, l, dst, 0);
+100         return dst;
+101     }
+102     public char[] nextChars(int len) {
+103         if (!hasNext()) throw new NoSuchElementException();
+104         char[] s = new char[len];
+105         int i = 0;
+106         int b = readByte();
+107         while (33 <= b && b <= 126 && i < len) {s[i++] = (char) b; b = readByte();}
+108         if (i != len) throw new NoSuchElementException(String.format("length %d is longer than the sequence.", len));
+109         return s;
+110     }
+111     public long nextLong() {
+112         if (!hasNext()) throw new NoSuchElementException();
+113         long n = 0;
+114         boolean minus = false;
+115         int b = readByte();
+116         if (b == '-') {minus = true; b = readByte();}
+117         if (b < '0' || '9' < b) throw new NumberFormatException();
+118         while (true) {
+119             if ('0' <= b && b <= '9') n = n * 10 + b - '0';
+120             else if (b == -1 || !(33 <= b && b <= 126)) return minus ? -n : n;
+121             else throw new NumberFormatException();
+122             b = readByte();
+123         }
+124     }
+125     public int nextInt() {return Math.toIntExact(nextLong());}
+126     public double nextDouble() {return Double.parseDouble(next());}
+127 }
+128 
+129 
+130 /**
+131  * @author https://atcoder.jp/users/suisen
+132  */
+133 class Out {
+134     private final OutputStream out;
+135     private byte[] buf = new byte[1024];
+136     private int ptr = 0;
+137     private static final int AUTO_FLUSH_THRETHOLD = 1 << 17;
+138 
+139     public Out(OutputStream out) {
+140         this.out = out;
+141     }
+142 
+143     public void flush() {
+144         try {
+145             out.write(buf, 0, ptr);
+146             out.flush();
+147             ptr = 0;
+148         } catch (IOException e) {e.printStackTrace();}
+149     }
+150 
+151     public void close() {
+152         try {out.close();} catch (IOException e) {e.printStackTrace();}
+153     }
+154 
+155     public Out writeln() {return write('\n');}
+156     public Out writeln(Object o) {return write(o).write('\n');}
+157     public Out writeln(String s) {return write(s).write('\n');}
+158     public Out writeln(char[] c) {return write(c).write('\n');}
+159     public Out writeln(char   c) {return write(c).write('\n');}
+160     public Out writeln(byte   b) {return write(b).write('\n');}
+161     public Out writeln(int    x) {return write(x).write('\n');}
+162     public Out writeln(long   x) {return write(x).write('\n');}
+163     public Out writeln(double d) {return write(d).write('\n');}
+164 
+165     public Out writeSpace() {return write(' ');}
+166     
+167     public Out write(Object o) {
+168         return write(o.toString());
+169     }
+170 
+171     public Out write(String s) {
+172         try {
+173             Field strValueField = s.getClass().getDeclaredField("value");
+174             strValueField.setAccessible(true);
+175             byte[] b = (byte[]) strValueField.get(s);
+176             int l = s.length();
+177             if (l > AUTO_FLUSH_THRETHOLD) {
+178                 flush();
+179                 int i = 0;
+180                 while (i + AUTO_FLUSH_THRETHOLD < l) {
+181                     out.write(b, i, AUTO_FLUSH_THRETHOLD);
+182                     out.flush();
+183                     i += AUTO_FLUSH_THRETHOLD;
+184                 }
+185                 ensureCapacity(l - i);
+186                 System.arraycopy(b, i, buf, 0, l - i);
+187                 ptr = l - i;
+188             } else {
+189                 ensureCapacity(ptr + l);
+190                 System.arraycopy(b, 0, buf, ptr, l);
+191                 ptr += l;
+192             }
+193         } catch (Exception e) {e.printStackTrace();}
+194         return this;
+195     }
+196 
+197     public Out write(char[] c) {
+198         int l = c.length;
+199         if (l > AUTO_FLUSH_THRETHOLD) {
+200             flush();
+201             ensureCapacity(AUTO_FLUSH_THRETHOLD);
+202             int i = 0;
+203             while (i + AUTO_FLUSH_THRETHOLD < l) {
+204                 for (int j = 0; j < AUTO_FLUSH_THRETHOLD; j++) {
+205                     buf[ptr++] = (byte) c[i + j];
+206                 }
+207                 flush();
+208                 i += AUTO_FLUSH_THRETHOLD;
+209             }
+210             for (; i < l; i++) {
+211                 buf[ptr++] = (byte) c[i];
+212             }
+213         } else {
+214             ensureCapacity(ptr + l);
+215             for (char ch : c) buf[ptr++] = (byte) ch;
+216         }
+217         return this;
+218     }
+219 
+220     public Out write(char c) {
+221         ensureCapacity(ptr + 1);
+222         buf[ptr++] = (byte) c;
+223         return this;
+224     }
+225 
+226     public Out write(byte b) {
+227         ensureCapacity(ptr + 1);
+228         buf[ptr++] = b;
+229         return this;
+230     }
+231 
+232     public Out write(int x) {
+233         if (x == 0) {
+234             ensureCapacity(ptr + 1);
+235             buf[ptr++] = '0';
+236             return this;
+237         }
+238         int d = stringSize(x);
+239         ensureCapacity(ptr + d);
+240         if (x < 0) {
+241             buf[ptr++] = '-';
+242             x = -x;
+243             d--;
+244         }
+245         int j = ptr + d; 
+246         while (x > 0) {
+247             buf[--j] = (byte) ('0' + (x % 10));
+248             x /= 10;
+249         }
+250         ptr += d;
+251         return this;
+252     }
+253 
+254     public Out write(long x) {
+255         if (x == 0) {
+256             ensureCapacity(ptr + 1);
+257             buf[ptr++] = '0';
+258             return this;
+259         }
+260         int d = stringSize(x);
+261         ensureCapacity(ptr + d);
+262         if (x < 0) {
+263             buf[ptr++] = '-';
+264             x = -x;
+265             d--;
+266         }
+267         int j = ptr + d; 
+268         while (x > 0) {
+269             buf[--j] = (byte) ('0' + (x % 10));
+270             x /= 10;
+271         }
+272         ptr += d;
+273         return this;
+274     }
+275 
+276     public Out write(double d) {
+277         return write(Double.toString(d));
+278     }
+279 
+280     private void ensureCapacity(int cap) {
+281         if (cap > AUTO_FLUSH_THRETHOLD) {
+282             flush();
+283         }
+284         if (cap >= buf.length) {
+285             int newLength = buf.length;
+286             while (newLength < cap) newLength <<= 1;
+287             byte[] newBuf = new byte[newLength];
+288             System.arraycopy(buf, 0, newBuf, 0, buf.length);
+289             buf = newBuf;
+290         }
+291     }
+292     private static int stringSize(long x) {
+293         int d = 1;
+294         if (x >= 0) {d = 0; x = -x;}
+295         long p = -10;
+296         for (int i = 1; i < 19; i++, p *= 10) if (x > p) return i + d;
+297         return 19 + d;
+298     }
+299     private static int stringSize(int x) {
+300         int d = 1;
+301         if (x >= 0) {d = 0; x = -x;}
+302         int p = -10;
+303         for (int i = 1; i < 10; i++, p *= 10) if (x > p) return i + d;
+304         return 10 + d;
+305     }
+306 }
+307 
+308 
+309 /**
+310  * @author https://atcoder.jp/users/suisen
+311  */
+312 final class ExtendedScanner extends BasicScanner {
+313     public ExtendedScanner(InputStream in) {super(in);}
+314     public int[] ints(final int n) {
+315         final int[] a = new int[n];
+316         Arrays.setAll(a, $ -> nextInt());
+317         return a;
+318     }
+319     public int[] ints(final int n, final IntUnaryOperator f) {
+320         final int[] a = new int[n];
+321         Arrays.setAll(a, $ -> f.applyAsInt(nextInt()));
+322         return a;
+323     }
+324     public int[][] ints(final int n, final int m) {
+325         final int[][] a = new int[n][];
+326         Arrays.setAll(a, $ -> ints(m));
+327         return a;
+328     }
+329     public int[][] ints(final int n, final int m, final IntUnaryOperator f) {
+330         final int[][] a = new int[n][];
+331         Arrays.setAll(a, $ -> ints(m, f));
+332         return a;
+333     }
+334     public long[] longs(final int n) {
+335         final long[] a = new long[n];
+336         Arrays.setAll(a, $ -> nextLong());
+337         return a;
+338     }
+339     public long[] longs(final int n, final LongUnaryOperator f) {
+340         final long[] a = new long[n];
+341         Arrays.setAll(a, $ -> f.applyAsLong(nextLong()));
+342         return a;
+343     }
+344     public long[][] longs(final int n, final int m) {
+345         final long[][] a = new long[n][];
+346         Arrays.setAll(a, $ -> longs(m));
+347         return a;
+348     }
+349     public long[][] longs(final int n, final int m, final LongUnaryOperator f) {
+350         final long[][] a = new long[n][];
+351         Arrays.setAll(a, $ -> longs(m, f));
+352         return a;
+353     }
+354     public char[][] charArrays(final int n) {
+355         final char[][] c = new char[n][];
+356         Arrays.setAll(c, $ -> nextChars());
+357         return c;
+358     }
+359     public char[][] charArrays(final int n, final int m) {
+360         final char[][] c = new char[n][];
+361         Arrays.setAll(c, $ -> nextChars(m));
+362         return c;
+363     }
+364     public double[] doubles(final int n) {
+365         final double[] a = new double[n];
+366         Arrays.setAll(a, $ -> nextDouble());
+367         return a;
+368     }
+369     public double[][] doubles(final int n, final int m) {
+370         final double[][] a = new double[n][];
+371         Arrays.setAll(a, $ -> doubles(m));
+372         return a;
+373     }
+374     public String[] strings(final int n) {
+375         final String[] s = new String[n];
+376         Arrays.setAll(s, $ -> next());
+377         return s;
+378     }
+379     public String[] strings(final int n, final int m) {
+380         final String[] s = new String[n];
+381         Arrays.setAll(s, $ -> next(m));
+382         return s;
+383     }
+384 }
+385 
+386 /**
+387  * @author https://atcoder.jp/users/suisen
+388  */
+389 final class BitUtil {
+390     private static final int[] INT_MASK = {
+391         0x0000_0000,
+392         0x0000_0001, 0x0000_0003, 0x0000_0007, 0x0000_000f,
+393         0x0000_001f, 0x0000_003f, 0x0000_007f, 0x0000_00ff,
+394         0x0000_01ff, 0x0000_03ff, 0x0000_07ff, 0x0000_0fff,
+395         0x0000_1fff, 0x0000_3fff, 0x0000_7fff, 0x0000_ffff,
+396         0x0001_ffff, 0x0003_ffff, 0x0007_ffff, 0x000f_ffff,
+397         0x001f_ffff, 0x003f_ffff, 0x007f_ffff, 0x00ff_ffff,
+398         0x01ff_ffff, 0x03ff_ffff, 0x07ff_ffff, 0x0fff_ffff,
+399         0x1fff_ffff, 0x3fff_ffff, 0x7fff_ffff, 0xffff_ffff
+400     };
+401     private static final long[] LONG_MASK = {
+402         0x0000_0000_0000_0000l,
+403         0x0000_0000_0000_0001l, 0x0000_0000_0000_0003l, 0x0000_0000_0000_0007l, 0x0000_0000_0000_000fl, 
+404         0x0000_0000_0000_001fl, 0x0000_0000_0000_003fl, 0x0000_0000_0000_007fl, 0x0000_0000_0000_00ffl, 
+405         0x0000_0000_0000_01ffl, 0x0000_0000_0000_03ffl, 0x0000_0000_0000_07ffl, 0x0000_0000_0000_0fffl,
+406         0x0000_0000_0000_1fffl, 0x0000_0000_0000_3fffl, 0x0000_0000_0000_7fffl, 0x0000_0000_0000_ffffl, 
+407         0x0000_0000_0001_ffffl, 0x0000_0000_0003_ffffl, 0x0000_0000_0007_ffffl, 0x0000_0000_000f_ffffl, 
+408         0x0000_0000_001f_ffffl, 0x0000_0000_003f_ffffl, 0x0000_0000_007f_ffffl, 0x0000_0000_00ff_ffffl, 
+409         0x0000_0000_01ff_ffffl, 0x0000_0000_03ff_ffffl, 0x0000_0000_07ff_ffffl, 0x0000_0000_0fff_ffffl, 
+410         0x0000_0000_1fff_ffffl, 0x0000_0000_3fff_ffffl, 0x0000_0000_7fff_ffffl, 0x0000_0000_ffff_ffffl,
+411         0x0000_0001_ffff_ffffl, 0x0000_0003_ffff_ffffl, 0x0000_0007_ffff_ffffl, 0x0000_000f_ffff_ffffl, 
+412         0x0000_001f_ffff_ffffl, 0x0000_003f_ffff_ffffl, 0x0000_007f_ffff_ffffl, 0x0000_00ff_ffff_ffffl, 
+413         0x0000_01ff_ffff_ffffl, 0x0000_03ff_ffff_ffffl, 0x0000_07ff_ffff_ffffl, 0x0000_0fff_ffff_ffffl,
+414         0x0000_1fff_ffff_ffffl, 0x0000_3fff_ffff_ffffl, 0x0000_7fff_ffff_ffffl, 0x0000_ffff_ffff_ffffl, 
+415         0x0001_ffff_ffff_ffffl, 0x0003_ffff_ffff_ffffl, 0x0007_ffff_ffff_ffffl, 0x000f_ffff_ffff_ffffl, 
+416         0x001f_ffff_ffff_ffffl, 0x003f_ffff_ffff_ffffl, 0x007f_ffff_ffff_ffffl, 0x00ff_ffff_ffff_ffffl, 
+417         0x01ff_ffff_ffff_ffffl, 0x03ff_ffff_ffff_ffffl, 0x07ff_ffff_ffff_ffffl, 0x0fff_ffff_ffff_ffffl, 
+418         0x1fff_ffff_ffff_ffffl, 0x3fff_ffff_ffff_ffffl, 0x7fff_ffff_ffff_ffffl, 0xffff_ffff_ffff_ffffl
+419     };
+420     private BitUtil(){}
+421     public static boolean test (final long n, final int bit) {return (n & (1l << bit)) != 0;}
+422     public static boolean test (final int  n, final int bit) {return (n & (1  << bit)) != 0;}
+423 
+424     public static int     get  (final long n, final int bit) {return (n & (1l << bit)) == 0 ? 1 : 0;}
+425     public static int     get  (final int  n, final int bit) {return (n & (1  << bit)) == 0 ? 1 : 0;}
+426 
+427     public static long    set  (final long n, final int bit)                   {return n | (1l << bit);}
+428     public static int     set  (final int  n, final int bit)                   {return n | (1  << bit);}
+429     public static long    set  (final long n, final int from, final int to)    {return n | (LONG_MASK[to - from] << from);}
+430     public static int     set  (final int  n, final int from, final int to)    {return n | (INT_MASK [to - from] << from);}
+431     public static long    set  (final long n, final int bit,  final boolean b) {return b ? n | (1l << bit) : n & ~(1l << bit);}
+432     public static int     set  (final int  n, final int bit,  final boolean b) {return b ? n | (1  << bit) : n & ~(1  << bit);}
+433     public static long    set  (final long n, final int from, final int to, final boolean b) {return b ? n | (LONG_MASK[to - from] << from) : n & ~(LONG_MASK[to - from] << from);}
+434     public static int     set  (final int  n, final int from, final int to, final boolean b) {return b ? n | (INT_MASK [to - from] << from) : n & ~(INT_MASK [to - from] << from);}
+435 
+436     public static long    clear(final long n, final int bit)                {return n & ~(1l << bit);}
+437     public static int     clear(final int  n, final int bit)                {return n & ~(1  << bit);}
+438     public static long    clear(final long n, final int from, final int to) {return n & ~(LONG_MASK[to - from] << from);}
+439     public static int     clear(final int  n, final int from, final int to) {return n & ~(INT_MASK [to - from] << from);}
+440 
+441     public static long    flip (final long n, final int bit)                {return n ^ (1l << bit);}
+442     public static int     flip (final int  n, final int bit)                {return n ^ (1  << bit);}
+443     public static long    flip (final long n, final int from, final int to) {return n ^ (LONG_MASK[to - from] << from);}
+444     public static int     flip (final int  n, final int from, final int to) {return n ^ (INT_MASK [to - from] << from);}
+445 
+446     public static long    mask (final long n, final int bit)                {return n & (1l << bit);}
+447     public static int     mask (final int  n, final int bit)                {return n & (1  << bit);}
+448     public static long    mask (final long n, final int from, final int to) {return n & (LONG_MASK[to - from] << from);}
+449     public static int     mask (final int  n, final int from, final int to) {return n & (INT_MASK [to - from] << from);}
+450 
+451     public static int     bsr  (final long n) {return 63 - Long   .numberOfLeadingZeros (n);}
+452     public static int     bsr  (final int  n) {return 31 - Integer.numberOfLeadingZeros (n);}
+453 }

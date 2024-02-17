@@ -1,0 +1,129 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.StringTokenizer;
+6 import java.io.IOException;
+7 import java.io.BufferedReader;
+8 import java.io.InputStreamReader;
+9 import java.io.InputStream;
+10 
+11 /**
+12  * Built using CHelper plug-in
+13  * Actual solution is at the top
+14  *
+15  * @author Jaynil
+16  */
+17 public class Main {
+18     public static void main(String[] args) {
+19         InputStream inputStream = System.in;
+20         OutputStream outputStream = System.out;
+21         InputReader in = new InputReader(inputStream);
+22         PrintWriter out = new PrintWriter(outputStream);
+23         ERoaming solver = new ERoaming();
+24         solver.solve(1, in, out);
+25         out.close();
+26     }
+27 
+28     static class ERoaming {
+29         long[] fact;
+30         long[] factinv;
+31         long mod = 1000000007;
+32         long n;
+33 
+34         public void gen() {
+35             fact = new long[(int) (n + 1)];
+36             factinv = new long[(int) (n + 1)];
+37             fact[0] = 1;
+38             factinv[0] = Maths.power(fact[0], mod - 2, mod);
+39             for (int i = 1; i <= n; i++) {
+40                 fact[i] = i * fact[i - 1];
+41                 fact[i] %= mod;
+42                 factinv[i] = Maths.power(fact[i], mod - 2, mod);
+43             }
+44         }
+45 
+46         public void solve(int testNumber, InputReader in, PrintWriter out) {
+47             n = in.nextLong();
+48             long k = in.nextLong();
+49             if (k >= n) {
+50                 out.println(Maths.nCrs(n + n - 1, n - 1, mod));
+51             } else {
+52                 long ans = 0;
+53                 gen();
+54                 for (int i = 0; i <= k; i++) {
+55                     long up = fact[(int) n] * fact[(int) (n - 1)];
+56                     up %= mod;
+57                     long den1 = factinv[i] * factinv[i];
+58                     den1 %= mod;
+59                     long den2 = factinv[(int) n - i] * factinv[(int) n - i - 1];
+60                     den2 %= mod;
+61                     long den = den1 * den2;
+62                     den %= mod;
+63                     ans += up * den;
+64                     ans %= mod;
+65 //                out.println((up*den)%mod);
+66                 }
+67                 out.println(ans);
+68             }
+69         }
+70 
+71     }
+72 
+73     static class Maths {
+74         static long nCrs(long n, long r, long p) {
+75             //r is small
+76             long up = 1;
+77             long down = 1;
+78             for (long i = n - r + 1; i <= n; i++) {
+79                 up *= i;
+80                 up %= p;
+81             }
+82             for (long i = 1; i <= r; i++) {
+83                 down *= i;
+84                 down %= p;
+85             }
+86             return (up * power(down, p - 2, p)) % p;
+87         }
+88 
+89         static long power(long x, long y, long p) {
+90             long res = 1;
+91             x = x % p;
+92             while (y > 0) {
+93                 if ((y & 1) == 1)
+94                     res = (res * x) % p;
+95                 y = y >> 1;
+96                 x = (x * x) % p;
+97             }
+98             return res;
+99         }
+100 
+101     }
+102 
+103     static class InputReader {
+104         public BufferedReader reader;
+105         public StringTokenizer tokenizer;
+106 
+107         public InputReader(InputStream stream) {
+108             reader = new BufferedReader(new InputStreamReader(stream), 32768);
+109             tokenizer = null;
+110         }
+111 
+112         public String next() {
+113             while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+114                 try {
+115                     tokenizer = new StringTokenizer(reader.readLine());
+116                 } catch (IOException e) {
+117                     throw new RuntimeException(e);
+118                 }
+119             }
+120             return tokenizer.nextToken();
+121         }
+122 
+123         public long nextLong() {
+124             return Long.parseLong(next());
+125         }
+126 
+127     }
+128 }
+129 

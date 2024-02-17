@@ -1,0 +1,262 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.util.Arrays;
+4 import java.util.NoSuchElementException;
+5 import java.util.Random;
+6 import java.util.Scanner;
+7 
+8 class UnionFind{
+9 	int Parent[];
+10 	UnionFind(int n){//Initialize by -1
+11 		Parent=new int[n];
+12 		Arrays.fill(Parent, -1);
+13 	}
+14 	int root(int A) {//In which tree is A?
+15 		if(Parent[A]<0)return A;
+16 		return Parent[A]=root(Parent[A]);
+17 	}
+18 	int size(int A) {//size of tree which is include A
+19 		return -Parent[root(A)];
+20 	}
+21 	boolean connect(int A,int B) {//Connect A and B
+22 		A=root(A);
+23 		B=root(B);
+24 		if(A==B) return false;
+25 		if(size(A)<size(B)) {int C=0;C=B;B=A;A=C;}//SWAP
+26 		Parent[A]+=Parent[B];
+27 		Parent[B]=A;
+28 		return true;
+29 	}
+30 }
+31 
+32 public class Main {
+33 	static FastScanner scan=new FastScanner();
+34 	static Scanner scanner=new Scanner(System.in);
+35 	static Random rand=new Random();
+36 	static long mod=1000000007;
+37 	static double eps=0.0000000001;
+38 	static int big=Integer.MAX_VALUE;
+39 	static long modlcm(long a,long b) {return a*b*modint(gcd(a,b),mod);}
+40 	static long gcd (long a, long b) {return b>0?gcd(b,a%b):a;}
+41 	static long lcm (long a, long b) {return a*b/gcd(a,b);}
+42 	static int max(int a,int b) {return a>b?a:b;}
+43 	static int min(int a,int b) {return a<b?a:b;}
+44 	static long lmax(long a,long b) {return Math.max(a, b);}
+45 	static long lmin(long a,long b) {return Math.min(a, b);}
+46 	static long factorial(int i) {return i==1?1:i*factorial(i-1);}
+47 	public static void main(String[] args) throws IOException {
+48 		String str=scan.next();
+49 		for(int i=1;i<str.length();i++) {
+50 			if(str.charAt(i-1)=='A'&&str.charAt(i)=='C') {
+51 				System.out.println("Yes");
+52 				return;
+53 			}
+54 		}
+55 		System.out.println("No");
+56 	}
+57 	static int lower_bound(int a[],int key) {
+58 		int right=a.length;
+59 		int left=0;
+60 		while(right-left>1) {
+61 			int mid=(right+left)/2;
+62 			if(a[mid]<key) {
+63 				left=mid;
+64 			}
+65 			else {
+66 				right=mid;
+67 			}
+68 		}
+69 		return left;
+70 	}
+71 	static int upper_bound(int a[],int key) {
+72 		int right=a.length;
+73 		int left=0;
+74 		while(right-left>1) {
+75 			int mid=(right+left)/2;
+76 			if(a[mid]<=key) {
+77 				left=mid;
+78 			}
+79 			else {
+80 				right=mid;
+81 			}
+82 		}
+83 		return left;
+84 	}
+85 	static boolean isPrime (long n) {
+86 		if (n==2) return true;
+87 		if (n<2 || n%2==0) return false;
+88 		double d = Math.sqrt(n);
+89 		for (int i=3; i<=d; i+=2)if(n%i==0){return false;}
+90 		return true;
+91 	}
+92 	static int upper_division(int a,int b) {
+93 		if(a%b==0) {
+94 			return a/b;
+95 		}
+96 		else {
+97 			return a/b+1;
+98 		}
+99 	}
+100 	static long lupper_division(long a,long b) {
+101 		if(a%b==0) {
+102 			return a/b;
+103 		}
+104 		else {
+105 			return a/b+1;
+106 		}
+107 	}
+108 	static int[] setArray(int a) {
+109 		int b[]=new int[a];
+110 		for(int i=0;i<a;i++) {
+111 			b[i]=scan.nextInt();
+112 		}
+113 		return b;
+114 	}
+115 	static long[] lsetArray(int a) {
+116 		long b[]=new long[a];
+117 		for(int i=0;i<a;i++) {
+118 			b[i]=scan.nextLong();
+119 		}
+120 		return b;
+121 	}
+122 	static String reverce(String str) {
+123 		String strr="";
+124 		for(int i=str.length()-1;i>=0;i--) {
+125 			strr+=str.charAt(i);
+126 		}
+127 		return strr;
+128 	}
+129 	public static void printArray(int[] que) {
+130 		for(int i=0;i<que.length-1;i++) {
+131 			System.out.print(que[i]+" ");
+132 		}
+133 		System.out.println(que[que.length-1]);
+134 	}
+135 	public static int[][] doublesort(int[][]a) {
+136 		Arrays.sort(a,(x,y)->Integer.compare(x[0],y[0]));
+137 		return a;
+138 	}
+139 	public static long[][] ldoublesort(long[][]a) {
+140 		Arrays.sort(a,(x,y)->Long.compare(x[0],y[0]));
+141 		return a;
+142 	}
+143 	static long modpow(long x,long n,long mo) {
+144 		long sum=1;
+145 		while(n>0) {
+146 			if((n&1)==1) {
+147 				sum=sum*x%mo;
+148 			}
+149 			x=x*x%mo;
+150 			n>>=1;
+151 		}
+152 		return sum;
+153 	}
+154 	public static char[] revch(char ch[]) {
+155 		char ret[]=new char[ch.length];
+156 		for(int i=ch.length-1,j=0;i>=0;i--,j++) {
+157 			ret[j]=ch[i];
+158 		}
+159 		return ret;
+160 	}
+161 	public static int[] revint(int ch[]) {
+162 		int ret[]=new int[ch.length];
+163 		for(int i=ch.length-1,j=0;i>=0;i--,j++) {
+164 			ret[j]=ch[i];
+165 		}
+166 		return ret;
+167 	}
+168 	public static void warshall_floyd(int v[][],int n) {
+169 		for(int k=0;k<n;k++)
+170 			for(int i=0;i<n;i++)
+171 				for(int j=0;j<n;j++)
+172 					v[i][j]=min(v[i][j],v[i][k]+v[k][j]);
+173 	}
+174 	public static long modint(long a,long m) {
+175 		long b=m,u=1,v=0;
+176 		while(b!=0) {
+177 			long t=a/b;
+178 			a-=t*b;
+179 			long x=a;
+180 			a=b;
+181 			b=x;
+182 
+183 			u-=t*v;
+184 			x=u;
+185 			u=v;
+186 			v=x;
+187 		}
+188 		u%=m;
+189 		if(u<0)u+=m;
+190 		return u;
+191 	}
+192 }
+193 class FastScanner {
+194 	private final InputStream in = System.in;
+195 	private final byte[] buffer = new byte[1024];
+196 	private int ptr = 0;
+197 	private int buflen = 0;
+198 	private boolean hasNextByte() {
+199 		if (ptr < buflen) {
+200 			return true;
+201 		}else{
+202 			ptr = 0;
+203 			try {
+204 				buflen = in.read(buffer);
+205 			} catch (IOException e) {
+206 				e.printStackTrace();
+207 			}
+208 			if (buflen <= 0) {
+209 				return false;
+210 			}
+211 		}
+212 		return true;
+213 	}
+214 	private int readByte() { if (hasNextByte()) return buffer[ptr++]; else return -1;}
+215 	private static boolean isPrintableChar(int c) { return 33 <= c && c <= 126;}
+216 	public boolean hasNext() { while(hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++; return hasNextByte();}
+217 	public String next() {
+218 		if (!hasNext()) throw new NoSuchElementException();
+219 		StringBuilder sb = new StringBuilder();
+220 		int b = readByte();
+221 		while(isPrintableChar(b)) {
+222 			sb.appendCodePoint(b);
+223 			b = readByte();
+224 		}
+225 		return sb.toString();
+226 	}
+227 	public long nextLong() {
+228 		if (!hasNext()) throw new NoSuchElementException();
+229 		long n = 0;
+230 		boolean minus = false;
+231 		int b = readByte();
+232 		if (b == '-') {
+233 			minus = true;
+234 			b = readByte();
+235 		}
+236 		if (b < '0' || '9' < b) {
+237 			throw new NumberFormatException();
+238 		}
+239 		while(true){
+240 			if ('0' <= b && b <= '9') {
+241 				n *= 10;
+242 				n += b - '0';
+243 			}else if(b == -1 || !isPrintableChar(b)){
+244 				return minus ? -n : n;
+245 			}else{
+246 				throw new NumberFormatException();
+247 			}
+248 			b = readByte();
+249 		}
+250 	}
+251 	public int nextInt() {
+252 		long nl = nextLong();
+253 		if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE) throw new NumberFormatException();
+254 		return (int) nl;
+255 	}
+256 	public double nextDouble() { return Double.parseDouble(next());}
+257 	public char nextchar() {
+258 		try { return (char)System.in.read(); } catch(Exception e) {
+259 			throw new RuntimeException(e);
+260 		}
+261 	}
+262 }

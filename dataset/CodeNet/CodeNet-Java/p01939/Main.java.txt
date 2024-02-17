@@ -1,0 +1,53 @@
+1 import java.math.BigInteger;
+2 import java.util.Scanner;
+3 
+4 public class Main {
+5 
+6 	public static void main(String args[]){
+7 
+8 		int MOD = 1000000007;
+9 
+10 		Scanner sc = new Scanner(System.in);
+11 		Long first_N = sc.nextLong();
+12 		Long first_M = sc.nextLong();
+13 
+14 		Long first_limit;
+15 
+16 		if(first_N == 1){
+17 			System.out.println((first_M+1)%MOD);
+18 		}else{
+19 
+20 			if((first_M+1)%(first_N-1) == 0){
+21 				first_limit = (first_M+1)/(first_N-1)-1;
+22 			}else{
+23 				first_limit = (first_M+1)/(first_N-1);
+24 			}
+25 
+26 			if(first_limit <= 0){
+27 				System.out.println((first_M+1)%MOD);
+28 			}else{
+29 
+30 				BigInteger bigMOD = BigInteger.valueOf(MOD);
+31 
+32 				BigInteger limit = BigInteger.valueOf(first_limit);
+33 
+34 				BigInteger A = BigInteger.valueOf(first_M+1);
+35 
+36 				BigInteger B = BigInteger.valueOf(2*(first_M+1));
+37 				B = B.multiply(limit);
+38 
+39 				BigInteger C = BigInteger.valueOf(first_N-1);
+40 				C = C.multiply(limit);
+41 				C = C.multiply(BigInteger.valueOf(first_limit+1));
+42 
+43 				A = A.add(B).subtract(C);
+44 
+45 				System.out.println(A.remainder(bigMOD));
+46 
+47 			}
+48 
+49 		}
+50 
+51 
+52 	}
+53 }

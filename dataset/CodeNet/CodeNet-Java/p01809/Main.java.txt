@@ -1,0 +1,32 @@
+1 import java.util.ArrayList;
+2 import java.util.Scanner;
+3 
+4 public class Main{
+5 	public static void main(String args[]) {
+6 		ArrayList<Long> yaku = new ArrayList<Long>();
+7 
+8 		Scanner scn = new Scanner(System.in);
+9 		long p = scn.nextLong(), q = scn.nextLong();
+10 		scn.close();
+11 		long qs;
+12 		long ans = 1;
+13 		long bp = p,bq = q,buf = p;
+14 
+15 		while(bq % bp != 0) {
+16 			buf = bq % bp;
+17 			bq = bp;
+18 			bp = buf;
+19 		}
+20 		qs = q/buf;
+21 		for(long i = 2;i <= Math.sqrt(qs);i++) {
+22 			if(qs % i ==0) {
+23 				while(qs % i == 0) {
+24 					qs /=i;
+25 				}
+26 				ans *= i;
+27 			}
+28 		}
+29 		ans*= qs;
+30 		System.out.println(ans);
+31 	}
+32 }

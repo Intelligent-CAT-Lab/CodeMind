@@ -1,0 +1,1 @@
+print("the cost of one peach is higher than that of one apple.".replace('apple', '???').replace('peach', 'apple').replace('???', 'peach'))

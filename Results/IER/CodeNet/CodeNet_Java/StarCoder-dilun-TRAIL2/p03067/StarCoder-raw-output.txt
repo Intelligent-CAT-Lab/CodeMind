@@ -1,0 +1,66 @@
+ariable a, variable b and variable c are initialized with 3, 8 and 5 respectively according to the input.
+It checks if the condition (c >= a && c <= b) || (c >= b && c <= a) is true or false.
+The condition is met when c is 5, 8 or 3.
+<<<Output>>>
+Yes
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ *
+ * @author L_aka_ryuga
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        OutputWriter out = new OutputWriter(outputStream);
+        Task solver = new Task();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class Task {
+        public void solve(int testNumber, InputReader in, OutputWriter out) {
+            int n = in.ni();
+            int[] arr = new int[n];
+            for (int i = 0; i < n; i++) {
+                arr[i] = in.ni();
+            }
+            int[] dp = new int[n];
+            dp[0] = arr[0];
+            for (int i = 1; i < n; i++) {
+                dp[i] = Math.max(dp[i - 1], arr[i]);
+            }
+            int max = dp[0];
+            for (int i = 1; i < n; i++) {
+                max = Math.max(max, dp[i]);
+            }
+            out.println(max);
+        }
+
+    }
+
+    static class InputReader {
+        private InputStream stream;
+        private byte[] buf = new byte[1024];
+        private int curChar;
+        private int numChars

@@ -24,7 +24,7 @@ class OpenAIModel():
     map the model name to the model id in openai
     '''
     mapping: dict = {
-        "GPT_3":"gpt-3.5-turbo-0613",
+    "GPT_3":"gpt-3.5-turbo-0613",
     "GPT_4":"gpt-4-1106-preview"}
     def __call__(self,model:Model):
         return self.mapping[model.value]

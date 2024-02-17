@@ -1,0 +1,46 @@
+1 import java.util.*;
+2 
+3 public class Main {
+4 	public static void main(String[] args) {
+5 		Scanner sc = new Scanner(System.in);
+6 		
+7 		char[] T = sc.next().toCharArray();
+8 		int N = T.length;
+9 		
+10 		int oneSum = 0;
+11 		ArrayList<Integer> indexes = new ArrayList<>();
+12 		for(int i=0; i<N; i++) {
+13 			if(T[i]=='1') {
+14 				int length = 0;
+15 				for(int j=i; j<N; j++) {
+16 					if(T[j]=='1')
+17 						length++;
+18 					else
+19 						break;
+20 				}
+21 				if(length%2==1) {
+22 					indexes.add(i-(oneSum-indexes.size()));
+23 				}
+24 				oneSum += length;
+25 				i += length;
+26 			}
+27 		}
+28 		
+29 		long zeroSum = N-oneSum;
+30 		long ans = (zeroSum+1)*(oneSum-indexes.size())/2;
+31 		
+32 		for(int i=0; i<indexes.size(); i++) {
+33 			int index = indexes.get(i);
+34 			ans += zeroSum+1 - (index-i+(1+i%2))/2;
+35 		}
+36 		
+37 		for(int i=oneSum-1; i>=1; i--) {
+38 			ans += (i+1)/2;
+39 		}
+40 		
+41 		System.out.println(ans);
+42 		sc.close();
+43 	}
+44 
+45 }
+46 

@@ -1,0 +1,93 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 public class Main {
+5 
+6 
+7     private  static void solver(InputReader sc, PrintWriter out) throws Exception {
+8         long n = sc.nextLong();
+9         long sqrt = (long) Math.sqrt(n);
+10         long x=0,y=0;
+11         for(long i=sqrt;i>=1;i--){
+12             if(n%i==0){
+13                x  =i;
+14                y = (long) n/i;
+15                 break;
+16             }
+17         }
+18         long ans =0;
+19         if(x!=0 && y!=0)
+20              ans = (x-1)+(y-1);
+21         else
+22             ans = n-1;
+23         out.println(ans);
+24     }
+25     private  static long gcd(long a, long b){
+26         if(b==0)
+27             return a;
+28         else
+29             return gcd(b,a%b);
+30     }
+31 
+32     public static void main(String[] args) throws Exception{
+33         InputStream inputStream = System.in;
+34         OutputStream outputStream = System.out;
+35         InputReader in = new InputReader(inputStream);
+36         PrintWriter out = new PrintWriter(outputStream);
+37         solver(in,out);
+38         out.close();
+39     }
+40     static class InputReader {
+41         public BufferedReader reader;
+42         public StringTokenizer tokenizer;
+43 
+44         public InputReader(InputStream stream) {
+45             reader = new BufferedReader(new InputStreamReader(stream), 32768);
+46             tokenizer = null;
+47         }
+48 
+49         public String next() {
+50             while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+51                 try {
+52                     tokenizer = new StringTokenizer(reader.readLine());
+53                 } catch (IOException e) {
+54                     throw new RuntimeException(e);
+55                 }
+56             }
+57             return tokenizer.nextToken();
+58         }
+59 
+60         public int nextInt() {
+61             return Integer.parseInt(next());
+62         }
+63         public long nextLong(){
+64             return Long.parseLong(next());
+65         }
+66 
+67         public long[] readLongArr(int n){
+68             long arr[] = new long[n];
+69             for(int i=0; i<n; i++){
+70                 arr[i] = nextLong();
+71             }
+72             return arr;
+73         }
+74         public int[] readIntArr(int n){
+75             int arr[] = new int[n];
+76             for(int i=0; i<n; i++){
+77                 arr[i] = nextInt();
+78             }
+79             return arr;
+80         }
+81     }
+82 }
+83 class Pair implements Comparable<Pair>{
+84     int x;
+85     String s;
+86     Pair(int x, String s){
+87         this.x = x;
+88         this.s = s;
+89     }
+90     public int compareTo(Pair p){
+91         return this.x-p.x;
+92     }
+93 }

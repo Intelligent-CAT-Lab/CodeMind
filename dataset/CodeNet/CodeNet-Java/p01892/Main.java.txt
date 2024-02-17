@@ -1,0 +1,94 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.PrintWriter;
+4 import java.util.NoSuchElementException;
+5 
+6 public class Main {
+7 	long A,B;
+8 	int N;
+9 	public void solve() {
+10 		A = nextLong();
+11 		B = nextLong();
+12 		N = nextInt();
+13 
+14 		long ans = Math.abs(A - B);
+15 		for(int i = 1;i <= N;i++){
+16 			for(int j = 1;j <= N;j++){
+17 				if(i * B % j != 0)continue;
+18 				ans = Math.min(ans, Math.abs(A - i * B / j));
+19 			}
+20 		}
+21 
+22 		out.println(ans);
+23 
+24 	}
+25 
+26 	public static void main(String[] args) {
+27 		out.flush();
+28 		new Main().solve();
+29 		out.close();
+30 	}
+31 
+32 	/* Input */
+33 	private static final InputStream in = System.in;
+34 	private static final PrintWriter out = new PrintWriter(System.out);
+35 	private final byte[] buffer = new byte[2048];
+36 	private int p = 0;
+37 	private int buflen = 0;
+38 
+39 	private boolean hasNextByte() {
+40 		if (p < buflen)
+41 			return true;
+42 		p = 0;
+43 		try {
+44 			buflen = in.read(buffer);
+45 		} catch (IOException e) {
+46 			e.printStackTrace();
+47 		}
+48 		if (buflen <= 0)
+49 			return false;
+50 		return true;
+51 	}
+52 
+53 	public boolean hasNext() {
+54 		while (hasNextByte() && !isPrint(buffer[p])) {
+55 			p++;
+56 		}
+57 		return hasNextByte();
+58 	}
+59 
+60 	private boolean isPrint(int ch) {
+61 		if (ch >= '!' && ch <= '~')
+62 			return true;
+63 		return false;
+64 	}
+65 
+66 	private int nextByte() {
+67 		if (!hasNextByte())
+68 			return -1;
+69 		return buffer[p++];
+70 	}
+71 
+72 	public String next() {
+73 		if (!hasNext())
+74 			throw new NoSuchElementException();
+75 		StringBuilder sb = new StringBuilder();
+76 		int b = -1;
+77 		while (isPrint((b = nextByte()))) {
+78 			sb.appendCodePoint(b);
+79 		}
+80 		return sb.toString();
+81 	}
+82 
+83 	public int nextInt() {
+84 		return Integer.parseInt(next());
+85 	}
+86 
+87 	public long nextLong() {
+88 		return Long.parseLong(next());
+89 	}
+90 
+91 	public double nextDouble() {
+92 		return Double.parseDouble(next());
+93 	}
+94 }

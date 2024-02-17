@@ -1,0 +1,76 @@
+1 import java.io.PrintWriter;
+2 import java.util.Scanner;
+3 import java.util.Stack;
+4 import java.util.function.Supplier;
+5 
+6 public class Main {
+7     public static void main(String[] args) {
+8         try (Scanner in = new Scanner(System.in); PrintWriter out = new PrintWriter(System.out)) {
+9             char[] s = in.next().toCharArray();
+10             int n = s.length;
+11 
+12             Stack<Integer> elements = new Stack<>();
+13             elements.push(0);
+14             Stack<Integer> elementsBefore = new Stack<>();
+15 
+16             Runnable VALID_UNDO = () -> {
+17                 elements.push(elements.pop() - 1);
+18                 elements.push(elementsBefore.pop());
+19             };
+20             Runnable INVALID_UNDO = () -> {
+21                 elements.pop();
+22                 elements.push(elementsBefore.pop());
+23             };
+24             Runnable OPEN = () -> {
+25                 elements.pop();
+26             };
+27 
+28             Stack<Runnable> undo = new Stack<>();
+29             Stack<OldState> oldStates = new Stack<>();
+30 
+31             int depth = 0;
+32             long ans = 0;
+33 
+34 
+35             for (int i = 0; i < n; i++) {
+36                 if (s[i] != '-') oldStates.push(new OldState(depth, ans));
+37                 if (s[i] == '(') {
+38                     depth++;
+39                     elements.push(0);
+40                     undo.push(OPEN);
+41                 } else if (s[i] == ')') {
+42                     depth--;
+43                     elementsBefore.push(elements.pop());
+44                     if (depth < 0) {
+45                         depth = 0;
+46                         elements.push(0);
+47                         undo.push(INVALID_UNDO);
+48                     } else {
+49                         elements.push(elements.pop() + 1);
+50                         undo.push(VALID_UNDO);
+51                     }
+52 
+53                     int delta =  elements.peek();
+54                     ans += delta;
+55                 } else {
+56                     OldState state = oldStates.pop();
+57                     ans = state.ans;
+58                     depth = state.depth;
+59                     undo.pop().run();
+60                 }
+61                 out.println(ans);
+62             }
+63         }
+64     }
+65 
+66     private static class OldState {
+67         int depth;
+68         long ans;
+69 
+70         OldState(int depth, long ans) {
+71             this.depth = depth;
+72             this.ans = ans;
+73         }
+74     }
+75 }
+76 

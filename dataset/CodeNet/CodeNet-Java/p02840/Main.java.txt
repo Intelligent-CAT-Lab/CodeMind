@@ -1,0 +1,282 @@
+1 import java.io.ByteArrayInputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.ArrayList;
+6 import java.util.Arrays;
+7 import java.util.Collections;
+8 import java.util.Comparator;
+9 import java.util.HashMap;
+10 import java.util.InputMismatchException;
+11 import java.util.List;
+12 import java.util.Map;
+13 import java.util.Map.Entry;
+14 
+15 public class Main {
+16 
+17 	private static final String NO = "No";
+18 	private static final String YES = "Yes";
+19 	InputStream is;
+20 	PrintWriter out;
+21 	String INPUT = "";
+22 	private List<Integer>[] g;
+23 
+24 	private static final long MOD = 998244353;
+25 	private static final int INF = Integer.MAX_VALUE;
+26 
+27 	void solve() {
+28 		int T = 1;
+29 		for (int i = 0; i < T; i++)
+30 			solve(i);
+31 	}
+32 
+33 	void solve(int T) {
+34 		int n = ni();
+35 		int x = ni();
+36 		int d = ni();
+37 		if (d == 0)
+38 			if (x == 0) {
+39 				out.print(1);
+40 				return;
+41 			} else {
+42 				out.print(n + 1);
+43 				return;
+44 			}
+45 
+46 		if (x == 0) {
+47 			out.print(1 + n * (n - 1) / 2);
+48 			return;
+49 		}
+50 
+51 		Map<Long, List<long[]>> m = new HashMap<Long, List<long[]>>();
+52 
+53 		for (long take = 0; take <= n; ++take) {
+54 			long b = take * x;
+55 			long sum = take * (take - 1) / 2L;
+56 			long rsum = (n - take) * take + sum;
+57 			long c = b / d;
+58 			add(m, b % d, new long[] { c + sum, c + rsum });
+59 		}
+60 		long ans = 0L;
+61 		for (Entry<Long, List<long[]>> en : m.entrySet()) {
+62 			List<long[]> v = en.getValue();
+63 			Collections.sort(v, new Comparator<long[]>() {
+64 				public int compare(long[] o1, long[] o2) {
+65 					if (o1[0] == o2[0])
+66 						return Long.signum(o1[1] - o2[1]);
+67 					return Long.signum(o1[0] - o2[0]);
+68 				}
+69 			});
+70 			long l = 0, r = 0;
+71 			boolean f = false;
+72 			for (long p[] : v) {
+73 				if (!f) {
+74 					f = true;
+75 					l = p[0];
+76 					r = p[1];
+77 				} else {
+78 					if (p[0] <= r) {
+79 						r = Math.max(r, p[1]);
+80 					} else {
+81 						ans += r - l + 1;
+82 						l = p[0];
+83 						r = p[1];
+84 					}
+85 				}
+86 			}
+87 			ans += r - l + 1;
+88 		}
+89 		out.println(ans);
+90 	}
+91 
+92 	private void add(Map<Long, List<long[]>> m, long k, long[] v) {
+93 		if (!m.containsKey(k))
+94 			m.put(k, new ArrayList<long[]>());
+95 		m.get(k).add(v);
+96 	}
+97 
+98 	// a^b
+99 	long power(long a, long b) {
+100 		long x = 1, y = a;
+101 		while (b > 0) {
+102 			if (b % 2 != 0) {
+103 				x = (x * y) % MOD;
+104 			}
+105 			y = (y * y) % MOD;
+106 			b /= 2;
+107 		}
+108 		return x % MOD;
+109 	}
+110 
+111 	private long gcd(long a, long b) {
+112 		while (a != 0) {
+113 			long tmp = b % a;
+114 			b = a;
+115 			a = tmp;
+116 		}
+117 		return b;
+118 	}
+119 
+120 	void run() throws Exception {
+121 		is = INPUT.isEmpty() ? System.in : new ByteArrayInputStream(INPUT.getBytes());
+122 		out = new PrintWriter(System.out);
+123 
+124 		long s = System.currentTimeMillis();
+125 		solve();
+126 		out.flush();
+127 		if (!INPUT.isEmpty())
+128 			tr(System.currentTimeMillis() - s + "ms");
+129 	}
+130 
+131 	public static void main(String[] args) throws Exception {
+132 		new Main().run();
+133 	}
+134 
+135 	private byte[] inbuf = new byte[1024];
+136 	public int lenbuf = 0, ptrbuf = 0;
+137 	private boolean vis[];
+138 
+139 	private int readByte() {
+140 		if (lenbuf == -1)
+141 			throw new InputMismatchException();
+142 		if (ptrbuf >= lenbuf) {
+143 			ptrbuf = 0;
+144 			try {
+145 				lenbuf = is.read(inbuf);
+146 			} catch (IOException e) {
+147 				throw new InputMismatchException();
+148 			}
+149 			if (lenbuf <= 0)
+150 				return -1;
+151 		}
+152 		return inbuf[ptrbuf++];
+153 	}
+154 
+155 	private boolean isSpaceChar(int c) {
+156 		return !(c >= 33 && c <= 126);
+157 	}
+158 
+159 	private int skip() {
+160 		int b;
+161 		while ((b = readByte()) != -1 && isSpaceChar(b))
+162 			;
+163 		return b;
+164 	}
+165 
+166 	private double nd() {
+167 		return Double.parseDouble(ns());
+168 	}
+169 
+170 	private char nc() {
+171 		return (char) skip();
+172 	}
+173 
+174 	private String ns() {
+175 		int b = skip();
+176 		StringBuilder sb = new StringBuilder();
+177 		while (!(isSpaceChar(b))) { // when nextLine, (isSpaceChar(b) && b != '
+178 									// ')
+179 			sb.appendCodePoint(b);
+180 			b = readByte();
+181 		}
+182 		return sb.toString();
+183 	}
+184 
+185 	private char[] ns(int n) {
+186 		char[] buf = new char[n];
+187 		int b = skip(), p = 0;
+188 		while (p < n) {
+189 			if (!(isSpaceChar(b)))
+190 				buf[p++] = (char) b;
+191 			b = readByte();
+192 		}
+193 		return n == p ? buf : Arrays.copyOf(buf, p);
+194 	}
+195 
+196 	private char[][] nm(int n, int m) {
+197 		char[][] map = new char[n][];
+198 		for (int i = 0; i < n; i++)
+199 			map[i] = ns(m);
+200 		return map;
+201 	}
+202 
+203 	private int[] na(int n) {
+204 		int[] a = new int[n];
+205 		for (int i = 0; i < n; i++)
+206 			a[i] = ni();
+207 		return a;
+208 	}
+209 
+210 	private List<Integer> na2(int n) {
+211 		List<Integer> a = new ArrayList<Integer>();
+212 		for (int i = 0; i < n; i++)
+213 			a.add(ni());
+214 		return a;
+215 	}
+216 
+217 	private int[][] na(int n, int m) {
+218 		int[][] a = new int[n][];
+219 		for (int i = 0; i < n; i++)
+220 			a[i] = na(m);
+221 		return a;
+222 	}
+223 
+224 	private int ni() {
+225 		int num = 0, b;
+226 		boolean minus = false;
+227 		while ((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'))
+228 			;
+229 		if (b == '-') {
+230 			minus = true;
+231 			b = readByte();
+232 		}
+233 
+234 		while (true) {
+235 			if (b >= '0' && b <= '9') {
+236 				num = num * 10 + (b - '0');
+237 			} else {
+238 				return minus ? -num : num;
+239 			}
+240 			b = readByte();
+241 		}
+242 	}
+243 
+244 	private long[] nl(int n) {
+245 		long[] a = new long[n];
+246 		for (int i = 0; i < n; i++)
+247 			a[i] = nl();
+248 		return a;
+249 	}
+250 
+251 	private long[][] nl(int n, int m) {
+252 		long[][] a = new long[n][];
+253 		for (int i = 0; i < n; i++)
+254 			a[i] = nl(m);
+255 		return a;
+256 	}
+257 
+258 	private long nl() {
+259 		long num = 0;
+260 		int b;
+261 		boolean minus = false;
+262 		while ((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'))
+263 			;
+264 		if (b == '-') {
+265 			minus = true;
+266 			b = readByte();
+267 		}
+268 
+269 		while (true) {
+270 			if (b >= '0' && b <= '9') {
+271 				num = num * 10 + (b - '0');
+272 			} else {
+273 				return minus ? -num : num;
+274 			}
+275 			b = readByte();
+276 		}
+277 	}
+278 
+279 	private static void tr(Object... o) {
+280 		System.out.println(Arrays.deepToString(o));
+281 	}
+282 }

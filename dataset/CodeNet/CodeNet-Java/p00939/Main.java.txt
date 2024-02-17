@@ -1,0 +1,166 @@
+1 import java.io.BufferedReader;
+2 import java.io.Closeable;
+3 import java.io.IOException;
+4 import java.io.InputStream;
+5 import java.io.InputStreamReader;
+6 import java.util.ArrayList;
+7 import java.util.Arrays;
+8 import java.util.HashMap;
+9 import java.util.HashSet;
+10 import java.util.LinkedList;
+11 import java.util.Scanner;
+12 import java.util.SortedMap;
+13 import java.util.StringTokenizer;
+14 import java.util.TreeMap;
+15  
+16 public class Main {
+17 	
+18 	// sum ????????¶????????????, prod ?????????????????¨???????????????.
+19 	public static long lower_prod(final int n, final int deep, String value, final int rest_sum, final long cur_prod, final long s_prod, final int upper_val, int[] using_values, HashMap<Long, Long> memoized, HashSet<String> same_number){
+20 		final int trial = n - deep;
+21 		//System.out.println(trial + " " + rest_sum + " " + cur_prod + " " + s_prod);
+22 		
+23 		if(trial == 0){
+24 			if(!memoized.containsKey(cur_prod)){
+25 				memoized.put(cur_prod, 0l);
+26 			}
+27 			
+28 			long ret = 1;
+29 			
+30 			if(rest_sum > 0){
+31 				ret = 0;
+32 			}else if(cur_prod >= s_prod){
+33 				if(cur_prod == s_prod){ same_number.add(value); }
+34 				ret = 0;
+35 			}else{
+36 				for(int i = 1; i <= n; i++){ ret *= i; }
+37 				for(int i = 0; i < 10; i++){
+38 					for(int j = 1; j <= using_values[i]; j++){
+39 						ret /= j;
+40 					}
+41 				}
+42 			}
+43 			
+44 			return memoized.put(cur_prod, memoized.get(cur_prod) + ret);
+45 		}
+46 		
+47 		long ret = 0;
+48 		for(int use_value = upper_val; use_value >= 0; use_value--){
+49 			if(cur_prod * (use_value + 1) > s_prod){ continue; }
+50 			if(rest_sum - use_value < 0){ continue; }
+51 			
+52 			using_values[use_value]++;
+53 			ret += lower_prod(n, deep + 1, value + use_value, rest_sum - use_value, cur_prod * (use_value + 1), s_prod, use_value, using_values, memoized, same_number);
+54 			using_values[use_value]--;
+55 		}
+56 		
+57 		return ret;
+58 	}
+59 	
+60 	public static long lower_number(final int n, final int deep, int[] s_part, int[] rest_values){
+61 		if(deep == n){ return 0; }
+62 		
+63 		final int trial = n - deep;
+64 		final int s_number = s_part[deep];
+65 		
+66 		long ret = 0;
+67 		for(int i = 0; i < s_number; i++){
+68 			if(rest_values[i] <= 0){ continue; }
+69 			rest_values[i]--;
+70 			
+71 			long combs = 1;
+72 			for(int j = 1; j <= (trial - 1); j++){ combs *= j; }
+73 			for(int elem = 0; elem < 10; elem++){
+74 				if(rest_values[elem] <= 0){ continue; }
+75 				for(int j = 1; j <= rest_values[elem]; j++){
+76 					combs /= j;
+77 				}
+78 			}
+79 			ret += combs;
+80 			
+81 			rest_values[i]++;
+82 		}
+83 		
+84 		if(rest_values[s_number] > 0){
+85 			rest_values[s_number]--;
+86 			//System.out.println(deep + " : " + ret + " : " + Arrays.toString(rest_values));
+87 			return ret + lower_number(n, deep + 1, s_part, rest_values);
+88 		}else{
+89 			return ret;
+90 		}
+91 	}
+92 	
+93 	public static void main(String[] args) throws IOException {
+94 		Scanner sc = new Scanner(System.in);
+95 		
+96 		String s = sc.next();
+97 		int[] s_part = new int[s.length()];
+98 		for(int i = 0; i < s.length(); i++){ s_part[i] = Character.getNumericValue(s.charAt(i)); }
+99 		
+100 		final int n = s.length();
+101 		final int sum_max = (n + 1) * 10;
+102 		
+103 		int s_sum = 0;
+104 		for(final char c : s.toCharArray()){ s_sum += Character.getNumericValue(c); }
+105 		
+106 		long[][] SUM_USE_ZERO_DP = new long[n + 1][sum_max];
+107 		long[][] SUM_NOT_ZERO_DP = new long[n + 1][sum_max];
+108 		SUM_USE_ZERO_DP[0][0] = SUM_NOT_ZERO_DP[0][0] = 1;
+109 		
+110 		for(int len = 0; len < n; len++){
+111 			for(int num = 0; num < sum_max; num++){
+112 				for(int i = 0; i < 10 && (num + i) < sum_max; i++){
+113 					if(i != 0){ SUM_NOT_ZERO_DP[len + 1][num + i] += SUM_NOT_ZERO_DP[len][num]; }
+114 					SUM_USE_ZERO_DP[len + 1][num + i] += SUM_USE_ZERO_DP[len][num];
+115 				}
+116 			}
+117 		}
+118 		
+119 		long[][] P_SUM_USE_ZERO_DP = new long[n + 1][sum_max];
+120 		for(int len = 0; len <= n; len++){
+121 			P_SUM_USE_ZERO_DP[len][0] = SUM_USE_ZERO_DP[len][0];
+122 			
+123 			for(int i = 1; i < sum_max; i++){
+124 				P_SUM_USE_ZERO_DP[len][i] = SUM_USE_ZERO_DP[len][i] + P_SUM_USE_ZERO_DP[len][i - 1];
+125 			}
+126 		}
+127 		
+128 		long s_prod = 1;
+129 		for(final char c : s.toCharArray()){ s_prod *= Character.getNumericValue(c) + 1; }
+130 		
+131 		
+132 		final long lower = s_sum == 0 ? 0 : P_SUM_USE_ZERO_DP[n][s_sum - 1];
+133 		final long upper = P_SUM_USE_ZERO_DP[n][s_sum];
+134 		/*
+135 		for(int i = 0; i <= s_sum; i++){
+136 			System.out.println(i + " : [" + (i == 0 ? 0 : P_SUM_USE_ZERO_DP[n][i - 1]) + " , " + P_SUM_USE_ZERO_DP[n][i] + ") : " + (P_SUM_USE_ZERO_DP[n][i] - (i == 0 ? 0 : P_SUM_USE_ZERO_DP[n][i - 1])));
+137 		}
+138 		*/
+139 		//System.out.println("[" + lower + " , " + upper + ")");
+140 		
+141 		HashMap<Long, Long> prod_memoized = new HashMap<Long, Long>();
+142 		HashSet<String> same_number = new HashSet<String>();
+143 		final long lower_prod = lower_prod(n, 0, "", s_sum, 1, s_prod, 9, new int[10], prod_memoized, same_number);
+144 		long sum_memoized = 0;
+145 		for(final long val : prod_memoized.values()){ sum_memoized += val; }
+146 		//System.out.println(sum_memoized);
+147 		//System.out.println(prod_memoized);
+148 		//System.out.println(same_number);
+149 		
+150 		long lower_number = 0;
+151 		for(final String same : same_number){
+152 			int[] values = new int[10];
+153 			
+154 			for(final char elem : same.toCharArray()){ values[Character.getNumericValue(elem)]++; }
+155 			//System.out.println(Arrays.toString(values));
+156 			lower_number += lower_number(n, 0, s_part, values);
+157 			//System.out.println(lower_number);
+158 		}
+159 		
+160 		
+161 		//final long ret = dfs(n, 0, 0, false, false, 1, s_sum, s_prod, s_part, SUM_USE_ZERO_DP, SUM_NOT_ZERO_DP);
+162 		
+163 		System.out.println(lower + sum_memoized + lower_number);
+164 		
+165 	}
+166 }

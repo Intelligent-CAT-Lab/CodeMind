@@ -1,0 +1,170 @@
+1 import java.util.*;
+2 
+3 public class Main {
+4 
+5     public static void main(String[] args) {
+6         //
+7         Euclid e1=new Euclid();//ユークリッドの互除法
+8         Compute c1=new Compute();//累積和，
+9         //変数
+10         int count = 0;
+11         boolean sw = false;
+12         int max = Integer.MIN_VALUE;
+13         int min = Integer.MAX_VALUE;
+14         double dMax = Double.MIN_VALUE;
+15         double dMin = Double.MAX_VALUE;
+16         //int answer = 0;
+17         long answer=0;
+18         //String answer="Good";
+19         //StringBuilder answer=new StringBuilder();
+20         //List<Integer> list = new ArrayList<>();
+21         //int array[] = new int[];
+22 
+23         //入力
+24         Scanner sc = new Scanner(System.in);
+25         long A = sc.nextLong();
+26         long B = sc.nextLong();
+27         long C = sc.nextLong();
+28         long D = sc.nextLong();
+29 
+30         long n = B-A+1;
+31 
+32         if(C==D)
+33         {
+34             long a=A/C;
+35             long b=B/C;
+36             long x=b-a;
+37             if (A%C==0) {x++;}
+38             answer=n-x;
+39             System.out.println(answer);
+40             return;
+41         }
+42 
+43         long a=A/C;
+44         long b=B/C;
+45         long p=b-a;
+46         if (A%C==0){p++;}
+47 
+48         a=A/D;
+49         b=B/D;
+50         long q=b-a;
+51         if (A%D==0){q++;}
+52 
+53         long e=c1.leastCommonMultiple(C,D);
+54         a=A/e;
+55         b=B/e;
+56         long r=b-a;
+57         if(A%e==0){r++;}
+58 
+59         answer=n-(p+q-r);
+60         //出力
+61         //BigDecimal bd = new BigDecimal(answer);
+62         //System.out.println(bd.setScale(12,BigDecimal.ROUND_DOWN));
+63         //System.out.println(String.format("%.0f",answer));
+64         System.out.println(answer);
+65     }
+66 }
+67 
+68 class Euclid
+69 {
+70     public static int gcd(int x,int y)//ユークリッドの互除法を使って2値の最大公約数を求める(int)
+71     {
+72         int tmp;
+73         if(x<y)
+74         {
+75             tmp=x;
+76             x=y;
+77             y=tmp;
+78         }
+79         if(x==0)//(x or y)=0の時は0でない時の値を返す
+80         {
+81             return y;
+82         }else if(y==0)
+83         {
+84             return x;
+85         }else
+86         {
+87             while ((tmp = x % y) != 0)
+88             {
+89                 x = y;
+90                 y = tmp;
+91             }
+92             return y;
+93         }
+94     }
+95 
+96     public static long gcd(long x,long y)//ユークリッドの互除法を使って2値の最大公約数を求める(long)
+97     {
+98         long tmp;
+99         if(x<y)
+100         {
+101             tmp=x;
+102             x=y;
+103             y=tmp;
+104         }
+105         if(x==0)//(x or y)=0の時は0でない時の値を返す
+106         {
+107             return y;
+108         }else if(y==0)
+109         {
+110             return x;
+111         }else
+112         {
+113             while ((tmp = x % y) != 0)
+114             {
+115                 x = y;
+116                 y = tmp;
+117             }
+118             return y;
+119         }
+120     }
+121 }
+122 
+123 class Compute
+124 {
+125     int cumulativeSum(int A[],int k)//kの大きさごとに配列Aを切り取ってその区間内の数を足した時の最大値をreturn
+126     {
+127         int ans=0;
+128         //累積和表を作成
+129         int B[]=new int[A.length+1];//累積和に使う配列
+130         B[0]=0;
+131         for(int i=1;i<B.length;i++)
+132         {
+133             B[i]=B[i-1]+A[i-1];
+134         }
+135 
+136         //最大値を求める
+137         int tmp=0;
+138         ans=B[k]-B[0];
+139         for(int i=1;i<A.length-k;i++)
+140         {
+141             tmp=B[i+k]-B[i];
+142             if(tmp>ans)
+143             {
+144                 ans=tmp;
+145             }
+146         }
+147         System.out.println(Arrays.toString(B));
+148         return ans;
+149     }
+150 
+151     public int leastCommonMultiple(int a,int b)//最大公倍数(Euclidクラスが必要)(int)
+152     {
+153         int ans=1;
+154         Euclid e1=new Euclid();
+155         
+156         ans=(a*b)/e1.gcd(a,b);
+157 
+158         return ans;
+159     }
+160 
+161     public long leastCommonMultiple(long a,long b)////最大公倍数(Euclidクラスが必要)(long)
+162     {
+163         long ans=1;
+164         Euclid e1=new Euclid();
+165 
+166         ans=(a*b)/e1.gcd(a,b);
+167 
+168         return ans;
+169     }
+170 }

@@ -1,0 +1,26 @@
+1 import java.util.Scanner;
+2 
+3 public class Main {
+4 	public static long MOD = 1000000007;
+5 	public static void main(String[] args) {
+6 		Scanner sc = new Scanner(System.in);
+7 		int n = sc.nextInt();
+8 		int m = sc.nextInt();
+9 		long[][] dp = new long[n+1][n+1];
+10 		dp[1][0] = 1;
+11 		for(int i=0;i<m;i++) {
+12 			long[][] next = new long[n+1][n+1];
+13 			for(int a=0;a<=n;a++) {
+14 				for(int b=0;b<=n;b++) {
+15 					if (dp[a][b] == 0) continue;
+16 					next[a+b][0] = (next[a+b][0] + dp[a][b] * a) % MOD;
+17 					next[a][b+1] = (next[a][b+1] + dp[a][b] * (n-a-b)) % MOD;
+18 					next[a][b] = (next[a][b] + dp[a][b] * b) % MOD;
+19 				}
+20 			}
+21 			dp = next;
+22 		}
+23 		System.out.println(dp[n][0]);
+24 	}
+25 
+26 }

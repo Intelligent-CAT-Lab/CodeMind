@@ -1,0 +1,36 @@
+1 import java.util.Arrays;
+2 import java.util.Scanner;
+3 
+4 public class Main {
+5 	static Scanner sc = new Scanner(System.in);
+6 	static final long MOD = 998244353;
+7 
+8 	public static void main(String[] args) {
+9 		int N = sc.nextInt();
+10 		int X = sc.nextInt();
+11 		long[][][] dp = new long[2][512][X + 1];
+12 		for (int i = 0; i <= X; i++) {
+13 			dp[0][i][i] = 1;
+14 		}
+15 		int t = 1;
+16 		for (int i = 1; i < N; i++, t = 1 - t) {
+17 			for (int j = 0; j < 512; j++) {
+18 				Arrays.fill(dp[t][j], 0);
+19 			}
+20 			for (int j = 0; j < 512; j++) {
+21 				long sum = 0;
+22 				for (int k = 0; k <= X; k++) {
+23 					sum += dp[1 - t][j][k];
+24 					dp[t][j ^ k][k] += sum;
+25 					dp[t][j ^ k][k] %= MOD;
+26 				}
+27 			}
+28 		}
+29 		long ans = 0;
+30 		for (int i = 0; i <= X; i++) {
+31 			ans += dp[1 - t][X][i];
+32 		}
+33 		System.out.println(ans % MOD);
+34 	}
+35 }
+36 

@@ -1,0 +1,86 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 public class Main
+5 {
+6     PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+7     BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+8 
+9     int MOD = 1000000007;
+10 
+11     public void go() throws IOException
+12     {
+13         StringTokenizer tok = new StringTokenizer(in.readLine());
+14         long l = Long.parseLong(tok.nextToken());
+15         long r = Long.parseLong(tok.nextToken());
+16         int n = Long.toBinaryString(r).length();
+17         // bit position, x in range, y in range, msb flipped
+18         long[][][][] dp = new long[n+1][2][2][2];
+19         for (int x = 0; x < 2; x++)
+20         {
+21             for (int y = 0; y < 2; y++)
+22             {
+23                 for (int msb = 0; msb < 2; msb++)
+24                 {
+25                     dp[0][x][y][msb] = 1;
+26                     print(dp, 0, x, y, msb);
+27                 }
+28             }
+29         }
+30         for (int i = 1; i <= n; i++)
+31         {
+32             for (int x = 0; x < 2; x++)
+33             {
+34                 for (int y = 0; y < 2; y++)
+35                 {
+36                     for (int msb = 0; msb < 2; msb++)
+37                     {
+38                         // flip neither, x needs to be in range
+39                         if (x == 1 || getBit(l, i-1) == 0)
+40                         {
+41                             // y is in range if already in range or current bit is 1
+42                             dp[i][x][y][msb] += dp[i-1][x][y | getBit(r, i-1)][msb];
+43                             dp[i][x][y][msb] %= MOD;
+44                         }
+45                         // flip both, y needs to be in range
+46                         if (y == 1 || getBit(r, i-1) == 1)
+47                         {
+48                             // msb gets flipped
+49                             // x is in range if already in range or current bit is 0
+50                             dp[i][x][y][msb] += dp[i-1][x | (1-getBit(l, i-1))][y][1];
+51                             dp[i][x][y][msb] %= MOD;
+52                         }
+53                         // flip only y, both need to be in range and msb needs to have been flipped
+54                         if ((x == 1 || getBit(l, i-1) == 0)
+55                             && (y == 1 || getBit(r, i-1) == 1)
+56                             && msb == 1)
+57                         {
+58                             dp[i][x][y][msb] += dp[i-1][x][y][1];
+59                             dp[i][x][y][msb] %= MOD;
+60                         }
+61                         print(dp, i, x, y, msb);
+62                     }
+63                 }
+64             }
+65         }
+66         out.println(dp[n][0][0][0]);
+67 
+68         out.flush();
+69         in.close();
+70     }
+71 
+72     public void print(long[][][][] dp, int i, int x, int y, int msb)
+73     {
+74         // out.printf("%d %d %d %d = %d%n", i, x, y, msb, dp[i][x][y][msb]);
+75     }
+76 
+77     public int getBit(long n, int i)
+78     {
+79         return (int)((n >> i) & 1);
+80     }
+81 
+82     public static void main(String[] args) throws IOException
+83     {
+84         new Main().go();
+85     }
+86 }

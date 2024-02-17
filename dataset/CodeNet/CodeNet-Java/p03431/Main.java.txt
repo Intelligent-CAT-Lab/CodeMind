@@ -1,0 +1,178 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.PrintWriter;
+6 import java.io.BufferedWriter;
+7 import java.io.Writer;
+8 import java.io.OutputStreamWriter;
+9 import java.util.InputMismatchException;
+10 import java.io.IOException;
+11 import java.io.InputStream;
+12 
+13 /**
+14  * Built using CHelper plug-in
+15  * Actual solution is at the top
+16  */
+17 public class Main {
+18     public static void main(String[] args) {
+19         InputStream inputStream = System.in;
+20         OutputStream outputStream = System.out;
+21         InputReader in = new InputReader(inputStream);
+22         OutputWriter out = new OutputWriter(outputStream);
+23         TaskE solver = new TaskE();
+24         solver.solve(1, in, out);
+25         out.close();
+26     }
+27 
+28     static class TaskE {
+29         public static final int mod = 998244353;
+30         int n;
+31         int k;
+32         long[] fact;
+33         long[] ifact;
+34 
+35         long comb(int n, int k) {
+36             if (k < 0 || k > n) return 0;
+37             return fact[n] * ifact[k] % mod * ifact[n - k] % mod;
+38         }
+39 
+40         public void solve(int testNumber, InputReader in, OutputWriter out) {
+41             n = in.nextInt();
+42             k = in.nextInt();
+43             long[][] x = Factorials.getFIF(500010, mod);
+44             fact = x[0];
+45             ifact = x[1];
+46 
+47             long ans = 0;
+48             for (int diff = k % 2; diff <= k; diff += 2) {
+49                 int nr = (k + diff) / 2;
+50                 int nb = k - nr;
+51                 if (nr < n) continue;
+52 
+53             if (diff == 0) {
+54                 ans += comb(k-1, nr);
+55                 if (ans >= mod) ans -= mod;
+56                 ans -= comb(k-1, nb-1-(nr-n+1));
+57                 if (ans < 0) ans += mod;
+58                 continue;
+59             }
+60                 int r2 = (k - diff) / 2 - Math.min(k - diff, nr - n) - 1;
+61                 int b2 = k - r2;
+62 
+63                 ans += comb(nr + nb, nb) - comb(r2 + b2, r2);
+64                 ans %= mod;
+65                 if (ans < 0) ans += mod;
+66             }
+67 
+68             out.println(ans);
+69         }
+70 
+71     }
+72 
+73     static class Factorials {
+74         public static long[][] getFIF(int max, int mod) {
+75             long[] fact = new long[max];
+76             long[] ifact = new long[max];
+77             long[] inv = new long[max];
+78             inv[1] = 1;
+79             for (int i = 2; i < max; i++) {
+80                 inv[i] = (mod - mod / i) * inv[mod % i] % mod;
+81             }
+82             fact[0] = 1;
+83             ifact[0] = 1;
+84             for (int i = 1; i < max; i++) {
+85                 fact[i] = fact[i - 1] * i % mod;
+86                 ifact[i] = ifact[i - 1] * inv[i] % mod;
+87             }
+88             return new long[][]{fact, ifact, inv};
+89         }
+90 
+91     }
+92 
+93     static class OutputWriter {
+94         private final PrintWriter writer;
+95 
+96         public OutputWriter(OutputStream outputStream) {
+97             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+98         }
+99 
+100         public OutputWriter(Writer writer) {
+101             this.writer = new PrintWriter(writer);
+102         }
+103 
+104         public void close() {
+105             writer.close();
+106         }
+107 
+108         public void println(long i) {
+109             writer.println(i);
+110         }
+111 
+112     }
+113 
+114     static class InputReader {
+115         private InputStream stream;
+116         private byte[] buf = new byte[1 << 16];
+117         private int curChar;
+118         private int numChars;
+119 
+120         public InputReader(InputStream stream) {
+121             this.stream = stream;
+122         }
+123 
+124         public int read() {
+125             if (this.numChars == -1) {
+126                 throw new InputMismatchException();
+127             } else {
+128                 if (this.curChar >= this.numChars) {
+129                     this.curChar = 0;
+130 
+131                     try {
+132                         this.numChars = this.stream.read(this.buf);
+133                     } catch (IOException var2) {
+134                         throw new InputMismatchException();
+135                     }
+136 
+137                     if (this.numChars <= 0) {
+138                         return -1;
+139                     }
+140                 }
+141 
+142                 return this.buf[this.curChar++];
+143             }
+144         }
+145 
+146         public int nextInt() {
+147             int c;
+148             for (c = this.read(); isSpaceChar(c); c = this.read()) {
+149                 ;
+150             }
+151 
+152             byte sgn = 1;
+153             if (c == 45) {
+154                 sgn = -1;
+155                 c = this.read();
+156             }
+157 
+158             int res = 0;
+159 
+160             while (c >= 48 && c <= 57) {
+161                 res *= 10;
+162                 res += c - 48;
+163                 c = this.read();
+164                 if (isSpaceChar(c)) {
+165                     return res * sgn;
+166                 }
+167             }
+168 
+169             throw new InputMismatchException();
+170         }
+171 
+172         public static boolean isSpaceChar(int c) {
+173             return c == 32 || c == 10 || c == 13 || c == 9 || c == -1;
+174         }
+175 
+176     }
+177 }
+178 

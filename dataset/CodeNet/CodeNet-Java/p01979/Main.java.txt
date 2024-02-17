@@ -1,0 +1,50 @@
+1 import java.util.*;
+2 
+3 public class Main {
+4     public static void main(String[] args) {
+5         Scanner sc = new Scanner(System.in);
+6         char[] numArr = sc.next().toCharArray();
+7         int length = numArr.length;
+8         int[] arr = new int[length];
+9         for (int i = 0; i < length; i++) {
+10             arr[i] = numArr[i] - '0';
+11         }
+12         long[][][][][][] dp = new long[length + 1][10][10][10][10][2];
+13         dp[0][0][0][0][0][1] = 1;
+14         long[][] counts = new long[length + 1][2];
+15         for (int i = 1; i <= length; i++) {
+16             for (int a = 0; a < 10; a++) {
+17                 for (int b = 0; b < 10; b++) {
+18                     for (int c = 0; c < 10; c++) {
+19                         for (int d = 0; d < 10; d++) {
+20                             for (int e = 0; e < 10; e++) {
+21                                 dp[i][b][c][d][e][0] += dp[i - 1][a][b][c][d][0];
+22                                 if (e < arr[i - 1]) {
+23                                     dp[i][b][c][d][e][0] += dp[i - 1][a][b][c][d][1];
+24                                 } else if (e == arr[i - 1]) {
+25                                     dp[i][b][c][d][e][1] += dp[i - 1][a][b][c][d][1];
+26                                 }
+27                             }
+28                         }
+29                     }
+30                 }
+31             }
+32             for (int e = 0; e < 10; e++) {
+33                 counts[i][0] += counts[i - 1][0];
+34                 if (e < arr[i - 1]) {
+35                     counts[i][0] += counts[i - 1][1];
+36                 } else if (e == arr[i- 1]) {
+37                     counts[i][1] += counts[i - 1][1];
+38                 }
+39             }
+40             for (int j = 0; j < 10; j++) {
+41                 counts[i][0] += dp[i][5][1][j][3][0];
+42                 counts[i][1] += dp[i][5][1][j][3][1];
+43                 dp[i][5][1][j][3][0] = 0;
+44                 dp[i][5][1][j][3][1] = 0;
+45             }
+46         }
+47         System.out.println(counts[length][0] + counts[length][1]);
+48     }
+49 }
+50 

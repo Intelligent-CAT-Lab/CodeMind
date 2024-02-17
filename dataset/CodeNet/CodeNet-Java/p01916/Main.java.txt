@@ -1,0 +1,118 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.PrintWriter;
+4 import java.util.NoSuchElementException;
+5 
+6 public class Main implements Runnable {
+7 	char[] s;
+8 	int[] a,b;
+9 
+10 	public void solve() {
+11 		s = next().toCharArray();
+12 
+13 		a = new int[26];
+14 		b = new int[1111];
+15 
+16 		for(int i = 0;i < s.length;i++){
+17 			a[s[i]-'a']++;
+18 		}
+19 
+20 		for(int i = 0;i < 26;i++){
+21 			b[a[i]]++;
+22 		}
+23 
+24 		for(int i = 999;i >= 0;i-=2){
+25 			if(b[i] > 0){
+26 				b[i]--;
+27 				break;
+28 			}
+29 		}
+30 
+31 		int m = 0;
+32 
+33 		for(int i = 1;i <= 1000;i+=2){
+34 			m += b[i];
+35 		}
+36 
+37 		if(m%2 == 0){
+38 			out.println(m/2);
+39 		}else{
+40 			out.println(m/2+1);
+41 		}
+42 	}
+43 
+44 	public static void main(String[] args) {
+45 		new Thread(null, new Main(), "", 64 * 1024 * 1024).start();
+46 	}
+47 
+48 	/* Input */
+49 	private static final InputStream in = System.in;
+50 	private static final PrintWriter out = new PrintWriter(System.out);
+51 	private final byte[] buffer = new byte[2048];
+52 	private int p = 0;
+53 	private int buflen = 0;
+54 
+55 	private boolean hasNextByte() {
+56 		if (p < buflen)
+57 			return true;
+58 		p = 0;
+59 		try {
+60 			buflen = in.read(buffer);
+61 		} catch (IOException e) {
+62 			e.printStackTrace();
+63 		}
+64 		if (buflen <= 0)
+65 			return false;
+66 		return true;
+67 	}
+68 
+69 	public boolean hasNext() {
+70 		while (hasNextByte() && !isPrint(buffer[p])) {
+71 			p++;
+72 		}
+73 		return hasNextByte();
+74 	}
+75 
+76 	private boolean isPrint(int ch) {
+77 		if (ch >= '!' && ch <= '~')
+78 			return true;
+79 		return false;
+80 	}
+81 
+82 	private int nextByte() {
+83 		if (!hasNextByte())
+84 			return -1;
+85 		return buffer[p++];
+86 	}
+87 
+88 	public String next() {
+89 		if (!hasNext())
+90 			throw new NoSuchElementException();
+91 		StringBuilder sb = new StringBuilder();
+92 		int b = -1;
+93 		while (isPrint((b = nextByte()))) {
+94 			sb.appendCodePoint(b);
+95 		}
+96 		return sb.toString();
+97 	}
+98 
+99 	public int nextInt() {
+100 		return Integer.parseInt(next());
+101 	}
+102 
+103 	public long nextLong() {
+104 		return Long.parseLong(next());
+105 	}
+106 
+107 	public double nextDouble() {
+108 		return Double.parseDouble(next());
+109 	}
+110 
+111 	@Override
+112 	public void run() {
+113 		out.flush();
+114 		new Main().solve();
+115 		out.close();
+116 
+117 	}
+118 }

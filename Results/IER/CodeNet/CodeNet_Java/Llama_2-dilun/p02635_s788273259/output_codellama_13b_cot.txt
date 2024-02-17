@@ -1,0 +1,79 @@
+
+<<<Analysis>>>
+The variable n, variable a and variable b are initialized with 0, 1 and 1 respectively according to the input. And variable sum is initialized with 0.
+It enters a for loop and it iterates from 1 to 10 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [1, 1]. If it does, it adds the current interger i to variable answer. The condition is met when i is 1,2,3,4,5,6,7,8,9 and 10.
+After the loop finishes, it print the fianl value of variable answer as output, which is 55.
+<<<Output>>>
+55
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    FastScanner in;
+    PrintWriter out;
+
+    void solve() {
+        char[] s = in.next().toCharArray();
+        int k = in.nextInt();
+        List<Integer> pos0 = new ArrayList<>();
+        int n = s.length;
+        for (int i = 0; i < n; i++) {
+            if (s[i] == '0') {
+                pos0.add(i);
+            }
+        }
+        List<Integer> lens = new ArrayList<>();
+        for (int i = 0; i < pos0.size(); i++) {
+            int from = i == 0? -1 : (pos0.get(i - 1));
+            int to = pos0.get(i);
+            lens.add(to - from - 1);
+        }
+        int tot1 = 0;
+        for (char c : s) {
+            if (c == '1') {
+                tot1++;
+            }
+        }
+//        System.err.println(lens + " " + tot1);
+        int[][] dp = new int[tot1 + 1][tot1 + 1];
+        // old cost, used ones -> ways
+        dp[0][0] = 1;
+        int[][] ndp = new int[tot1 + 1][tot1 + 1];
+        int[][] tempDP = new int[tot1 + 1][tot1 + 1];
+        int seenOnes = 0;
+        for (int i = 0; i < lens.size(); i++) {
+            int curLen = lens.get(i);
+            for (int j = 0; j < ndp.length; j++) {
+                Arrays.fill(ndp[j], 0);
+                Arrays.fill(tempDP[j], 0);
+            }
+            seenOnes += curLen;
+            for (int wasCost = 0; wasCost < dp.length; wasCost++) {
+                for (int used = 0; used < dp[wasCost].length; used++) {
+                    int cur = dp[wasCost][used];
+                    if (cur == 0) {
+                        continue;
+                    }
+                    for (int here = 0; here < curLen; here++) {
+                        if (here + used > tot1) {
+                            continue;
+                        }
+                        if (curLen - here > used) {
+                            continue;
+                        }
+                        ndp[wasCost][used + here] = add(ndp[wasCost][used + here], cur);
+                    }
+                    if (curLen + used <= tot1) {
+                        tempDP[wasCost][used + curLen] = add(tempDP[wasCost][used + curLen], cur);
+                    }
+                }
+            }
+            for (int wasCost = 0; wasCost < dp.length; wasCost++) {
+                for (int used = 0; used < dp[wasCost].length; used++) {
+                    int cur = temp

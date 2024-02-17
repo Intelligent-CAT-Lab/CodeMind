@@ -1,0 +1,64 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6    public static void main(String[] args) {\n7\t\t try {\n7\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nQuestion: What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the sataes and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.util.*;\n2 import java.io.*;\n3 import java.util.function.*;\n4 \n5 class Main {\n6     static In in = new In();\n7     static Out out = new Out();\n8     static long mod = 1000000007;\n9     static long inf = 0xfffffffffffffffL;\n10 \n11     void solve() {\n12         long n = in.nextLong();\n13         long a = in.nextLong();\n14         long b = in.nextLong();\n15         if (a > b) {\n16             long t = b;\n17             b = a;\n18             a = t;\n19         }\n20         if ((b - a) % 2 == 1) {\n21             long ans1 = a - 1 + (b - a + 1) / 2;\n22             a = n - a + 1;\n23             b = n - b + 1;\n24             if (a > b) {\n25                 long t = b;\n26                 b = a;\n27                 a = t;\n28             }\n29             long ans2 = a - 1 + (b - a + 1) / 2;\n30             out.println(Math.min(ans1, ans2));\n31         } else {\n32             out.println((b - a) / 2);\n33         }\n34     }\n35 \n36     public static void main(String[]$) {\n37         new Main().solve();\n38         out.flush();\n39     }\n40 }\n41 \n42 class In {\n43     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in), 0x10000);\n44     private StringTokenizer tokenizer;\n45 \n46     String next() {\n47         try {\n48             while (tokenizer == null || !tokenizer.hasMoreTokens()) {\n49                 tokenizer = new StringTokenizer(reader.readLine());\n50             }\n51         } catch (IOException ignored) {\n52         }\n53         return tokenizer.nextToken();\n54     }\n55 \n56     int nextInt() {\n57         return Integer.parseInt(next());\n58     }\n59 \n60     long nextLong() {\n61         return Long.parseLong(next());\n62     }\n63 \n64     char[][] nextCharArray(int n, int m) {\n65         char[][] a = new char[n][m];\n66         for (int i = 0; i < n; i++) {\n67             a[i] = next().toCharArray();\n68         }\n69         return a;\n70     }\n71 \n72     int[] nextIntArray(int n) {\n73         int[] a = new int[n];\n74         for (int i = 0; i < n; i++) {\n75             a[i] = nextInt();\n76         }\n77         return a;\n78     }\n79 \n80     int[] nextIntArray(int n, IntUnaryOperator op) {\n81         int[] a = new int[n];\n82         for (int i = 0; i < n; i++) {\n83             a[i] = op.applyAsInt(nextInt());\n84         }\n85         return a;\n86     }\n87 \n88     long[] nextLongArray(int n) {\n89         long[] a = new long[n];\n90         for (int i = 0; i < n; i++) {\n91             a[i] = nextLong();\n92         }\n93         return a;\n94     }\n95 \n96     long[] nextLongArray(int n, LongUnaryOperator op) {\n97         long[] a = new long[n];\n98         for (int i = 0; i < n; i++) {\n99             a[i] = op.applyAsLong(nextLong());\n100         }\n101         return a;\n102     }\n103 }\n104 \n105 class Out {\n106     private static PrintWriter out = new PrintWriter(System.out);\n107 \n108     void println(Object... a) {\n109         StringJoiner joiner = new StringJoiner(\" \");\n110         for (Object obj : a) {\n111             joiner.add(String.valueOf(obj));\n112         }\n113         out.println(joiner);\n114     }\n115 \n116     void flush() {\n117         out.flush();\n118     }\n119 }\n\nGiven the following input:\n5 2 4\n\n\nQuestion:\n What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "5"
+        ],
+        "variable": "n",
+        "line": "12"
+    },
+    "2": {
+        "prompt": "Question:\n What would be the states of variable a in line 13? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "a",
+        "line": "13"
+    },
+    "3": {
+        "prompt": "Question:\n What would be the states of variable b in line 14? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "4"
+        ],
+        "variable": "b",
+        "line": "14"
+    },
+    "4": {
+        "prompt": "Question:\n What would be the states of variable b in line 15? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "4"
+        ],
+        "variable": "b",
+        "line": "15"
+    },
+    "5": {
+        "prompt": "Question:\n What would be the states of variable a in line 15? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "a",
+        "line": "15"
+    },
+    "6": {
+        "prompt": "Question:\n What would be the states of variable b in line 20? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "4"
+        ],
+        "variable": "b",
+        "line": "20"
+    },
+    "7": {
+        "prompt": "Question:\n What would be the states of variable a in line 20? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "a",
+        "line": "20"
+    }
+}

@@ -1,0 +1,65 @@
+1 
+2 
+3 import java.util.Scanner;
+4 import java.util.Stack;
+5 
+6 public class Main {
+7 
+8 	public static void main(String[] args) {
+9 		Scanner sc = new Scanner(System.in);
+10 
+11 		String str = sc.next();
+12 		//0を北とする
+13 		int dir = 0;
+14 
+15 		//一周したかの判定にスタックを使う
+16 		//Rでpush, Lでpopとすることで
+17 		//sizeが5になったら1周完了、0なら回転失敗と判断
+18 		Stack<Integer> stack = new Stack<Integer>();
+19 		stack.add(0);
+20 		int result = 0;
+21 
+22 		for(int i = 0; i < str.length(); i++){
+23 
+24 			char command = str.charAt(i);
+25 
+26 			//コマンドに応じて方向を計算する
+27 			if(command == 'R'){
+28 				dir++;
+29 			}
+30 			else {
+31 				dir += 3;
+32 			}
+33 			dir %= 4;
+34 
+35 			//北を向いているとき
+36 			//ここが回転の起点なのでスタック生成
+37 			if(dir == 0 && stack == null){
+38 				stack = new Stack<Integer>();
+39 				stack.add(0);
+40 			}
+41 			else if(stack != null){
+42 				//左回転
+43 				if(command == 'L'){
+44 					stack.pop();
+45 					if(stack.size() == 0){
+46 						stack = null;
+47 					}
+48 				}
+49 				//右回転
+50 				else{
+51 					stack.push(0);
+52 					if(stack.size() == 5){
+53 						result++;
+54 						stack.removeAllElements();
+55 						stack.add(0);
+56 					}
+57 				}
+58 			}
+59 		}
+60 
+61 		System.out.println(result);
+62 	}
+63 
+64 }
+65 

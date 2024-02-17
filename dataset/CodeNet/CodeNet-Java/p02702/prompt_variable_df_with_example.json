@@ -1,0 +1,52 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the states of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6\t public static void main(String[] args) {\n7\t\t try {\n8\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nWhat would be the states of variables given the following input:\n20 2 5\n\nQuestion:\nPrint all the states of variable answer in line 15 and end your response with \"END-OF-STATE\":\nAnswer:\n0\nEND-OF-STATE\n\n\nQuestion:\nPrint all the states of variable i in line 17 and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nPrint all the states of variable i in line 27 and end your response with \"END-OF-STATE\":\nAnswer:\n2\n3\n4\n5\n11\n12\n13\n14\n20\nEND-OF-STATE\n\n\n\nQuestion:\nPrint all the states of variable answer in line 27 and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.util.*;\n2 \n3 public class Main {\n4     public static void main(String[] args) throws Exception {\n5         // Your code here!\n6         Scanner sc = new Scanner(System.in);\n7         String str = sc.next();\n8         char c[] = str.toCharArray();\n9         int n = str.length();\n10         int p = 2019;\n11         \n12         // ans: i\u6841\u76ee\uff5ej\u6841\u76ee\u306e\u90e8\u5206\u5217\u304c2019\u306e\u500d\u6570\u3067\u3042\u308b\u30d1\u30bf\u30fc\u30f3\u6570\n13         // ex. 1817181712114\n14         //         ^^^^^\n15         long ans = 0;\n16         \n17         // 2019\u306e\u500d\u6570\u306b\u306a\u308b\u6841i, j\u306e\u7d44\u307f\u5408\u308f\u305b\u5168\u63a2\u7d22\u306fO(N^2)\n18         // -> \u5404\u6841\u306e\u300c2019\u306e\u4f59\u308a\u300d\u3092O(N)\u3067\u8a08\u7b97\u3059\u308b\u3002\n19         \n20         // d'[i]: \u53f3\u304b\u3089i\u6841\u76ee\u306e\u5024 * 10^i (mod 2019)\n21         // ex. 1817181712114\n22         // d'[0]: 4 % 2019 -> 4\n23         // d'[1]: 10 % 2019 -> 10\n24         // d'[5]: 700000 (mod 2019) -> ?\n25         // \u2261 7 * 10 * 10^4\n26         // \u2261 7 * 19240\n27         // \u2261 7 * 1069 = 7483 % 2019 = 1426\n28         \n29         // d[i]: d'[i]\u306e\u7d2f\u7a4d\u548c\n30         // d = {4,14,114,95}\n31         int[] d = new int[n+1];\n32         // ten: 10^i (mod 2019)\n33         int ten = 1;\n34         \n35         // d[i]\u3092\u8a08\u7b97\u3059\u308b\n36         // (\u53f3\u306e\u6841(c[n-1])\u304b\u3089\u9806\u306b\u898b\u308b)\n37         for (int i = n - 1; i >= 0; i--) {\n38             // 1000000 % 2019\u306f\u8a08\u7b97\u3057\u3093\u3069\u3044\u306e\u3067\u3001\n39             int a = ((c[i] - '0') * ten) % p;\n40             d[i] = (d[i+1] + a) % p;\n41             ten = (ten * 10) % p;\n42         }\n43         \n44         // \u300cd[i] = d[j]\u3068\u306a\u308b\u300d\u3068\u306f\u3001\n45         // \u300cex. 181712114 % 2019 = 2114 % 2019\u300d\u3002\n46         // -> 181710000 \u2261 0 (mod 2019)\n47         // -> (\u5408\u540c\u5f0f\u3067\u5272\u308a\u7b97\u306fmod p\u3068\u4e92\u3044\u306b\u7d20\u3067\u306a\u3044\u3068\u4e0d\u80fd)\n48         // -> (gcd(2019, 10) = 1)\n49         // -> 18171 \u2261 0 (mod 2019)\n50         // -> 18171 % 2019 = 0\n51         // -> 18171\u306f2019\u306e\u500d\u6570\n52         \n53         // map: d[]\u306e\u5024\u306e\u983b\u5ea6\n54         Map<Integer, Integer> map = new HashMap<Integer, Integer>();\n55         for (int i = n; i >= 0; i--) {\n56             int key = d[i];\n57             if (!map.containsKey(key)) {\n58                 map.put(key, 1);\n59             } else {\n60                 int val = map.get(key);\n61                 map.put(key, val + 1);\n62             }\n63         }\n64         // \u540c\u3058\u5024\u306e\u500b\u6570n\u304b\u30892\u3064\u9078\u3076\u30d1\u30bf\u30fc\u30f3\u6570 = nC2\n65         for (Integer key : map.keySet()) {\n66             int val = map.get(key);\n67             ans += (long)val * (val-1) / 2;\n68         }\n69         System.out.println(ans);\n70     }\n71 }\nGiven the following input:\n1817181712114\n\n\nQuestion:\nWhat would be the states of variable val in line 66? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "1",
+            "1",
+            "2"
+        ],
+        "variable": "val",
+        "line": 66
+    },
+    "2": {
+        "prompt": "Question:\nWhat would be the states of variable ans in line 67? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2",
+            "2",
+            "3"
+        ],
+        "variable": "ans",
+        "line": 67
+    },
+    "3": {
+        "prompt": "Question:\nWhat would be the states of variable ans in line 69? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "3"
+        ],
+        "variable": "ans",
+        "line": 69
+    }
+}

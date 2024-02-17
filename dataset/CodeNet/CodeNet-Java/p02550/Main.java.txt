@@ -1,0 +1,70 @@
+1 import java.util.ArrayList;
+2 import java.util.HashSet;
+3 import java.util.Scanner;
+4 import java.util.Set;
+5 
+6 public class Main {
+7     static public void main(String[] args) {
+8         Scanner sc = new Scanner(System.in);
+9         long N = sc.nextLong();
+10         int X = sc.nextInt();
+11         int M = sc.nextInt();
+12         Set<Integer> used = new HashSet<>();
+13         ArrayList<Integer> A = new ArrayList<>();
+14         A.add(X);
+15         used.add(X);
+16 
+17         long K=0;
+18         long L=0;
+19         long ans = 0;
+20         boolean breakflag = false;
+21 
+22         for(int i = 0 ; i < M-1 && i < N-1 ; i++){
+23             long prev  = (long)A.get(i);
+24             int now = (int)((prev*prev) % M);
+25             if(now == 0){
+26                 for(int j = 0 ; j <= i ; j++){
+27                     ans += A.get(j);
+28                 }
+29                 breakflag = true;
+30                 break;
+31             }else if(used.contains(now)){
+32                 L = i+1;
+33                 for(int j = 0 ; j <= i ; j++){
+34                     if(A.get(j) == now){
+35                         K = j;
+36                         break;
+37                     }
+38                     ans += A.get(j);
+39                 }
+40 
+41                 long sub = 0;
+42                 for(int j = (int)K ; j < L ; j++){
+43                     sub += A.get(j);
+44                 }
+45 
+46                 long m = (N-K) % (L-K);
+47                 long left = 0;
+48                 for(int j=0; j < m ; j++){
+49                     left += A.get((int)K + j);
+50                 }
+51 
+52                 ans += ((N-K)/(L-K))*sub + left;
+53                 breakflag =true;
+54                 break;
+55             }else{
+56                 used.add(now);
+57                 A.add(now);
+58             }
+59         }
+60 
+61         if(!breakflag){
+62             ans = 0;
+63             for(int a:A){
+64                 ans += a;
+65             }
+66         }
+67 
+68         System.out.println(ans);
+69     }
+70 }

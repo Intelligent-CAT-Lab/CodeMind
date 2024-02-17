@@ -1,0 +1,215 @@
+1 import java.io.*;
+2 import java.util.*;
+3 import java.util.Map.Entry;
+4 
+5 @SuppressWarnings("unused")
+6 public class Main {
+7     FastScanner in = new FastScanner(System.in);
+8     PrintWriter out = new PrintWriter(System.out);
+9     final int MOD = (int)1e9+7;
+10     void printlnYN(boolean b){out.println((b ? "Yes" : "No"));}
+11 
+12     void solve() throws Exception{
+13         int M = in.nextInt(), D = in.nextInt();
+14         int ans = 0;
+15         for(int m = 1; m <= M; m++){
+16             for(int d = 1; d <= D; d++){
+17                 int d1 = d % 10, d2 = d / 10;
+18                 if(d1 >= 2 && d2 >= 2 && d1 * d2 == m) ans++;
+19             }
+20         }
+21         out.println(ans);
+22     }
+23 
+24     public static void main(String[] args) throws Exception {
+25         new Main().m();
+26     }
+27 
+28     void m() throws Exception {
+29         solve();
+30         out.flush();
+31     }
+32 
+33     static class FastScanner {
+34         Reader input;
+35 
+36         FastScanner() {this(System.in);}
+37         FastScanner(InputStream stream) {this.input = new BufferedReader(new InputStreamReader(stream));}
+38 
+39         int nextInt() {return (int) nextLong();}
+40 
+41         long nextLong() {
+42             try {
+43                 int sign = 1;
+44                 int b = input.read();
+45                 while ((b < '0' || '9' < b) && b != '-' && b != '+') {
+46                     b = input.read();
+47                 }
+48                 if (b == '-') {
+49                     sign = -1;
+50                     b = input.read();
+51                 } else if (b == '+') {
+52                     b = input.read();
+53                 }
+54                 long ret = b - '0';
+55                 while (true) {
+56                     b = input.read();
+57                     if (b < '0' || '9' < b) return ret * sign;
+58                     ret *= 10;
+59                     ret += b - '0';
+60                 }
+61             } catch (IOException e) {
+62                 e.printStackTrace();
+63                 return -1;
+64             }
+65         }
+66 
+67         double nextDouble() {
+68             try {
+69                 double sign = 1;
+70                 int b = input.read();
+71                 while ((b < '0' || '9' < b) && b != '-' && b != '+') {
+72                     b = input.read();
+73                 }
+74                 if (b == '-') {
+75                     sign = -1;
+76                     b = input.read();
+77                 } else if (b == '+') {
+78                     b = input.read();
+79                 }
+80                 double ret = b - '0';
+81                 while (true) {
+82                     b = input.read();
+83                     if (b < '0' || '9' < b) break;
+84                     ret *= 10;
+85                     ret += b - '0';
+86                 }
+87                 if (b != '.') return sign * ret;
+88                 double div = 1;
+89                 b = input.read();
+90                 while ('0' <= b && b <= '9') {
+91                     ret *= 10;
+92                     ret += b - '0';
+93                     div *= 10;
+94                     b = input.read();
+95                 }
+96                 return sign * ret / div;
+97             } catch (IOException e) {
+98                 e.printStackTrace();
+99                 return Double.NaN;
+100             }
+101         }
+102 
+103         char nextChar() {
+104             try {
+105                 int b = input.read();
+106                 while (Character.isWhitespace(b)) {
+107                     b = input.read();
+108                 }
+109                 return (char) b;
+110             } catch (IOException e) {
+111                 e.printStackTrace();
+112                 return 0;
+113             }
+114         }
+115 
+116         String nextStr() {
+117             try {
+118                 StringBuilder sb = new StringBuilder();
+119                 int b = input.read();
+120                 while (Character.isWhitespace(b)) {
+121                     b = input.read();
+122                 }
+123                 while (b != -1 && !Character.isWhitespace(b)) {
+124                     sb.append((char) b);
+125                     b = input.read();
+126                 }
+127                 return sb.toString();
+128             } catch (IOException e) {
+129                 e.printStackTrace();
+130                 return "";
+131             }
+132         }
+133 
+134         public int[] nextIntArray(int n) {
+135             int[] res = new int[n];
+136             for (int i = 0; i < n; i++) {
+137                 res[i] = nextInt();
+138             }
+139             return res;
+140         }
+141 
+142         public int[] nextIntArrayDec(int n) {
+143             int[] res = new int[n];
+144             for (int i = 0; i < n; i++) {
+145                 res[i] = nextInt() - 1;
+146             }
+147             return res;
+148         }
+149 
+150         public int[] nextIntArray1Index(int n) {
+151             int[] res = new int[n + 1];
+152             for (int i = 0; i < n; i++) {
+153                 res[i + 1] = nextInt();
+154             }
+155             return res;
+156         }
+157 
+158         public long[] nextLongArray(int n) {
+159             long[] res = new long[n];
+160             for (int i = 0; i < n; i++) {
+161                 res[i] = nextLong();
+162             }
+163             return res;
+164         }
+165 
+166         public long[] nextLongArrayDec(int n) {
+167             long[] res = new long[n];
+168             for (int i = 0; i < n; i++) {
+169                 res[i] = nextLong() - 1;
+170             }
+171             return res;
+172         }
+173 
+174         public long[] nextLongArray1Index(int n) {
+175             long[] res = new long[n + 1];
+176             for (int i = 0; i < n; i++) {
+177                 res[i + 1] = nextLong();
+178             }
+179             return res;
+180         }
+181 
+182         public double[] nextDoubleArray(int n) {
+183             double[] res = new double[n];
+184             for (int i = 0; i < n; i++) {
+185                 res[i] = nextDouble();
+186             }
+187             return res;
+188         }
+189 
+190         public Long[] nextWrapperLongArray(int n) {
+191             Long[] res = new Long[n];
+192             for (int i = 0; i < n; i++) {
+193                 res[i] = nextLong();
+194             }
+195             return res;
+196         }
+197 
+198         public Long[] nextWrapperLongArrayDec(int n) {
+199             Long[] res = new Long[n];
+200             for (int i = 0; i < n; i++) {
+201                 res[i] = nextLong() - 1;
+202             }
+203             return res;
+204         }
+205 
+206         public Long[] nextWrapperLongArray1Index(int n) {
+207             Long[] res = new Long[n + 1];
+208             for (int i = 0; i < n; i++) {
+209                 res[i + 1] = nextLong();
+210             }
+211             return res;
+212         }
+213     }
+214 }
+215 /* end Main */

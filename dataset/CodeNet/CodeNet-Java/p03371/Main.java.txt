@@ -1,0 +1,121 @@
+1 import java.io.*;
+2 import java.util.StringTokenizer;
+3 
+4 public class Main {
+5     public static void main(String[] args) {
+6         Scanner in = new Scanner(System.in);
+7         PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out));
+8 
+9         int a = in.nextInt();
+10         int b = in.nextInt();
+11         int c = in.nextInt();
+12         int x = in.nextInt();
+13         int y = in.nextInt();
+14 
+15         if (a + b < 2 * c) {
+16             out.println(x * a + y * b);
+17         } else {
+18             int min = Math.min(x, y);
+19             int max = Math.max(x, y);
+20             int res = 0;
+21             res += 2 * c * min;
+22             if (max == x) {
+23                 res += Math.min(a, 2 * c) * (max - min);
+24             } else {
+25                 res += Math.min(b, 2 * c) * (max - min);
+26             }
+27             out.println(res);
+28         }
+29 
+30         out.close();
+31         //INT OVERFLOW -> USE LONG
+32         //ARR OUT OF BOUNDS
+33     }
+34 
+35     static class Scanner {
+36         StringTokenizer st;
+37         BufferedReader br;
+38 
+39         public Scanner(InputStream s) {
+40             br = new BufferedReader(new InputStreamReader(s));
+41         }
+42 
+43         public Scanner(String s) {
+44             try {
+45                 br = new BufferedReader(new FileReader(s));
+46             } catch (FileNotFoundException e) {
+47                 e.printStackTrace();
+48             }
+49         }
+50 
+51         public String next() {
+52             while (st == null || !st.hasMoreTokens()) {
+53                 try {
+54                     st = new StringTokenizer(br.readLine());
+55                 } catch (IOException e) {
+56                     e.printStackTrace();
+57                 }
+58             }
+59             return st.nextToken();
+60         }
+61 
+62         public int nextInt() {
+63             return Integer.parseInt(next());
+64         }
+65 
+66         public String nextLine() {
+67             String str = "";
+68             try {
+69                 str = br.readLine();
+70             } catch (IOException e) {
+71                 e.printStackTrace();
+72             }
+73             return str;
+74         }
+75 
+76         public long nextLong() {
+77             return Long.parseLong(next());
+78         }
+79 
+80         public double nextDouble() {
+81             return Double.parseDouble(next());
+82         }
+83 
+84         public int[] nextIntArray(int n) {
+85             int[] arr = new int[n];
+86             for (int i = 0; i < n; i++) {
+87                 arr[i] = nextInt();
+88             }
+89             return arr;
+90         }
+91 
+92         public double[] nextDoubleArray(int n) {
+93             double[] arr = new double[n];
+94             for (int i = 0; i < n; i++) {
+95                 arr[i] = nextDouble();
+96             }
+97             return arr;
+98         }
+99 
+100         public long[] nextLongArray(int n) {
+101             long[] arr = new long[n];
+102             for (int i = 0; i < n; i++) {
+103                 arr[i] = nextLong();
+104             }
+105             return arr;
+106         }
+107 
+108         public char[] nextCharArray(int n) {
+109             char[] arr = nextLine().trim().replaceAll("\\s", "").toCharArray();
+110             return arr;
+111         }
+112 
+113         public String[] nextStringArray(int n) {
+114             String[] arr = new String[n];
+115             for (int i = 0; i < n; i++) {
+116                 arr[i] = next();
+117             }
+118             return arr;
+119         }
+120     }
+121 }

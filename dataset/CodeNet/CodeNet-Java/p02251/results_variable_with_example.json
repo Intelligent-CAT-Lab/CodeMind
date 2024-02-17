@@ -1,0 +1,259 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6    public static void main(String[] args) {\n7\t\t try {\n7\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nQuestion: What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the sataes and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN",
+        "predict": "20\nEND-OF-STATE"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.util.*;\n2 import java.io.*;\n3 \n4 class Main {\n5 \tvoid solve () {\n6 \t\t\n7 \t\tint n = nextInt();\n8 \t\tint ans = 0;\n9 \t\t\n10 \t\t//25cent\n11 \t\tans += n/25;\n12 \t\tn %= 25;\n13 \t\t\n14 \t\t//10cent\n15 \t\tans += n/10;\n16 \t\tn %= 10;\n17 \t\t\n18 \t\t//5cent\n19 \t\tans += n/5;\n20 \t\tn %= 5;\n21 \t\t\n22 \t\t//1cent\n23 \t\tans += n;\n24 \t\t\n25 \t\tout.println(ans);\n26 \t\t\n27 \t}\n28 \n29 \n30 \t// <Main Method>\n31 \tpublic static PrintWriter out;\n32 \tpublic static void main(String[] args) {\n33 \t\tout = new PrintWriter(System.out);\n34 \t\tnew Main().solve();\n35 \t\tout.flush();\n36 \t}\n37 \n38 \t// <Default Field>\n39 \tstatic int maxInt = Integer.MAX_VALUE, minInt = Integer.MIN_VALUE;\n40 \tstatic int mod = 1000000007;\n41 \n42 \t// <Default Method>\n43 \tstatic int max (int... ar) {Arrays.sort(ar);return ar[ar.length-1];}\n44 \tstatic int min (int... ar) {Arrays.sort(ar);return ar[0];}\n45 \tstatic int calcManhatDistance (int x1, int y1, int x2, int y2) {\n46 \t\tint d = Math.abs(x1-x2)+Math.abs(y1-y2);\n47 \t\treturn d;\n48 \t}\n49 \tstatic double calcEuclidDistance (double x1, double y1, double x2, double y2) {\n50 \t\tdouble d = Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));\n51 \t\treturn d;\n52 \t}\n53 \tstatic boolean isPrime (int n) {\n54 \t\tif (n==2) return true;\n55 \t\tif (n<2 || n%2==0) return false;\n56 \t\tdouble d = Math.sqrt(n);\n57 \t\tfor (int i=3; i<=d; i+=2) if(n%i==0){return false;}\n58 \t\treturn true;\n59 \t}\n60 \tstatic void printChar2DArray (char[][] ar) {\n61 \t\tfor (int i=0; i<ar.length; i++) {\n62 \t\t\tfor (int j=0; j<ar[0].length; j++) {\n63 \t\t\t\tout.print(ar[i][j]);\n64 \t\t\t}\n65 \t\t\tout.println();\n66 \t\t}\n67 \t}\n68 \n69 \t// <Fast Scanner> START -------------------------------------------------\n70 \tstatic InputStream in = System.in;\n71 \tstatic  byte[] buffer = new byte[1024];\n72 \tstatic int length = 0, p = 0;\n73 \tpublic static boolean hasNextByte () {\n74 \t\tif (p < length) return true;\n75 \t\telse {\n76 \t\t\tp = 0;\n77 \t\t\ttry {length = in.read(buffer);}\n78 \t\t\tcatch (Exception e) {e.printStackTrace();}\n79 \t\t\tif (length == 0) return false;\n80 \t\t}\n81 \t\treturn true;\n82 \t}\n83 \tpublic static int readByte () {\n84 \t\tif (hasNextByte() == true) return buffer[p++];\n85 \t\treturn -1;\n86 \t}\n87 \tpublic static boolean isPrintable (int n) {return 33<=n&&n<=126;}\n88 \tpublic static void skip () {\n89 \t\twhile (hasNextByte() && !isPrintable(buffer[p])) p++;\n90 \t}\n91 \tpublic static boolean hasNext () {skip(); return hasNextByte();}\n92 \tpublic static String next () {\n93 \t\tif (!hasNext()) throw new NoSuchElementException();\n94 \t\tStringBuilder sb = new StringBuilder();\n95 \t\tint temp = readByte();\n96 \t\twhile (isPrintable(temp)) {\n97 \t\t\tsb.appendCodePoint(temp);\n98 \t\t\ttemp = readByte();\n99 \t\t}\n100 \t\treturn sb.toString();\n101 \t}\n102 \tpublic static String[] nextStringArray (int n) {\n103 \t\tString[] ar = new String[n];\n104 \t\tfor (int i=0; i<n; i++) ar[i] = next();\n105 \t\treturn ar;\n106 \t}\n107 \tpublic static int nextInt () {return Math.toIntExact(nextLong());}\n108 \tpublic static int[] nextIntArray (int n) {\n109 \t\tint[] ar = new int[n];\n110 \t\tfor (int i=0; i<n; i++) ar[i] = nextInt();\n111 \t\treturn ar;\n112 \t}\n113 \tpublic static long nextLong () {\n114 \t\tif (!hasNext()) throw new NoSuchElementException();\n115 \t\tboolean minus = false;\n116 \t\tint temp = readByte();\n117 \t\tif (temp == '-') {\n118 \t\t\tminus = true;\n119 \t\t\ttemp = readByte();\n120 \t\t}\n121 \t\tif (temp<'0' || '9'<temp) throw new NumberFormatException();\n122 \t\tlong n = 0;\n123 \t\twhile (isPrintable(temp)) {\n124 \t\t\tif ('0'<=temp && temp<='9') {\n125 \t\t\t\tn *= 10;\n126 \t\t\t\tn += temp - '0';\n127 \t\t\t}\n128 \t\t\ttemp = readByte();\n129 \t\t}\n130 \t\treturn minus? -n : n;\n131 \t}\n132 \tpublic static char[][] nextChar2DArray (int h, int w, boolean b) {\n133 \t\t//b(\u756a\u5175)\u304ctrue\u306a\u3089\u914d\u5217\u3092\u4f59\u8a08\u306b\u78ba\u4fdd\u3059\u308b\n134 \t\tchar[][] ar = new char[b?h+2:h][b?w+2:h];\n135 \t\tfor (int i=b?1:0; i<(b?h+1:h); i++) {\n136 \t\t\tString temp = next();\n137 \t\t\tfor (int j=0; j<w; j++) {\n138 \t\t\t\tar[i][b?j+1:j] = temp.charAt(j);\n139 \t\t\t}\n140 \t\t}\n141 \t\treturn ar;\n142 \t}\n143 \t// <Fast Scanner> END ----------------------------------------------------------\n144 }\n145 \n\nGiven the following input:\n100\n\n\nQuestion:\n What would be the states of variable minus in line 115? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "false"
+        ],
+        "variable": "minus",
+        "line": "115",
+        "predict": "false\nEND-OF-STATE"
+    },
+    "2": {
+        "prompt": "Question:\n What would be the states of variable temp in line 116? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "49"
+        ],
+        "variable": "temp",
+        "line": "116",
+        "predict": "45\nEND-OF-STATE"
+    },
+    "3": {
+        "prompt": "Question:\n What would be the states of variable temp in line 117? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "49"
+        ],
+        "variable": "temp",
+        "line": "117",
+        "predict": "32\nEND-OF-STATE"
+    },
+    "4": {
+        "prompt": "Question:\n What would be the states of variable temp in line 121? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "49"
+        ],
+        "variable": "temp",
+        "line": "121",
+        "predict": "49\nEND-OF-STATE"
+    },
+    "5": {
+        "prompt": "Question:\n What would be the states of variable n in line 122? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "n",
+        "line": "122",
+        "predict": "100\nEND-OF-STATE"
+    },
+    "6": {
+        "prompt": "Question:\n What would be the states of variable n in line 87? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "1",
+            "10",
+            "100"
+        ],
+        "variable": "n",
+        "line": "87",
+        "predict": "100\nEND-OF-STATE"
+    },
+    "7": {
+        "prompt": "Question:\n What would be the states of variable temp in line 123? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "49",
+            "48",
+            "48",
+            "10"
+        ],
+        "variable": "temp",
+        "line": "123",
+        "predict": "32\nEND-OF-STATE"
+    },
+    "8": {
+        "prompt": "Question:\n What would be the states of variable temp in line 124? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "49",
+            "48",
+            "48"
+        ],
+        "variable": "temp",
+        "line": "124",
+        "predict": "49\nEND-OF-STATE"
+    },
+    "9": {
+        "prompt": "Question:\n What would be the states of variable n in line 125? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "10",
+            "100"
+        ],
+        "variable": "n",
+        "line": "125",
+        "predict": "3\n32\nEND-OF-STATE"
+    },
+    "10": {
+        "prompt": "Question:\n What would be the states of variable temp in line 126? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "49",
+            "48",
+            "48"
+        ],
+        "variable": "temp",
+        "line": "126",
+        "predict": "50\nEND-OF-STATE"
+    },
+    "11": {
+        "prompt": "Question:\n What would be the states of variable n in line 126? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1",
+            "10",
+            "100"
+        ],
+        "variable": "n",
+        "line": "126",
+        "predict": "0\nEND-OF-STATE"
+    },
+    "12": {
+        "prompt": "Question:\n What would be the states of variable temp in line 128? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "48",
+            "48",
+            "10"
+        ],
+        "variable": "temp",
+        "line": "128",
+        "predict": "-1\nEND-OF-STATE"
+    },
+    "13": {
+        "prompt": "Question:\n What would be the states of variable n in line 7? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "100"
+        ],
+        "variable": "n",
+        "line": "7",
+        "predict": "100\nEND-OF-STATE"
+    },
+    "14": {
+        "prompt": "Question:\n What would be the states of variable ans in line 8? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "ans",
+        "line": "8",
+        "predict": "0\nEND-OF-STATE"
+    },
+    "15": {
+        "prompt": "Question:\n What would be the states of variable ans in line 11? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "4"
+        ],
+        "variable": "ans",
+        "line": "11",
+        "predict": "4\nEND-OF-STATE"
+    },
+    "16": {
+        "prompt": "Question:\n What would be the states of variable n in line 11? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "100"
+        ],
+        "variable": "n",
+        "line": "11",
+        "predict": "0\nEND-OF-STATE"
+    },
+    "17": {
+        "prompt": "Question:\n What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "n",
+        "line": "12",
+        "predict": "0\nEND-OF-STATE"
+    },
+    "18": {
+        "prompt": "Question:\n What would be the states of variable ans in line 15? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "4"
+        ],
+        "variable": "ans",
+        "line": "15",
+        "predict": "4\nEND-OF-STATE"
+    },
+    "19": {
+        "prompt": "Question:\n What would be the states of variable n in line 15? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "n",
+        "line": "15",
+        "predict": "0\nEND-OF-STATE"
+    },
+    "20": {
+        "prompt": "Question:\n What would be the states of variable n in line 16? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "n",
+        "line": "16",
+        "predict": "0\nEND-OF-STATE"
+    },
+    "21": {
+        "prompt": "Question:\n What would be the states of variable ans in line 19? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "4"
+        ],
+        "variable": "ans",
+        "line": "19",
+        "predict": "4\nEND-OF-STATE"
+    },
+    "22": {
+        "prompt": "Question:\n What would be the states of variable n in line 19? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "n",
+        "line": "19",
+        "predict": "0\nEND-OF-STATE"
+    },
+    "23": {
+        "prompt": "Question:\n What would be the states of variable n in line 20? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "n",
+        "line": "20",
+        "predict": "0\nEND-OF-STATE"
+    },
+    "24": {
+        "prompt": "Question:\n What would be the states of variable ans in line 23? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "4"
+        ],
+        "variable": "ans",
+        "line": "23",
+        "predict": "4\nEND-OF-STATE"
+    },
+    "25": {
+        "prompt": "Question:\n What would be the states of variable n in line 23? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "n",
+        "line": "23",
+        "predict": "0\nEND-OF-STATE"
+    },
+    "26": {
+        "prompt": "Question:\n What would be the states of variable ans in line 25? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "4"
+        ],
+        "variable": "ans",
+        "line": "25",
+        "predict": "4\nEND-OF-STATE"
+    }
+}

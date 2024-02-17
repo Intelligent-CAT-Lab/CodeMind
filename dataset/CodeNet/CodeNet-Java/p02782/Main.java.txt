@@ -1,0 +1,271 @@
+1 import java.io.*;
+2 import java.util.Arrays;
+3 import java.util.StringJoiner;
+4 import java.util.StringTokenizer;
+5 
+6 public class Main {
+7 
+8     static int R1, C1, R2, C2;
+9 
+10     public static void main(String[] args) {
+11         FastScanner sc = new FastScanner(System.in);
+12         R1 = sc.nextInt();
+13         C1 = sc.nextInt();
+14         R2 = sc.nextInt();
+15         C2 = sc.nextInt();
+16 
+17         System.out.println(solve());
+18     }
+19 
+20     static int solve() {
+21         // 10^6なのでうっとなるがまぁ大丈夫だろう...
+22         // 使うinverseの数は少ないのでinverseは全部出さない(遅い)
+23         int[] factorial = new int[R2+C2+11];
+24         factorial[0] = 1;
+25         factorial[1] = 1;
+26         for (int i = 2; i <= R2+C2+10; i++) {
+27             factorial[i] = mul(factorial[i-1], i);
+28         }
+29 
+30         int a = f(R2, C2, factorial);
+31         int b = f(R2, C1-1, factorial);
+32         int c = f(R1-1, C2, factorial);
+33         int d = f(R1-1, C1-1, factorial);
+34         // debug(a, b, c, d);
+35         return add(sub(sub(a, b), c), d);
+36     }
+37 
+38     static int f(int r, int c, int[] factorial) {
+39         // k(0, c) + k(1, c) + ...k(r, c) = k(r, c+1) らしい
+40         // で、これを各列に対して行ったものが一行をなすと考えるとさらにその和を考えることができる(-1する)
+41         // ということで k(r+1, c+1) - 1 になる
+42 
+43         int ret = factorial[r+c+2];
+44         ret = div(ret, factorial[r+1]);
+45         ret = div(ret, factorial[c+1]);
+46         ret = sub(ret, 1);
+47         return ret;
+48     }
+49 
+50     static int MOD = 1_000_000_007;
+51 
+52     static int pow(int base, long exp) {
+53         if( exp == 0 ) return 1;
+54 
+55         int ans = 1;
+56         base %= MOD;
+57         while( exp > 0 ) {
+58             if( (exp & 1) == 1 ) {
+59                 ans = mul(ans, base);
+60             }
+61 
+62             base = mul(base, base);
+63             exp = exp >> 1;
+64         }
+65         return ans;
+66     }
+67 
+68     static int sub(int a, int b) {
+69         int c = a - b;
+70         if( c < 0 ) c += MOD;
+71         return c;
+72     }
+73 
+74     static int div(int a, int b) {
+75         return mul(a, pow(b, MOD-2));
+76     }
+77 
+78     static int add(int a, int b) {
+79         int c = a + b;
+80         if( c >= MOD ) c %= MOD;
+81         return c;
+82     }
+83 
+84     static int mul(int a, int b) {
+85         long c = (long)a * b;
+86         if( c >= MOD ) c %= MOD;
+87         return (int)c;
+88     }
+89 
+90     static class FermatCombination {
+91         private final int size;
+92         private final int[] factorial; // n -> factorial(n)
+93         private final int[] inverse;   // n -> inverse(factorial(n))
+94 
+95         FermatCombination(int size) {
+96             this.size = size;
+97             factorial = new int[size + 1];
+98             inverse = new int[size + 1];
+99 
+100             init();
+101         }
+102 
+103         private void init() {
+104             factorial[0] = 1;
+105             factorial[1] = 1;
+106             inverse[0] = 1;
+107             inverse[1] = 1;
+108             for (int i = 2; i <= size; i++) {
+109                 factorial[i] = mul(factorial[i-1], i);
+110                 inverse[i] = pow(factorial[i], MOD - 2);
+111             }
+112         }
+113 
+114         int comb(int n, int k) {
+115             if( n > size ) throw new RuntimeException("wtf : size=" + size + " n=" + n);
+116             return mul(mul(factorial[n], inverse[k]), inverse[n - k]);
+117         }
+118 
+119         // 重複組み合わせ
+120         // k種類からn個選ぶ場合の数
+121         int hcomb(int k, int n) {
+122             return comb(k+n-1, n);
+123         }
+124 
+125         int group(int n, int g, int k) {
+126             // C(n, g) * C(n-g, g)... / k!
+127             // n! / (n-gk)! / g! ^ k / k!
+128             int ret = factorial[n];             // n!
+129             ret = mul(ret, inverse[n - g*k]);   // 1 / (n-gk)!
+130             ret = mul(ret, pow(inverse[g], k)); // 1 / (g! ^ k)
+131             ret = mul(ret, inverse[k]);         // 1 / k!
+132             return ret;
+133         }
+134     }
+135 
+136     @SuppressWarnings("unused")
+137     static class FastScanner {
+138         private BufferedReader reader;
+139         private StringTokenizer tokenizer;
+140 
+141         FastScanner(InputStream in) {
+142             reader = new BufferedReader(new InputStreamReader(in));
+143             tokenizer = null;
+144         }
+145 
+146         String next() {
+147             if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+148                 try {
+149                     tokenizer = new StringTokenizer(reader.readLine());
+150                 } catch (IOException e) {
+151                     throw new RuntimeException(e);
+152                 }
+153             }
+154             return tokenizer.nextToken();
+155         }
+156 
+157         String nextLine() {
+158             if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+159                 try {
+160                     return reader.readLine();
+161                 } catch (IOException e) {
+162                     throw new RuntimeException(e);
+163                 }
+164             }
+165             return tokenizer.nextToken("\n");
+166         }
+167 
+168         long nextLong() {
+169             return Long.parseLong(next());
+170         }
+171 
+172         int nextInt() {
+173             return Integer.parseInt(next());
+174         }
+175 
+176         int[] nextIntArray(int n) {
+177             int[] a = new int[n];
+178             for (int i = 0; i < n; i++) a[i] = nextInt();
+179             return a;
+180         }
+181 
+182         int[] nextIntArray(int n, int delta) {
+183             int[] a = new int[n];
+184             for (int i = 0; i < n; i++) a[i] = nextInt() + delta;
+185             return a;
+186         }
+187 
+188         long[] nextLongArray(int n) {
+189             long[] a = new long[n];
+190             for (int i = 0; i < n; i++) a[i] = nextLong();
+191             return a;
+192         }
+193     }
+194 
+195     static void writeLines(int[] as) {
+196         PrintWriter pw = new PrintWriter(System.out);
+197         for (int a : as) pw.println(a);
+198         pw.flush();
+199     }
+200 
+201     static void writeLines(long[] as) {
+202         PrintWriter pw = new PrintWriter(System.out);
+203         for (long a : as) pw.println(a);
+204         pw.flush();
+205     }
+206 
+207     static void writeSingleLine(int[] as) {
+208         PrintWriter pw = new PrintWriter(System.out);
+209         for (int i = 0; i < as.length; i++) {
+210             if (i != 0) pw.print(" ");
+211             pw.print(as[i]);
+212         }
+213         pw.println();
+214         pw.flush();
+215     }
+216 
+217     static int max(int... as) {
+218         int max = Integer.MIN_VALUE;
+219         for (int a : as) max = Math.max(a, max);
+220         return max;
+221     }
+222 
+223     static int min(int... as) {
+224         int min = Integer.MAX_VALUE;
+225         for (int a : as) min = Math.min(a, min);
+226         return min;
+227     }
+228 
+229     static void debug(Object... args) {
+230         StringJoiner j = new StringJoiner(" ");
+231         for (Object arg : args) {
+232             if (arg == null) j.add("null");
+233             else if (arg instanceof int[]) j.add(Arrays.toString((int[]) arg));
+234             else if (arg instanceof long[]) j.add(Arrays.toString((long[]) arg));
+235             else if (arg instanceof double[]) j.add(Arrays.toString((double[]) arg));
+236             else if (arg instanceof Object[]) j.add(Arrays.toString((Object[]) arg));
+237             else j.add(arg.toString());
+238         }
+239         System.err.println(j.toString());
+240     }
+241 
+242     static void printSingleLine(int[] array) {
+243         PrintWriter pw = new PrintWriter(System.out);
+244         for (int i = 0; i < array.length; i++) {
+245             if (i != 0) pw.print(" ");
+246             pw.print(array[i]);
+247         }
+248         pw.println();
+249         pw.flush();
+250     }
+251 
+252     static int lowerBound(int[] array, int value) {
+253         int lo = 0, hi = array.length, mid;
+254         while (lo < hi) {
+255             mid = (hi + lo) / 2;
+256             if (array[mid] < value) lo = mid + 1;
+257             else hi = mid;
+258         }
+259         return lo;
+260     }
+261 
+262     static int upperBound(int[] array, int value) {
+263         int lo = 0, hi = array.length, mid;
+264         while (lo < hi) {
+265             mid = (hi + lo) / 2;
+266             if (array[mid] <= value) lo = mid + 1;
+267             else hi = mid;
+268         }
+269         return lo;
+270     }
+271 }

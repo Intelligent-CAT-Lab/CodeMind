@@ -1,0 +1,533 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.PrintWriter;
+4 import java.util.NoSuchElementException;
+5 
+6 class Block {
+7 	boolean[][] c;
+8 	int w;
+9 	int h;
+10 	int dx;
+11 	int dy;
+12 	int offx;
+13 	int offy;
+14 
+15 	Block(int d) {
+16 		if (d % 2 == 0) {
+17 			w = d;
+18 			h = d - 1;
+19 			this.c = new boolean[h][w];
+20 			int cy = d / 2 - 1;
+21 			int cx1 = d / 2 - 1;
+22 			int cx2 = d / 2;
+23 			for (int i = 0; i < h; i++) {
+24 				for (int j = 0; j < w; j++) {
+25 					if (abs(cx1 - j) + abs(cy - i) < d / 2)
+26 						this.c[i][j] = true;
+27 					if (abs(cx2 - j) + abs(cy - i) < d / 2)
+28 						this.c[i][j] = true;
+29 				}
+30 			}
+31 
+32 			dx = w;
+33 			dy = 0;
+34 
+35 			offx = d / 2;
+36 			offy = d / 2;
+37 		} else {
+38 			w = d;
+39 			h = d;
+40 			this.c = new boolean[h][w];
+41 			int c = d - 1 >> 1;
+42 			for (int i = 0; i < h; i++) {
+43 				for (int j = 0; j < w; j++) {
+44 					if (abs(c - j) + abs(c - i) < (d + 1) / 2)
+45 						this.c[i][j] = true;
+46 				}
+47 			}
+48 
+49 			dx = d + 1 >> 1;
+50 			dy = d - 1 >> 1;
+51 
+52 			offx = dy;
+53 			offy = dx;
+54 		}
+55 	}
+56 
+57 	int abs(int a) {
+58 		return a < 0 ? -a : a;
+59 	}
+60 
+61 	void dump() {
+62 		for (int i = 0; i < h; i++) {
+63 			String s = "";
+64 			for (int j = 0; j < w; j++) {
+65 				if (c[i][j])
+66 					s += "*";
+67 				else
+68 					s += " ";
+69 			}
+70 			System.out.println(s);
+71 		}
+72 	}
+73 }
+74 
+75 class Field {
+76 	int[][] c;
+77 	int w, h;
+78 
+79 	Field(int w, int h) {
+80 		c = new int[h][w];
+81 		this.w = w;
+82 		this.h = h;
+83 	}
+84 
+85 	void put(Block b, int x, int y, int color) {
+86 		for (int i = 0; i < b.h; i++) {
+87 			for (int j = 0; j < b.w; j++) {
+88 				int px = j + x;
+89 				int py = i + y;
+90 				if (px < 0 || py < 0 || px >= w || py >= h)
+91 					continue;
+92 				if (!b.c[i][j])
+93 					continue;
+94 				if (c[py][px] != 0)
+95 					throw new Error("は？");
+96 				c[py][px] = color;
+97 			}
+98 		}
+99 	}
+100 
+101 	void dump() {
+102 		boolean ng = false;
+103 		for (int i = 0; i < h; i++) {
+104 			String s = "";
+105 			for (int j = 0; j < w; j++) {
+106 				s += "RGBY".charAt(c[i][j] - 1);
+107 				if (c[i][j] == 0)
+108 					ng = true;
+109 			}
+110 			System.out.println(s);
+111 		}
+112 		if (ng)
+113 			throw new Error("は？");
+114 	}
+115 }
+116 
+117 public class Main {
+118 	private static void solve() {
+119 		int h = nei();
+120 		int w = nei();
+121 		int d = nei();
+122 
+123 		Block b = new Block(d);
+124 		Field f = new Field(w, h);
+125 
+126 		int x1 = -b.w;
+127 		int x2 = w;
+128 		int y1 = -b.h - w;
+129 		int y2 = h;
+130 
+131 		int sy = y1;
+132 		int sx = x1;
+133 		int line = 0;
+134 
+135 		while (sy < h) {
+136 
+137 			int cnt = 0;
+138 			int x = sx;
+139 			int y = sy;
+140 			while (x <= x2 && y <= y2) {
+141 				f.put(b, x, y, 1 + cnt % 2 + line % 2 * 2);
+142 
+143 				x += b.dx;
+144 				y += b.dy;
+145 				cnt++;
+146 			}
+147 
+148 			sx -= b.offx;
+149 			sy += b.offy;
+150 			line++;
+151 		}
+152 
+153 		f.dump();
+154 	}
+155 
+156 	static int[] lis(int[] s) {
+157 		int n = s.length;
+158 		int[] dp = new int[n];
+159 		int[] ids = new int[n];
+160 		int[] pids = new int[n];
+161 		dp[0] = s[0];
+162 		int len = 1;
+163 		int lidx = 0;
+164 		for (int i = 1; i < n; i++) {
+165 			int idx = bs(s[i], dp, 0, len);
+166 			dp[idx] = s[i];
+167 			ids[idx] = i;
+168 			if (idx == len) {
+169 				lidx = i;
+170 				len++;
+171 			}
+172 			if (idx > 0)
+173 				pids[i] = ids[idx - 1];
+174 		}
+175 		int[] lis = new int[len];
+176 		lis[len - 1] = s[lidx];
+177 		for (int i = len - 1; i >= 0; i--) {
+178 			lis[i] = s[lidx];
+179 			lidx = pids[lidx];
+180 		}
+181 		return lis;
+182 	}
+183 
+184 	static int bs(int a, int[] as, int from, int num) {
+185 		int min = from;
+186 		int max = from + num - 1;
+187 		while (min < max) {
+188 			int mid = min + max >> 1;
+189 			if (as[mid] < a)
+190 				min = mid + 1;
+191 			else if (as[mid] > a)
+192 				max = mid;
+193 			else
+194 				return mid;
+195 		}
+196 		return as[min] < a ? min + 1 : min;
+197 	}
+198 
+199 	static int gcd(int x, int y) {
+200 		x = (x ^ x >> 31) - (x >> 31);
+201 		y = (y ^ y >> 31) - (y >> 31);
+202 		if (x < y) {
+203 			x ^= y;
+204 			y ^= x;
+205 			x ^= y;
+206 		}
+207 		int z = x % y;
+208 		if (z == 0)
+209 			return y;
+210 		return gcd(y, z);
+211 	}
+212 
+213 	static long gcd(long x, long y) {
+214 		x = (x ^ x >> 63) - (x >> 63);
+215 		y = (y ^ y >> 63) - (y >> 63);
+216 		if (x < y) {
+217 			x ^= y;
+218 			y ^= x;
+219 			x ^= y;
+220 		}
+221 		long z = x % y;
+222 		if (z == 0)
+223 			return y;
+224 		return gcd(y, z);
+225 	}
+226 
+227 	static int lcm(int x, int y) {
+228 		x = (x ^ x >> 31) - (x >> 31);
+229 		y = (y ^ y >> 31) - (y >> 31);
+230 		return x / gcd(x, y) * y;
+231 	}
+232 
+233 	static long lcm(long x, long y) {
+234 		x = (x ^ x >> 63) - (x >> 63);
+235 		y = (y ^ y >> 63) - (y >> 63);
+236 		return x / gcd(x, y) * y;
+237 	}
+238 
+239 	static int abs(int x) {
+240 		return x < 0 ? -x : x;
+241 	}
+242 
+243 	static long abs(long x) {
+244 		return x < 0 ? -x : x;
+245 	}
+246 
+247 	static int min(int a, int b) {
+248 		return a < b ? a : b;
+249 	}
+250 
+251 	static long min(long a, long b) {
+252 		return a < b ? a : b;
+253 	}
+254 
+255 	static int max(int a, int b) {
+256 		return a > b ? a : b;
+257 	}
+258 
+259 	static long max(long a, long b) {
+260 		return a > b ? a : b;
+261 	}
+262 
+263 	static int clamp(int a, int min, int max) {
+264 		return a < min ? min : a > max ? max : a;
+265 	}
+266 
+267 	static long clamp(long a, long min, long max) {
+268 		return a < min ? min : a > max ? max : a;
+269 	}
+270 
+271 	static void out(String val) {
+272 		IO.out(val);
+273 	}
+274 
+275 	static void out(Object val) {
+276 		IO.out(String.valueOf(val));
+277 	}
+278 
+279 	static void out(int val) {
+280 		IO.out(String.valueOf(val));
+281 	}
+282 
+283 	static void out(long val) {
+284 		IO.out(String.valueOf(val));
+285 	}
+286 
+287 	static void out(char val) {
+288 		IO.out(String.valueOf(val));
+289 	}
+290 
+291 	static void out(float val) {
+292 		IO.out(String.valueOf(val));
+293 	}
+294 
+295 	static void out(double val) {
+296 		IO.out(String.valueOf(val));
+297 	}
+298 
+299 	static void out(boolean val) {
+300 		IO.out(String.valueOf(val));
+301 	}
+302 
+303 	static void kil(String val) {
+304 		IO.out(val);
+305 		IO.flush();
+306 		System.exit(0);
+307 	}
+308 
+309 	static void kil(Object val) {
+310 		IO.out(String.valueOf(val));
+311 		IO.flush();
+312 		System.exit(0);
+313 	}
+314 
+315 	static void kil(int val) {
+316 		IO.out(String.valueOf(val));
+317 		IO.flush();
+318 		System.exit(0);
+319 	}
+320 
+321 	static void kil(long val) {
+322 		IO.out(String.valueOf(val));
+323 		IO.flush();
+324 		System.exit(0);
+325 	}
+326 
+327 	static void kil(char val) {
+328 		IO.out(String.valueOf(val));
+329 		IO.flush();
+330 		System.exit(0);
+331 	}
+332 
+333 	static void kil(float val) {
+334 		IO.out(String.valueOf(val));
+335 		IO.flush();
+336 		System.exit(0);
+337 	}
+338 
+339 	static void kil(double val) {
+340 		IO.out(String.valueOf(val));
+341 		IO.flush();
+342 		System.exit(0);
+343 	}
+344 
+345 	static void kil(boolean val) {
+346 		IO.out(String.valueOf(val));
+347 		IO.flush();
+348 		System.exit(0);
+349 	}
+350 
+351 	static String nes() {
+352 		return IO.next();
+353 	}
+354 
+355 	static int nei() {
+356 		return IO.nextInt();
+357 	}
+358 
+359 	static long nel() {
+360 		return IO.nextLong();
+361 	}
+362 
+363 	static String[] nss(int n) {
+364 		String[] as = new String[n];
+365 		for (int i = 0; i < n; i++) {
+366 			as[i] = IO.next();
+367 		}
+368 		return as;
+369 	}
+370 
+371 	static int[] nis(int n) {
+372 		int[] as = new int[n];
+373 		for (int i = 0; i < n; i++) {
+374 			as[i] = IO.nextInt();
+375 		}
+376 		return as;
+377 	}
+378 
+379 	static long[] nls(int n) {
+380 		long[] as = new long[n];
+381 		for (int i = 0; i < n; i++) {
+382 			as[i] = IO.nextLong();
+383 		}
+384 		return as;
+385 	}
+386 
+387 	static String[][] nss2(int n, int m) {
+388 		String[][] as = new String[n][m];
+389 		for (int i = 0; i < n; i++) {
+390 			for (int j = 0; j < m; j++) {
+391 				as[i][j] = IO.next();
+392 			}
+393 		}
+394 		return as;
+395 	}
+396 
+397 	static int[][] nis2(int n, int m) {
+398 		int[][] as = new int[n][m];
+399 		for (int i = 0; i < n; i++) {
+400 			for (int j = 0; j < m; j++) {
+401 				as[i][j] = IO.nextInt();
+402 			}
+403 		}
+404 		return as;
+405 	}
+406 
+407 	static long[][] nls2(int n, int m) {
+408 		long[][] as = new long[n][m];
+409 		for (int i = 0; i < n; i++) {
+410 			for (int j = 0; j < m; j++) {
+411 				as[i][j] = IO.nextLong();
+412 			}
+413 		}
+414 		return as;
+415 	}
+416 
+417 	static int parseInt(String val) {
+418 		return Integer.parseInt(val);
+419 	}
+420 
+421 	static int parseInt(char val) {
+422 		return Integer.parseInt(String.valueOf(val));
+423 	}
+424 
+425 	static long parseLong(String val) {
+426 		return Long.parseLong(val);
+427 	}
+428 
+429 	public static void main(String[] args) {
+430 		solve();
+431 		IO.flush();
+432 	}
+433 }
+434 
+435 final class IO {
+436 	private static final InputStream in = System.in;
+437 	private static final PrintWriter out = new PrintWriter(System.out, false);
+438 	private static final byte[] buffer = new byte[1024];
+439 	private static int ptr = 0;
+440 	private static int len = 0;
+441 
+442 	private static boolean hasNextByte() {
+443 		if (ptr < len)
+444 			return true;
+445 		ptr = 0;
+446 		try {
+447 			len = in.read(buffer);
+448 		} catch (IOException e) {
+449 			e.printStackTrace();
+450 		}
+451 		return len > 0;
+452 	}
+453 
+454 	private static int readByte() {
+455 		if (hasNextByte())
+456 			return buffer[ptr++];
+457 		else
+458 			return -1;
+459 	}
+460 
+461 	static boolean hasNext() {
+462 		byte c;
+463 		while (hasNextByte() && ((c = buffer[ptr]) < '!' || c > '~'))
+464 			ptr++;
+465 		return hasNextByte();
+466 	}
+467 
+468 	static String next() {
+469 		if (!hasNext())
+470 			throw new NoSuchElementException();
+471 		StringBuilder sb = new StringBuilder();
+472 		int b = readByte();
+473 		while (b >= '!' && b <= '~') {
+474 			sb.append((char) b);
+475 			b = readByte();
+476 		}
+477 		return sb.toString();
+478 	}
+479 
+480 	static long nextLong() {
+481 		if (!hasNext())
+482 			throw new NoSuchElementException();
+483 		long n = 0;
+484 		int sign = 1;
+485 		int b = readByte();
+486 		if (b == '-') {
+487 			sign = -1;
+488 			b = readByte();
+489 		}
+490 		if (b < '0' || '9' < b)
+491 			throw new NumberFormatException();
+492 		while (true) {
+493 			if ('0' <= b && b <= '9')
+494 				n = n * 10 + b - '0';
+495 			else if (b == -1 || b < '!' || b > '~')
+496 				return n * sign;
+497 			else
+498 				throw new NumberFormatException();
+499 			b = readByte();
+500 		}
+501 	}
+502 
+503 	static int nextInt() {
+504 		if (!hasNext())
+505 			throw new NoSuchElementException();
+506 		int n = 0;
+507 		int sign = 1;
+508 		int b = readByte();
+509 		if (b == '-') {
+510 			sign = -1;
+511 			b = readByte();
+512 		}
+513 		if (b < '0' || '9' < b)
+514 			throw new NumberFormatException();
+515 		while (true) {
+516 			if ('0' <= b && b <= '9')
+517 				n = n * 10 + b - '0';
+518 			else if (b == -1 || b < '!' || b > '~')
+519 				return n * sign;
+520 			else
+521 				throw new NumberFormatException();
+522 			b = readByte();
+523 		}
+524 	}
+525 
+526 	static void out(String val) {
+527 		out.println(val);
+528 	}
+529 
+530 	static void flush() {
+531 		out.flush();
+532 	}
+533 }

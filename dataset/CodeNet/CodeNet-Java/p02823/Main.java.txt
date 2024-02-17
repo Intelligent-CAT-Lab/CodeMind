@@ -1,0 +1,119 @@
+1 import java.util.*;
+2 import java.io.*;
+3 import java.util.function.*;
+4 
+5 class Main {
+6     static In in = new In();
+7     static Out out = new Out();
+8     static long mod = 1000000007;
+9     static long inf = 0xfffffffffffffffL;
+10 
+11     void solve() {
+12         long n = in.nextLong();
+13         long a = in.nextLong();
+14         long b = in.nextLong();
+15         if (a > b) {
+16             long t = b;
+17             b = a;
+18             a = t;
+19         }
+20         if ((b - a) % 2 == 1) {
+21             long ans1 = a - 1 + (b - a + 1) / 2;
+22             a = n - a + 1;
+23             b = n - b + 1;
+24             if (a > b) {
+25                 long t = b;
+26                 b = a;
+27                 a = t;
+28             }
+29             long ans2 = a - 1 + (b - a + 1) / 2;
+30             out.println(Math.min(ans1, ans2));
+31         } else {
+32             out.println((b - a) / 2);
+33         }
+34     }
+35 
+36     public static void main(String[]$) {
+37         new Main().solve();
+38         out.flush();
+39     }
+40 }
+41 
+42 class In {
+43     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in), 0x10000);
+44     private StringTokenizer tokenizer;
+45 
+46     String next() {
+47         try {
+48             while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+49                 tokenizer = new StringTokenizer(reader.readLine());
+50             }
+51         } catch (IOException ignored) {
+52         }
+53         return tokenizer.nextToken();
+54     }
+55 
+56     int nextInt() {
+57         return Integer.parseInt(next());
+58     }
+59 
+60     long nextLong() {
+61         return Long.parseLong(next());
+62     }
+63 
+64     char[][] nextCharArray(int n, int m) {
+65         char[][] a = new char[n][m];
+66         for (int i = 0; i < n; i++) {
+67             a[i] = next().toCharArray();
+68         }
+69         return a;
+70     }
+71 
+72     int[] nextIntArray(int n) {
+73         int[] a = new int[n];
+74         for (int i = 0; i < n; i++) {
+75             a[i] = nextInt();
+76         }
+77         return a;
+78     }
+79 
+80     int[] nextIntArray(int n, IntUnaryOperator op) {
+81         int[] a = new int[n];
+82         for (int i = 0; i < n; i++) {
+83             a[i] = op.applyAsInt(nextInt());
+84         }
+85         return a;
+86     }
+87 
+88     long[] nextLongArray(int n) {
+89         long[] a = new long[n];
+90         for (int i = 0; i < n; i++) {
+91             a[i] = nextLong();
+92         }
+93         return a;
+94     }
+95 
+96     long[] nextLongArray(int n, LongUnaryOperator op) {
+97         long[] a = new long[n];
+98         for (int i = 0; i < n; i++) {
+99             a[i] = op.applyAsLong(nextLong());
+100         }
+101         return a;
+102     }
+103 }
+104 
+105 class Out {
+106     private static PrintWriter out = new PrintWriter(System.out);
+107 
+108     void println(Object... a) {
+109         StringJoiner joiner = new StringJoiner(" ");
+110         for (Object obj : a) {
+111             joiner.add(String.valueOf(obj));
+112         }
+113         out.println(joiner);
+114     }
+115 
+116     void flush() {
+117         out.flush();
+118     }
+119 }

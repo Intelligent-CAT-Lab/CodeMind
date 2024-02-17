@@ -1,0 +1,142 @@
+1 
+2 import java.util.*;
+3 import java.io.*;
+4 
+5 public class Main{
+6     static final Reader sc = new Reader();
+7     static final PrintWriter out = new PrintWriter(System.out,false);
+8 
+9     public static void main(String[] args) throws Exception {
+10     	int a = sc.nextInt();
+11     	int b = sc.nextInt();
+12     	int c = sc.nextInt();
+13     	int d = a + b;
+14     	int e = -1;
+15     	for(int i=0;i<1000;i++){
+16     		if(0<=(60*i+c)%d && (60*i+c)%d<=a){
+17     			e = i;
+18     			break;
+19     		}
+20     	}
+21     	if(e==-1){
+22     		out.println(-1);
+23     	}
+24     	else{
+25     		out.println(60*e+c);
+26     	}
+27     	out.flush();
+28         sc.close();
+29         out.close();
+30     }
+31 
+32     static void trace(Object... o) { System.out.println(Arrays.deepToString(o));}
+33 }
+34 
+35 class Reader {
+36 
+37     private final InputStream in;
+38     private final byte[] buf = new byte[1024];
+39     private int ptr = 0;
+40     private int buflen = 0;
+41 
+42     public Reader() { this(System.in);}
+43     public Reader(InputStream source) { this.in = source;}
+44 
+45     private boolean hasNextByte() {
+46         if (ptr < buflen) return true;
+47         ptr = 0;
+48         try{
+49             buflen = in.read(buf);
+50         }catch (IOException e) {e.printStackTrace();}
+51         if (buflen <= 0) return false;
+52         return true;
+53     }
+54 
+55     private int readByte() { if (hasNextByte()) return buf[ptr++]; else return -1;}
+56 
+57     private boolean isPrintableChar(int c) { return 33 <= c && c <= 126;}
+58 
+59     private void skip() { while(hasNextByte() && !isPrintableChar(buf[ptr])) ptr++;}
+60 
+61     public boolean hasNext() {skip(); return hasNextByte();}
+62 
+63     public String next() {
+64         if (!hasNext()) throw new NoSuchElementException();
+65         StringBuilder sb = new StringBuilder();
+66         int b = readByte();
+67         while (isPrintableChar(b)) {
+68             sb.appendCodePoint(b);
+69             b = readByte();
+70         }
+71         return sb.toString();
+72     }
+73 
+74     public long nextLong() {
+75         if (!hasNext()) throw new NoSuchElementException();
+76         boolean minus = false;
+77         long num = readByte();
+78 
+79         if(num == '-'){
+80             num = 0;
+81             minus = true;
+82         }else if (num < '0' || '9' < num){
+83             throw new NumberFormatException();
+84         }else{
+85             num -= '0';
+86         }
+87 
+88         while(true){
+89             int b = readByte();
+90             if('0' <= b && b <= '9')
+91                 num = num * 10 + (b - '0');
+92             else if(b == -1 || !isPrintableChar(b))
+93                 return minus ? -num : num;
+94             else
+95                 throw new NoSuchElementException();
+96         }
+97     }
+98 
+99     public int nextInt() {
+100         long num = nextLong();
+101         if (num < Integer.MIN_VALUE || Integer.MAX_VALUE < num)
+102             throw new NumberFormatException();
+103         return (int)num;
+104     }
+105 
+106     public double nextDouble() {
+107         return Double.parseDouble(next());
+108     }
+109 
+110     public char nextChar() {
+111         if (!hasNext()) throw new NoSuchElementException();
+112         return (char)readByte();
+113     }
+114 
+115     public String nextLine() {
+116         while (hasNextByte() && (buf[ptr] == '\n' || buf[ptr] == '\r')) ptr++;
+117         if (!hasNextByte()) throw new NoSuchElementException();
+118 
+119         StringBuilder sb = new StringBuilder();
+120         int b = readByte();
+121         while (b != '\n' && b != '\r') {
+122             sb.appendCodePoint(b);
+123             b = readByte();
+124         }
+125 
+126         return sb.toString();
+127     }
+128 
+129     public int[] nextIntArray(int n) {
+130         int[] res = new int[n];
+131         for (int i=0; i<n; i++) res[i] = nextInt();
+132         return res;
+133     }
+134 
+135     public char[] nextCharArray(int n) {
+136         char[] res = new char[n];
+137         for (int i=0; i<n; i++) res[i] = nextChar();
+138         return res;
+139     }
+140 
+141     public void close() {try{ in.close();}catch(IOException e){ e.printStackTrace();}};
+142 }

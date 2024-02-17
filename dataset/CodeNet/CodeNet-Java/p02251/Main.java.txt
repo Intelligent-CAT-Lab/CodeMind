@@ -1,0 +1,145 @@
+1 import java.util.*;
+2 import java.io.*;
+3 
+4 class Main {
+5 	void solve () {
+6 		
+7 		int n = nextInt();
+8 		int ans = 0;
+9 		
+10 		//25cent
+11 		ans += n/25;
+12 		n %= 25;
+13 		
+14 		//10cent
+15 		ans += n/10;
+16 		n %= 10;
+17 		
+18 		//5cent
+19 		ans += n/5;
+20 		n %= 5;
+21 		
+22 		//1cent
+23 		ans += n;
+24 		
+25 		out.println(ans);
+26 		
+27 	}
+28 
+29 
+30 	// <Main Method>
+31 	public static PrintWriter out;
+32 	public static void main(String[] args) {
+33 		out = new PrintWriter(System.out);
+34 		new Main().solve();
+35 		out.flush();
+36 	}
+37 
+38 	// <Default Field>
+39 	static int maxInt = Integer.MAX_VALUE, minInt = Integer.MIN_VALUE;
+40 	static int mod = 1000000007;
+41 
+42 	// <Default Method>
+43 	static int max (int... ar) {Arrays.sort(ar);return ar[ar.length-1];}
+44 	static int min (int... ar) {Arrays.sort(ar);return ar[0];}
+45 	static int calcManhatDistance (int x1, int y1, int x2, int y2) {
+46 		int d = Math.abs(x1-x2)+Math.abs(y1-y2);
+47 		return d;
+48 	}
+49 	static double calcEuclidDistance (double x1, double y1, double x2, double y2) {
+50 		double d = Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+51 		return d;
+52 	}
+53 	static boolean isPrime (int n) {
+54 		if (n==2) return true;
+55 		if (n<2 || n%2==0) return false;
+56 		double d = Math.sqrt(n);
+57 		for (int i=3; i<=d; i+=2) if(n%i==0){return false;}
+58 		return true;
+59 	}
+60 	static void printChar2DArray (char[][] ar) {
+61 		for (int i=0; i<ar.length; i++) {
+62 			for (int j=0; j<ar[0].length; j++) {
+63 				out.print(ar[i][j]);
+64 			}
+65 			out.println();
+66 		}
+67 	}
+68 
+69 	// <Fast Scanner> START -------------------------------------------------
+70 	static InputStream in = System.in;
+71 	static  byte[] buffer = new byte[1024];
+72 	static int length = 0, p = 0;
+73 	public static boolean hasNextByte () {
+74 		if (p < length) return true;
+75 		else {
+76 			p = 0;
+77 			try {length = in.read(buffer);}
+78 			catch (Exception e) {e.printStackTrace();}
+79 			if (length == 0) return false;
+80 		}
+81 		return true;
+82 	}
+83 	public static int readByte () {
+84 		if (hasNextByte() == true) return buffer[p++];
+85 		return -1;
+86 	}
+87 	public static boolean isPrintable (int n) {return 33<=n&&n<=126;}
+88 	public static void skip () {
+89 		while (hasNextByte() && !isPrintable(buffer[p])) p++;
+90 	}
+91 	public static boolean hasNext () {skip(); return hasNextByte();}
+92 	public static String next () {
+93 		if (!hasNext()) throw new NoSuchElementException();
+94 		StringBuilder sb = new StringBuilder();
+95 		int temp = readByte();
+96 		while (isPrintable(temp)) {
+97 			sb.appendCodePoint(temp);
+98 			temp = readByte();
+99 		}
+100 		return sb.toString();
+101 	}
+102 	public static String[] nextStringArray (int n) {
+103 		String[] ar = new String[n];
+104 		for (int i=0; i<n; i++) ar[i] = next();
+105 		return ar;
+106 	}
+107 	public static int nextInt () {return Math.toIntExact(nextLong());}
+108 	public static int[] nextIntArray (int n) {
+109 		int[] ar = new int[n];
+110 		for (int i=0; i<n; i++) ar[i] = nextInt();
+111 		return ar;
+112 	}
+113 	public static long nextLong () {
+114 		if (!hasNext()) throw new NoSuchElementException();
+115 		boolean minus = false;
+116 		int temp = readByte();
+117 		if (temp == '-') {
+118 			minus = true;
+119 			temp = readByte();
+120 		}
+121 		if (temp<'0' || '9'<temp) throw new NumberFormatException();
+122 		long n = 0;
+123 		while (isPrintable(temp)) {
+124 			if ('0'<=temp && temp<='9') {
+125 				n *= 10;
+126 				n += temp - '0';
+127 			}
+128 			temp = readByte();
+129 		}
+130 		return minus? -n : n;
+131 	}
+132 	public static char[][] nextChar2DArray (int h, int w, boolean b) {
+133 		//b(番兵)がtrueなら配列を余計に確保する
+134 		char[][] ar = new char[b?h+2:h][b?w+2:h];
+135 		for (int i=b?1:0; i<(b?h+1:h); i++) {
+136 			String temp = next();
+137 			for (int j=0; j<w; j++) {
+138 				ar[i][b?j+1:j] = temp.charAt(j);
+139 			}
+140 		}
+141 		return ar;
+142 	}
+143 	// <Fast Scanner> END ----------------------------------------------------------
+144 }
+145 

@@ -1,0 +1,178 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.BufferedWriter;
+6 import java.util.HashMap;
+7 import java.io.IOException;
+8 import java.io.InputStreamReader;
+9 import java.io.UncheckedIOException;
+10 import java.nio.charset.Charset;
+11 import java.util.StringTokenizer;
+12 import java.util.Map;
+13 import java.util.Map.Entry;
+14 import java.io.Writer;
+15 import java.io.OutputStreamWriter;
+16 import java.io.BufferedReader;
+17 import java.util.regex.Pattern;
+18 import java.io.InputStream;
+19 
+20 /**
+21  * Built using CHelper plug-in
+22  * Actual solution is at the top
+23  *
+24  * @author mikit
+25  */
+26 public class Main {
+27     public static void main(String[] args) {
+28         InputStream inputStream = System.in;
+29         OutputStream outputStream = System.out;
+30         LightScanner in = new LightScanner(inputStream);
+31         LightWriter out = new LightWriter(outputStream);
+32         CDivisorGame solver = new CDivisorGame();
+33         solver.solve(1, in, out);
+34         out.close();
+35     }
+36 
+37     static class CDivisorGame {
+38         public void solve(int testNumber, LightScanner in, LightWriter out) {
+39             Debug.enable("src");
+40             long n = in.longs();
+41             Map<Long, Integer> pf = new HashMap<>();
+42             for (long i = 2; i * i <= n; i++) {
+43                 int c = 0;
+44                 while (n % i == 0) {
+45                     n /= i;
+46                     c++;
+47                 }
+48                 if (c > 0) {
+49                     pf.put(i, c);
+50                 }
+51             }
+52             if (n > 1) {
+53                 pf.put(n, 1);
+54             }
+55 
+56             long ans = 1;
+57             for (Map.Entry<Long, Integer> ent : pf.entrySet()) {
+58                 ans *= (ent.getValue() + 1L);
+59             }
+60             out.ans(pf.size()).ans(ans - 1).ln();
+61         }
+62 
+63     }
+64 
+65     static class LightWriter implements AutoCloseable {
+66         private final Writer out;
+67         private boolean autoflush = false;
+68         private boolean breaked = true;
+69 
+70         public LightWriter(Writer out) {
+71             this.out = out;
+72         }
+73 
+74         public LightWriter(OutputStream out) {
+75             this(new BufferedWriter(new OutputStreamWriter(out, Charset.defaultCharset())));
+76         }
+77 
+78         public LightWriter print(char c) {
+79             try {
+80                 out.write(c);
+81                 breaked = false;
+82             } catch (IOException ex) {
+83                 throw new UncheckedIOException(ex);
+84             }
+85             return this;
+86         }
+87 
+88         public LightWriter print(String s) {
+89             try {
+90                 out.write(s, 0, s.length());
+91                 breaked = false;
+92             } catch (IOException ex) {
+93                 throw new UncheckedIOException(ex);
+94             }
+95             return this;
+96         }
+97 
+98         public LightWriter ans(String s) {
+99             if (!breaked) {
+100                 print(' ');
+101             }
+102             return print(s);
+103         }
+104 
+105         public LightWriter ans(long l) {
+106             return ans(Long.toString(l));
+107         }
+108 
+109         public LightWriter ans(int i) {
+110             return ans(Integer.toString(i));
+111         }
+112 
+113         public LightWriter ln() {
+114             print(System.lineSeparator());
+115             breaked = true;
+116             if (autoflush) {
+117                 try {
+118                     out.flush();
+119                 } catch (IOException ex) {
+120                     throw new UncheckedIOException(ex);
+121                 }
+122             }
+123             return this;
+124         }
+125 
+126         public void close() {
+127             try {
+128                 out.close();
+129             } catch (IOException ex) {
+130                 throw new UncheckedIOException(ex);
+131             }
+132         }
+133 
+134     }
+135 
+136     static class LightScanner {
+137         private BufferedReader reader = null;
+138         private StringTokenizer tokenizer = null;
+139 
+140         public LightScanner(InputStream in) {
+141             reader = new BufferedReader(new InputStreamReader(in));
+142         }
+143 
+144         public String string() {
+145             if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+146                 try {
+147                     tokenizer = new StringTokenizer(reader.readLine());
+148                 } catch (IOException e) {
+149                     throw new UncheckedIOException(e);
+150                 }
+151             }
+152             return tokenizer.nextToken();
+153         }
+154 
+155         public long longs() {
+156             return Long.parseLong(string());
+157         }
+158 
+159     }
+160 
+161     static class Debug {
+162         private static final String DEBUG_CALL_PATTERN = "^.+\\.debug\\((.+)\\);.*$";
+163         private static Pattern debugRegex;
+164         private static boolean enabled = false;
+165         private static String src;
+166 
+167         public static void enable(String s) {
+168             enabled = true;
+169             src = s;
+170             if (debugRegex == null) {
+171                 debugRegex = Pattern.compile(DEBUG_CALL_PATTERN);
+172             }
+173         }
+174 
+175     }
+176 }
+177 
+178 

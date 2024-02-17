@@ -1,0 +1,73 @@
+
+<<<Analysis>>>
+The variable n, variable a and variable b are initialized with 2, 1 and 3 respectively according to the input. And variable sum is initialized with 0.
+It enters a for loop and it iterates from 1 to 2 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [2, 5]. If it does, it adds the current interger i to variable answer. The condition is met when i is 2,3,4,5,11,12,13,14 and 20.
+After the loop finishes, it print the fianl value of variable answer as output, which is 84.
+<<<Output>>>
+84
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.util.*;
+import java.io.*;
+
+public class Main {
+	public static long gcd(long n, long m){ if(m > n) return gcd(m,n); if(m == 0) return n; return gcd(m, n%m);}
+	public static long lcm(long m, long n){ return (m/gcd(m,n))*n;}
+	static int mod = 1000000007;
+	static int INF = Integer.MAX_VALUE;
+	static int[] dx = {0,0,1,-1};
+	static int[] dy = {1,-1,0,0};
+	static int[] dx8 = {0,0,1,-1,1,1,-1,-1};
+	static int[] dy8 = {1,-1,0,0,1,-1,-1,1};
+	public static void main(String[] args){
+		FastScanner scanner = new FastScanner();
+		int[] a = new int[4];
+		for(int i = 0; i < 4; i++){
+			a[i] = scanner.nextInt();
+		}
+		Arrays.sort(a);
+		System.out.println(Math.abs(a[0]+a[3]-a[1]-a[2]));
+ 	}
+
+	static class Edge implements Comparable<Edge>{
+		int to;
+		int cost;
+		Edge(int to, int cost){
+			this.to = to;
+			this.cost = cost;
+		}
+		public int compareTo(Edge e){
+			return cost-e.cost;
+		}
+	}
+	static class Edge2 implements Comparable<Edge2>{
+		int from;
+		int to;
+		int cost;
+		Edge2(int from, int to, int cost){
+			this.from = from;
+			this.to = to;
+			this.cost = cost;
+		}
+		public int compareTo(Edge2 e){
+			return cost-e.cost;
+		}
+	}
+
+	static class RMQ {
+		private int size_, dat[];
+		private int query_(int a, int b, int k, int l, int r) {
+			if(r <= a || b <= l) return 2147483647;
+			if(a <= l && r <= b) return dat[k];
+			int lc = query_(a, b, 2 * k, l, (l + r) / 2);
+			int rc = query_(a, b, 2 * k + 1, (l + r) / 2, r);
+			return Math.min(lc, rc);
+		}
+		RMQ(int s) {
+			for(size_ = 1; size_ < s;) size_ *= 2;
+			dat = new int[size_ * 2];
+			for

@@ -1,0 +1,1 @@
+print(str(input())[:-8])

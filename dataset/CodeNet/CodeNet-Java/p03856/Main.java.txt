@@ -1,0 +1,84 @@
+1 import java.awt.geom.*;
+2 import java.io.*;
+3 import java.math.*;
+4 import java.text.*; 
+5 import java.util.*;
+6 import java.util.regex.*;
+7 
+8 /*
+9 		  br = new BufferedReader(new FileReader("input.txt"));
+10 		  pw = new PrintWriter(new BufferedWriter(new FileWriter("output.txt")));
+11 		  br = new BufferedReader(new InputStreamReader(System.in));
+12 		  pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+13  */
+14 
+15 public class Main {
+16 	private static BufferedReader br;
+17 	private static StringTokenizer st;
+18 	private static PrintWriter pw;
+19 
+20 	public static void main(String[] args) throws IOException {
+21 		br = new BufferedReader(new InputStreamReader(System.in));
+22 		pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+23 		//int qq = 1;
+24 		int qq = Integer.MAX_VALUE;
+25 		//int qq = readInt();
+26 		for(int casenum = 1; casenum <= qq; casenum++) {
+27 			String s = readLine();
+28 			String[] good = new String[] {"dream", "dreamer", "erase", "eraser"};
+29 			boolean[] poss = new boolean[s.length()+1];
+30 			poss[0] = true;
+31 			for(int i = 0; i < s.length(); i++) {
+32 				if(!poss[i]) continue;
+33 				for(String out: good) {
+34 					if(i + out.length() > s.length()) continue;
+35 					int match = 0;
+36 					for(int a = 0; a < out.length(); a++) {
+37 						if(out.charAt(a) == s.charAt(i+a)) {
+38 							match++;
+39 						}
+40 					}
+41 					if(match == out.length()) {
+42 						poss[i+match] = true;
+43 					}
+44 				}
+45 			}
+46 			pw.println(poss[s.length()] ? "YES" : "NO");
+47 		}
+48 		exitImmediately();
+49 	}
+50 
+51 	
+52 	private static void exitImmediately() {
+53 		pw.close();
+54 		System.exit(0);
+55 	}
+56 
+57 	private static long readLong() throws IOException {
+58 		return Long.parseLong(readToken());
+59 	}
+60 
+61 	private static double readDouble() throws IOException {
+62 		return Double.parseDouble(readToken());
+63 	}
+64 
+65 	private static int readInt() throws IOException {
+66 		return Integer.parseInt(readToken());
+67 	}
+68 
+69 	private static String readLine() throws IOException  {
+70 		String s = br.readLine();
+71 		if(s == null) {
+72 			exitImmediately();
+73 		}
+74 		st = null;
+75 		return s;
+76 	}
+77 
+78 	private static String readToken() throws IOException  {
+79 		while(st == null || !st.hasMoreTokens())  {
+80 			st = new StringTokenizer(readLine().trim());
+81 		}
+82 		return st.nextToken();
+83 	}
+84 }

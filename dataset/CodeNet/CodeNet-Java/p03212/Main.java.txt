@@ -1,0 +1,61 @@
+1 import java.util.ArrayDeque;
+2 import java.util.HashSet;
+3 import java.util.Queue;
+4 import java.util.Scanner;
+5 import java.util.Set;
+6 
+7 
+8 
+9 public class Main {
+10 
+11 	public static void main(String[] args){
+12 		Scanner sc = new Scanner(System.in);
+13 		Set<String> set = new HashSet<String> ();
+14 		long N = sc.nextInt();
+15 		Main main = new Main();
+16 		Queue<String> queue = new ArrayDeque<String>();
+17 		int count =0;
+18 		char ch[] = {'3','5','7'};
+19 		queue.add("357");
+20 		queue.add("375");
+21 		queue.add("537");
+22 		queue.add("573");
+23 		queue.add("735");
+24 		queue.add("753");
+25 		if (N<1000) {
+26 			for (String s:queue) {
+27 				if (Long.parseLong(s)<=N) {
+28 					count ++;
+29 				}
+30 			}
+31 			System.out.println(count);
+32 			return ;
+33 		}
+34 		while(queue.size()>0) {
+35 			String s = queue.poll();
+36 			if (Long.parseLong(s)<=N) {
+37 				count ++;
+38 				for (int i=0;i<=s.length();i++) {
+39 					for (int j=0;j<ch.length;j++) {
+40 						String temp=main.addChar(s, i, ch[j]);
+41 						if(set.contains(temp)==false) {
+42 							set.add(temp);
+43 							queue.add(temp);
+44 						}
+45 					}
+46 				}
+47 			}
+48 		}
+49 		System.out.println(count);
+50   	}
+51 
+52 	private String addChar(String s,int location,char c) {
+53 		StringBuffer sb = new StringBuffer();
+54 		sb.append(s.substring(0,location));
+55 		sb.append(c);
+56 		if (location<s.length()) {
+57 			sb.append(s.substring(location));
+58 		}
+59 		return sb.toString();
+60 	}
+61 }

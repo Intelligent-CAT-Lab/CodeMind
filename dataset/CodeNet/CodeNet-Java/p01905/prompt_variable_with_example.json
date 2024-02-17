@@ -1,0 +1,93 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6    public static void main(String[] args) {\n7\t\t try {\n7\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nQuestion: What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the sataes and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.io.IOException;\n2 import java.io.InputStream;\n3 import java.io.PrintWriter;\n4 import java.util.Arrays;\n5 import java.util.NoSuchElementException;\n6 \n7 public class Main {\n8 \tint N,M;\n9 \tint[] a;\n10 \tpublic void solve() {\n11 \t\tN = nextInt();\n12 \t\tM = nextInt();\n13 \n14 \t\ta = new int[N];\n15 \n16 \t\tfor(int i = 0;i < M;i++){\n17 \t\t\ta[i] = nextInt();\n18 \t\t}\n19 \t\tboolean[] b = new boolean[N * 2 - 1];\n20 \t\tArrays.fill(b,true);\n21 \t\tfor(int i = 0;i < M;i++){\n22 \t\t\tb[a[i]+N-1] = false;\n23 \t\t}\n24 \n25 \t\tfor(int i = N*2-2;i > 0;i-=2){\n26 \t\t\tif(b[i] && b[i-1])b[(i-2)/2] = true;\n27 \t\t\telse if(b[i] || b[i-1])b[(i-2)/2] = true;\n28 \t\t\telse b[(i-2)/2] = false;\n29 \t\t}\n30 \n31 \t\tint ans = 0;\n32 \t\tfor(int i = 0;i < N-1;i++){\n33 \t\t\tif(b[i*2+1] && b[i*2+2])ans++;\n34 \t\t}\n35 \n36 \t\tout.println(ans);\n37 \t}\n38 \n39 \tpublic static void main(String[] args) {\n40 \t\tout.flush();\n41 \t\tnew Main().solve();\n42 \t\tout.close();\n43 \t}\n44 \n45 \t/* Input */\n46 \tprivate static final InputStream in = System.in;\n47 \tprivate static final PrintWriter out = new PrintWriter(System.out);\n48 \tprivate final byte[] buffer = new byte[2048];\n49 \tprivate int p = 0;\n50 \tprivate int buflen = 0;\n51 \n52 \tprivate boolean hasNextByte() {\n53 \t\tif (p < buflen)\n54 \t\t\treturn true;\n55 \t\tp = 0;\n56 \t\ttry {\n57 \t\t\tbuflen = in.read(buffer);\n58 \t\t} catch (IOException e) {\n59 \t\t\te.printStackTrace();\n60 \t\t}\n61 \t\tif (buflen <= 0)\n62 \t\t\treturn false;\n63 \t\treturn true;\n64 \t}\n65 \n66 \tpublic boolean hasNext() {\n67 \t\twhile (hasNextByte() && !isPrint(buffer[p])) {\n68 \t\t\tp++;\n69 \t\t}\n70 \t\treturn hasNextByte();\n71 \t}\n72 \n73 \tprivate boolean isPrint(int ch) {\n74 \t\tif (ch >= '!' && ch <= '~')\n75 \t\t\treturn true;\n76 \t\treturn false;\n77 \t}\n78 \n79 \tprivate int nextByte() {\n80 \t\tif (!hasNextByte())\n81 \t\t\treturn -1;\n82 \t\treturn buffer[p++];\n83 \t}\n84 \n85 \tpublic String next() {\n86 \t\tif (!hasNext())\n87 \t\t\tthrow new NoSuchElementException();\n88 \t\tStringBuilder sb = new StringBuilder();\n89 \t\tint b = -1;\n90 \t\twhile (isPrint((b = nextByte()))) {\n91 \t\t\tsb.appendCodePoint(b);\n92 \t\t}\n93 \t\treturn sb.toString();\n94 \t}\n95 \n96 \tpublic int nextInt() {\n97 \t\treturn Integer.parseInt(next());\n98 \t}\n99 \n100 \tpublic long nextLong() {\n101 \t\treturn Long.parseLong(next());\n102 \t}\n103 \n104 \tpublic double nextDouble() {\n105 \t\treturn Double.parseDouble(next());\n106 \t}\n107 }\nGiven the following input:\n2 0\n\n\nQuestion:\n What would be the states of variable b in line 89? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "-1",
+            "-1"
+        ],
+        "variable": "b",
+        "line": "89"
+    },
+    "2": {
+        "prompt": "Question:\n What would be the states of variable b in line 90? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "50",
+            "32",
+            "48",
+            "10"
+        ],
+        "variable": "b",
+        "line": "90"
+    },
+    "3": {
+        "prompt": "Question:\n What would be the states of variable b in line 91? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "50",
+            "48"
+        ],
+        "variable": "b",
+        "line": "91"
+    },
+    "4": {
+        "prompt": "Question:\n What would be the states of variable i in line 25? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "i",
+        "line": "25"
+    },
+    "5": {
+        "prompt": "Question:\n What would be the states of variable i in line 26? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "i",
+        "line": "26"
+    },
+    "6": {
+        "prompt": "Question:\n What would be the states of variable ans in line 31? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "ans",
+        "line": "31"
+    },
+    "7": {
+        "prompt": "Question:\n What would be the states of variable i in line 32? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "i",
+        "line": "32"
+    },
+    "8": {
+        "prompt": "Question:\n What would be the states of variable i in line 33? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "i",
+        "line": "33"
+    },
+    "9": {
+        "prompt": "Question:\n What would be the states of variable ans in line 33? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "ans",
+        "line": "33"
+    },
+    "10": {
+        "prompt": "Question:\n What would be the states of variable ans in line 36? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "ans",
+        "line": "36"
+    }
+}

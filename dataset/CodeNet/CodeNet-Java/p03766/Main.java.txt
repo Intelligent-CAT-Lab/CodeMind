@@ -1,0 +1,240 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.util.Arrays;
+6 import java.io.IOException;
+7 import java.io.UncheckedIOException;
+8 import java.io.Closeable;
+9 import java.io.Writer;
+10 import java.io.OutputStreamWriter;
+11 import java.io.InputStream;
+12 
+13 /**
+14  * Built using CHelper plug-in
+15  * Actual solution is at the top
+16  *
+17  * @author daltao
+18  */
+19 public class Main {
+20     public static void main(String[] args) throws Exception {
+21         Thread thread = new Thread(null, new TaskAdapter(), "daltao", 1 << 27);
+22         thread.start();
+23         thread.join();
+24     }
+25 
+26     static class TaskAdapter implements Runnable {
+27         @Override
+28         public void run() {
+29             InputStream inputStream = System.in;
+30             OutputStream outputStream = System.out;
+31             FastInput in = new FastInput(inputStream);
+32             FastOutput out = new FastOutput(outputStream);
+33             TaskC solver = new TaskC();
+34             solver.solve(1, in, out);
+35             out.close();
+36         }
+37     }
+38 
+39     static class TaskC {
+40         int[] f;
+41         int[] suffix;
+42         int n;
+43         NumberTheory.Modular mod = new NumberTheory.Modular(1e9 + 7);
+44 
+45         public void solve(int testNumber, FastInput in, FastOutput out) {
+46             n = in.readInt();
+47             f = new int[n + 1];
+48             suffix = new int[n + 1];
+49             Arrays.fill(f, -1);
+50             Arrays.fill(suffix, -1);
+51             f[n] = n;
+52             suffix[n] = n;
+53 
+54             int ans = f(1);
+55             out.println(ans);
+56         }
+57 
+58         public int f(int i) {
+59             if (i > n) {
+60                 return 0;
+61             }
+62             if (f[i] == -1) {
+63                 f[i] = f(i + 1);
+64                 if (i + 3 <= n) {
+65                     int since = i + 3;
+66                     int until = n - i - 1;
+67                     f[i] = mod.plus(f[i], suffix(since));
+68                     f[i] = mod.plus(f[i], n - until);
+69                     f[i] = mod.plus(f[i], mod.mul(n - 1, n - 1));
+70                 } else {
+71                     f[i] = mod.plus(f[i], mod.mul(n - 1, n));
+72                 }
+73             }
+74             return f[i];
+75         }
+76 
+77         public int suffix(int i) {
+78             if (i > n) {
+79                 return 0;
+80             }
+81             if (suffix[i] == -1) {
+82                 suffix[i] = mod.plus(f[i], suffix(i + 1));
+83             }
+84             return suffix[i];
+85         }
+86 
+87     }
+88 
+89     static class FastInput {
+90         private final InputStream is;
+91         private byte[] buf = new byte[1 << 13];
+92         private int bufLen;
+93         private int bufOffset;
+94         private int next;
+95 
+96         public FastInput(InputStream is) {
+97             this.is = is;
+98         }
+99 
+100         private int read() {
+101             while (bufLen == bufOffset) {
+102                 bufOffset = 0;
+103                 try {
+104                     bufLen = is.read(buf);
+105                 } catch (IOException e) {
+106                     throw new RuntimeException(e);
+107                 }
+108                 if (bufLen == -1) {
+109                     return -1;
+110                 }
+111             }
+112             return buf[bufOffset++];
+113         }
+114 
+115         public void skipBlank() {
+116             while (next >= 0 && next <= 32) {
+117                 next = read();
+118             }
+119         }
+120 
+121         public int readInt() {
+122             int sign = 1;
+123 
+124             skipBlank();
+125             if (next == '+' || next == '-') {
+126                 sign = next == '+' ? 1 : -1;
+127                 next = read();
+128             }
+129 
+130             int val = 0;
+131             if (sign == 1) {
+132                 while (next >= '0' && next <= '9') {
+133                     val = val * 10 + next - '0';
+134                     next = read();
+135                 }
+136             } else {
+137                 while (next >= '0' && next <= '9') {
+138                     val = val * 10 - next + '0';
+139                     next = read();
+140                 }
+141             }
+142 
+143             return val;
+144         }
+145 
+146     }
+147 
+148     static class FastOutput implements AutoCloseable, Closeable {
+149         private StringBuilder cache = new StringBuilder(10 << 20);
+150         private final Writer os;
+151 
+152         public FastOutput(Writer os) {
+153             this.os = os;
+154         }
+155 
+156         public FastOutput(OutputStream os) {
+157             this(new OutputStreamWriter(os));
+158         }
+159 
+160         public FastOutput println(int c) {
+161             cache.append(c).append('\n');
+162             return this;
+163         }
+164 
+165         public FastOutput flush() {
+166             try {
+167                 os.append(cache);
+168                 cache.setLength(0);
+169             } catch (IOException e) {
+170                 throw new UncheckedIOException(e);
+171             }
+172             return this;
+173         }
+174 
+175         public void close() {
+176             flush();
+177             try {
+178                 os.close();
+179             } catch (IOException e) {
+180                 throw new UncheckedIOException(e);
+181             }
+182         }
+183 
+184     }
+185 
+186     static class NumberTheory {
+187         public static class Modular {
+188             int m;
+189 
+190             public Modular(int m) {
+191                 this.m = m;
+192             }
+193 
+194             public Modular(long m) {
+195                 this.m = (int) m;
+196                 if (this.m != m) {
+197                     throw new IllegalArgumentException();
+198                 }
+199             }
+200 
+201             public Modular(double m) {
+202                 this.m = (int) m;
+203                 if (this.m != m) {
+204                     throw new IllegalArgumentException();
+205                 }
+206             }
+207 
+208             public int valueOf(int x) {
+209                 x %= m;
+210                 if (x < 0) {
+211                     x += m;
+212                 }
+213                 return x;
+214             }
+215 
+216             public int valueOf(long x) {
+217                 x %= m;
+218                 if (x < 0) {
+219                     x += m;
+220                 }
+221                 return (int) x;
+222             }
+223 
+224             public int mul(int x, int y) {
+225                 return valueOf((long) x * y);
+226             }
+227 
+228             public int plus(int x, int y) {
+229                 return valueOf(x + y);
+230             }
+231 
+232             public String toString() {
+233                 return "mod " + m;
+234             }
+235 
+236         }
+237 
+238     }
+239 }
+240 

@@ -1,0 +1,218 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.OutputStream;
+4 import java.io.PrintWriter;
+5 import java.util.NoSuchElementException;
+6 
+7 /*
+8                    _ooOoo_
+9                   o8888888o
+10                   88" . "88
+11                   (| -_- |)
+12                   O\  =  /O
+13                ____/`---'\____
+14              .'  \\|     |//  `.
+15             /  \\|||  :  |||//  \
+16            /  _||||| -:- |||||-  \
+17            |   | \\\  -  /// |   |
+18            | \_|  ''\---/''  |   |
+19            \  .-\__  `-`  ___/-. /
+20          ___`. .'  /--.--\  `. . __
+21       ."" '<  `.___\_<|>_/___.'  >'"".
+22      | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+23      \  \ `-.   \_ __\ /__ _/   .-` /  /
+24 ======`-.____`-.___\_____/___.-`____.-'======
+25                    `=---='
+26 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+27             pass System Test!
+28 */
+29 
+30 public class Main {
+31   private static class Task {
+32     void solve(FastScanner in, PrintWriter out) throws Exception {
+33       String S = in.next();
+34       while (S.length() > 3) {
+35         boolean abc = false;
+36         for (int i = 0; i + 3 <= S.length(); i++) {
+37           if (S.substring(i, i + 3).equals("ABC")) {
+38             S = S.substring(0, i) + "X" + S.substring(i + 3);
+39             abc = true;
+40           }
+41         }
+42         if (!abc) {
+43           out.println("No");
+44           return;
+45         }
+46 
+47         boolean[] check = new boolean[3];
+48         for (int i = 0; i < S.length(); i++) {
+49           if (S.charAt(i) - 'A' >= 3) continue;
+50           check[S.charAt(i) - 'A'] = true;
+51         }
+52         int cnt = 0;
+53         for (boolean t : check) if (t) cnt++;
+54         if (cnt != 2) {
+55           out.println("No");
+56           return;
+57         }
+58         for (int i = 0; i < 3; i++) {
+59           if (!check[i]) {
+60             char c = (char) (i + 'A');
+61             S = S.replaceAll("X", "" + c);
+62           }
+63         }
+64       }
+65 
+66       if (S.equals("ABC")) {
+67         out.println("Yes");
+68       } else {
+69         out.println("No");
+70       }
+71     }
+72   }
+73 
+74   /**
+75    * ?????????????????????????????¬????????§??????
+76    */
+77   public static void main(String[] args) throws Exception {
+78     OutputStream outputStream = System.out;
+79     FastScanner in = new FastScanner();
+80     PrintWriter out = new PrintWriter(outputStream);
+81     Task solver = new Task();
+82     solver.solve(in, out);
+83     out.close();
+84   }
+85   private static class FastScanner {
+86     private final InputStream in = System.in;
+87     private final byte[] buffer = new byte[1024];
+88     private int ptr = 0;
+89     private int bufferLength = 0;
+90 
+91     private boolean hasNextByte() {
+92       if (ptr < bufferLength) {
+93         return true;
+94       } else {
+95         ptr = 0;
+96         try {
+97           bufferLength = in.read(buffer);
+98         } catch (IOException e) {
+99           e.printStackTrace();
+100         }
+101         if (bufferLength <= 0) {
+102           return false;
+103         }
+104       }
+105       return true;
+106     }
+107 
+108     private int readByte() {
+109       if (hasNextByte()) return buffer[ptr++];
+110       else return -1;
+111     }
+112 
+113     private static boolean isPrintableChar(int c) {
+114       return 33 <= c && c <= 126;
+115     }
+116 
+117     private void skipUnprintable() {
+118       while (hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++;
+119     }
+120 
+121     boolean hasNext() {
+122       skipUnprintable();
+123       return hasNextByte();
+124     }
+125 
+126     public String next() {
+127       if (!hasNext()) throw new NoSuchElementException();
+128       StringBuilder sb = new StringBuilder();
+129       int b = readByte();
+130       while (isPrintableChar(b)) {
+131         sb.appendCodePoint(b);
+132         b = readByte();
+133       }
+134       return sb.toString();
+135     }
+136 
+137     long nextLong() {
+138       if (!hasNext()) throw new NoSuchElementException();
+139       long n = 0;
+140       boolean minus = false;
+141       int b = readByte();
+142       if (b == '-') {
+143         minus = true;
+144         b = readByte();
+145       }
+146       if (b < '0' || '9' < b) {
+147         throw new NumberFormatException();
+148       }
+149       while (true) {
+150         if ('0' <= b && b <= '9') {
+151           n *= 10;
+152           n += b - '0';
+153         } else if (b == -1 || !isPrintableChar(b)) {
+154           return minus ? -n : n;
+155         } else {
+156           throw new NumberFormatException();
+157         }
+158         b = readByte();
+159       }
+160     }
+161 
+162     double nextDouble() {
+163       return Double.parseDouble(next());
+164     }
+165 
+166     double[] nextDoubleArray(int n) {
+167       double[] array = new double[n];
+168       for (int i = 0; i < n; i++) {
+169         array[i] = nextDouble();
+170       }
+171       return array;
+172     }
+173 
+174     double[][] nextDoubleMap(int n, int m) {
+175       double[][] map = new double[n][];
+176       for (int i = 0; i < n; i++) {
+177         map[i] = nextDoubleArray(m);
+178       }
+179       return map;
+180     }
+181 
+182     public int nextInt() {
+183       return (int) nextLong();
+184     }
+185 
+186     public int[] nextIntArray(int n) {
+187       int[] array = new int[n];
+188       for (int i = 0; i < n; i++) array[i] = nextInt();
+189       return array;
+190     }
+191 
+192     public long[] nextLongArray(int n) {
+193       long[] array = new long[n];
+194       for (int i = 0; i < n; i++) array[i] = nextLong();
+195       return array;
+196     }
+197 
+198     public String[] nextStringArray(int n) {
+199       String[] array = new String[n];
+200       for (int i = 0; i < n; i++) array[i] = next();
+201       return array;
+202     }
+203 
+204     public char[][] nextCharMap(int n) {
+205       char[][] array = new char[n][];
+206       for (int i = 0; i < n; i++) array[i] = next().toCharArray();
+207       return array;
+208     }
+209 
+210     public int[][] nextIntMap(int n, int m) {
+211       int[][] map = new int[n][];
+212       for (int i = 0; i < n; i++) {
+213         map[i] = nextIntArray(m);
+214       }
+215       return map;
+216     }
+217   }
+218 }

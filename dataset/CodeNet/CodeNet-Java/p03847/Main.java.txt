@@ -1,0 +1,43 @@
+1 import java.util.*;
+2 
+3 public class Main {
+4   public static void main(String[] args) {
+5     Scanner sc = new Scanner(System.in);
+6     long MOD = (long)Math.pow(10, 9) + 7;
+7     long N = sc.nextLong();
+8     int[] n = new int[61];
+9     for(int i = 0; i < 61; i++) {
+10       n[i] = (int)(N % 2);
+11       N /= 2;
+12     }
+13     long[][] dp = new long[61][3];
+14     if(n[60] == 0) {
+15       dp[60][0] = 1;
+16     } else {
+17       dp[60][0] = 1;
+18       dp[60][1] = 1; 
+19     }
+20     for(int i = 59; i >= 0; i--) {
+21       dp[i][2] = (3 * dp[i + 1][2]) % MOD;
+22       for(int j = 0; j < 3; j++) {
+23         int c = 2 + n[i] - j;
+24         if(c >= 2) {
+25           dp[i][2] = (dp[i][2] + dp[i + 1][1]) % MOD;
+26         } else {
+27           dp[i][c] = (dp[i][c] + dp[i + 1][1]) % MOD;
+28         }
+29       }
+30       for(int j = 0; j < 3; j++) {
+31         int c = n[i] - j;
+32         if(c < 0) {
+33         } else {
+34           dp[i][c] = (dp[i][c] + dp[i + 1][0]) % MOD;
+35         }
+36       }
+37     }
+38     long ans = dp[0][0]; 
+39     ans = (ans + dp[0][1]) % MOD;
+40     ans = (ans + dp[0][2]) % MOD;
+41     System.out.println(ans);
+42   }
+43 }

@@ -1,0 +1,81 @@
+
+<<<Analysis>>>
+The variable n is initialized with 1 according to the input.
+It enters a while loop and it iterates from 1 to 100 to check each integer i in this range. The value of variable i is also passed to variable b.
+Inside the while loop, it calculates the sum of the digits of the current interger b by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [2, 5]. If it does, it adds the current interger i to variable answer. The condition is met when i is 2,3,4,5,11,12,13,14 and 20.
+After the loop finishes, it print the fianl value of variable answer as output, which is 84.
+<<<Output>>>
+84
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.awt.geom.*;
+import java.io.*;
+import java.util.*;
+
+
+public class Main {
+	ArrayList<Long> list, list2;
+
+	private void doit(){
+		Scanner sc = new Scanner(System.in);
+		//test();
+		init();
+		while(sc.hasNext()){
+			long n = sc.nextLong();
+			int ind = binarySearch(n); //ind is digit + 1
+			StringBuilder sb = new StringBuilder();
+			
+			long mid = 0, left = list2.get(ind), right = list2.get(ind + 1);
+			long res = 1 << 24;
+			while(left <= right){
+				mid = (left + right) / 2;
+				res = calc(mid-1, list2.get(ind), ind+1)+1;
+				//System.out.println("list= " +list2.get(ind) + "keta = " + (ind+1));
+				//System.out.println("mid = " + mid+ "res = " + res + " left = " + left + " right = " + right );
+				if(res == n){
+					break;
+				}
+				if(res < n){
+					left = mid + 1;
+				}
+				else{
+					right = mid - 1;
+				}
+			}
+			if(res!= n){
+				mid = right;
+			}
+			res = calc(mid-1, list2.get(ind), ind+1)+1;
+			//System.out.println("res = " + res + "mid = " + mid);
+			long value = n - res;
+			for(long i = mid; ; i++){
+				if(i % 15 == 0){
+					sb.append("FizzBuzz");
+				}
+				else if(i % 3 == 0){
+					sb.append("Fizz");
+				}
+				else if(i% 5 == 0){
+					sb.append("Buzz");
+				}
+				else{
+					sb.append(i + "");
+				}
+				if(sb.length()>= value + 20){
+					break;
+				}
+			}
+			//System.out.println(value);
+			System.out.println(sb.substring((int) value, (int)value + 20));
+//			for(int i = 0; i < 10; i++){
+//				System.out.println(list.get(i));
+//			}
+		}
+	}
+
+	private long calc(long b, long a, int digit) {
+	
+		long diff =

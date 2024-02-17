@@ -1,0 +1,189 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 public class Main {
+5   private static int dropBit(int n, int index) {
+6     int higher = (n >> (index + 1)) << index;
+7     int lower = (n & ((1 << index) - 1));
+8 //    System.err.printf("n: %d, index: %d, higher: %d, lower: %d\n", n, index, higher, lower);
+9     return higher | lower;
+10   }
+11   
+12   private static int insertBit(int n, int index, int v) {
+13     int higher = ((n >> index) << (index + 1));
+14     int lower = (n & ((1 << index) - 1));
+15     return higher | lower | v;
+16   }
+17   
+18   private static List<Integer> solveSub(int n, int a, int b) {
+19 //    System.err.printf("n: %d, a: %d, b: %d\n", n, a, b);
+20     if (n == 1) {
+21       if (a != b) {
+22         return Arrays.asList(a, b);
+23       } else {
+24         return null;
+25       }
+26     }
+27     
+28     for (int i = 0; i < n; i++) {
+29       int aBit = (a >> i) & 1;
+30       int bBit = (b >> i) & 1;
+31       if (aBit != bBit) {
+32         int aDash = dropBit(a, i);
+33         int bDash = dropBit(b, i);
+34 //        System.err.printf("i: %d, aDash: %d, bDash: %d\n", i, aDash, bDash);
+35         int c = aDash ^ 1;
+36         List<Integer> path1 = solveSub(n - 1, aDash, c);
+37         List<Integer> path2 = solveSub(n - 1, c, bDash);
+38         if (path1 != null && path2 != null) {
+39           List<Integer> path = new ArrayList<>();
+40           for (int v : path1) {
+41             path.add(insertBit(v, i, aBit << i));
+42           }
+43           for (int v : path2) {
+44             path.add(insertBit(v, i, bBit << i));
+45           }
+46           return path;
+47         }
+48         return null;
+49       }
+50     }
+51     return null;
+52   }
+53   
+54   private static List<String> solve(int n, int a, int b) {
+55     List<Integer> path = solveSub(n, a, b);
+56     if (path == null) {
+57       return Arrays.asList("NO");
+58     }
+59     StringBuffer sb = new StringBuffer();
+60     sb.append(path.get(0));
+61     for (int i = 1; i < path.size(); i++) {
+62       sb.append(" ");
+63       sb.append(path.get(i));
+64     }
+65     return Arrays.asList("YES", sb.toString());
+66   }
+67   
+68   private static void execute(ContestReader reader, PrintWriter out) {
+69     int n = reader.nextInt();
+70     int a = reader.nextInt();
+71     int b = reader.nextInt();
+72     for (String line : solve(n, a, b)) {
+73       out.println(line);
+74     }
+75   }
+76   
+77   public static void main(String[] args) {
+78     ContestReader reader = new ContestReader(System.in);
+79     PrintWriter out = new PrintWriter(System.out);
+80     execute(reader, out);
+81     out.flush();
+82   }
+83 }
+84 
+85 class ContestReader {
+86   private BufferedReader reader;
+87   private StringTokenizer tokenizer;
+88   
+89   ContestReader(InputStream in) {
+90     reader = new BufferedReader(new InputStreamReader(in));
+91   }
+92   
+93   public String next() {
+94     while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+95       try {
+96         tokenizer = new java.util.StringTokenizer(reader.readLine());
+97       } catch (Exception e) {
+98         throw new RuntimeException(e);
+99       }
+100     }
+101     return tokenizer.nextToken();
+102   }
+103   
+104   public int nextInt() {
+105     return Integer.parseInt(next());
+106   }
+107   
+108   public long nextLong() {
+109     return Long.parseLong(next());
+110   }
+111   
+112   public double nextDouble() {
+113     return Double.parseDouble(next());
+114   }
+115   
+116   public String[] next(int n) {
+117     String[] array = new String[n];
+118     for (int i = 0; i < n; i++) {
+119       array[i] = next();
+120     }
+121     return array;
+122   }
+123   
+124   public int[] nextInt(int n) {
+125     int[] array = new int[n];
+126     for (int i = 0; i < n; i++) {
+127       array[i] = nextInt();
+128     }
+129     return array;
+130   }
+131   
+132   public long[] nextLong(int n) {
+133     long[] array = new long[n];
+134     for (int i = 0; i < n; i++) {
+135       array[i] = nextLong();
+136     }
+137     return array;
+138   }
+139   
+140   public double[] nextDouble(int n) {
+141     double[] array = new double[n];
+142     for (int i = 0; i < n; i++) {
+143       array[i] = nextDouble();
+144     }
+145     return array;
+146   }
+147   
+148   public char[] nextCharArray() {
+149     return next().toCharArray();
+150   }
+151   
+152   public int[][] nextInt(int n, int m) {
+153     int[][] matrix = new int[n][m];
+154     for (int i = 0; i < n; i++) {
+155       for (int j = 0; j < m; j++) {
+156         matrix[i][j] = nextInt();
+157       }
+158     }
+159     return matrix;
+160   }
+161   
+162   public long[][] nextLong(int n, int m) {
+163     long[][] matrix = new long[n][m];
+164     for (int i = 0; i < n; i++) {
+165       for (int j = 0; j < m; j++) {
+166         matrix[i][j] = nextLong();
+167       }
+168     }
+169     return matrix;
+170   }
+171   
+172   public double[][] nextDouble(int n, int m) {
+173     double[][] matrix = new double[n][m];
+174     for (int i = 0; i < n; i++) {
+175       for (int j = 0; j < m; j++) {
+176         matrix[i][j] = nextDouble();
+177       }
+178     }
+179     return matrix;
+180   }
+181   
+182   public char[][] nextCharArray(int n) {
+183     char[][] matrix = new char[n][];
+184     for (int i = 0; i < n; i++) {
+185       matrix[i] = next().toCharArray();
+186     }
+187     return matrix;
+188   }
+189 }

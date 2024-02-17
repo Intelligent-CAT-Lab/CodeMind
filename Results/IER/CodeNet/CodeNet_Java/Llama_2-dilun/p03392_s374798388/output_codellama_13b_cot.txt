@@ -1,0 +1,92 @@
+
+<<<Analysis>>>
+The variable S is initialized with "abc".
+It enters a for loop and it iterates from 1 to 3 to check each integer i in this range. The value of variable i is also passed to variable k.
+Inside the for loop, it calculates the sum of the digits of the current interger k by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [0, 2]. If it does, it adds the current interger i to variable answer. The condition is met when i is 1,2,3.
+After the loop finishes, it print the fianl value of variable answer as output, which is 3.
+<<<Output>>>
+3
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.*;
+import java.util.*;
+import java.util.function.Function;
+
+public class Main {
+
+    static String S;
+
+    public static void main(String[] args) {
+        FastScanner sc = new FastScanner(System.in);
+        S = sc.next();
+
+        System.out.println(solve());
+    }
+
+    static int MOD = 998244353;
+
+    static int solve() {
+        if( S.length() == 1 ) return 1;
+        if( S.length() <= 3 ) return count();
+        if( isAllSame(S) ) return 1;
+
+        // j = 連続(1) or not
+        // k = 最後の文字
+        // l = sum
+        int[][][][] dp = new int[S.length()+1][2][3][3];
+        dp[1][0][0][0] = 1;
+        dp[1][0][1][1] = 1;
+        dp[1][0][2][2] = 1;
+        for (int i = 1; i < S.length(); i++) {
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 3; k++) {
+                    for (int l = 0; l < 3; l++) {
+                        // m = 追加する文字
+                        for (int m = 0; m < 3; m++) {
+                            boolean aa = j == 1 || k == m;
+                            dp[i+1][aa?1:0][m][(l+m)%3] += dp[i][j][k][l];
+                            dp[i+1][aa?1:0][m][(l+m)%3] %= MOD;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 対称じゃね？と思ったけど違うっぽい
+        int sum = calcSum(S);
+
+        int ans = 0;
+        for (int k = 0; k < 3; k++) {
+            ans += dp[S.length()][1][k][sum];
+            ans %= MOD;
+        }
+
+        if( is_abc(S) ) {
+            ans += 1;
+            ans %= MOD;
+        }
+        return ans;
+    }
+
+    static boolean isAllSame(String s) {
+        char c = s.charAt(0);
+        for (int i = 1; i < s.length(); i++) {
+            if( s.charAt(i)!= c ) return false;
+        }
+        return true;
+    }
+
+    static int calcSum(String s) {
+        int sum = 0;
+        for (int i = 0; i < s.length(); i++) {
+            sum += (s.charAt(i) - 'a');
+        }
+        return sum % 3;
+    }
+
+    static boolean is_abc(String s) {
+        for (int i = 0; i < s.length()-1; i++) {
+            if( s.char

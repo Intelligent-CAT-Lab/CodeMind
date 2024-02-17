@@ -1,0 +1,1 @@
+print("takahashi"[:3])

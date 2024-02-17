@@ -1,0 +1,414 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 public class Main {
+5   private static void execute(ContestReader reader, PrintWriter out) {
+6     int n = reader.nextInt();
+7     int k = reader.nextInt();
+8     out.println(new Solver(n, k).solve());
+9   }
+10   
+11   public static void main(String[] args) {
+12     ContestReader reader = new ContestReader(System.in);
+13     PrintWriter out = new PrintWriter(System.out);
+14     execute(reader, out);
+15     out.flush();
+16   }
+17 }
+18 
+19 class Solver {
+20   final int n, k;
+21   ModCalculator mc;
+22   
+23   Solver(int n, int k) {
+24     this.n = n;
+25     this.k = k;
+26   }
+27   
+28   private long calculateOrder1() {
+29     long[][] dptable = new long[n][n];
+30     dptable[n - 1][0] = 1;
+31     for (int i = 0; i < k; i++) {
+32       for (int j = 0; j <= n - 1 - i; j++) {
+33         // dptable[j][n - 1 - i - j]
+34         int t = n - 1 - i - j;
+35         for (int k = 1; k <= j; k++) {
+36           dptable[j - k][t + k - 1] = mc.add(dptable[j - k][t + k - 1], dptable[j][t]);
+37         }
+38         if (t > 0) {
+39           dptable[j][t - 1] = mc.add(dptable[j][t - 1], dptable[j][t]);
+40         }
+41         
+42         // dptable[j - k][t + k - 1] = mc.add(dptable[j - k][t + k - 1], dptable[j][t]);
+43         // a = j - k
+44         // b = t + k - 1
+45         // j = a + k
+46         // t = b - k + 1
+47         // dptable[a][b] += dptable[a+k][b-k+1]
+48         
+49         
+50       }
+51     }
+52     for (int i = 0; i < n; i++) {
+53       for (int j = 0; j < n; j++) {
+54         System.err.printf("%7d", dptable[i][j]);
+55       }
+56       System.err.println();
+57     }
+58     
+59     
+60     long sum = 0;
+61     for (int j = 0; j <= n - k; j++){
+62       sum = mc.add(sum, dptable[j][n - k - j]);
+63     }
+64     return sum;
+65   }
+66   
+67   private long calculateOrder2() {
+68     long[][] dptable = new long[n][n];
+69     dptable[n - 1][0] = 1;
+70     for (int i = 0; i < k-1; i++) {
+71       dptable[n - 1 - i - 1][0] = mc.add(dptable[n - 1 - i][0], dptable[n-1-i-1][1]);
+72       for (int j = 1; n - 1 - i - 1 - j >= 0; j++) {
+73         dptable[n - 1 - i - 1 - j][j] = mc.add(dptable[n - 1 - i - 1 - j + 1][j - 1], dptable[n - 1 - i - 1 - j][j + 1]);
+74       }
+75       /*
+76       for (int j = 0; j <= n - 1 - i; j++) {
+77         // dptable[j][n - 1 - i - j]
+78         int t = n - 1 - i - j;
+79         for (int k = 1; k <= j; k++) {
+80           dptable[j - k][t + k - 1] = mc.add(dptable[j - k][t + k - 1], dptable[j][t]);
+81         }
+82         if (t > 0) {
+83           dptable[j][t - 1] = mc.add(dptable[j][t - 1], dptable[j][t]);
+84         }
+85         
+86         // dptable[j - k][t + k - 1] = mc.add(dptable[j - k][t + k - 1], dptable[j][t]);
+87         // a = j - k
+88         // b = t + k - 1
+89         // j = a + k
+90         // t = b - k + 1
+91         // dptable[a][b] += dptable[a+k][b-k+1]
+92         
+93         
+94       }
+95       */
+96     }
+97     /*
+98     for (int i = 0; i < n; i++) {
+99       for (int j = 0; j < n; j++) {
+100         System.err.printf("%7d", dptable[i][j]);
+101       }
+102       System.err.println();
+103     }
+104     */
+105     
+106     
+107     long sum = 0;
+108     for (int j = 0; j <= n - k; j++){
+109       sum = mc.add(sum, dptable[j][n - k - j]);
+110     }
+111     return sum;
+112   }
+113   
+114   public long solve() {
+115     mc = new ModCalculator(1_000_000_007L);
+116     
+117 //    long v11 = calculateOrder1();
+118     long v12 = calculateOrder2();
+119     long v2 = mc.pow(2, n - k - 1);
+120 //    System.err.printf("%d %d\n", v11, v12);
+121 //    System.err.printf("%d %d\n", v12, v2);
+122     return mc.mul(v12, v2);
+123   }
+124 }
+125 
+126 class ContestReader {
+127   private BufferedReader reader;
+128   private StringTokenizer tokenizer;
+129   
+130   ContestReader(InputStream in) {
+131     reader = new BufferedReader(new InputStreamReader(in));
+132   }
+133   
+134   public String next() {
+135     while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+136       try {
+137         tokenizer = new java.util.StringTokenizer(reader.readLine());
+138       } catch (Exception e) {
+139         throw new RuntimeException(e);
+140       }
+141     }
+142     return tokenizer.nextToken();
+143   }
+144   
+145   public int nextInt() {
+146     return Integer.parseInt(next());
+147   }
+148   
+149   public long nextLong() {
+150     return Long.parseLong(next());
+151   }
+152   
+153   public double nextDouble() {
+154     return Double.parseDouble(next());
+155   }
+156   
+157   public String[] nextArray(int n) {
+158     String[] array = new String[n];
+159     for (int i = 0; i < n; i++) {
+160       array[i] = next();
+161     }
+162     return array;
+163   }
+164   
+165   public int[] nextIntArray(int n) {
+166     int[] array = new int[n];
+167     for (int i = 0; i < n; i++) {
+168       array[i] = nextInt();
+169     }
+170     return array;
+171   }
+172   
+173   public long[] nextLongArray(int n) {
+174     long[] array = new long[n];
+175     for (int i = 0; i < n; i++) {
+176       array[i] = nextLong();
+177     }
+178     return array;
+179   }
+180   
+181   public double[] nextDoubleArray(int n) {
+182     double[] array = new double[n];
+183     for (int i = 0; i < n; i++) {
+184       array[i] = nextDouble();
+185     }
+186     return array;
+187   }
+188   
+189   public int[][] nextIntMatrix(int n, int m) {
+190     int[][] matrix = new int[n][m];
+191     for (int i = 0; i < n; i++) {
+192       for (int j = 0; j < m; j++) {
+193         matrix[i][j] = nextInt();
+194       }
+195     }
+196     return matrix;
+197   }
+198   
+199   public long[][] nextLongMatrix(int n, int m) {
+200     long[][] matrix = new long[n][m];
+201     for (int i = 0; i < n; i++) {
+202       for (int j = 0; j < m; j++) {
+203         matrix[i][j] = nextLong();
+204       }
+205     }
+206     return matrix;
+207   }
+208   
+209   public double[][] nextDoubleMatrix(int n, int m) {
+210     double[][] matrix = new double[n][m];
+211     for (int i = 0; i < n; i++) {
+212       for (int j = 0; j < m; j++) {
+213         matrix[i][j] = nextDouble();
+214       }
+215     }
+216     return matrix;
+217   }
+218 }
+219 
+220 class ModCalculator {
+221   private final long mod;
+222   private final ModCombinationCache modCombinationCache;
+223   
+224   ModCalculator(long mod) {
+225     this.mod = mod;
+226     this.modCombinationCache = new ModCombinationCache();
+227   }
+228   
+229   public long add(long a, long b) {
+230     return (a + b) % mod;
+231   }
+232   
+233   public long sub(long a, long b) {
+234     return (a - b + mod) % mod;
+235   }
+236   
+237   public long mul(long a, long b) {
+238     return (a * b) % mod;
+239   }
+240   
+241   public long pow(long a, long b) {
+242     if (b == 0) {
+243       return 1;
+244     }
+245     long v = pow(mul(a, a), b / 2);
+246     if (b % 2 == 1) {
+247       return mul(v, a);
+248     } else {
+249       return v;
+250     }
+251   }
+252   
+253   public long inverse(long a) {
+254     return pow(a, mod - 2);
+255   }
+256   
+257   public long div(long a, long b) {
+258     return mul(a, inverse(b));
+259   }
+260   
+261   public long getF(int n) {
+262     return modCombinationCache.getF(n);
+263   }
+264   
+265   public long getP(int n, int r) {
+266     return modCombinationCache.getP(n, r);
+267   }
+268   
+269   public long getC(int n, int k) {
+270     return modCombinationCache.getC(n, k);
+271   }
+272   
+273   class ModCombinationCache {
+274     private final List<Long> factorialCache;
+275     private final List<Long> factorialInverseCache;
+276     
+277     public ModCombinationCache() {
+278       factorialCache = new ArrayList<>();
+279       factorialCache.add(1L);
+280       factorialInverseCache = new ArrayList<>();
+281       factorialInverseCache.add(1L);
+282     }
+283     
+284     private void resize(int n) {
+285       for (int i = factorialCache.size() - 1; i < n; i++) {
+286         long v = mul(factorialCache.get(i), i + 1);
+287         factorialCache.add(v);
+288         factorialInverseCache.add(inverse(v));
+289       }
+290     }
+291     
+292     long getF(int n) {
+293       resize(n);
+294       return factorialCache.get(n);
+295     }
+296     
+297     long getP(int n, int r) {
+298       resize(n);
+299       return mul(factorialCache.get(n), factorialInverseCache.get(n - r));
+300     }
+301     
+302     long getC(int n, int k) {
+303       resize(n);
+304       return mul(factorialCache.get(n), mul(factorialInverseCache.get(k), factorialInverseCache.get(n-k)));
+305     }
+306   }
+307 }
+308  
+309 class Algorithm {
+310   private static void swap(Object[] list, int a, int b) {
+311     Object tmp = list[a];
+312     list[a] = list[b];
+313     list[b] = tmp;
+314   }
+315   
+316   public static <T extends Comparable<? super T>> boolean nextPermutation(T[] ts) {
+317     int rightMostAscendingOrderIndex = ts.length - 2;
+318     while (rightMostAscendingOrderIndex >= 0 &&
+319         ts[rightMostAscendingOrderIndex].compareTo(ts[rightMostAscendingOrderIndex + 1]) >= 0) {
+320       rightMostAscendingOrderIndex--;
+321     }
+322     if (rightMostAscendingOrderIndex < 0) {
+323       return false;
+324     }
+325     
+326     int rightMostGreatorIndex = ts.length - 1;
+327     while (ts[rightMostAscendingOrderIndex].compareTo(ts[rightMostGreatorIndex]) >= 0) {
+328       rightMostGreatorIndex--;
+329     }
+330     
+331     swap(ts, rightMostAscendingOrderIndex, rightMostGreatorIndex);
+332     for (int i = 0; i < (ts.length - rightMostAscendingOrderIndex - 1) / 2; i++) {
+333       swap(ts, rightMostAscendingOrderIndex + 1 + i, ts.length - 1 - i);
+334     }
+335     return true;
+336   }
+337   
+338   public static void shuffle(int[] array) {
+339     Random random = new Random();
+340     int n = array.length;
+341     for (int i = 0; i < n; i++) {
+342       int randomIndex = i + random.nextInt(n - i);
+343       
+344       int temp = array[i];
+345       array[i] = array[randomIndex];
+346       array[randomIndex] = temp;
+347     }
+348   }
+349   
+350   public static void shuffle(long[] array) {
+351     Random random = new Random();
+352     int n = array.length;
+353     for (int i = 0; i < n; i++) {
+354       int randomIndex = i + random.nextInt(n - i);
+355       
+356       long temp = array[i];
+357       array[i] = array[randomIndex];
+358       array[randomIndex] = temp;
+359     }
+360   }
+361   
+362   public static void sort(int[] array) {
+363     shuffle(array);
+364     Arrays.sort(array);
+365   }
+366   
+367   public static void sort(long[] array) {
+368     shuffle(array);
+369     Arrays.sort(array);
+370   }
+371 }
+372 
+373 class UnionFind {
+374   int[] parents;
+375   int[] ranks;
+376 
+377   UnionFind(int n) {
+378     parents = new int[n];
+379     ranks = new int[n];
+380 
+381     for (int i = 0; i < n; i++) {
+382       parents[i] = i;
+383     }
+384   }
+385 
+386   public int getRoot(int index) {
+387     if (parents[index] == index) {
+388       return index;
+389     } else {
+390       parents[index] = getRoot(parents[index]);
+391       return parents[index];
+392     }
+393   }
+394 
+395   public boolean sameGroup(int a, int b) {
+396     return getRoot(a) == getRoot(b);
+397   }
+398 
+399   public void merge(int a, int b) {
+400     int rootA = getRoot(a);
+401     int rootB = getRoot(b);
+402     if (rootA == rootB) {
+403       return;
+404     }
+405     if (ranks[rootA] < ranks[rootB]) {
+406       parents[rootA] = rootB;
+407     } else if (ranks[rootB] < ranks[rootA]) {
+408       parents[rootB] = rootA;
+409     } else {
+410       parents[rootA] = rootB;
+411       ranks[rootB]++;
+412     }
+413   }
+414 }

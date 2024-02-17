@@ -1,0 +1,254 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.PrintWriter;
+4 import java.net.ConnectException;
+5 import java.rmi.dgc.Lease;
+6 import java.util.ArrayDeque;
+7 import java.util.ArrayList;
+8 import java.util.Arrays;
+9 import java.util.Collections;
+10 import java.util.Deque;
+11 import java.util.HashMap;
+12 import java.util.HashSet;
+13 import java.util.List;
+14 import java.util.Map;
+15 import java.util.NoSuchElementException;
+16 import java.util.Objects;
+17 import java.util.Set;
+18 import java.util.Stack;
+19 import java.util.TreeMap;
+20 import java.util.TreeSet;
+21 
+22 import static java.util.Comparator.*;
+23 
+24 public class Main {
+25 	public static void main(String[] args) {
+26 		Main main = new Main();
+27 		main.solve();
+28 		main.out.close();
+29 	}
+30 
+31 	// ======================================================================
+32 	public void solve() {
+33 		int N = ni();
+34 		int K = ni();
+35 		if(N == 2) {
+36 			if(K == 0) {
+37 				out.println(1);
+38 				out.println("1 2");
+39 			} else {
+40 				out.println(-1);
+41 			}
+42 			return;
+43 		}
+44 		long max = combination(N-1,2);
+45 		if(K > max) {
+46 			out.println(-1);
+47 			return;
+48 		}
+49 		long M = N - 1 + (max - K);
+50 		out.println(M);
+51 		for (int i = 2; i <= N; i++) {
+52 			out.println(1 + " " + i);
+53 		}
+54 		long cnt = max - K;
+55 		if(cnt > 0) {
+56 			for (int i = 2; i <= N - 1; i++) {
+57 				for (int j = i + 1; j <= N; j++) {
+58 					out.println(i + " " + j);
+59 					cnt--;
+60 					if(cnt <= 0)	return;
+61 				}
+62 			}
+63 		}
+64 	}
+65 	// パスカルの三角形を作る
+66 	long[][] dp;
+67 	public void make_comb_dp(int n) {
+68 		dp = new long[n + 1][n + 1];
+69 		for (int i = 0; i < n + 1; i++) {
+70 			dp[i][0] = 1L;
+71 			dp[i][i] = 1L;
+72 		}
+73 		for (int i = 2; i < n + 1; i++) {
+74 			for (int j = 1; j < i; j++) {
+75 				dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+76 			}
+77 		}
+78 		initFlag = true;
+79 	}
+80 	// 二項係数を返す
+81 	boolean initFlag = false;
+82 	public long combination(int n, int k) {
+83 		if (!initFlag) {
+84 			make_comb_dp(n);
+85 			initFlag = true;
+86 		}
+87 		return (dp[n][k]);
+88 	}
+89 
+90 	// ------------------------------------------
+91 	// ライブラリ
+92 	// ------------------------------------------
+93 	// Print
+94 	private PrintWriter out = new PrintWriter(System.out);
+95 
+96 	// Scanner
+97 	private FastScanner scan = new FastScanner();
+98 
+99 	int ni() {
+100 		return scan.nextInt();
+101 	}
+102 
+103 	int[] ni(int n) {
+104 		int[] a = new int[n];
+105 		for (int i = 0; i < n; i++) {
+106 			a[i] = ni();
+107 		}
+108 		return a;
+109 	}
+110 
+111 	int[][] ni(int y, int x) {
+112 		int[][] a = new int[y][x];
+113 		for (int i = 0; i < y; i++) {
+114 			for (int j = 0; j < x; j++) {
+115 				a[i][j] = ni();
+116 			}
+117 		}
+118 		return a;
+119 	}
+120 
+121 	long nl() {
+122 		return scan.nextLong();
+123 	}
+124 
+125 	long[] nl(int n) {
+126 		long[] a = new long[n];
+127 		for (int i = 0; i < n; i++) {
+128 			a[i] = nl();
+129 		}
+130 		return a;
+131 	}
+132 
+133 	long[][] nl(int y, int x) {
+134 		long[][] a = new long[y][x];
+135 		for (int i = 0; i < y; i++) {
+136 			for (int j = 0; j < x; j++) {
+137 				a[i][j] = nl();
+138 			}
+139 		}
+140 		return a;
+141 	}
+142 
+143 	String ns() {
+144 		return scan.next();
+145 	}
+146 
+147 	String[] ns(int n) {
+148 		String[] a = new String[n];
+149 		for (int i = 0; i < n; i++) {
+150 			a[i] = ns();
+151 		}
+152 		return a;
+153 	}
+154 
+155 	String[][] ns(int y, int x) {
+156 		String[][] a = new String[y][x];
+157 		for (int i = 0; i < y; i++) {
+158 			for (int j = 0; j < x; j++) {
+159 				a[i][j] = ns();
+160 			}
+161 		}
+162 		return a;
+163 	}
+164 }
+165 
+166 class FastScanner {
+167 	private final InputStream in = System.in;
+168 	private final byte[] buffer = new byte[1024];
+169 	private int ptr = 0;
+170 	private int buflen = 0;
+171 
+172 	private boolean hasNextByte() {
+173 		if (ptr < buflen) {
+174 			return true;
+175 		} else {
+176 			ptr = 0;
+177 			try {
+178 				buflen = in.read(buffer);
+179 			} catch (IOException e) {
+180 				e.printStackTrace();
+181 			}
+182 			if (buflen <= 0) {
+183 				return false;
+184 			}
+185 		}
+186 		return true;
+187 	}
+188 
+189 	private int readByte() {
+190 		if (hasNextByte())
+191 			return buffer[ptr++];
+192 		else
+193 			return -1;
+194 	}
+195 
+196 	private static boolean isPrintableChar(int c) {
+197 		return 33 <= c && c <= 126;
+198 	}
+199 
+200 	public boolean hasNext() {
+201 		while (hasNextByte() && !isPrintableChar(buffer[ptr]))
+202 			ptr++;
+203 		return hasNextByte();
+204 	}
+205 
+206 	public String next() {
+207 		if (!hasNext())
+208 			throw new NoSuchElementException();
+209 		StringBuilder sb = new StringBuilder();
+210 		int b = readByte();
+211 		while (isPrintableChar(b)) {
+212 			sb.appendCodePoint(b);
+213 			b = readByte();
+214 		}
+215 		return sb.toString();
+216 	}
+217 
+218 	public long nextLong() {
+219 		if (!hasNext())
+220 			throw new NoSuchElementException();
+221 		long n = 0;
+222 		boolean minus = false;
+223 		int b = readByte();
+224 		if (b == '-') {
+225 			minus = true;
+226 			b = readByte();
+227 		}
+228 		if (b < '0' || '9' < b) {
+229 			throw new NumberFormatException();
+230 		}
+231 		while (true) {
+232 			if ('0' <= b && b <= '9') {
+233 				n *= 10;
+234 				n += b - '0';
+235 			} else if (b == -1 || !isPrintableChar(b)) {
+236 				return minus ? -n : n;
+237 			} else {
+238 				throw new NumberFormatException();
+239 			}
+240 			b = readByte();
+241 		}
+242 	}
+243 
+244 	public int nextInt() {
+245 		long nl = nextLong();
+246 		if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE)
+247 			throw new NumberFormatException();
+248 		return (int) nl;
+249 	}
+250 
+251 	public double nextDouble() {
+252 		return Double.parseDouble(next());
+253 	}
+254 }

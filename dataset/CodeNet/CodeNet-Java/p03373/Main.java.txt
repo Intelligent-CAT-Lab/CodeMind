@@ -1,0 +1,212 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 
+5 public class Main {
+6 
+7 	private static Scanner sc;
+8 	private static Printer pr;
+9 
+10 	private static void solve() {
+11 		int a = sc.nextInt();
+12 		int b = sc.nextInt();
+13 		int c = sc.nextInt();
+14 		int x = sc.nextInt();
+15 		int y = sc.nextInt();
+16 
+17 		int min = Integer.MAX_VALUE;
+18 		for (int i = 0; i <= Math.max(x, y); i++) {
+19 			int tmp = a * (Math.max(0, x - i)) + b * (Math.max(0, y - i)) + c * i * 2;
+20 			min = Math.min(min, tmp);
+21 		}
+22 
+23 		pr.println(min);
+24 	}
+25 
+26 	// ---------------------------------------------------
+27 	public static void main(String[] args) {
+28 		sc = new Scanner(INPUT == null ? System.in : new ByteArrayInputStream(INPUT.getBytes()));
+29 		pr = new Printer(System.out);
+30 
+31 		solve();
+32 
+33 //		pr.close();
+34 		pr.flush();
+35 //		sc.close();
+36 	}
+37 
+38 	static String INPUT = null;
+39 
+40 	@SuppressWarnings("unused")
+41 	private static class Scanner {
+42 		BufferedReader br;
+43 
+44 		Scanner (InputStream in) {
+45 			br = new BufferedReader(new InputStreamReader(in));
+46 		}
+47 
+48 		private boolean isPrintable(int ch) {
+49 			return ch >= '!' && ch <= '~';
+50 		}
+51 
+52 		private boolean isCRLF(int ch) {
+53 			return ch == '\n' || ch == '\r' || ch == -1;
+54 		}
+55 
+56 		private int nextPrintable() {
+57 			try {
+58 				int ch;
+59 				while (!isPrintable(ch = br.read())) {
+60 					if (ch == -1) {
+61 						throw new NoSuchElementException();
+62 					}
+63 				}
+64 
+65 				return ch;
+66 			} catch (IOException e) {
+67 				throw new NoSuchElementException();
+68 			}
+69 		}
+70 
+71 		String next() {
+72 			try {
+73 				int ch = nextPrintable();
+74 				StringBuilder sb = new StringBuilder();
+75 				do {
+76 					sb.appendCodePoint(ch);
+77 				} while (isPrintable(ch = br.read()));
+78 
+79 				return sb.toString();
+80 			} catch (IOException e) {
+81 				throw new NoSuchElementException();
+82 			}
+83 		}
+84 
+85 		int nextInt() {
+86 			try {
+87 				// parseInt from Integer.parseInt()
+88 				boolean negative = false;
+89 				int res = 0;
+90 				int limit = -Integer.MAX_VALUE;
+91 				int radix = 10;
+92 
+93 				int fc = nextPrintable();
+94 				if (fc < '0') {
+95 					if (fc == '-') {
+96 						negative = true;
+97 						limit = Integer.MIN_VALUE;
+98 					} else if (fc != '+') {
+99 						throw new NumberFormatException();
+100 					}
+101 					fc = br.read();
+102 				}
+103 				int multmin = limit / radix;
+104 
+105 				int ch = fc;
+106 				do {
+107 					int digit = ch - '0';
+108 					if (digit < 0 || digit >= radix) {
+109 						throw new NumberFormatException();
+110 					}
+111 					if (res < multmin) {
+112 						throw new NumberFormatException();
+113 					}
+114 					res *= radix;
+115 					if (res < limit + digit) {
+116 						throw new NumberFormatException();
+117 					}
+118 					res -= digit;
+119 
+120 				} while (isPrintable(ch = br.read()));
+121 
+122 				return negative ? res : -res;
+123 			} catch (IOException e) {
+124 				throw new NoSuchElementException();
+125 			}
+126 		}
+127 
+128 		long nextLong() {
+129 			try {
+130 				// parseLong from Long.parseLong()
+131 				boolean negative = false;
+132 				long res = 0;
+133 				long limit = -Long.MAX_VALUE;
+134 				int radix = 10;
+135 
+136 				int fc = nextPrintable();
+137 				if (fc < '0') {
+138 					if (fc == '-') {
+139 						negative = true;
+140 						limit = Long.MIN_VALUE;
+141 					} else if (fc != '+') {
+142 						throw new NumberFormatException();
+143 					}
+144 					fc = br.read();
+145 				}
+146 				long multmin = limit / radix;
+147 
+148 				int ch = fc;
+149 				do {
+150 					int digit = ch - '0';
+151 					if (digit < 0 || digit >= radix) {
+152 						throw new NumberFormatException();
+153 					}
+154 					if (res < multmin) {
+155 						throw new NumberFormatException();
+156 					}
+157 					res *= radix;
+158 					if (res < limit + digit) {
+159 						throw new NumberFormatException();
+160 					}
+161 					res -= digit;
+162 
+163 				} while (isPrintable(ch = br.read()));
+164 
+165 				return negative ? res : -res;
+166 			} catch (IOException e) {
+167 				throw new NoSuchElementException();
+168 			}
+169 		}
+170 
+171 		float nextFloat() {
+172 			return Float.parseFloat(next());
+173 		}
+174 
+175 		double nextDouble() {
+176 			return Double.parseDouble(next());
+177 		}
+178 
+179 		String nextLine() {
+180 			try {
+181 				int ch;
+182 				while (isCRLF(ch = br.read())) {
+183 					if (ch == -1) {
+184 						throw new NoSuchElementException();
+185 					}
+186 				}
+187 				StringBuilder sb = new StringBuilder();
+188 				do {
+189 					sb.appendCodePoint(ch);
+190 				} while (!isCRLF(ch = br.read()));
+191 
+192 				return sb.toString();
+193 			} catch (IOException e) {
+194 				throw new NoSuchElementException();
+195 			}
+196 		}
+197 
+198 		void close() {
+199 			try {
+200 				br.close();
+201 			} catch (IOException e) {
+202 //				throw new NoSuchElementException();
+203 			}
+204 		}
+205 	}
+206 
+207 	private static class Printer extends PrintWriter {
+208 		Printer(OutputStream out) {
+209 			super(out);
+210 		}
+211 	}
+212 }

@@ -1,0 +1,474 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.PrintStream;
+6 import java.util.Arrays;
+7 import java.io.IOException;
+8 import java.io.UncheckedIOException;
+9 import java.io.Closeable;
+10 import java.io.Writer;
+11 import java.io.OutputStreamWriter;
+12 import java.io.InputStream;
+13 
+14 /**
+15  * Built using CHelper plug-in
+16  * Actual solution is at the top
+17  */
+18 public class Main {
+19     public static void main(String[] args) throws Exception {
+20         Thread thread = new Thread(null, new TaskAdapter(), "", 1 << 27);
+21         thread.start();
+22         thread.join();
+23     }
+24 
+25     static class TaskAdapter implements Runnable {
+26         @Override
+27         public void run() {
+28             InputStream inputStream = System.in;
+29             OutputStream outputStream = System.out;
+30             FastInput in = new FastInput(inputStream);
+31             FastOutput out = new FastOutput(outputStream);
+32             CRangeSet solver = new CRangeSet();
+33             solver.solve(1, in, out);
+34             out.close();
+35         }
+36     }
+37 
+38     static class CRangeSet {
+39         Debug debug = new Debug(false);
+40         Modular mod = new Modular(1e9 + 7);
+41         Power pow = new Power(mod);
+42         int a;
+43         int b;
+44         int[] f;
+45 
+46         public void solve(int testNumber, FastInput in, FastOutput out) {
+47             int n = in.readInt();
+48             a = in.readInt();
+49             b = in.readInt();
+50             if (a < b) {
+51                 int tmp = a;
+52                 a = b;
+53                 b = tmp;
+54             }
+55 
+56             f = new int[a];
+57             SequenceUtils.deepFill(f, -1);
+58 
+59 //        for (int i = 0; i < a; i++) {
+60 //            debug.debug("f(" + i + ")", f(i));
+61 //        }
+62 
+63             ArrayIndex ai = new ArrayIndex(n + 1, a, 2);
+64             int[] dp = new int[ai.totalSize()];
+65             dp[ai.indexOf(0, 0, 0)] = 1;
+66             dp[ai.indexOf(0, 0, 1)] = 1;
+67             int[] sum = new int[2];
+68             for (int i = 1; i <= n; i++) {
+69                 Arrays.fill(sum, 0);
+70                 for (int j = 0; j < a; j++) {
+71                     int lend = j == i - 1 ? 1 : 0;
+72                     sum[0] = mod.plus(sum[0], mod.mul(dp[ai.indexOf(i - 1, j, 0)], f(j - 2 + lend)));
+73                 }
+74                 for (int j = 0; j < b; j++) {
+75                     sum[1] = mod.plus(sum[1], dp[ai.indexOf(i - 1, j, 1)]);
+76                 }
+77                 debug.debug("i", i - 1);
+78                 debug.debug("sum", sum);
+79                 for (int k = 1; k < a; k++) {
+80                     if (k == 1) {
+81                         dp[ai.indexOf(i, k, 0)] = sum[1];
+82                     } else {
+83                         dp[ai.indexOf(i, k, 0)] = dp[ai.indexOf(i - 1, k - 1, 0)];
+84                     }
+85                 }
+86                 for (int k = 1; k < b; k++) {
+87                     if (k == 1) {
+88                         dp[ai.indexOf(i, k, 1)] = sum[0];
+89                     } else {
+90                         dp[ai.indexOf(i, k, 1)] = dp[ai.indexOf(i - 1, k - 1, 1)];
+91                     }
+92                 }
+93             }
+94 
+95             Arrays.fill(sum, 0);
+96             for (int j = 0; j < a; j++) {
+97                 sum[0] = mod.plus(sum[0], mod.mul(dp[ai.indexOf(n, j, 0)], f(j - 1)));
+98             }
+99             for (int j = 0; j < b; j++) {
+100                 sum[1] = mod.plus(sum[1], dp[ai.indexOf(n, j, 1)]);
+101             }
+102             debug.debug("sum", sum);
+103 
+104             int invalid = mod.plus(sum[0], sum[1]);
+105             int total = pow.pow(2, n);
+106             int valid = mod.subtract(total, invalid);
+107             out.println(valid);
+108         }
+109 
+110         public int f(int i) {
+111             if (i <= 0) {
+112                 return 1;
+113             }
+114             if (f[i] == -1) {
+115                 f[i] = f(i - 1);
+116                 for (int t = b; i - t >= 0; t++) {
+117                     f[i] = mod.plus(f[i], f(i - t - 1));
+118                 }
+119             }
+120             return f[i];
+121         }
+122 
+123     }
+124 
+125     static class Power implements InverseNumber {
+126         final Modular modular;
+127 
+128         public Power(Modular modular) {
+129             this.modular = modular;
+130         }
+131 
+132         public int pow(int x, int n) {
+133             if (n == 0) {
+134                 return modular.valueOf(1);
+135             }
+136             long r = pow(x, n >> 1);
+137             r = modular.valueOf(r * r);
+138             if ((n & 1) == 1) {
+139                 r = modular.valueOf(r * x);
+140             }
+141             return (int) r;
+142         }
+143 
+144     }
+145 
+146     static class Modular {
+147         int m;
+148 
+149         public Modular(int m) {
+150             this.m = m;
+151         }
+152 
+153         public Modular(long m) {
+154             this.m = (int) m;
+155             if (this.m != m) {
+156                 throw new IllegalArgumentException();
+157             }
+158         }
+159 
+160         public Modular(double m) {
+161             this.m = (int) m;
+162             if (this.m != m) {
+163                 throw new IllegalArgumentException();
+164             }
+165         }
+166 
+167         public int valueOf(int x) {
+168             x %= m;
+169             if (x < 0) {
+170                 x += m;
+171             }
+172             return x;
+173         }
+174 
+175         public int valueOf(long x) {
+176             x %= m;
+177             if (x < 0) {
+178                 x += m;
+179             }
+180             return (int) x;
+181         }
+182 
+183         public int mul(int x, int y) {
+184             return valueOf((long) x * y);
+185         }
+186 
+187         public int plus(int x, int y) {
+188             return valueOf(x + y);
+189         }
+190 
+191         public int subtract(int x, int y) {
+192             return valueOf(x - y);
+193         }
+194 
+195         public String toString() {
+196             return "mod " + m;
+197         }
+198 
+199     }
+200 
+201     static class FastOutput implements AutoCloseable, Closeable, Appendable {
+202         private StringBuilder cache = new StringBuilder(10 << 20);
+203         private final Writer os;
+204 
+205         public FastOutput append(CharSequence csq) {
+206             cache.append(csq);
+207             return this;
+208         }
+209 
+210         public FastOutput append(CharSequence csq, int start, int end) {
+211             cache.append(csq, start, end);
+212             return this;
+213         }
+214 
+215         public FastOutput(Writer os) {
+216             this.os = os;
+217         }
+218 
+219         public FastOutput(OutputStream os) {
+220             this(new OutputStreamWriter(os));
+221         }
+222 
+223         public FastOutput append(char c) {
+224             cache.append(c);
+225             return this;
+226         }
+227 
+228         public FastOutput append(int c) {
+229             cache.append(c);
+230             return this;
+231         }
+232 
+233         public FastOutput println(int c) {
+234             return append(c).println();
+235         }
+236 
+237         public FastOutput println() {
+238             cache.append(System.lineSeparator());
+239             return this;
+240         }
+241 
+242         public FastOutput flush() {
+243             try {
+244                 os.append(cache);
+245                 os.flush();
+246                 cache.setLength(0);
+247             } catch (IOException e) {
+248                 throw new UncheckedIOException(e);
+249             }
+250             return this;
+251         }
+252 
+253         public void close() {
+254             flush();
+255             try {
+256                 os.close();
+257             } catch (IOException e) {
+258                 throw new UncheckedIOException(e);
+259             }
+260         }
+261 
+262         public String toString() {
+263             return cache.toString();
+264         }
+265 
+266     }
+267 
+268     static class Debug {
+269         private boolean offline;
+270         private PrintStream out = System.err;
+271         static int[] empty = new int[0];
+272 
+273         public Debug(boolean enable) {
+274             offline = enable && System.getSecurityManager() == null;
+275         }
+276 
+277         public Debug debug(String name, int x) {
+278             if (offline) {
+279                 debug(name, "" + x);
+280             }
+281             return this;
+282         }
+283 
+284         public Debug debug(String name, String x) {
+285             if (offline) {
+286                 out.printf("%s=%s", name, x);
+287                 out.println();
+288             }
+289             return this;
+290         }
+291 
+292         public Debug debug(String name, Object x) {
+293             return debug(name, x, empty);
+294         }
+295 
+296         public Debug debug(String name, Object x, int... indexes) {
+297             if (offline) {
+298                 if (x == null || !x.getClass().isArray()) {
+299                     out.append(name);
+300                     for (int i : indexes) {
+301                         out.printf("[%d]", i);
+302                     }
+303                     out.append("=").append("" + x);
+304                     out.println();
+305                 } else {
+306                     indexes = Arrays.copyOf(indexes, indexes.length + 1);
+307                     if (x instanceof byte[]) {
+308                         byte[] arr = (byte[]) x;
+309                         for (int i = 0; i < arr.length; i++) {
+310                             indexes[indexes.length - 1] = i;
+311                             debug(name, arr[i], indexes);
+312                         }
+313                     } else if (x instanceof short[]) {
+314                         short[] arr = (short[]) x;
+315                         for (int i = 0; i < arr.length; i++) {
+316                             indexes[indexes.length - 1] = i;
+317                             debug(name, arr[i], indexes);
+318                         }
+319                     } else if (x instanceof boolean[]) {
+320                         boolean[] arr = (boolean[]) x;
+321                         for (int i = 0; i < arr.length; i++) {
+322                             indexes[indexes.length - 1] = i;
+323                             debug(name, arr[i], indexes);
+324                         }
+325                     } else if (x instanceof char[]) {
+326                         char[] arr = (char[]) x;
+327                         for (int i = 0; i < arr.length; i++) {
+328                             indexes[indexes.length - 1] = i;
+329                             debug(name, arr[i], indexes);
+330                         }
+331                     } else if (x instanceof int[]) {
+332                         int[] arr = (int[]) x;
+333                         for (int i = 0; i < arr.length; i++) {
+334                             indexes[indexes.length - 1] = i;
+335                             debug(name, arr[i], indexes);
+336                         }
+337                     } else if (x instanceof float[]) {
+338                         float[] arr = (float[]) x;
+339                         for (int i = 0; i < arr.length; i++) {
+340                             indexes[indexes.length - 1] = i;
+341                             debug(name, arr[i], indexes);
+342                         }
+343                     } else if (x instanceof double[]) {
+344                         double[] arr = (double[]) x;
+345                         for (int i = 0; i < arr.length; i++) {
+346                             indexes[indexes.length - 1] = i;
+347                             debug(name, arr[i], indexes);
+348                         }
+349                     } else if (x instanceof long[]) {
+350                         long[] arr = (long[]) x;
+351                         for (int i = 0; i < arr.length; i++) {
+352                             indexes[indexes.length - 1] = i;
+353                             debug(name, arr[i], indexes);
+354                         }
+355                     } else {
+356                         Object[] arr = (Object[]) x;
+357                         for (int i = 0; i < arr.length; i++) {
+358                             indexes[indexes.length - 1] = i;
+359                             debug(name, arr[i], indexes);
+360                         }
+361                     }
+362                 }
+363             }
+364             return this;
+365         }
+366 
+367     }
+368 
+369     static class FastInput {
+370         private final InputStream is;
+371         private byte[] buf = new byte[1 << 13];
+372         private int bufLen;
+373         private int bufOffset;
+374         private int next;
+375 
+376         public FastInput(InputStream is) {
+377             this.is = is;
+378         }
+379 
+380         private int read() {
+381             while (bufLen == bufOffset) {
+382                 bufOffset = 0;
+383                 try {
+384                     bufLen = is.read(buf);
+385                 } catch (IOException e) {
+386                     bufLen = -1;
+387                 }
+388                 if (bufLen == -1) {
+389                     return -1;
+390                 }
+391             }
+392             return buf[bufOffset++];
+393         }
+394 
+395         public void skipBlank() {
+396             while (next >= 0 && next <= 32) {
+397                 next = read();
+398             }
+399         }
+400 
+401         public int readInt() {
+402             int sign = 1;
+403 
+404             skipBlank();
+405             if (next == '+' || next == '-') {
+406                 sign = next == '+' ? 1 : -1;
+407                 next = read();
+408             }
+409 
+410             int val = 0;
+411             if (sign == 1) {
+412                 while (next >= '0' && next <= '9') {
+413                     val = val * 10 + next - '0';
+414                     next = read();
+415                 }
+416             } else {
+417                 while (next >= '0' && next <= '9') {
+418                     val = val * 10 - next + '0';
+419                     next = read();
+420                 }
+421             }
+422 
+423             return val;
+424         }
+425 
+426     }
+427 
+428     static class SequenceUtils {
+429         public static void deepFill(Object array, int val) {
+430             if (!array.getClass().isArray()) {
+431                 throw new IllegalArgumentException();
+432             }
+433             if (array instanceof int[]) {
+434                 int[] intArray = (int[]) array;
+435                 Arrays.fill(intArray, val);
+436             } else {
+437                 Object[] objArray = (Object[]) array;
+438                 for (Object obj : objArray) {
+439                     deepFill(obj, val);
+440                 }
+441             }
+442         }
+443 
+444     }
+445 
+446     static interface InverseNumber {
+447     }
+448 
+449     static class ArrayIndex {
+450         int[] dimensions;
+451 
+452         public ArrayIndex(int... dimensions) {
+453             this.dimensions = dimensions;
+454         }
+455 
+456         public int totalSize() {
+457             int ans = 1;
+458             for (int x : dimensions) {
+459                 ans *= x;
+460             }
+461             return ans;
+462         }
+463 
+464         public int indexOf(int a, int b) {
+465             return a * dimensions[1] + b;
+466         }
+467 
+468         public int indexOf(int a, int b, int c) {
+469             return indexOf(a, b) * dimensions[2] + c;
+470         }
+471 
+472     }
+473 }
+474 

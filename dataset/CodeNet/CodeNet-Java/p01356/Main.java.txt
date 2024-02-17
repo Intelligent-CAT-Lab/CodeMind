@@ -1,0 +1,96 @@
+1 import java.util.*;
+2 
+3 public class Main {
+4 	public static void main(String[] args) {
+5 		Scanner sc = new Scanner(System.in);
+6 		long n = sc.nextLong();
+7 		long m = sc.nextLong();
+8 		long a = sc.nextLong();
+9 		long b = sc.nextLong();
+10 		long p = sc.nextLong();
+11 		long q = sc.nextLong();
+12 		long INF = 1000_000_000_000_000L;
+13 		if (a == 1 && b == 1) {
+14 			// (p+q)N
+15 			long ans = INF;
+16 			long div = m / (p + q);
+17 			div = Math.min(div, n);
+18 			ans = Math.min(ans, Math.abs(div * (p + q) - m));
+19 			div = Math.min(div + 1, n);
+20 			ans = Math.min(ans, Math.abs(div * (p + q) - m));
+21 			System.out.println(ans);
+22 			return;
+23 		}
+24 		// pa^k+qb^k
+25 		long lim = 0;
+26 		while (p * Math.pow(a, lim) + q * Math.pow(b, lim) <= m) {
+27 			++lim;
+28 		}
+29 		lim += 1;
+30 		lim = Math.min(lim, n);
+31 		lim = Math.min(lim, 40);
+32 		ArrayList<Long> pending1 = new ArrayList<>();
+33 		ArrayList<Long> pending2 = new ArrayList<>();
+34 		long[] powA = new long[42];
+35 		long[] powB = new long[42];
+36 		powA[0] = 1;
+37 		powB[0] = 1;
+38 		for (int i = 1; i < powA.length; ++i) {
+39 			powA[i] = powA[i - 1] * a;
+40 			powB[i] = powB[i - 1] * b;
+41 		}
+42 		for (int t = 0; t < 2; ++t) {
+43 			long max = (t == 0 ? lim / 2 : (lim + 1) / 2);
+44 			outer: for (long i = 0; i < (1L << max); ++i) {
+45 				long s = 0;
+46 				for (int j = 0; j < max; ++j) {
+47 					if ((i & (1L << j)) > 0) {
+48 						s += p * powA[(int) (j + (t == 1 ? lim / 2 : 0))]
+49 								+ q * powB[(int) (j + (t == 1 ? lim / 2 : 0))];
+50 						if (s > INF)
+51 							continue outer;
+52 					}
+53 				}
+54 				if (t == 0)
+55 					pending1.add(s);
+56 				else
+57 					pending2.add(s);
+58 			}
+59 		}
+60 
+61 		Collections.sort(pending1);
+62 		Collections.sort(pending2);
+63 
+64 		long ans = m;
+65 		for (int j = 0; j < 2; ++j) {
+66 			int t = pending2.size() - 1;
+67 			for (int i = 0; i < pending1.size(); ++i) {
+68 				if (j == 0)
+69 					while (t > 0 && pending1.get(i) + pending2.get(t) > m)
+70 						--t;
+71 				else if (j == 1)
+72 					while (t > 0 && pending1.get(i) + pending2.get(t) >= m
+73 							&& pending1.get(i) + pending2.get(t - 1) >= m)
+74 						--t;
+75 				ans = Math.min(ans, Math.abs(-m + pending1.get(i) + pending2.get(t)));
+76 			}
+77 		}
+78 
+79 		System.out.println(ans);
+80 
+81 	}
+82 
+83 	static void tr(Object... objects) {
+84 		System.out.println(Arrays.deepToString(objects));
+85 	}
+86 
+87 	static long pow(long a, long n) {
+88 		long ret = 1;
+89 		for (; n > 0; n >>= 1, a *= a) {
+90 			if (n % 2 == 1) {
+91 				ret *= a;
+92 			}
+93 		}
+94 		return ret;
+95 	}
+96 }

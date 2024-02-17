@@ -1,0 +1,726 @@
+1 import java.util.*;
+2 import java.io.*;
+3 import java.math.*;
+4 
+5 public class Main{
+6   static int repow(int b,int p){
+7     long a = b;
+8     long res=1;
+9     while(p>0){
+10       if(p%2==1){
+11         res*=a;
+12       }
+13       a*=a;
+14       p/=2;
+15     }
+16     return (int)res;
+17   }
+18   static int repow(int b,int p,int modder){
+19     long a = b%modder;
+20     long res=1;
+21     while(p>0){
+22       if(p%2==1){
+23         res=(res*a)%modder;
+24       }
+25       a=(a*a)%modder;
+26       p/=2;
+27     }
+28     return (int)res;
+29   }
+30   static long repow(long b,long p){
+31     long a = b;
+32     long res=1;
+33     while(p>0){
+34       if(p%2==1){
+35         res*=a;
+36       }
+37       a*=a;
+38       p/=2;
+39     }
+40     return res;
+41   }
+42   static long repow(long b,long p,long modder){
+43     long a = b%modder;
+44     long res=1;
+45     while(p>0){
+46       if(p%2==1){
+47         res=(res*a)%modder;
+48       }
+49       a=(a*a)%modder;
+50       p/=2;
+51     }
+52     return res;
+53   }
+54   static long gcd(long c,long d){
+55     while(true){
+56       long f=c%d;
+57       if(f==0){
+58         return d;
+59       }
+60       c=d;
+61       d=f;
+62     }
+63   }
+64   static long lcm(long c,long d){
+65     return c/gcd(c,d)*d;
+66   }
+67   static ArrayList<Integer> divList(int n){
+68     ArrayList<Integer> div=new ArrayList<Integer>();
+69     for(int i=1;i*i<=n;i++){
+70       if(n%i==0){
+71         div.add(i);
+72         if(i*i!=n){
+73           div.add((int)(n/i));
+74         }
+75       }
+76     }
+77     return div;
+78   }
+79   static ArrayList<Long> divList(long n){
+80     ArrayList<Long> div=new ArrayList<Long>();
+81     for(long i=1;i*i<=n;i++){
+82       if(n%i==0){
+83         div.add(i);
+84         if(i*i!=n){
+85           div.add(n/i);
+86         }
+87       }
+88     }
+89     return div;
+90   }
+91   static HashSet<Integer> divSet(int n){
+92     HashSet<Integer> div=new HashSet<Integer>();
+93     for(int i=1;i*i<=n;i++){
+94       if(n%i==0){
+95         div.add(i);
+96         div.add((int)(n/i));
+97       }
+98     }
+99     return div;
+100   }
+101   static Map<Long,Integer> pFacMap(long x){
+102     Map<Long,Integer> mp=new HashMap<>();
+103     long t=x;
+104     for(long i=2;i*i<=x&&i<=t;i++){
+105       if(t%i==0){
+106         int num=0;
+107         while(t%i==0){
+108           t/=i;
+109           num++;
+110         }
+111         mp.put(i,num);
+112       }
+113     }
+114     if(t!=1){
+115       mp.put(t,1);
+116     }
+117     return mp;
+118   }
+119   static boolean iP(long n){
+120     if(n==2){
+121       return true;
+122     }
+123     if((n&1)==0||n==1){
+124       return false;
+125     }
+126     //    if(n>3037007383L){
+127     if(n>Integer.MAX_VALUE){
+128       return tameshiwari(n);
+129     }
+130     long d=n-1;
+131     int s=0;
+132     while((d&1)==0){
+133       d/=2;
+134       s++;
+135     }
+136     int[] aa = {2,3,5,7,11,13,17};
+137     for(int i=0;i<7&&aa[i]<n;i++){
+138       int a = aa[i];
+139       long t = d;
+140       long y=repow(a,t,n);
+141       while(t!=n-1&&y!=1&&y!=n-1){
+142         y = (y*y)%n;
+143         t=t<<1;
+144       }
+145       if(y!=n-1&&(t&1)==0){
+146         return false;
+147       }
+148     }
+149     return true;
+150   }
+151   static boolean tameshiwari(long n){
+152     for(long i=2;i*i<=n;i++){
+153       if(n%i==0){
+154         return false;
+155       }
+156     }
+157     return true;
+158   }
+159   static class NCK{
+160     int max;
+161     int mod;
+162     long[] fac;
+163     long[] finv;
+164     long[] inv;
+165     NCK(){
+166       this(510000,1000000007);
+167     }
+168     NCK(int max,int mod){
+169       this.max=max;
+170       this.mod=mod;
+171       pre(max,mod);
+172     }
+173     void pre(int nmax,int nmod){
+174       fac = new long[nmax];
+175       finv = new long[nmax];
+176       inv = new long[nmax];
+177       fac[0]=fac[1]=1;
+178       finv[0]=finv[1]=1;
+179       inv[1]=1;
+180       for(int i=2;i<nmax;i++){
+181         fac[i]=fac[i-1]*i%nmod;
+182         inv[i]=nmod-inv[nmod%i]*(nmod/i)%nmod;
+183         finv[i]=finv[i-1]*inv[i]%nmod;
+184       }
+185     }
+186     long nCk(int n,int k){
+187       if(n<k){return 0;}
+188       if(n<0||k<0){return 0;}
+189       return fac[n]*(finv[k]*finv[n-k]%mod)%mod;
+190     }
+191   }
+192   static int kmp(String t,String p){
+193     int[] f=new int[p.length()+1];
+194     int i=0;
+195     int j=1;
+196     f[1]=0;
+197     while(j<p.length()){
+198       if(i==0||p.charAt(i-1)==p.charAt(j-1)){
+199         i++;
+200         j++;
+201         f[j]=i;
+202       }else{
+203         i=f[i];
+204       }
+205     }
+206     i=1;
+207     j=1;
+208     while(i<=p.length()&&j<=t.length()){
+209       if(i==0||p.charAt(i-1)==t.charAt(j-1)){
+210         i++;
+211         j++;
+212       }else{
+213         i=f[i];
+214       }
+215     }
+216     return i==(p.length()+1)?j-i:-1;
+217   }
+218   static String StSort(String s){
+219     StringBuilder sb = new StringBuilder(s);
+220     int lg = sb.length();
+221     int l;
+222     int r;
+223     int gaze;
+224     for(int i=1;i<lg;i++){
+225       l=0;
+226       r=i-1;
+227       while(l<=r){
+228         gaze=(l+r)/2;
+229         if(sb.charAt(gaze)<=sb.charAt(i)){
+230           l=gaze+1;
+231         }else if(sb.charAt(gaze)>sb.charAt(i)){
+232           r=gaze-1;
+233         }
+234       }
+235       sb.insert(l,sb.charAt(i));
+236       sb.deleteCharAt(i+1);
+237     }
+238     return sb.toString();
+239   }
+240   static class Xy{
+241     int x;
+242     int y;
+243     Xy(int x,int y){
+244       this.x=x;
+245       this.y=y;
+246     }
+247     public int manht(Xy o){
+248       return Math.abs(x-o.x)+Math.abs(y-o.y);
+249     }
+250     public String toString(){
+251       return "["+x+","+y+"]";
+252     }
+253     public double henkaku(){
+254       return Math.atan2(y,x);
+255     }
+256     public static int hencom(Xy s1,Xy s2){
+257       return (int)Math.signum(s1.henkaku()-s2.henkaku());
+258     }
+259     public boolean equals(Object o){
+260       return x==((Xy)o).x&&y==((Xy)o).y;
+261     }
+262   }
+263   static class Zip1{
+264     Map<Long,Integer> zip=new HashMap<>();
+265     long[] unzip;
+266     Zip1(long[] a){
+267       Arrays.sort(a);
+268       long mae=0;int zure=0;
+269       for(int i=0;i<a.length;i++){
+270         if(i==0||mae!=a[i]){
+271           zip.put(a[i],i-zure);
+272           mae=a[i];
+273         }else{
+274           zure++;
+275         }
+276       }
+277       unzip=new long[size()];
+278       for(Map.Entry<Long,Integer> me:zip.entrySet()){
+279         unzip[me.getValue()]=me.getKey();
+280       }
+281     }
+282     int zip(long t){
+283       return zip.get(t);
+284     }
+285     long unzip(int i){
+286       return unzip[i];
+287     }
+288     int size(){
+289       return zip.size();
+290     }
+291   }
+292   static class UnFd{
+293     int[] parent;
+294     int[] size;
+295     int forest;
+296     UnFd(int n){
+297       parent=new int[n];
+298       size=new int[n];
+299       forest=n;
+300       for(int i=0;i<n;i++){
+301         parent[i]=i;
+302         size[i]=1;
+303       }
+304     }
+305     private boolean isRoot(int i){
+306       return parent[i]==i;
+307     }
+308     private int rootOf(int i){
+309       if(isRoot(i)){
+310         return i;
+311       }
+312       return parent[i]=rootOf(parent[i]);
+313     }
+314     public boolean same(int i,int j){
+315       return rootOf(i)==rootOf(j);
+316     }
+317     public void merge(int i,int j){
+318       i=rootOf(i);
+319       j=rootOf(j);
+320       if(i==j){
+321         return;
+322       }
+323       size[Integer.min(i,j)]+=size[Integer.max(i,j)];
+324       parent[Integer.max(i,j)]=Integer.min(i,j);
+325       forest--;
+326     }
+327     public int sizeOf(int i){
+328       return size[rootOf(i)];
+329     }
+330     public int[] parents(){
+331       return parent;
+332     }
+333     public int forest(){
+334       return forest;
+335     }
+336     public String toString(){
+337       return Arrays.toString(parent);
+338     }
+339   }
+340   static class SegTree<T>{
+341     int n;
+342     int m;
+343     java.util.function.BinaryOperator<T> op;
+344     int[] l;
+345     int[] r;
+346     T[] a;
+347     T ident;
+348     SegTree(int n,java.util.function.BinaryOperator<T> op,T ident){
+349       this.n=n;
+350       this.op=op;
+351       this.ident=ident;
+352       int ii=n-1;
+353       int p=0;
+354       while(ii>0){
+355         ii/=2;
+356         p++;
+357       }
+358       m=repow(2,p+1)-1;
+359       @SuppressWarnings("unchecked")
+360       T[] b=(T[])(new Object[m]);
+361       a=b;
+362       Arrays.fill(a,ident);
+363       l=new int[m];
+364       r=new int[m];
+365       for(int i=0;i<=m/2;i++){
+366         l[m/2+i]=i;
+367         r[m/2+i]=i+1;
+368       }
+369       for(int i=m/2-1;i>=0;i--){
+370         l[i]=l[lch(i)];
+371         r[i]=r[rch(i)];
+372       }
+373     }
+374     SegTree(int n,java.util.function.BinaryOperator<T> op,T ident,T[] ary){
+375       this.n=n;
+376       this.op=op;
+377       this.ident=ident;
+378       int ii=n-1;
+379       int p=0;
+380       while(ii>0){
+381         ii/=2;
+382         p++;
+383       }
+384       m=repow(2,p+1)-1;
+385       @SuppressWarnings("unchecked")
+386       T[] b=(T[])(new Object[m]);
+387       a=b;
+388       for(int i=0;i<n;i++){
+389         a[m/2+i]=ary[i];
+390       }
+391       for(int i=m/2+n;i<m;i++){
+392         a[i]=ident;
+393       }
+394       for(int i=m/2-1;i>=0;i--){
+395         a[i]=op.apply(a[lch(i)],a[rch(i)]);
+396       }
+397       l=new int[m];
+398       r=new int[m];
+399       for(int i=0;i<=m/2;i++){
+400         l[m/2+i]=i;
+401         r[m/2+i]=i+1;
+402       }
+403       for(int i=m/2-1;i>=0;i--){
+404         l[i]=l[lch(i)];
+405         r[i]=r[rch(i)];
+406       }
+407     }
+408     public T getAll(){
+409       return a[0];
+410     }
+411     public T get(int from,int to){
+412       if(from<0||n<to||from>=to){
+413         throw new IllegalArgumentException(String.valueOf(from)+","+String.valueOf(to));
+414       }
+415       return get(from,to,0);
+416     }
+417     private T get(int from,int to,int node){
+418       if(from==l[node]&&to==r[node]){
+419         return a[node];
+420       }else{
+421         if(to<=l[node]+(r[node]-l[node])/2){
+422           return get(from,to,lch(node));
+423         }else if(l[node]+(r[node]-l[node])/2<=from){
+424           return get(from,to,rch(node));
+425         }else{
+426           return op.apply(get(from,l[node]+(r[node]-l[node])/2,lch(node)),get(l[node]+(r[node]-l[node])/2,to,rch(node)));
+427         }
+428       }
+429     }
+430     public void set(T ob,int i){
+431       if(i<0||n<=i){
+432         throw new IndexOutOfBoundsException(String.valueOf(i)+"isOutFromLength "+String.valueOf(n));
+433       }
+434       int j=m/2+i;
+435       a[j]=ob;
+436       while(true){
+437         if(j==0){
+438           break;
+439         }
+440         j=prt(j);
+441         a[j]=op.apply(a[lch(j)],a[rch(j)]);
+442       }
+443     }
+444     static private int prt(int node){
+445       return (node-1)/2;
+446     }
+447     static private int lch(int node){
+448       return 2*node+1;
+449     }
+450     static private int rch(int node){
+451       return 2*node+2;
+452     }
+453     public String toString(){
+454       return Arrays.toString(a);
+455     }
+456   }
+457   static boolean next_permutation(int[] per){
+458     if(per.length<2){
+459       return false;
+460     }
+461     int i;
+462     for(i=per.length-1;i>0;i--){
+463       if(per[i-1]<per[i]){
+464         break;
+465       }
+466     }
+467     if(0<i){
+468       i--;
+469       int tmp;
+470       int j;
+471       for(j=per.length-1;j>i;j--){
+472         if(per[j]>per[i]){
+473           break;
+474         }
+475       }
+476       //swap(i,j)
+477       tmp=per[i];
+478       per[i]=per[j];
+479       per[j]=tmp;
+480       for(int k=i+1;k<(i+1+per.length)/2;k++){
+481         //swap(k,per.length-k+i)
+482         tmp=per[k];
+483         per[k]=per[per.length-k+i];
+484         per[per.length-k+i]=tmp;
+485       }
+486       return true;
+487     }
+488     int tmp;
+489     for(int k=0;k<per.length;k++){
+490       //swap(k,per.length-k-1)
+491       tmp=per[k];  
+492       per[k]=per[per.length-k-1];
+493       per[per.length-k-1]=tmp;
+494     }
+495     return false;
+496   }
+497   static boolean next_bits(boolean[] b){
+498     for(int i=0;i<b.length;i++){
+499       if(b[i]){
+500         b[i]=false;
+501       }else{
+502         b[i]=true;
+503         return true;
+504       }
+505     }
+506     return false;
+507   }
+508   static class Scnr{
+509     private final InputStream ins;
+510     private final byte[] buffer = new byte[1024];
+511     private int ptr = 0;
+512     private int buflen = 0;
+513     Scnr(){
+514       this(System.in);
+515     }
+516     Scnr(InputStream in){
+517       ins = in;
+518     }
+519     private boolean hasNextByte(){
+520       if(ptr<buflen){
+521         return true;
+522       }else{
+523         ptr = 0;
+524         try{
+525           buflen = ins.read(buffer);
+526         }catch(IOException e){
+527           e.printStackTrace();
+528         }
+529         if(buflen<=0){
+530           return false;
+531         }
+532       }
+533       return true;
+534     }
+535     private int readByte(){
+536       if(hasNextByte()){
+537         return buffer[ptr++];
+538       }else{
+539         return -1;
+540       }
+541     }
+542     private static boolean isPrintableChar(int c){
+543       return 33<=c&&c<=126;
+544     }
+545     public boolean hasNext(){
+546       while(hasNextByte()&&!isPrintableChar(buffer[ptr])){
+547         ptr++;
+548       }
+549       return hasNextByte();
+550     }
+551     public String next(){
+552       return nextBuilder().toString();
+553     }
+554     public StringBuilder nextBuilder(){
+555       if(!hasNext()){
+556         throw new NoSuchElementException();
+557       }
+558       StringBuilder sb = new StringBuilder();
+559       int b = readByte();
+560       while(isPrintableChar(b)){
+561         sb.appendCodePoint(b);
+562         b = readByte();
+563       }
+564       return sb;
+565     }
+566     public double nextDouble(){
+567       return Double.parseDouble(next());
+568     }
+569     public long nextLong(){
+570       if(!hasNext()){
+571         throw new NoSuchElementException();
+572       }
+573       long n = 0;
+574       boolean minus = false;
+575       int b = readByte();
+576       if(b=='-'){
+577         minus=true;
+578         b=readByte();
+579       }
+580       if(b<'0'||'9'<b){
+581         throw new NumberFormatException();
+582       }
+583       while(true){
+584         if('0'<=b&&b<='9'){
+585           n*=10;
+586           n+=b-'0';
+587         }else if(b==-1||!isPrintableChar(b)){
+588           return minus?-n:n;
+589         }else{
+590           throw new NumberFormatException();
+591         }
+592         b=readByte();
+593       }
+594     }
+595     public int nextInt(){
+596       long nl=nextLong();
+597       if(nl<Integer.MIN_VALUE||Integer.MAX_VALUE<nl){
+598         throw new NumberFormatException();
+599       }
+600       return (int) nl;
+601     }
+602     public String[] nextA(int n){
+603       String[] a = new String[n];
+604       nextA(a,n);
+605       return a;
+606     }
+607     public void nextA(String[] a,int n){
+608       nextA(a,0,n);
+609     }
+610     public void nextA(String[] a,int off,int len){
+611       for(int i=off;i<off+len;i++){
+612         a[i]=next();
+613       }
+614     }
+615     public int[] nextAint(int n){
+616       int[] a = new int[n];
+617       nextAint(a,n);
+618       return a;
+619     }
+620     public void nextAint(int[] a,int n){
+621       nextAint(a,0,n);
+622     }
+623     public void nextAint(int[] a,int off,int len){
+624       for(int i=off;i<off+len;i++){
+625         a[i] = nextInt();
+626       }
+627     }
+628     public Integer[] nextAInt(int n){
+629       Integer[] a = new Integer[n];
+630       nextAInt(a,n);
+631       return a;
+632     }
+633     public void nextAInt(Integer[] a,int n){
+634       nextAInt(a,0,n);
+635     }
+636     public void nextAInt(Integer[] a,int off,int len){
+637       for(int i=off;i<off+len;i++){
+638         a[i] = nextInt();
+639       }
+640     }
+641     public long[] nextALong(int n){
+642       long[] a = new long[n];
+643       nextALong(a,n);
+644       return a;
+645     }
+646     public void nextALong(long[] a,int n){
+647       nextALong(a,0,n);
+648     }
+649     public void nextALong(long[] a,int off,int len){
+650       for(int i=off;i<off+len;i++){
+651         a[i] = nextLong();
+652       }
+653     }
+654     public double[] nextADouble(int n){
+655       double[] a = new double[n];
+656       nextADouble(a,n);
+657       return a;
+658     }
+659     public void nextADouble(double[] a,int n){
+660       nextADouble(a,0,n);
+661     }
+662     public void nextADouble(double[] a,int off,int len){
+663       for(int i=off;i<off+len;i++){
+664         a[i] = nextDouble();
+665       }
+666     }
+667     public List<Integer> nextLInt(int n){
+668       List<Integer> l = new ArrayList<>(n);
+669       for(int i=0;i<n;i++){
+670         l.add(sc.nextInt());
+671       }
+672       return l;
+673     }
+674     public List<Long> nextLLong(int n){
+675       List<Long> l = new ArrayList<>(n);
+676       for(int i=0;i<n;i++){
+677         l.add(sc.nextLong());
+678       }
+679       return l;
+680     }
+681     public List<Double> nextLDouble(int n){
+682       List<Double> l = new ArrayList<>(n);
+683       for(int i=0;i<n;i++){
+684         l.add(sc.nextDouble());
+685       }
+686       return l;
+687     }
+688   }
+689   
+690   static Scnr sc = new Scnr();
+691   static PrintWriter out = new PrintWriter(System.out);
+692   public static void main(String args[]){
+693     //for(int i=sc.nextInt();i>0;i--)
+694     solve();
+695     out.flush();
+696   }
+697 //  static int mod=1000000007;
+698   static void solve(){
+699     int n=sc.nextInt();
+700     int m=sc.nextInt();
+701     if(n%2==1){
+702       int f=1;
+703       int t=n;
+704       for(int i=0;i<m;i++){
+705         out.println(f+" "+t);
+706         f++;
+707         t--;
+708       }
+709     }else{
+710       int f=1;
+711       int t=n;
+712       int i;
+713       for(i=0;i<(m+1)/2;i++){
+714         out.println(f+" "+t);
+715         f++;
+716         t--;
+717       }
+718       t--;
+719       for(;i<m;i++){
+720         out.println(f+" "+t);
+721         f++;
+722         t--;
+723       }
+724     }
+725   }
+726 }

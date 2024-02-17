@@ -1,0 +1,171 @@
+Below is an instruction that describes a task, paired with an input that
+provides further context.  Write a response that appropriately completes
+the request.
+
+### Instruction:
+Below is an example:
+[[[Example Start]]]
+I want to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the output of the code.
+Consider the following code:
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class Main {
+
+    public static void main(String[] args) {
+        try {
+            InputStreamReader isr = new InputStreamReader(System.in);
+            BufferedReader br = new BufferedReader(isr);
+            String strArr[] = br.readLine().split(" ");
+
+            int n = Integer.parseInt(strArr[0]);
+            int a = Integer.parseInt(strArr[1]);
+            int b = Integer.parseInt(strArr[2]);
+            int answer = 0;
+
+            for (int i = 1; i < n + 1; i++) {
+                int num = i;
+                int sum = 0;
+
+                while (num!= 0) {
+                        sum += num % 10;
+                        num /= 10;
+                }
+
+                if (sum >= a && sum <= b ) {
+                        answer = answer + i;
+                }
+            }
+            System.out.println(answer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+<<Question>>
+What would be the output of code executiion given the following input:
+20 2 5
+First think step by step then print the output of code execution and end the output with "END-OF-OUTPUT".
+<<Answer>>
+The variable `n`, variable `a` and variable `b` are initialized with 20, 2 and 5, respectively. And variable `answer` is initialized with 0.
+It enters a for loop and it iterates from 1 to 20 to check each integer `i` in this range.
+In each iteration, the value of variable `i` is passed to variable `num` and variable `sum` is first initialized with 0.
+Then it calculates the sum of the digits of the variable `num` by repeatedlly extracting the digits of `num` with a while loop and adding it to variable `sum`.
+After that it checks if the calculated variable `sum` fall within the range [2, 5]. If it does, it adds the value of variable `i` to variable `answer`. The condition is met when `i` is 2,3,4,5,11,12,13,14 and 20.
+When the loop finishes, it print the fianl value of variable `answer` as output, which is 84.
+
+The output of code execution is:
+84
+END-OF-OUTPUT
+[[[Example End]]]
+
+
+Consider the following code: 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class Main {
+
+    static Parser parser = new Parser();
+
+    public static void main(String[] args) throws IOException {
+
+        int K = parser.parseInt();
+        int[] dp = new int[K];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+
+        Deque<Integer> deque = new ArrayDeque<>();
+
+        dp[1] = 1;
+        deque.add(1);
+        while(!deque.isEmpty()){
+            int curr = deque.poll();
+            int v1 = (curr + 1) % K;
+            int v2 = (curr * 10) % K;
+
+            if(dp[v1] > dp[curr] + 1){
+                deque.addFirst(v1);
+                dp[v1] = dp[curr] + 1;
+            }
+
+            if(dp[v2] > dp[curr]){
+                deque.addLast(v2);
+                dp[v2] = dp[curr];
+            }
+        }
+
+        System.out.println(dp[0]);
+
+    }
+
+}
+
+class Parser {
+    private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private static final Iterator<String> stringIterator = br.lines().iterator();
+    private static final Deque<String> inputs = new ArrayDeque<>();
+
+    void fill() throws IOException {
+        if(inputs.isEmpty()){
+            if(!stringIterator.hasNext()) throw new IOException();
+            inputs.addAll(Arrays.asList(stringIterator.next().split(" ")));
+        }
+    }
+
+    Integer parseInt() throws IOException {
+        fill();
+        if(!inputs.isEmpty()) {
+            return Integer.parseInt(inputs.pollFirst());
+        }
+        throw new IOException();
+    }
+
+    Long parseLong() throws IOException {
+        fill();
+        if(!inputs.isEmpty()) {
+            return Long.parseLong(inputs.pollFirst());
+        }
+        throw new IOException();
+    }
+
+    Double parseDouble() throws IOException {
+        fill();
+        if(!inputs.isEmpty()) {
+            return Double.parseDouble(inputs.pollFirst());
+        }
+        throw new IOException();
+    }
+
+    String parseString() throws IOException {
+        fill();
+        return inputs.pollFirst();
+    }
+
+}
+<<Question>>
+What would be the output of code executiion given the following input:
+6
+
+First think step by step then print the output of code execution and end the output with "END-OF-OUTPUT"\<<Answer>>
+### Response:
+The variable `K` is initialized with 6. And an array `dp` of size `K` is initialized with `Integer.MAX_VALUE`.
+A `Deque` called `deque` is initialized to store the indices of the array `dp`.
+
+The value of `dp[1]` is set to 1 and the index 1 is added to the `deque`.
+
+The while loop runs until the `deque` is empty. In each iteration, the index of the current element is polled from the `deque`.
+
+Two new indices are calculated by adding 1 and multiplying the current index by 10, respectively.
+
+If the value of `dp[v1]` is greater than `dp[curr] + 1`, then the index `v1` is added to the `deque` with a value of `dp[curr] + 1`.
+
+If the value of `dp[v2]` is greater than `dp[curr]`, then the index `v2` is added to the `deque` with a value of `dp[curr]`.
+
+After the while loop finishes, the value of `dp[0]` is printed as output, which is 3.
+
+The output of code execution is:
+3
+END-OF-OUTPUT

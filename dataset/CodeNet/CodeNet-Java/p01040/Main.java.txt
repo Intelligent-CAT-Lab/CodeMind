@@ -1,0 +1,68 @@
+1 import java.util.Scanner;
+2 
+3 public class Main {
+4 
+5 	static final int a0 = 1;
+6 	static final int[] days = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+7 
+8 	public static void main(String[] args) {
+9 		Scanner sc = new Scanner(System.in);
+10 		System.out.println(count(sc.nextLong(),sc.nextInt(),sc.nextInt(),sc.nextLong(),sc.nextInt(),sc.nextInt()));
+11 	}
+12 
+13 	public static long count(long y1,int m1,int d1,long y2,int m2,int d2) {
+14 		long count400 = count(1,1,1,a0,400,12,31);
+15 		d1--;
+16 		if (d1 <= 0) {
+17 			m1--;
+18 			if(m1 <= 0) {
+19 				y1--;
+20 				m1 = 12;
+21 			}
+22 			d1 = days[m1];
+23 		}
+24 		long yy1 = (y1 - 1) / 400;
+25 		long c1 = count400 * yy1 + count(yy1 * 400 + 1, 1, 1, a0, y1, m1, d1);
+26 		long yy2 = (y2 - 1) / 400;
+27 		long c2 = count400 * yy2 + count(yy2 * 400 + 1, 1, 1, a0, y2, m2, d2);
+28 		return c2 - c1;
+29 	}
+30 
+31 	public static long count(long y1,int m1,int d1,int a,long y2,int m2,int d2) {
+32 		long count = 0;
+33 		while(true) {
+34 			if (y1 > y2 || y1 == y2 && m1 > m2 || y1 == y2 && m1 == m2 && d1 > d2) {
+35 				break;
+36 			}
+37 			if (d1 == 13 && a == 5) {
+38 				count++;
+39 			}
+40 //			if (y1 == 2015 && m1 == 3 && d1 == 13) {
+41 //				System.out.println(a);
+42 //			}
+43 
+44 			d1++;
+45 			if (d1 > days[m1] + (m1 == 2 && isUruu(y1) ? 1 : 0)) {
+46 				d1 = 1;
+47 				m1++;
+48 			}
+49 			if (m1 > 12) {
+50 				m1 = 1;
+51 				y1++;
+52 			}
+53 			a = (a + 1) % 7;
+54 		}
+55 		return count;
+56 	}
+57 
+58 	public static boolean isUruu(long y) {
+59 		if (y % 400 == 0) {
+60 			return true;
+61 		}else if(y % 100 == 0) {
+62 			return false;
+63 		}else{
+64 			return y % 4 == 0;
+65 		}
+66 	}
+67 
+68 }

@@ -1,0 +1,136 @@
+1 import java.util.*;
+2 import java.lang.*;
+3 import java.math.*;
+4 import java.io.*;
+5 import static java.lang.Math.*;
+6 import static java.util.Arrays.*;
+7 import static java.util.Collections.*;
+8 
+9 // Get Lost
+10 public class Main{
+11 	Scanner sc=new Scanner(System.in);
+12 
+13 	int w, h, gx, gy, n;
+14 	int[] xs, ys;
+15 	String run;
+16 
+17 	void run(){
+18 		w=sc.nextInt();
+19 		h=sc.nextInt();
+20 		gx=sc.nextInt()-1;
+21 		gy=sc.nextInt()-1;
+22 		n=sc.nextInt();
+23 		xs=new int[n];
+24 		ys=new int[n];
+25 		for(int i=0; i<n; i++){
+26 			xs[i]=sc.nextInt()-1;
+27 			ys[i]=sc.nextInt()-1;
+28 		}
+29 		run=sc.next()+"$";
+30 		solve();
+31 	}
+32 
+33 	void solve(){
+34 		long sum=0;
+35 		for(int d=0; d<4; d++){
+36 			sum+=solve1();
+37 			int ngx=h-1-gy, ngy=gx;
+38 			gx=ngx;
+39 			gy=ngy;
+40 			for(int i=0; i<n; i++){
+41 				int nx=h-1-ys[i], ny=xs[i];
+42 				xs[i]=nx;
+43 				ys[i]=ny;
+44 			}
+45 			int t=w;
+46 			w=h;
+47 			h=t;
+48 		}
+49 		println(sum+"");
+50 	}
+51 
+52 	TreeSet<Integer>[] sets1, sets2;
+53 
+54 	@SuppressWarnings("unchecked")
+55 	long solve1(){
+56 		sets1=new TreeSet[w];
+57 		for(int i=0; i<w; i++){
+58 			sets1[i]=new TreeSet<Integer>();
+59 			sets1[i].add(-1);
+60 			sets1[i].add(h);
+61 		}
+62 		sets2=new TreeSet[h];
+63 		for(int i=0; i<h; i++){
+64 			sets2[i]=new TreeSet<Integer>();
+65 			sets2[i].add(-1);
+66 			sets2[i].add(w);
+67 		}
+68 
+69 		for(int i=0; i<n; i++){
+70 			sets1[xs[i]].add(ys[i]);
+71 			sets2[ys[i]].add(xs[i]);
+72 		}
+73 		sets1[gx].add(gy);
+74 		sets2[gy].add(gx);
+75 
+76 		long sum=1;
+77 		for(int x=0; x<w; x++){
+78 			int py=-2;
+79 			for(int y : sets1[x]){
+80 				int sy=y-1;
+81 				if(sy!=py){
+82 					if(ok(x, sy, 0)){
+83 						// [py+1, y-1]
+84 						sum+=y-py-1;
+85 					}
+86 				}
+87 				py=y;
+88 			}
+89 		}
+90 		return sum;
+91 	}
+92 
+93 	boolean ok(int x, int y, int d){
+94 		for(int k=0; k<run.length(); k++){
+95 			int wx, wy; // wall or goal
+96 			int nx, ny; // next point
+97 			if(d==0){
+98 				wx=nx=x;
+99 				wy=sets1[x].higher(y);
+100 				ny=wy-1;
+101 			}else if(d==1){
+102 				wy=ny=y;
+103 				wx=sets2[y].lower(x);
+104 				nx=wx+1;
+105 			}else if(d==2){
+106 				wx=nx=x;
+107 				wy=sets1[x].lower(y);
+108 				ny=wy+1;
+109 			}else{
+110 				assert d==3;
+111 				wy=ny=y;
+112 				wx=sets2[y].higher(x);
+113 				nx=wx-1;
+114 			}
+115 			if(wx==gx&&wy==gy){
+116 				return true;
+117 			}
+118 			x=nx;
+119 			y=ny;
+120 			if(run.charAt(k)=='L'){
+121 				d=(d+3)%4;
+122 			}else if(run.charAt(k)=='R'){
+123 				d=(d+1)%4;
+124 			}
+125 		}
+126 		return false;
+127 	}
+128 
+129 	void println(String s){
+130 		System.out.println(s);
+131 	}
+132 
+133 	public static void main(String[] args){
+134 		new Main().run();
+135 	}
+136 }

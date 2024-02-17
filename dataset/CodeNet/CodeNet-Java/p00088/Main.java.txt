@@ -1,0 +1,126 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStreamReader;
+4 
+5 
+6 public class Main {
+7 	private	static	BufferedReader	br = null;
+8 
+9 	static {
+10 		br = new BufferedReader(new InputStreamReader(System.in));
+11 	}
+12  
+13     /**
+14      * @param args
+15      */
+16 	public static void main(String[] args) {
+17 	// TODO Auto-generated method stub
+18 		String	stdin = null;
+19 
+20 		while ((stdin = parseStdin()) != null) {
+21 			String	work = "";
+22 			String	out  = "";
+23 
+24 			for(int loop = 0; loop < stdin.length(); loop++) {
+25 				work += MyConv.Encode(stdin.charAt(loop));
+26 			}
+27 
+28 			while(work.length() % 5 != 0) {
+29 				work += "0";
+30 			}
+31 
+32 			for(int loop = 0; loop < work.length(); loop += 5) {
+33 				out += MyConv.Decode(work.substring(loop, loop + 5));
+34 			}
+35 
+36 			System.out.println(out);
+37 		}
+38 	}
+39 
+40 	private static String parseStdin() {
+41         String  stdin = null;
+42         
+43         try {
+44        		stdin = br.readLine();
+45         }
+46         catch (IOException e) {}
+47  
+48         return stdin;
+49 	}
+50 }
+51 
+52 class MyConv {
+53 	public static String Encode(char key) {
+54 		switch (key) {
+55 		case ' ':  return "101";
+56 		case '\'': return "000000";
+57 		case ',':  return "000011";
+58 		case '-':  return "10010001";
+59 		case '.':  return "010001";
+60 		case '?':  return "000001";
+61 		case 'A':  return "100101";
+62 		case 'B':  return "10011010";
+63 		case 'C':  return "0101";
+64 		case 'D':  return "0001";
+65 		case 'E':  return "110";
+66 		case 'F':  return "01001";
+67 		case 'G':  return "10011011";
+68 		case 'H':  return "010000";
+69 		case 'I':  return "0111";
+70 		case 'J':  return "10011000";
+71 		case 'K':  return "0110";
+72 		case 'L':  return "00100";
+73 		case 'M':  return "10011001";
+74 		case 'N':  return "10011110";
+75 		case 'O':  return "00101";
+76 		case 'P':  return "111";
+77 		case 'Q':  return "10011111";
+78 		case 'R':  return "1000";
+79 		case 'S':  return "00110";
+80 		case 'T':  return "00111";
+81 		case 'U':  return "10011100";
+82 		case 'V':  return "10011101";
+83 		case 'W':  return "000010";
+84 		case 'X':  return "10010010";
+85 		case 'Y':  return "10010011";
+86 		case 'Z':  return "10010000";
+87 		}
+88 		return "";
+89 	}
+90 
+91 	public static char Decode(String key) {
+92 		if (key.equals("00000")) return 'A';
+93 		if (key.equals("00001")) return 'B';
+94 		if (key.equals("00010")) return 'C';
+95 		if (key.equals("00011")) return 'D';
+96 		if (key.equals("00100")) return 'E';
+97 		if (key.equals("00101")) return 'F';
+98 		if (key.equals("00110")) return 'G';
+99 		if (key.equals("00111")) return 'H';
+100 		if (key.equals("01000")) return 'I';
+101 		if (key.equals("01001")) return 'J';
+102 		if (key.equals("01010")) return 'K';
+103 		if (key.equals("01011")) return 'L';
+104 		if (key.equals("01100")) return 'M';
+105 		if (key.equals("01101")) return 'N';
+106 		if (key.equals("01110")) return 'O';
+107 		if (key.equals("01111")) return 'P';
+108 		if (key.equals("10000")) return 'Q';
+109 		if (key.equals("10001")) return 'R';
+110 		if (key.equals("10010")) return 'S';
+111 		if (key.equals("10011")) return 'T';
+112 		if (key.equals("10100")) return 'U';
+113 		if (key.equals("10101")) return 'V';
+114 		if (key.equals("10110")) return 'W';
+115 		if (key.equals("10111")) return 'X';
+116 		if (key.equals("11000")) return 'Y';
+117 		if (key.equals("11001")) return 'Z';
+118 		if (key.equals("11010")) return ' ';
+119 		if (key.equals("11011")) return '.';
+120 		if (key.equals("11100")) return ',';
+121 		if (key.equals("11101")) return '-';
+122 		if (key.equals("11110")) return '\'';
+123 		if (key.equals("11111")) return '?';
+124 		return 0;
+125 	}
+126 }

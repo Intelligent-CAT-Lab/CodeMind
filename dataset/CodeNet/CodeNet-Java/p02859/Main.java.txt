@@ -1,0 +1,129 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.PrintWriter;
+6 import java.io.BufferedWriter;
+7 import java.io.Writer;
+8 import java.io.OutputStreamWriter;
+9 import java.util.InputMismatchException;
+10 import java.io.IOException;
+11 import java.io.InputStream;
+12 
+13 /**
+14  * Built using CHelper plug-in
+15  * Actual solution is at the top
+16  *
+17  * @author gaidash
+18  */
+19 public class Main {
+20     public static void main(String[] args) {
+21         InputStream inputStream = System.in;
+22         OutputStream outputStream = System.out;
+23         InputReader in = new InputReader(inputStream);
+24         OutputWriter out = new OutputWriter(outputStream);
+25         ACircle solver = new ACircle();
+26         solver.solve(1, in, out);
+27         out.close();
+28     }
+29 
+30     static class ACircle {
+31         public void solve(int testNumber, InputReader in, OutputWriter out) {
+32             int r = in.nextInt();
+33 
+34             out.println(r * r);
+35         }
+36 
+37     }
+38 
+39     static class InputReader {
+40         private InputStream stream;
+41         private byte[] buf = new byte[1024];
+42         private int curChar;
+43         private int numChars;
+44         private InputReader.SpaceCharFilter filter;
+45 
+46         public InputReader(InputStream stream) {
+47             this.stream = stream;
+48         }
+49 
+50         public int read() {
+51             if (numChars == -1) {
+52                 throw new InputMismatchException();
+53             }
+54             if (curChar >= numChars) {
+55                 curChar = 0;
+56                 try {
+57                     numChars = stream.read(buf);
+58                 } catch (IOException e) {
+59                     throw new InputMismatchException();
+60                 }
+61                 if (numChars <= 0) {
+62                     return -1;
+63                 }
+64             }
+65             return buf[curChar++];
+66         }
+67 
+68         public int nextInt() {
+69             int c = read();
+70             while (isSpaceChar(c)) {
+71                 c = read();
+72             }
+73             int sgn = 1;
+74             if (c == '-') {
+75                 sgn = -1;
+76                 c = read();
+77             }
+78             int res = 0;
+79             do {
+80                 if (c < '0' || c > '9') {
+81                     throw new InputMismatchException();
+82                 }
+83                 res *= 10;
+84                 res += c - '0';
+85                 c = read();
+86             } while (!isSpaceChar(c));
+87             return res * sgn;
+88         }
+89 
+90         public boolean isSpaceChar(int c) {
+91             if (filter != null) {
+92                 return filter.isSpaceChar(c);
+93             }
+94             return isWhitespace(c);
+95         }
+96 
+97         public static boolean isWhitespace(int c) {
+98             return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+99         }
+100 
+101         public interface SpaceCharFilter {
+102             public boolean isSpaceChar(int ch);
+103 
+104         }
+105 
+106     }
+107 
+108     static class OutputWriter {
+109         private final PrintWriter writer;
+110 
+111         public OutputWriter(OutputStream outputStream) {
+112             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+113         }
+114 
+115         public OutputWriter(Writer writer) {
+116             this.writer = new PrintWriter(writer);
+117         }
+118 
+119         public void close() {
+120             writer.close();
+121         }
+122 
+123         public void println(int i) {
+124             writer.println(i);
+125         }
+126 
+127     }
+128 }
+129 

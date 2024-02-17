@@ -1,0 +1,38 @@
+1 import java.util.*;
+2 
+3 class Main{
+4 
+5     long search(long x, long y){
+6         long x_min = 0;
+7         long y_min = 0;
+8         long x_max = 0;
+9         long y_max = 0;
+10         long f, f1 = 1, f2 = 0;
+11         long p;
+12         for (p = 0;; p++){
+13             if ( x_min <= x && x <= x_max &&
+14                  y_min <= y && y <= y_max  ) return p%3 + 1;
+15             f = f1 + f2;
+16             if ( p % 4 == 0 )  x_max += f; // east
+17             else if ( p % 4 == 1 ) y_max += f; // north
+18             else if ( p % 4 == 2 ) x_min -= f; // west
+19             else  y_min -= f; // south
+20             f2 = f1;
+21             f1 = f;
+22         }
+23     }
+24 
+25     void solve(){
+26         long x, y;
+27         Scanner sc = new Scanner(System.in);
+28         x = sc.nextLong();
+29         y = sc.nextLong();
+30         System.out.println(search(x, y));
+31     }
+32 
+33     public static void main(String[] args){
+34         new Main().solve();
+35     }
+36 }
+37 
+38 

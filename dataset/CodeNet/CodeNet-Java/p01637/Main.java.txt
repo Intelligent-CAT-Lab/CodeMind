@@ -1,0 +1,52 @@
+1 import java.util.*;
+2 import java.lang.*;
+3 import java.math.*;
+4 import java.io.*;
+5 import static java.lang.Math.*;
+6 import static java.util.Arrays.*;
+7 import static java.util.Collections.*;
+8 
+9 // Change
+10 public class Main{
+11 	Scanner sc=new Scanner(System.in);
+12 
+13 	long M;
+14 	int rD, rR;
+15 	long cD, cR;
+16 
+17 	void run(){
+18 		M=sc.nextLong();
+19 		rD=sc.nextInt();
+20 		rR=sc.nextInt();
+21 		cD=sc.nextLong();
+22 		cR=sc.nextLong();
+23 		solve();
+24 	}
+25 
+26 	void solve(){
+27 		long max=-1;
+28 		long D0=(100*cD+rD-1)/rD, C0=(100*cR+rR-1)/rR;
+29 		for(int i=0; i<100; i++){
+30 			for(int j=0; j<100; j++){
+31 				long changeD=D0+i, changeR=C0+j;
+32 				long jpn=M-changeD-changeR;
+33 				if(jpn<0){
+34 					continue;
+35 				}
+36 				long remD=changeD*rD/100-cD;
+37 				long remR=changeR*rR/100-cR;
+38 				jpn+=remD*100/rD+remR*100/rR;
+39 				max=max(max, jpn);
+40 			}
+41 		}
+42 		println(max+"");
+43 	}
+44 
+45 	void println(String s){
+46 		System.out.println(s);
+47 	}
+48 
+49 	public static void main(String[] args){
+50 		new Main().run();
+51 	}
+52 }

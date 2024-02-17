@@ -1,0 +1,1566 @@
+1 
+2 import java.io.*;
+3 
+4 import static java.lang.Math.*;
+5 import static java.lang.Math.min;
+6 
+7 import java.math.BigDecimal;
+8 import java.util.*;
+9 
+10 import static java.util.Arrays.*;
+11 
+12 import java.util.stream.*;
+13 
+14 /**
+15  * @author baito
+16  */
+17 @SuppressWarnings("unchecked")
+18 public class Main {
+19     static boolean DEBUG = true;
+20     static StringBuilder sb = new StringBuilder();
+21     static int INF = 1234567890;
+22     static int MINF = -1234567890;
+23     static long LINF = 123456789123456789L;
+24     static long MLINF = -123456789123456789L;
+25     static int MOD = (int) 1e9 + 7;
+26     static double EPS = 1e-10;
+27     static int[] y4 = {-1, 1, 0, 0};
+28     static int[] x4 = {0, 0, -1, 1};
+29     static int[] y8 = {0, 1, 0, -1, -1, 1, 1, -1};
+30     static int[] x8 = {1, 0, -1, 0, 1, -1, 1, -1};
+31     static int[] Fa;
+32     static boolean[] isPrime;
+33     static ArrayList<Integer> primes;
+34     static char[][] S;
+35     static long maxRes = Long.MIN_VALUE;
+36     static long minRes = Long.MAX_VALUE;
+37     static int[] fac, finv, inv;
+38 
+39     //    static int N;
+40 //    static int[] A;
+41     static int N, A, B, C, D;
+42     static int[][] dp;
+43 
+44     public static void solve() throws Exception {
+45 //        longを忘れるなオーバーフローするぞ
+46 //        N = ni();
+47 //        A = nia(N);
+48 //        $END$
+49         int N = ni();
+50         int A = ni();
+51         int B = ni();
+52         int C = ni();
+53         int D = ni();
+54         setMod();
+55         long[][] dp = new long[N + 1][N + 1];
+56         for (int i = 0; i < N + 1; i++) {
+57             dp[i][0] = 1;
+58         }
+59         long[][] mPowFinv = new long[N + 1][N + 1];
+60         for (int k = 0; k < N + 1; k++) {
+61             mPowFinv[k][1] = finv[k];
+62         }
+63         for (int k = 0; k < N + 1; k++) {
+64             for (int i = 2; i < D + 1; i++) {
+65                 mPowFinv[k][i] = mPowFinv[k][i - 1] * finv[k] % MOD;
+66             }
+67         }
+68         for (int k = 1; k <= N; k++) {
+69             for (int n = 1; n <= N; n++) {
+70                 //k人が0のとき
+71                 dp[k][n] = dp[k - 1][n];
+72                 if (!(A <= k && k <= B)) continue;
+73                 for (int x = C; x <= D && n - k * x >= 0; x++) {
+74                     //n人からk人をxグループ作りその他はk-1人以下
+75                     long cal = mMuls(fac[n], finv[n - k * x], mPowFinv[k][x], finv[x]);
+76                     cal = mMul(cal, dp[k - 1][n - k * x]);
+77                     dp[k][n] = mSum(dp[k][n], cal);
+78                 }
+79             }
+80         }
+81         System.out.println(dp[N][N]);
+82     }
+83 
+84 
+85     public static boolean calc(long va) {
+86         //貪欲にギリギリセーフを選んでいく。
+87         int v = (int) va;
+88         return true;
+89     }
+90 
+91     //条件を満たす最大値、あるいは最小値を求める
+92     static int mgr(long ok, long ng) {
+93         //int ok = 0; //解が存在する
+94         //int ng = N; //解が存在しない
+95         while (Math.abs(ok - ng) > 1) {
+96             long mid;
+97             if (ok < 0 && ng > 0 || ok > 0 && ng < 0) mid = (ok + ng) / 2;
+98             else mid = ok + (ng - ok) / 2;
+99 
+100             if (calc(mid)) {
+101                 ok = mid;
+102             } else {
+103                 ng = mid;
+104             }
+105         }
+106         if (calc(ok)) return (int) ok;
+107         else return -1;
+108     }
+109 
+110     static <T> void initStreamArray(ArrayList<T>[] a, int n) {
+111         a = Stream.generate(ArrayList::new).limit(n).toArray(ArrayList[]::new);
+112     }
+113 
+114     //消す候補
+115     static ArrayList<Integer> divisors(int n) {
+116         ArrayList<Integer> res = new ArrayList<>();
+117         for (int i = 1; i <= Math.sqrt(n); i++) {
+118             if (n % i == 0) {
+119                 res.add(i);
+120                 if (i != n / i) res.add(n / i);
+121             }
+122         }
+123         return res;
+124     }
+125 
+126     static ArrayList<Long> divisors(long n) {
+127         ArrayList<Long> res = new ArrayList<>();
+128         for (long i = 1; i <= Math.sqrt(n); i++) {
+129             if (n % i == 0) {
+130                 res.add(i);
+131                 if (i != n / i) res.add(n / i);
+132             }
+133         }
+134         return res;
+135     }
+136 
+137     static ArrayList<Integer> factorization(int n) {
+138         if (primes == null) setPrimes();
+139         ArrayList<Integer> fact = new ArrayList<>();
+140         for (int p : primes) {
+141             if (n % p == 0) fact.add(p);
+142             while (n % p == 0) n /= p;
+143             if (n == 1) break;
+144         }
+145         if (n != 1) fact.add(n);
+146         return fact;
+147     }
+148 
+149     boolean equal(double a, double b) {
+150         return a == 0 ? abs(b) < EPS : abs((a - b) / a) < EPS;
+151     }
+152 
+153     public static void chMax(long v) {
+154         maxRes = Math.max(maxRes, v);
+155     }
+156 
+157     public static void chMin(long v) {
+158         minRes = Math.min(minRes, v);
+159     }
+160 
+161     //便利系
+162     //左端、右端の情報をもたせる。半開区間
+163     public static void setLR(int[] a, ArrayList<Integer> l, ArrayList<Integer> r) {
+164         for (int i = 0; i < a.length; i++) {
+165             if (a[i] > 0) {
+166                 int j = i;
+167                 while (a[j] > 0) j++;
+168                 l.add(i);
+169                 r.add(j);
+170                 i = j - 1;
+171             }
+172         }
+173     }
+174 
+175     public static long[] rui(int[] a) {
+176         long[] res = new long[a.length + 1];
+177         for (int i = 0; i < a.length; i++) {
+178             res[i + 1] = a[i];
+179         }
+180         for (int i = 0; i < a.length; i++) {
+181             res[i + 1] += res[i];
+182         }
+183         return res;
+184     }
+185 
+186     //p[i].nowx := i番目に小さいｖの値 p[i].nowy := その個数
+187     //0個の物は除く
+188     public static P[] mato(int[] a) {
+189         CouMap map = new CouMap(a);
+190         P[] res = new P[map.size()];
+191         int i = 0;
+192         for (Map.Entry<Long, Long> m : map.map.entrySet()) {
+193             res[i++] = new P((int) (long) m.getKey(), (int) (long) m.getValue());
+194         }
+195         sort(res);
+196         return res;
+197     }
+198 
+199     public static int[] imosu(int[] f, int[] t, int n) {
+200         int[] imosu = new int[n + 1];
+201         for (int i = 0; i < f.length; i++) {
+202             imosu[f[i]]++;
+203             imosu[t[i] + 1]--;
+204         }
+205         for (int i = 0; i < n; i++) {
+206             imosu[i + 1] += imosu[i];
+207         }
+208         return imosu;
+209     }
+210 
+211     static int[] inverse(int[] a) {
+212         int[] res = new int[a.length];
+213         for (int i = 0; i < a.length; i++)
+214             res[a[i]] = i;
+215         return res;
+216     }
+217 
+218     public static String notE(double v) {
+219         return BigDecimal.valueOf(v).toPlainString();
+220     }
+221 
+222     public static void print(char[][] a) {
+223         for (int i = 0; i < a.length; i++) {
+224             for (int j = 0; j < a[0].length; j++) {
+225                 System.out.print(a[i][j]);
+226             }
+227             System.out.println("");
+228         }
+229     }
+230 
+231     public static void print(int[][] a) {
+232         for (int i = 0; i < a.length; i++) {
+233             for (int j = 0; j < a[0].length; j++) {
+234                 System.out.print(a[i][j] + " ");
+235             }
+236             System.out.println("");
+237         }
+238     }
+239 
+240     public static <T> void print(ArrayList<T> a) {
+241         for (T t : a) {
+242             System.out.println(t);
+243         }
+244     }
+245 
+246     public static void print(int[] a) {
+247         for (int i = 0; i < a.length; i++)
+248             System.out.println(a[i]);
+249     }
+250 
+251     public static void print(long[] a) {
+252         for (int i = 0; i < a.length; i++)
+253             System.out.println(a[i]);
+254     }
+255 
+256     //bit関連
+257     public static boolean bget(BitSet bit, int keta) {
+258         return bit.nextSetBit(keta) == keta;
+259     }
+260 
+261     public static boolean bget(long bit, int keta) {
+262         return ((bit >> keta) & 1) == 1;
+263     }
+264 
+265     public static int bget3(long bit, int keta) {
+266         bit /= (long) pow(3, keta);
+267         return (int) (bit % 3);
+268     }
+269 
+270     public static int getHashA(long key) {
+271         return (int) (key >> 32);
+272     }
+273 
+274     public static int getHashB(long key) {
+275         return (int) (key & -1);
+276     }
+277 
+278     //正の数のみ
+279     public static long getHashKey(int a, int b) {
+280         return (long) a << 32 | b;
+281     }
+282     //数学関係--------------------------------
+283 
+284     //a/bを返す
+285     public static long ceil(long a, long b) {
+286         return (a % b == 0) ? a / b : a / b + 1;
+287     }
+288 
+289     public static double sqrt(double v) {
+290         return Math.sqrt(v);
+291     }
+292 
+293     public static long sqrt(long v) {
+294         long res = (long) Math.sqrt(v);
+295         while (res * res > v) res--;
+296         return res;
+297     }
+298 
+299     static double[][] PER_DP;
+300 
+301     static double ncrPer(int n, int r) {
+302         if (n < r) return 0;
+303         if (PER_DP == null) {
+304             PER_DP = new double[5001][5001];
+305             PER_DP[0][0] = 1;
+306             for (int ni = 0; ni < PER_DP.length - 1; ni++) {
+307                 for (int ri = 0; ri < ni + 1; ri++) {
+308                     PER_DP[ni + 1][ri] += PER_DP[ni][ri] / 2;
+309                     PER_DP[ni + 1][ri + 1] += PER_DP[ni][ri] / 2;
+310                 }
+311             }
+312         }
+313         return PER_DP[n][r];
+314     }
+315 
+316     //mod関連
+317     public static int mod(long a, int m) {
+318         return (int) ((a % m + m) % m);
+319     }
+320 
+321     static void setMod() {
+322         fac = new int[(int) 1e6 + 1000];
+323         finv = new int[(int) 1e6 + 1000];
+324         inv = new int[(int) 1e6 + 1000];
+325         fac[0] = fac[1] = 1;
+326         finv[0] = finv[1] = 1;
+327         inv[1] = 1;
+328         for (int i = 2; i < 1e6 + 1000; i++) {
+329             fac[i] = mMul(fac[i - 1], i);
+330             inv[i] = MOD - mMul(inv[MOD % i], (MOD / i));
+331             finv[i] = mMul(finv[i - 1], inv[i]);
+332         }
+333     }
+334 
+335     static int mNcr(int n, int r) {
+336         if (n < 0 || r < 0 || n < r) return 0;
+337         int result = mMul(Fa[n], finv[n - r]);
+338         result = mMul(result, finv[r]);
+339         return result;
+340     }
+341 
+342     public static int mSum(long a, long b) {
+343         return (int) (((a % MOD + b % MOD) % MOD + MOD) % MOD);
+344     }
+345 
+346     public static int mDiff(long a, long b) {
+347         return mSum(a, -b);
+348     }
+349 
+350     public static int mMul(long a, long b) {
+351         return (int) (((a % MOD * b % MOD) % MOD + MOD) % MOD);
+352     }
+353 
+354     public static int mDiv(long a, long b) {
+355         return mMul(a, mInv(b));
+356     }
+357 
+358     public static long mSums(long... lar) {
+359         long res = 0;
+360         for (long l : lar)
+361             res = (res + l % MOD) % MOD;
+362         return (res + MOD) % MOD;
+363     }
+364 
+365     public static long mDiffs(long... lar) {
+366         long res = lar[0] % MOD;
+367         for (int i = 1; i < lar.length; i++) {
+368             res = (res - lar[i] % MOD) % MOD;
+369         }
+370         return (res + MOD) % MOD;
+371     }
+372 
+373     public static long mMuls(long... lar) {
+374         long res = 1;
+375         for (long l : lar)
+376             res = (res * (l % MOD)) % MOD;
+377         return (res + MOD) % MOD;
+378     }
+379 
+380     public static long mDivs(long... lar) {
+381         long res = lar[0] % MOD;
+382         for (int i = 1; i < lar.length; i++) {
+383             res = mMul(res, mInv(lar[i]));
+384         }
+385         return (res + MOD) % MOD;
+386     }
+387 
+388     static long mInv(long n) {
+389         return mPow(n, MOD - 2);
+390     }
+391 
+392     static int mPow(long x, long n) {
+393         long res = 1L;
+394         while (n > 0) {
+395             if ((n & 1) == 1) {
+396                 res = res * x % MOD;
+397             }
+398             x = x * x % MOD;
+399             n >>= 1;
+400         }
+401         return (int) ((res + MOD) % MOD);
+402     }
+403 
+404     static void factorial() {
+405         Fa = new int[(int) 1e6 + 1];
+406         Fa[0] = Fa[1] = 1;
+407         for (int i = 2; i < Fa.length; i++) {
+408             Fa[i] = (int) ((Fa[i - 1] * 1L * i) % MOD);
+409         }
+410     }
+411 
+412 
+413     //↑nCrをmod計算するために必要
+414     static long lcm(long n, long r) {
+415         return n / gcd(n, r) * r;
+416     }
+417 
+418     static int gcd(int n, int r) {
+419         return r == 0 ? n : gcd(r, n % r);
+420     }
+421 
+422     static long gcd(long n, long r) {
+423         return r == 0 ? n : gcd(r, n % r);
+424     }
+425 
+426     public static int u0(int a) {
+427         if (a < 0) return 0;
+428         return a;
+429     }
+430 
+431     public static long u0(long a) {
+432         if (a < 0) return 0;
+433         return a;
+434     }
+435 
+436     public static double u0(double a) {
+437         if (a < 0) return 0;
+438         return a;
+439     }
+440 
+441     public static boolean[][] tbt(char[][] s, char c) {
+442         boolean[][] res = new boolean[s.length][s[0].length];
+443         for (int hi = 0; hi < s.length; hi++)
+444             for (int wi = 0; wi < s[0].length; wi++)
+445                 if (s[hi][wi] == c) res[hi][wi] = true;
+446         return res;
+447     }
+448 
+449     public static int[] tia(int a) {
+450         int[] res = new int[keta(a)];
+451         for (int i = res.length - 1; i >= 0; i--) {
+452             res[i] = a % 10;
+453             a /= 10;
+454         }
+455         return res;
+456     }
+457 
+458     public static int[][] tit(char[][] a) {
+459         int[][] res = new int[a.length][a[0].length];
+460         for (int hi = 0; hi < a.length; hi++) {
+461             for (int wi = 0; wi < a[0].length; wi++) {
+462                 res[hi][wi] = a[hi][wi] - '0';
+463             }
+464         }
+465         return res;
+466     }
+467 
+468     public static Integer[] toIntegerArray(int[] ar) {
+469         Integer[] res = new Integer[ar.length];
+470         for (int i = 0; i < ar.length; i++) {
+471             res[i] = ar[i];
+472         }
+473         return res;
+474     }
+475 
+476     //k個の次の組み合わせをビットで返す 大きさに上限はない 110110 -> 111001
+477     public static long bitNextComb(long comb) {
+478         long x = comb & -comb; //最下位の1
+479         long y = comb + x; //連続した下の1を繰り上がらせる
+480         return ((comb & ~y) / x >> 1) | y;
+481     }
+482 
+483     public static int keta(long num) {
+484         int res = 0;
+485         while (num > 0) {
+486             num /= 10;
+487             res++;
+488         }
+489         return res;
+490     }
+491 
+492     public static int ketaSum(long num) {
+493         int res = 0;
+494         while (num > 0) {
+495             res += num % 10;
+496             num /= 10;
+497         }
+498         return res;
+499     }
+500 
+501     public static boolean isOutofIndex(int x, int y, int w, int h) {
+502         if (x < 0 || y < 0) return true;
+503         if (w <= x || h <= y) return true;
+504         return false;
+505     }
+506 
+507     public static boolean isOutofIndex(int x, int y, char[][] ban) {
+508         if (x < 0 || y < 0) return true;
+509         if (ban[0].length <= x || ban.length <= y) return true;
+510         return false;
+511     }
+512 
+513 
+514     public static void setPrimes() {
+515         int n = 100001;
+516         isPrime = new boolean[n];
+517         Arrays.fill(isPrime, true);
+518         isPrime[0] = isPrime[1] = false;
+519         for (int i = 2; i * i <= n; i++) {
+520             if (!isPrime[i]) continue;
+521             for (int j = i * 2; j < n; j += i) {
+522                 isPrime[j] = false;
+523             }
+524         }
+525         primes = new ArrayList<>();
+526         for (int i = 2; i < n; i++) {
+527             if (isPrime[i]) primes.add(i);
+528         }
+529     }
+530 
+531     public static void revSort(int[] a) {
+532         Arrays.sort(a);
+533         reverse(a);
+534     }
+535 
+536     public static void revSort(long[] a) {
+537         Arrays.sort(a);
+538         reverse(a);
+539     }
+540 
+541     public static P[] clone(P[] ar) {
+542         P[] res = new P[ar.length];
+543         for (int i = 0; i < ar.length; i++) {
+544             res[i] = new P(ar[i].x, ar[i].y);
+545         }
+546         return res;
+547     }
+548 
+549     public static int[][] clone(int[][] ar) {
+550         int[][] nr = new int[ar.length][ar[0].length];
+551         for (int i = 0; i < ar.length; i++)
+552             nr[i] = ar[i].clone();
+553         return nr;
+554     }
+555 
+556     public static long[][] clone(long[][] ar) {
+557         long[][] nr = new long[ar.length][ar[0].length];
+558         for (int i = 0; i < ar.length; i++)
+559             nr[i] = ar[i].clone();
+560         return nr;
+561     }
+562 
+563     public static double[][] clone(double[][] ar) {
+564         double[][] nr = new double[ar.length][ar[0].length];
+565         for (int i = 0; i < ar.length; i++)
+566             nr[i] = ar[i].clone();
+567         return nr;
+568     }
+569 
+570     public static boolean[][] clone(boolean[][] ar) {
+571         boolean[][] nr = new boolean[ar.length][ar[0].length];
+572         for (int i = 0; i < ar.length; i++)
+573             nr[i] = ar[i].clone();
+574         return nr;
+575     }
+576 
+577     public static char[][] clone(char[][] ar) {
+578         char[][] nr = new char[ar.length][ar[0].length];
+579         for (int i = 0; i < ar.length; i++)
+580             nr[i] = ar[i].clone();
+581         return nr;
+582     }
+583 
+584     public static int[][][] clone(int[][][] ar) {
+585         int[][][] nr = new int[ar.length][ar[0].length][ar[0][0].length];
+586         for (int i = 0; i < ar.length; i++)
+587             nr[i] = clone(ar[i]);
+588         return nr;
+589     }
+590 
+591     public static long[][][] clone(long[][][] ar) {
+592         long[][][] nr = new long[ar.length][ar[0].length][ar[0][0].length];
+593         for (int i = 0; i < ar.length; i++)
+594             nr[i] = clone(ar[i]);
+595         return nr;
+596     }
+597 
+598     public static double[][][] clone(double[][][] ar) {
+599         double[][][] nr = new double[ar.length][ar[0].length][ar[0][0].length];
+600         for (int i = 0; i < ar.length; i++)
+601             nr[i] = clone(ar[i]);
+602         return nr;
+603     }
+604 
+605     public static boolean[][][] clone(boolean[][][] ar) {
+606         boolean[][][] nr = new boolean[ar.length][ar[0].length][ar[0][0].length];
+607         for (int i = 0; i < ar.length; i++)
+608             nr[i] = clone(ar[i]);
+609         return nr;
+610     }
+611 
+612     public static char[][][] clone(char[][][] ar) {
+613         char[][][] nr = new char[ar.length][ar[0].length][ar[0][0].length];
+614         for (int i = 0; i < ar.length; i++)
+615             nr[i] = clone(ar[i]);
+616         return nr;
+617     }
+618 
+619     /**
+620      * <h1>指定した値以上の先頭のインデクスを返す</h1>
+621      * <p>配列要素が０のときは、０が返る。</p>
+622      *
+623      * @return<b>int</b> ： 探索した値以上で、先頭になるインデクス
+624      * 値が無ければ、挿入できる最小のインデックス
+625      */
+626     public static <T extends Number> int lowerBound(final List<T> lis, final T value) {
+627         int low = 0;
+628         int high = lis.size();
+629         int mid;
+630 
+631         while (low < high) {
+632             mid = ((high - low) >>> 1) + low;    //(low + high) / 2 (オーバーフロー対策)
+633             if (lis.get(mid).doubleValue() < value.doubleValue()) {
+634                 low = mid + 1;
+635             } else {
+636                 high = mid;
+637             }
+638         }
+639         return low;
+640     }
+641 
+642     //v未満で最大のiを返す。ただしv以上を満たすiがあるなら最小のiを返す
+643     public static <T extends Number> int rlowerBound(final List<T> lis, final T value) {
+644         int ind = lowerBound(lis, value);
+645         if (ind == lis.size() || !lis.get(ind).equals(value)) ind--;
+646         return ind;
+647     }
+648 
+649     /**
+650      * <h1>指定した値より大きい先頭のインデクスを返す</h1>
+651      * <p>配列要素が０のときは、０が返る。</p>
+652      *
+653      * @return<b>int</b> ： 探索した値より上で、先頭になるインデクス
+654      * 値が無ければ、挿入できる最小のインデックス
+655      */
+656     public static <T extends Number> int upperBound(final List<T> lis, final T value) {
+657         int low = 0;
+658         int high = lis.size();
+659         int mid;
+660         while (low < high) {
+661             mid = ((high - low) >>> 1) + low;    //(low + high) / 2 (オーバーフロー対策)
+662             if (lis.get(mid).doubleValue() < value.doubleValue()) {
+663                 low = mid + 1;
+664             } else {
+665                 high = mid;
+666             }
+667         }
+668         return low;
+669     }
+670 
+671     public static int lowerBound(final int[] arr, final int value) {
+672         int low = 0;
+673         int high = arr.length;
+674         int mid;
+675 
+676         while (low < high) {
+677             mid = ((high - low) >>> 1) + low;    //(low + high) / 2 (オーバーフロー対策)
+678             if (arr[mid] < value) {
+679                 low = mid + 1;
+680             } else {
+681                 high = mid;
+682             }
+683         }
+684         return low;
+685     }
+686 
+687     public static int rlowerBound(final int[] arr, final int value) {
+688         int ind = lowerBound(arr, value);
+689         if (ind == arr.length || arr[ind] != value) ind--;
+690         return ind;
+691     }
+692 
+693 
+694     public static int upperBound(final int[] arr, final int value) {
+695         int low = 0;
+696         int high = arr.length;
+697         int mid;
+698         while (low < high) {
+699             mid = ((high - low) >>> 1) + low;    //(low + high) / 2 (オーバーフロー対策)
+700             if (arr[mid] <= value) {
+701                 low = mid + 1;
+702             } else {
+703                 high = mid;
+704             }
+705         }
+706         return low;
+707     }
+708 
+709     public static int lowerBound(final long[] arr, final long value) {
+710         int low = 0;
+711         int high = arr.length;
+712         int mid;
+713         while (low < high) {
+714             mid = ((high - low) >>> 1) + low;    //(low + high) / 2 (オーバーフロー対策)
+715             if (arr[mid] < value) {
+716                 low = mid + 1;
+717             } else {
+718                 high = mid;
+719             }
+720         }
+721         return low;
+722     }
+723 
+724     public static int rlowerBound(final long[] arr, final long value) {
+725         int ind = lowerBound(arr, value);
+726         if (ind == arr.length || arr[ind] != value) ind--;
+727         return ind;
+728     }
+729 
+730     public static int upperBound(final long[] arr, final long value) {
+731         int low = 0;
+732         int high = arr.length;
+733         int mid;
+734         while (low < high) {
+735             mid = ((high - low) >>> 1) + low;    //(low + high) / 2 (オーバーフロー対策)
+736             if (arr[mid] <= value) {
+737                 low = mid + 1;
+738             } else {
+739                 high = mid;
+740             }
+741         }
+742         return low;
+743     }
+744 
+745     //次の順列に書き換える、最大値ならfalseを返す
+746     public static boolean nextPermutation(int A[]) {
+747         int len = A.length;
+748         int pos = len - 2;
+749         for (; pos >= 0; pos--) {
+750             if (A[pos] < A[pos + 1]) break;
+751         }
+752         if (pos == -1) return false;
+753         //posより大きい最小の数を二分探索
+754         int ok = pos + 1;
+755         int ng = len;
+756         while (Math.abs(ng - ok) > 1) {
+757             int mid = (ok + ng) / 2;
+758             if (A[mid] > A[pos]) ok = mid;
+759             else ng = mid;
+760         }
+761         swap(A, pos, ok);
+762         reverse(A, pos + 1, len - 1);
+763         return true;
+764     }
+765 
+766     //次の順列に書き換える、最小値ならfalseを返す
+767     public static boolean prevPermutation(int A[]) {
+768         int len = A.length;
+769         int pos = len - 2;
+770         for (; pos >= 0; pos--) {
+771             if (A[pos] > A[pos + 1]) break;
+772         }
+773         if (pos == -1) return false;
+774         //posより小さい最大の数を二分探索
+775         int ok = pos + 1;
+776         int ng = len;
+777         while (Math.abs(ng - ok) > 1) {
+778             int mid = (ok + ng) / 2;
+779             if (A[mid] < A[pos]) ok = mid;
+780             else ng = mid;
+781         }
+782         swap(A, pos, ok);
+783         reverse(A, pos + 1, len - 1);
+784         return true;
+785     }
+786 
+787     static <T> void swap(T[] x, int i, int j) {
+788         T t = x[i];
+789         x[i] = x[j];
+790         x[j] = t;
+791     }
+792 
+793     static void swap(char[] x, int i, int j) {
+794         char t = x[i];
+795         x[i] = x[j];
+796         x[j] = t;
+797     }
+798 
+799     static void swap(int[] x, int i, int j) {
+800         int t = x[i];
+801         x[i] = x[j];
+802         x[j] = t;
+803     }
+804 
+805     public static String reverse(String a) {
+806         sb.append(a);
+807         String res = sb.reverse().toString();
+808         sb.setLength(0);
+809         return new String(res);
+810     }
+811 
+812     public static void reverse(int[] x) {
+813         int l = 0;
+814         int r = x.length - 1;
+815         while (l < r) {
+816             int temp = x[l];
+817             x[l] = x[r];
+818             x[r] = temp;
+819             l++;
+820             r--;
+821         }
+822     }
+823 
+824     public static void reverse(long[] x) {
+825         int l = 0;
+826         int r = x.length - 1;
+827         while (l < r) {
+828             long temp = x[l];
+829             x[l] = x[r];
+830             x[r] = temp;
+831             l++;
+832             r--;
+833         }
+834     }
+835 
+836     public static void reverse(char[] x) {
+837         int l = 0;
+838         int r = x.length - 1;
+839         while (l < r) {
+840             char temp = x[l];
+841             x[l] = x[r];
+842             x[r] = temp;
+843             l++;
+844             r--;
+845         }
+846     }
+847 
+848     public static void reverse(int[] x, int s, int e) {
+849         int l = s;
+850         int r = e;
+851         while (l < r) {
+852             int temp = x[l];
+853             x[l] = x[r];
+854             x[r] = temp;
+855             l++;
+856             r--;
+857         }
+858     }
+859 
+860     static int cou(boolean[] a) {
+861         int res = 0;
+862         for (boolean b : a) {
+863             if (b) res++;
+864         }
+865         return res;
+866     }
+867 
+868     static int cou(boolean[][] a) {
+869         int res = 0;
+870         for (boolean[] b : a) {
+871             res += cou(b);
+872         }
+873         return res;
+874     }
+875 
+876     static int cou(String s, char c) {
+877         int res = 0;
+878         for (int i = 0; i < s.length(); i++) {
+879             if (s.charAt(i) == c) res++;
+880         }
+881         return res;
+882     }
+883 
+884     static int cou(char[][] a, char c) {
+885         int co = 0;
+886         for (int i = 0; i < a.length; i++)
+887             for (int j = 0; j < a[0].length; j++)
+888                 if (a[i][j] == c) co++;
+889         return co;
+890     }
+891 
+892     static int cou(int[] a, int key) {
+893         int co = 0;
+894         for (int i = 0; i < a.length; i++)
+895             if (a[i] == key) co++;
+896         return co;
+897     }
+898 
+899     static int cou(long[] a, long key) {
+900         int co = 0;
+901         for (int i = 0; i < a.length; i++)
+902             if (a[i] == key) co++;
+903         return co;
+904     }
+905 
+906     static int cou(int[][] a, int key) {
+907         int co = 0;
+908         for (int i = 0; i < a.length; i++)
+909             co += (cou(a[i], key));
+910         return co;
+911     }
+912 
+913     static int[] couArray(int[] a) {
+914         int[] res = new int[maxs(a) + 1];
+915         for (int i : a) {
+916             res[i]++;
+917         }
+918         return res;
+919     }
+920 
+921     static void fill(int[] a, int v) {
+922         Arrays.fill(a, v);
+923     }
+924 
+925     static void fill(long[] a, int v) {
+926         Arrays.fill(a, v);
+927     }
+928 
+929     static void fill(boolean[] a, boolean v) {
+930         Arrays.fill(a, v);
+931     }
+932 
+933     static void fill(int[][] a, int v) {
+934         for (int i = 0; i < a.length; i++)
+935             Arrays.fill(a[i], v);
+936     }
+937 
+938     static void fill(char[][] a, char c) {
+939         for (int i = 0; i < a.length; i++)
+940             Arrays.fill(a[i], c);
+941     }
+942 
+943     static void fill(long[][] a, long v) {
+944         for (int i = 0; i < a.length; i++)
+945             Arrays.fill(a[i], v);
+946     }
+947 
+948     static void fill(double[][] a, double v) {
+949         for (int i = 0; i < a.length; i++)
+950             Arrays.fill(a[i], v);
+951     }
+952 
+953     static void fill(boolean[][] a, boolean v) {
+954         for (int i = 0; i < a.length; i++)
+955             Arrays.fill(a[i], v);
+956     }
+957 
+958     static void fill(int[][][] a, int v) {
+959         for (int i = 0; i < a.length; i++)
+960             fill(a[i], v);
+961     }
+962 
+963     static void fill(long[][][] a, long v) {
+964         for (int i = 0; i < a.length; i++)
+965             fill(a[i], v);
+966     }
+967 
+968     static int maxs(int... a) {
+969         int res = Integer.MIN_VALUE;
+970         for (int i : a) {
+971             res = Math.max(res, i);
+972         }
+973         return res;
+974     }
+975 
+976     static long maxs(long... a) {
+977         long res = Long.MIN_VALUE;
+978         for (long i : a) {
+979             res = Math.max(res, i);
+980         }
+981         return res;
+982     }
+983 
+984     static double maxs(double... a) {
+985         double res = Double.MIN_VALUE;
+986         for (double i : a) {
+987             res = Math.max(res, i);
+988         }
+989         return res;
+990     }
+991 
+992     static long mins(long... a) {
+993         long res = Long.MAX_VALUE;
+994         for (long i : a) {
+995             res = Math.min(res, i);
+996         }
+997         return res;
+998     }
+999 
+1000     static int maxs(int[][] ar) {
+1001         int res = Integer.MIN_VALUE;
+1002         for (int i[] : ar)
+1003             res = Math.max(res, maxs(i));
+1004         return res;
+1005     }
+1006 
+1007     static long maxs(long[][] ar) {
+1008         long res = Integer.MIN_VALUE;
+1009         for (long i[] : ar)
+1010             res = Math.max(res, maxs(i));
+1011         return res;
+1012     }
+1013 
+1014     static int mins(int... a) {
+1015         int res = Integer.MAX_VALUE;
+1016         for (int i : a) {
+1017             res = Math.min(res, i);
+1018         }
+1019         return res;
+1020     }
+1021 
+1022 
+1023     static int mins(int[][] ar) {
+1024         int res = Integer.MAX_VALUE;
+1025         for (int i[] : ar)
+1026             res = Math.min(res, mins(i));
+1027         return res;
+1028     }
+1029 
+1030     public static <T extends Number> long sum(ArrayList<T> lis) {
+1031         long res = 0;
+1032         for (T li : lis) {
+1033             res += li.longValue();
+1034         }
+1035         return res;
+1036     }
+1037 
+1038     static long sum(int[] a) {
+1039         long cou = 0;
+1040         for (int i : a)
+1041             cou += i;
+1042         return cou;
+1043     }
+1044 
+1045     static long sum(long[] a) {
+1046         long cou = 0;
+1047         for (long i : a)
+1048             cou += i;
+1049         return cou;
+1050     }
+1051 
+1052 
+1053 //FastScanner
+1054 
+1055     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+1056     static StringTokenizer tokenizer = null;
+1057 
+1058     public static String next() {
+1059         if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+1060             try {
+1061                 tokenizer = new StringTokenizer(reader.readLine());
+1062             } catch (IOException e) {
+1063                 throw new RuntimeException(e);
+1064             }
+1065         }
+1066         return tokenizer.nextToken();
+1067     }
+1068 
+1069     public static String nextLine() {
+1070         if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+1071             try {
+1072                 return reader.readLine();
+1073             } catch (IOException e) {
+1074                 throw new RuntimeException(e);
+1075             }
+1076         }
+1077 
+1078         return tokenizer.nextToken("\n");
+1079     }
+1080 
+1081     public static long nl() {
+1082         return Long.parseLong(next());
+1083     }
+1084 
+1085     public static String n() {
+1086         return next();
+1087     }
+1088 
+1089     public static int ni() {
+1090         return Integer.parseInt(next());
+1091     }
+1092 
+1093     public static double nd() {
+1094         return Double.parseDouble(next());
+1095     }
+1096 
+1097     public static int[] nia(int n) {
+1098         int[] a = new int[n];
+1099         for (int i = 0; i < n; i++) {
+1100             a[i] = ni();
+1101         }
+1102         return a;
+1103     }
+1104 
+1105     //1-index
+1106     public static int[] niao(int n) {
+1107         int[] a = new int[n + 1];
+1108         for (int i = 1; i < n + 1; i++) {
+1109             a[i] = ni();
+1110         }
+1111         return a;
+1112     }
+1113 
+1114     //番兵法
+1115     public static int[] nias(int n, int end) {
+1116         int[] a = new int[n + 1];
+1117         for (int i = 0; i < n; i++) {
+1118             a[i] = ni();
+1119         }
+1120         a[n] = end;
+1121         return a;
+1122     }
+1123 
+1124     public static int[] niad(int n) {
+1125         int[] a = new int[n];
+1126         for (int i = 0; i < n; i++) {
+1127             a[i] = ni() - 1;
+1128         }
+1129         return a;
+1130     }
+1131 
+1132     public static P[] npa(int n) {
+1133         P[] p = new P[n];
+1134         for (int i = 0; i < n; i++) {
+1135             p[i] = new P(ni(), ni());
+1136         }
+1137         return p;
+1138     }
+1139 
+1140     public static P[] npad(int n) {
+1141         P[] p = new P[n];
+1142         for (int i = 0; i < n; i++) {
+1143             p[i] = new P(ni() - 1, ni() - 1);
+1144         }
+1145         return p;
+1146     }
+1147 
+1148     public static int[][] nit(int h, int w) {
+1149         int[][] a = new int[h][w];
+1150         for (int hi = 0; hi < h; hi++) {
+1151             for (int wi = 0; wi < w; wi++) {
+1152                 a[hi][wi] = ni();
+1153             }
+1154         }
+1155         return a;
+1156     }
+1157 
+1158     public static int[][] nitd(int h, int w) {
+1159         int[][] a = new int[h][w];
+1160         for (int hi = 0; hi < h; hi++) {
+1161             for (int wi = 0; wi < w; wi++) {
+1162                 a[hi][wi] = ni() - 1;
+1163             }
+1164         }
+1165         return a;
+1166     }
+1167 
+1168     static int[][] S_ARRAY;
+1169     static long[][] S_LARRAY;
+1170     static int S_INDEX;
+1171     static int S_LINDEX;
+1172 
+1173     //複数の配列を受け取る
+1174     public static int[] niah(int n, int k) throws Exception {
+1175         if (S_ARRAY == null) {
+1176             S_ARRAY = new int[k][n];
+1177             for (int j = 0; j < n; j++) {
+1178                 for (int i = 0; i < k; i++) {
+1179                     S_ARRAY[i][j] = ni();
+1180                 }
+1181             }
+1182         }
+1183         return S_ARRAY[S_INDEX++];
+1184     }
+1185 
+1186     public static long[] nlah(int n, int k) throws Exception {
+1187         if (S_LARRAY == null) {
+1188             S_LARRAY = new long[k][n];
+1189             for (int j = 0; j < n; j++) {
+1190                 for (int i = 0; i < k; i++) {
+1191                     S_LARRAY[i][j] = nl();
+1192                 }
+1193             }
+1194         }
+1195         return S_LARRAY[S_LINDEX++];
+1196     }
+1197 
+1198     //複数の配列を受け取る
+1199     public static int[] niahd(int n, int k) throws Exception {
+1200         if (S_ARRAY == null) {
+1201             S_ARRAY = new int[k][n];
+1202             for (int j = 0; j < n; j++) {
+1203                 for (int i = 0; i < k; i++) {
+1204                     S_ARRAY[i][j] = ni() - 1;
+1205                 }
+1206             }
+1207         }
+1208         return S_ARRAY[S_INDEX++];
+1209     }
+1210 
+1211     public static long[] nlahd(int n, int k) throws Exception {
+1212         if (S_LARRAY == null) {
+1213             S_LARRAY = new long[k][n];
+1214             for (int j = 0; j < n; j++) {
+1215                 for (int i = 0; i < k; i++) {
+1216                     S_LARRAY[i][j] = nl() - 1;
+1217                 }
+1218             }
+1219         }
+1220         return S_LARRAY[S_LINDEX++];
+1221     }
+1222 
+1223     public static char[] nca() {
+1224         char[] a = next().toCharArray();
+1225         return a;
+1226     }
+1227 
+1228 
+1229     public static String[] nsa(int n) {
+1230         String[] res = new String[n];
+1231         for (int i = 0; i < n; i++) {
+1232             res[i] = n();
+1233         }
+1234         return res;
+1235     }
+1236 
+1237     //スペースが入っている場合
+1238     public static char[][] ncts(int h, int w) {
+1239         char[][] a = new char[h][w];
+1240         for (int hi = 0; hi < h; hi++) {
+1241             String s = nextLine().replace(" ", "");
+1242             for (int wi = 0; wi < s.length(); wi++) {
+1243                 a[hi][wi] = s.charAt(wi);
+1244             }
+1245         }
+1246         return a;
+1247     }
+1248 
+1249     public static char[][] nct(int h, int w) {
+1250         char[][] a = new char[h][w];
+1251         for (int hi = 0; hi < h; hi++) {
+1252             String s = nextLine();
+1253             for (int wi = 0; wi < s.length(); wi++) {
+1254                 a[hi][wi] = s.charAt(wi);
+1255             }
+1256         }
+1257         return a;
+1258     }
+1259 
+1260     public static char[][] nctp(int h, int w, char c) {
+1261         char[][] a = new char[h + 2][w + 2];
+1262         for (int hi = 1; hi < h + 1; hi++) {
+1263             String s = nextLine();
+1264             for (int wi = 1; wi < s.length() + 1; wi++) {
+1265                 a[hi][wi] = s.charAt(wi - 1);
+1266             }
+1267         }
+1268         for (int wi = 0; wi < w + 2; wi++)
+1269             a[0][wi] = a[h + 1][wi] = c;
+1270         for (int hi = 0; hi < h + 2; hi++)
+1271             a[hi][0] = a[hi][w + 1] = c;
+1272         return a;
+1273     }
+1274 
+1275     //スペースが入ってる時用
+1276     public static char[][] nctsp(int h, int w, char c) {
+1277         char[][] a = new char[h + 2][w + 2];
+1278         //char c = '*';
+1279         int i;
+1280         for (i = 0; i < w + 2; i++)
+1281             a[0][i] = c;
+1282         for (i = 1; i < h + 1; i++) {
+1283             a[i] = (c + nextLine().replace(" ", "") + c).toCharArray();
+1284         }
+1285         for (i = 0; i < w + 2; i++)
+1286             a[h + 1][i] = c;
+1287         return a;
+1288     }
+1289 
+1290     public static long[] nla(int n) {
+1291         long[] a = new long[n];
+1292         for (int i = 0; i < n; i++) {
+1293             a[i] = nl();
+1294         }
+1295         return a;
+1296     }
+1297 
+1298     public static long[] nlas(int n, long e) {
+1299         long[] a = new long[n + 1];
+1300         for (int i = 0; i < n; i++) {
+1301             a[i] = nl();
+1302         }
+1303         a[n] = e;
+1304         return a;
+1305     }
+1306 
+1307     public static long[] nlao(int n) {
+1308         long[] a = new long[n + 1];
+1309         for (int i = 0; i < n; i++) {
+1310             a[i + 1] = nl();
+1311         }
+1312         return a;
+1313     }
+1314 
+1315     public static long[] nlad(int n) {
+1316         long[] a = new long[n];
+1317         for (int i = 0; i < n; i++) {
+1318             a[i] = nl() - 1;
+1319         }
+1320         return a;
+1321     }
+1322 
+1323     public static long[][] nlt(int h, int w) {
+1324         long[][] a = new long[h][w];
+1325         for (int hi = 0; hi < h; hi++) {
+1326             for (int wi = 0; wi < w; wi++) {
+1327                 a[hi][wi] = nl();
+1328             }
+1329         }
+1330         return a;
+1331     }
+1332 
+1333     //便利クラス
+1334     static class CouMap {
+1335         public HashMap<Long, Long> map;
+1336         public HashMap<String, Long> smap;
+1337 
+1338         CouMap() {
+1339             map = new HashMap();
+1340             smap = new HashMap();
+1341         }
+1342 
+1343         CouMap(int[] a) {
+1344             map = new HashMap();
+1345             smap = new HashMap();
+1346             for (int i : a) {
+1347                 put(i);
+1348             }
+1349         }
+1350 
+1351         public int size() {
+1352             return map.size();
+1353         }
+1354 
+1355         public void put(long key, long value) {
+1356             Long nowValue = map.get(key);
+1357             map.put(key, nowValue == null ? value : nowValue + value);
+1358         }
+1359 
+1360         public void put(String key, long value) {
+1361             Long nowValue = smap.get(key);
+1362             smap.put(key, nowValue == null ? value : nowValue + value);
+1363         }
+1364 
+1365         public void mput(long key, long value) {
+1366             Long nowValue = map.get(key);
+1367             map.put(key, nowValue == null ? value % MOD : mSum(nowValue, value));
+1368         }
+1369 
+1370         public void put(long key) {
+1371             put(key, 1);
+1372         }
+1373 
+1374         public void put(String key) {
+1375             put(key, 1);
+1376         }
+1377 
+1378         public void put(int... arg) {
+1379             for (int i : arg) {
+1380                 put(i, 1);
+1381             }
+1382         }
+1383 
+1384         public void put(long... arg) {
+1385             for (long i : arg) {
+1386                 put(i, 1);
+1387             }
+1388         }
+1389 
+1390         public void mput(int... arg) {
+1391             for (int i : arg) {
+1392                 mput(i, 1);
+1393             }
+1394         }
+1395 
+1396         public void mput(long... arg) {
+1397             for (long i : arg) {
+1398                 mput(i, 1);
+1399             }
+1400         }
+1401 
+1402         public long get(long key) {
+1403             Long v = map.get(key);
+1404             return v == null ? 0 : v;
+1405         }
+1406 
+1407         public long get(String key) {
+1408             Long v = map.get(key);
+1409             return v == null ? 0 : v;
+1410         }
+1411     }
+1412 
+1413     static class P implements Comparable<P> {
+1414         int x, y;
+1415 
+1416         @Override
+1417         public int compareTo(P p) {
+1418             //xyで昇順
+1419             return x == p.x ? y - p.y : x - p.x;
+1420             //xyで降順
+1421             //return (nowx == p.nowx ? nowy - p.nowy : nowx - p.nowx) * -1;
+1422             //yxで昇順
+1423             //return nowy == p.nowy ? nowx - p.nowx : nowy - p.nowy;
+1424             //yxで昇順
+1425             //return (nowy == p.nowy ? nowx - p.nowx : nowy - p.nowy) * -1;
+1426 
+1427             //x昇 y降
+1428             //return nowx == p.nowx ? p.nowy - nowy : nowx - p.nowx;
+1429             //x降 y昇
+1430             //return (nowx == p.nowx ? p.nowy - nowy : nowx - p.nowx) * -1;
+1431             //y昇 x降
+1432             //return nowy == p.nowy ? p.nowx - nowx : nowy - p.nowy;
+1433             //y降 x昇
+1434             //return (nowy == p.nowy ? p.nowx - nowx : nowy - p.nowy) * -1;
+1435         }
+1436 
+1437         P(int a, int b) {
+1438             x = a;
+1439             y = b;
+1440         }
+1441 
+1442         @Override
+1443         public boolean equals(Object o) {
+1444             if (this == o) return true;
+1445             if (!(o instanceof P)) return false;
+1446             P p = (P) o;
+1447             return x == p.x && y == p.y;
+1448         }
+1449 
+1450         @Override
+1451         public int hashCode() {
+1452             return Objects.hash(x, y);
+1453         }
+1454 
+1455     }
+1456 
+1457     static class PL implements Comparable<PL> {
+1458         long x, y;
+1459 
+1460         public int compareTo(PL p) {
+1461             //xyで昇順
+1462             long res = x == p.x ? y - p.y : x - p.x;
+1463             //xyで降順
+1464             //long res = (nowx == p.nowx ? nowy - p.nowy : nowx - p.nowx) * -1;
+1465             //yxで昇順
+1466             //long res = nowy == p.nowy ? nowx - p.nowx : nowy - p.nowy;
+1467             //yxで昇順
+1468             //long res = (nowy == p.nowy ? nowx - p.nowx : nowy - p.nowy) * -1;
+1469 
+1470             //x昇 y降
+1471             //long res = nowx == p.nowx ? p.nowy - nowy : nowx - p.nowx;
+1472             //x降 y昇
+1473             //long res = (nowx == p.nowx ? p.nowy - nowy : nowx - p.nowx) * -1;
+1474             //y昇 x降
+1475             //long res = nowy == p.nowy ? p.nowx - nowx : nowy - p.nowy;
+1476             //y降 x昇
+1477             //long res = (nowy == p.nowy ? p.nowx - nowx : nowy - p.nowy) * -1;
+1478 
+1479             return (res == 0) ? 0 : res > 0 ? 1 : -1;
+1480         }
+1481 
+1482         PL(long a, long b) {
+1483             x = a;
+1484             y = b;
+1485         }
+1486 
+1487         @Override
+1488         public boolean equals(Object o) {
+1489             if (this == o) return true;
+1490             if (!(o instanceof PL)) return false;
+1491             PL p = (PL) o;
+1492             return x == p.x && y == p.y;
+1493         }
+1494 
+1495         @Override
+1496         public int hashCode() {
+1497             return Objects.hash(x, y);
+1498         }
+1499 
+1500     }
+1501 
+1502     //値を渡す際は半開区間
+1503     static class RectangleSum {
+1504         //半開区間 0は0
+1505         long[][] rui;
+1506         int H, W;
+1507 
+1508         RectangleSum(long[][] ori) {
+1509             H = ori.length;
+1510             W = ori[0].length;
+1511             rui = new long[H + 1][W + 1];
+1512             for (int hi = 0; hi < H; hi++) {
+1513                 for (int wi = 0; wi < W; wi++) {
+1514                     rui[hi + 1][wi + 1] = ori[hi][wi];
+1515                 }
+1516             }
+1517             for (int hi = 1; hi < H + 1; hi++) {
+1518                 for (int wi = 1; wi < W + 1; wi++) {
+1519                     rui[hi][wi] += rui[hi - 1][wi];
+1520                     rui[hi][wi] += rui[hi][wi - 1];
+1521                     rui[hi][wi] -= rui[hi - 1][wi - 1];
+1522                 }
+1523             }
+1524         }
+1525 
+1526         RectangleSum(int[][] ori) {
+1527             H = ori.length;
+1528             W = ori[0].length;
+1529             rui = new long[H + 1][W + 1];
+1530             for (int hi = 0; hi < H; hi++) {
+1531                 for (int wi = 0; wi < W; wi++) {
+1532                     rui[hi + 1][wi + 1] = ori[hi][wi];
+1533                 }
+1534             }
+1535             for (int hi = 1; hi < H + 1; hi++) {
+1536                 for (int wi = 1; wi < W + 1; wi++) {
+1537                     rui[hi][wi] += rui[hi - 1][wi];
+1538                     rui[hi][wi] += rui[hi][wi - 1];
+1539                     rui[hi][wi] -= rui[hi - 1][wi - 1];
+1540                 }
+1541             }
+1542         }
+1543 
+1544         //半開区間
+1545         public long getSum(int left, int right, int top, int bottom) {
+1546             if (right > W || bottom > H) return 0;
+1547             if (left < 0 || top < 0) return 0;
+1548             if (top >= bottom || left >= right) return 0;
+1549             long res = rui[bottom][right];
+1550             res -= rui[top][right];
+1551             res -= rui[bottom][left];
+1552             res += rui[top][left];
+1553             return res;
+1554         }
+1555 
+1556     }
+1557 
+1558     public static void main(String[] args) throws Exception {
+1559         long startTime = System.currentTimeMillis();
+1560         solve();
+1561         System.out.flush();
+1562         long endTime = System.currentTimeMillis();
+1563         if (DEBUG) System.err.println(endTime - startTime);
+1564     }
+1565 
+1566 }

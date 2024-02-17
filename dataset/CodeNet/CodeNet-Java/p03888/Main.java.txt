@@ -1,0 +1,142 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.BufferedWriter;
+6 import java.io.IOException;
+7 import java.io.InputStreamReader;
+8 import java.io.UncheckedIOException;
+9 import java.nio.charset.Charset;
+10 import java.util.StringTokenizer;
+11 import java.io.Writer;
+12 import java.io.OutputStreamWriter;
+13 import java.io.BufferedReader;
+14 import java.io.InputStream;
+15 
+16 /**
+17  * Built using CHelper plug-in
+18  * Actual solution is at the top
+19  *
+20  * @author mikit
+21  */
+22 public class Main {
+23     public static void main(String[] args) {
+24         InputStream inputStream = System.in;
+25         OutputStream outputStream = System.out;
+26         LightScanner in = new LightScanner(inputStream);
+27         LightWriter out = new LightWriter(outputStream);
+28         AEquivalentResistance solver = new AEquivalentResistance();
+29         solver.solve(1, in, out);
+30         out.close();
+31     }
+32 
+33     static class AEquivalentResistance {
+34         public void solve(int testNumber, LightScanner in, LightWriter out) {
+35             // out.setBoolLabel(LightWriter.BoolLabel.YES_NO_FIRST_UP);
+36             double r1 = in.doubles(), r2 = in.doubles();
+37             out.ans(1 / (1 / r1 + 1 / r2), 10).ln();
+38         }
+39 
+40     }
+41 
+42     static class LightWriter implements AutoCloseable {
+43         private final Writer out;
+44         private boolean autoflush = false;
+45         private boolean breaked = true;
+46 
+47         public LightWriter(Writer out) {
+48             this.out = out;
+49         }
+50 
+51         public LightWriter(OutputStream out) {
+52             this(new BufferedWriter(new OutputStreamWriter(out, Charset.defaultCharset())));
+53         }
+54 
+55         public LightWriter print(char c) {
+56             try {
+57                 out.write(c);
+58                 breaked = false;
+59             } catch (IOException ex) {
+60                 throw new UncheckedIOException(ex);
+61             }
+62             return this;
+63         }
+64 
+65         public LightWriter print(String s) {
+66             try {
+67                 out.write(s, 0, s.length());
+68                 breaked = false;
+69             } catch (IOException ex) {
+70                 throw new UncheckedIOException(ex);
+71             }
+72             return this;
+73         }
+74 
+75         public LightWriter ans(double x, int n) {
+76             if (!breaked) {
+77                 print(' ');
+78             }
+79             if (x < 0) {
+80                 print('-');
+81                 x = -x;
+82             }
+83             x += Math.pow(10, -n) / 2;
+84             print(Long.toString((long) x)).print('.');
+85             x -= (long) x;
+86             for (int i = 0; i < n; i++) {
+87                 x *= 10;
+88                 print((char) ('0' + ((int) x)));
+89                 x -= (int) x;
+90             }
+91             return this;
+92         }
+93 
+94         public LightWriter ln() {
+95             print(System.lineSeparator());
+96             breaked = true;
+97             if (autoflush) {
+98                 try {
+99                     out.flush();
+100                 } catch (IOException ex) {
+101                     throw new UncheckedIOException(ex);
+102                 }
+103             }
+104             return this;
+105         }
+106 
+107         public void close() {
+108             try {
+109                 out.close();
+110             } catch (IOException ex) {
+111                 throw new UncheckedIOException(ex);
+112             }
+113         }
+114 
+115     }
+116 
+117     static class LightScanner {
+118         private BufferedReader reader = null;
+119         private StringTokenizer tokenizer = null;
+120 
+121         public LightScanner(InputStream in) {
+122             reader = new BufferedReader(new InputStreamReader(in));
+123         }
+124 
+125         public String string() {
+126             if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+127                 try {
+128                     tokenizer = new StringTokenizer(reader.readLine());
+129                 } catch (IOException e) {
+130                     throw new UncheckedIOException(e);
+131                 }
+132             }
+133             return tokenizer.nextToken();
+134         }
+135 
+136         public double doubles() {
+137             return Double.parseDouble(string());
+138         }
+139 
+140     }
+141 }
+142 

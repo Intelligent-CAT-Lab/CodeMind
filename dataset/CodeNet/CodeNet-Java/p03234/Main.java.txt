@@ -1,0 +1,222 @@
+1 import java.io.BufferedOutputStream;
+2 import java.io.BufferedReader;
+3 import java.io.FileInputStream;
+4 import java.io.FileNotFoundException;
+5 import java.io.FileOutputStream;
+6 import java.io.IOException;
+7 import java.io.InputStream;
+8 import java.io.InputStreamReader;
+9 import java.io.OutputStream;
+10 import java.io.PrintWriter;
+11 import java.math.BigInteger;
+12 import java.util.Arrays;
+13 import java.util.StringTokenizer;
+14 
+15 public class Main {
+16 	public static void main(String[] args) {
+17 		InputStream input;
+18 		OutputStream output;
+19 		try {
+20 			input = new FileInputStream("input.txt");
+21 			output = new FileOutputStream("output.txt");
+22 		} catch (FileNotFoundException e) {
+23 			input = System.in;
+24 			output = System.out;
+25 		}
+26 		Kattio io = new Kattio(input, output);
+27 		(new Solve(io)).main();
+28 		io.close();
+29 
+30 		if (input instanceof FileInputStream)
+31 			try {
+32 				input.close();
+33 			} catch (IOException e) {
+34 
+35 			}
+36 		if (output instanceof FileOutputStream)
+37 			try {
+38 				output.close();
+39 			} catch (IOException e) {
+40 
+41 			}
+42 	}
+43 }
+44 
+45 class Solve {
+46 	
+47 	static final long mod = (long) 1e9+7;
+48 	
+49 	Kattio io;
+50 	
+51 	int n,k;
+52 	int[] a,b;
+53 	int[] f;
+54 	Long[][] dp;
+55 	
+56 	Long[] memoWaysToPair;
+57 	
+58 	Solve(Kattio io) {
+59 		this.io = io;
+60 	}
+61 
+62 	Long waysToPair(int x)
+63 	{
+64 		if (!memoWaysToPair[x].equals(new Long("-1"))) 
+65 			return memoWaysToPair[x];
+66 		
+67 		if (x%2==1) 
+68 			memoWaysToPair[x]=new Long(0);
+69 		else
+70 		if (x==0)
+71 			memoWaysToPair[x]=new Long(1);
+72 		else
+73 			memoWaysToPair[x]=waysToPair(x-2)*(x-1)%mod;
+74 		
+75 		//io.println(x+" "+memoWaysToPair[x]);
+76 		return memoWaysToPair[x];
+77 	}
+78 	
+79 	int paired(int x,int y)
+80 	{
+81 		//io.println(x+" "+y+" "+((f[y]-f[x-1])>(y-x+1)));
+82 		return f[y]-f[x-1];
+83 	}
+84 	
+85 	boolean inside(int a,int x,int y)
+86 	{
+87 		return (x<=a && a<=y);
+88 	}
+89 	
+90 	Long caldp(int x,int y)
+91 	{
+92 		if (!dp[x][y].equals(new Long("-1"))) return dp[x][y];
+93 		
+94 		int notPairedinXY = (y-x+1)-paired(x,y);
+95 		
+96 		//io.println(notPairedOutSideXY<0);
+97 		
+98 		for (int i=1; i<=k; i++)
+99 		{
+100 			boolean p1 = inside(a[i],x,y);
+101 			boolean p2 = inside(b[i],x,y);
+102 			if (p1!=p2)
+103 			{
+104 				dp[x][y]=new Long(0);
+105 				return dp[x][y];
+106 			}
+107 		}
+108 		
+109 		dp[x][y]=waysToPair(notPairedinXY);
+110 		
+111 		//io.println(x+" "+y+" "+dp[x][y]);
+112 		
+113 		for (int z=x+1; z<y; z++)
+114 		{
+115 			int notPairedinZY = (y-(z+1)+1)-paired(z+1,y);
+116 			dp[x][y]=(dp[x][y]-caldp(x,z)*waysToPair(notPairedinZY)+mod*mod)%mod;
+117 		}
+118 		
+119 		//io.println(x+" "+y+" "+dp[x][y]);
+120 		
+121 		return dp[x][y];
+122 		
+123 	}
+124 	void main() {
+125 		//io.println(mod);
+126 		n=io.getInt();
+127 		n*=2;
+128 		k=io.getInt();
+129 		a = new int[k+1];
+130 		b = new int[k+1];
+131 		f = new int[n+1];
+132 		
+133 		Arrays.fill(f, 0);
+134 		
+135 		for (int i=1; i<=k; i++)
+136 		{
+137 			a[i] = io.getInt();
+138 			b[i] = io.getInt();
+139 			f[a[i]]=1;
+140 			f[b[i]]=1;
+141 		}
+142 		
+143 		for (int i=1; i<=n; i++)
+144 			f[i]+=f[i-1];
+145 		
+146 		dp = new Long[n+1][n+1];
+147 		
+148 		for (int i=0; i<=n; i++)
+149 			Arrays.fill(dp[i], new Long("-1"));
+150 		
+151 		memoWaysToPair = new Long[n+1];
+152 		Arrays.fill(memoWaysToPair, new Long("-1"));
+153 		
+154 		Long res = new Long(0);
+155 		for (int x=1; x<=n; x++)
+156 			for (int y=x; y<=n; y++)
+157 			{
+158 				int notPairedOutSideXY = (n-(y-x+1))-(f[n]-paired(x,y));
+159 				res=(res+caldp(x,y)*waysToPair(notPairedOutSideXY)%mod)%mod;
+160 			}
+161 		
+162 		io.print(res);
+163 	}
+164 }
+165 
+166 class Kattio extends PrintWriter {
+167 	public Kattio(InputStream i) {
+168 		super(new BufferedOutputStream(System.out));
+169 		r = new BufferedReader(new InputStreamReader(i));
+170 	}
+171 
+172 	public Kattio(InputStream i, OutputStream o) {
+173 		super(new BufferedOutputStream(o));
+174 		r = new BufferedReader(new InputStreamReader(i));
+175 	}
+176 
+177 	public boolean hasMoreTokens() {
+178 		return peekToken() != null;
+179 	}
+180 
+181 	public int getInt() {
+182 		return Integer.parseInt(nextToken());
+183 	}
+184 
+185 	public double getDouble() {
+186 		return Double.parseDouble(nextToken());
+187 	}
+188 
+189 	public long getLong() {
+190 		return Long.parseLong(nextToken());
+191 	}
+192 
+193 	public String getWord() {
+194 		return nextToken();
+195 	}
+196 
+197 	private BufferedReader r;
+198 	private String line;
+199 	private StringTokenizer st;
+200 	private String token;
+201 
+202 	private String peekToken() {
+203 		if (token == null)
+204 			try {
+205 				while (st == null || !st.hasMoreTokens()) {
+206 					line = r.readLine();
+207 					if (line == null)
+208 						return null;
+209 					st = new StringTokenizer(line);
+210 				}
+211 				token = st.nextToken();
+212 			} catch (IOException e) {
+213 			}
+214 		return token;
+215 	}
+216 
+217 	private String nextToken() {
+218 		String ans = peekToken();
+219 		token = null;
+220 		return ans;
+221 	}
+222 }

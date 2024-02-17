@@ -1,0 +1,49 @@
+1 import java.util.ArrayList;
+2 import java.util.Collections;
+3 import java.util.Scanner;
+4 
+5 public class Main {
+6     public static void main(String[] args) {
+7         try (Scanner sc = new Scanner(System.in);) {
+8             new Main().solve(sc);
+9         }
+10     }
+11 
+12     void solve(Scanner sc) {
+13         int a = sc.nextInt();
+14         int b = sc.nextInt();
+15         int c = sc.nextInt();
+16         int d = sc.nextInt();
+17         int e = sc.nextInt();
+18         int f = sc.nextInt();
+19 
+20         int waterX = 0;
+21         int ansWater = 100;
+22         int ansSugar = 0;
+23         while (100 * a * waterX <= f) {
+24             int waterY = 0;
+25             while (100 * a * waterX + 100 * b * waterY <= f) {
+26                 int water = 100 * a * waterX + 100 * b * waterY;
+27                 int sugarX = 0;
+28                 while (water + c * sugarX <= f) {
+29                     int sugarY = 0;
+30                     while (water + c * sugarX + d * sugarY <= f) {
+31                         int sugar = c * sugarX + d * sugarY;
+32                         if (sugar * (100 + e) <= e * (water + sugar)) {
+33                             if (sugar * (ansWater + ansSugar) >= ansSugar * (water + sugar)) {
+34                                 ansWater = water;
+35                                 ansSugar = sugar;
+36                             }
+37                         }
+38                         sugarY++;
+39                     }
+40                     sugarX++;
+41                 }
+42                 waterY++;
+43             }
+44             waterX++;
+45         }
+46 
+47         System.out.println(ansWater + ansSugar + " " + ansSugar);
+48     }
+49 }

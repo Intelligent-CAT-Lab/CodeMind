@@ -1,0 +1,112 @@
+1 import java.util.*;
+2 import java.io.*;
+3 import java.math.*;
+4  
+5  
+6 import static java.lang.Math.*;
+7 import static java.util.Arrays.*;
+8 import static java.util.Collections.*;
+9  
+10 public class Main{
+11     static final long mod=1000000007;
+12     
+13     public  static void main(String[] args)   throws Exception, IOException{
+14         Reader sc = new Reader(System.in);
+15         PrintWriter out=new PrintWriter(System.out);
+16         int n=sc.nextInt();
+17         // char c[][] = new char[h][w];
+18         // char c[]=sc.nextString().toCharArray();
+19         // for(int i=0; i<n; i++) {a[i]=sc.nextInt();}
+20         long d[]=new long [1000];
+21 
+22         ArrayList<P> lis = new ArrayList<P>();
+23         long a=9,b=10;
+24         for(int i=1; i<10; i++) {
+25             lis.add(new P(i, -11+i));
+26         }
+27             lis.add(new P(19, -1));
+28 
+29         for(int i=1; i<15; i++) {
+30             for (long w=1; w<1000 ;w++ ){
+31                 long x=w*b+a, y=x;
+32                 int e=0;
+33                 while(x>0){e+=x%10; x/=10; }
+34                 lis.add(new P(y,(double)y/e));
+35             }
+36             b*=10; a*=10; a+=9;
+37         }
+38         sort(lis);
+39         long max=0;
+40         for (int w=0; w<lis.size() ;w++ ){
+41             if(max<lis.get(w).x){
+42             // db(lis.get(w).x,lis.get(w).d);
+43             max=lis.get(w).x;
+44             out.println(max);
+45             n--;
+46             if(n==0)break;
+47             }
+48         }
+49 
+50         // db(d);
+51 
+52         // for (int w=0; w<n ;w++ )
+53         // out.println(d[w]);
+54         out.flush();
+55     }
+56 
+57     static void db(Object... os){
+58         System.err.println(Arrays.deepToString(os));
+59     }
+60      
+61     static boolean validpos(int x,int y,int r, int c){
+62         return x<r && 0<=x && y<c && 0<=y;
+63     }
+64      
+65     static boolean bit(long x,int k){
+66         // weather k-th bit (from right) be one or zero
+67         return  ( 0 < ( (x>>k) & 1 )  )  ? true:false;
+68     }    
+69 }
+70 
+71 class P implements Comparable<P>{
+72     long x;
+73     double d;
+74     P(long x, double d) {
+75         this.x=x;
+76         this.d=d;
+77     } 
+78       
+79     public int compareTo(P p){
+80         return (d - p.d)>0?1:-1;//des
+81     } 
+82 }
+83 
+84 class Reader
+85 { 
+86     private BufferedReader x;
+87     private StringTokenizer st;
+88     
+89     public Reader(InputStream in)
+90     {
+91         x = new BufferedReader(new InputStreamReader(in));
+92         st = null;
+93     }
+94     public String nextString() throws IOException
+95     {
+96         while( st==null || !st.hasMoreTokens() )
+97             st = new StringTokenizer(x.readLine());
+98         return st.nextToken();
+99     }
+100     public int nextInt() throws IOException
+101     {
+102         return Integer.parseInt(nextString());
+103     }
+104     public long nextLong() throws IOException
+105     {
+106         return Long.parseLong(nextString());
+107     }
+108     public double nextDouble() throws IOException
+109     {
+110         return Double.parseDouble(nextString());
+111     }
+112 }

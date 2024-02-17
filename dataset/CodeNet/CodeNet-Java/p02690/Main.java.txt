@@ -1,0 +1,121 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStreamReader;
+4 import java.util.HashMap;
+5 import java.util.Map;
+6 import java.util.StringTokenizer;
+7 
+8 public class Main {
+9 	
+10 	long maxDiff = 1_000_000_000;
+11 
+12 	public static void main(String[] args) throws IOException {
+13 		Main mainObj = new Main();
+14 		mainObj.solve();
+15 	}
+16 
+17 	public void solve() throws IOException {
+18 		FastScanner fs = new FastScanner();
+19 		int x = fs.nextInt();
+20 		
+21 		HashMap<Long, Integer> powMap = new HashMap<>();
+22 		powMap.put(0L, 0);
+23 		powMap.put(1L, 1);
+24 		
+25 		long beforePow = 1;
+26 		long base = 2;
+27 		while(true) {
+28 			long powVal = pow(base, 5);
+29 			powMap.put(powVal, (int)base);
+30 			if(powVal - beforePow > x) {
+31 				break;
+32 			}
+33 			base++;
+34 			beforePow = powVal;
+35 		}
+36 		
+37 		for(Map.Entry<Long, Integer> mapEntry : powMap.entrySet()) {
+38 			long powVal = mapEntry.getKey();
+39 			
+40 			long diff = Math.abs(x - powVal);
+41 			if(powMap.containsKey(diff)) {
+42 				System.out.print(powMap.get(powVal));
+43 				if(powVal - x < 0) {
+44 					System.out.print(" -"+powMap.get(diff));
+45 				}else {
+46 					System.out.print(" "+powMap.get(diff));
+47 				}
+48 				System.out.print("\n");
+49 				return;
+50 			}
+51 		}
+52 		
+53 	}
+54 
+55 	public long pow(long base, int n) {
+56 		long retVal = 1;
+57 		while (n > 0) {
+58 			if ((n & 1) == 1) {
+59 				retVal *= base;
+60 			}
+61 			n >>= 1;
+62 			base *= base;
+63 		}
+64 		return retVal;
+65 	}
+66 	
+67 
+68 	public class FastScanner {
+69 
+70 		BufferedReader reader;
+71 		private StringTokenizer st;
+72 
+73 		public FastScanner() {
+74 			st = null;
+75 			reader = new BufferedReader(new InputStreamReader(System.in));
+76 		}
+77 
+78 		public String next() throws IOException {
+79 			if (st == null || !st.hasMoreElements()) {
+80 				st = new StringTokenizer(reader.readLine());
+81 			}
+82 			return st.nextToken();
+83 		}
+84 
+85 		public String nextLine() throws IOException {
+86 			st = null;
+87 			String readLine = null;
+88 			readLine = reader.readLine();
+89 			return readLine;
+90 		}
+91 
+92 		public int nextInt() throws NumberFormatException, IOException {
+93 			return Integer.parseInt(next());
+94 		}
+95 
+96 		public long nextLong() throws NumberFormatException, IOException {
+97 			return Long.parseLong(next());
+98 		}
+99 
+100 		public int[] nextIntArr(int n) throws NumberFormatException, IOException {
+101 			int[] retArr = new int[n];
+102 			for (int i = 0; i < n; i++) {
+103 				retArr[i] = nextInt();
+104 			}
+105 			return retArr;
+106 		}
+107 
+108 		public long[] nextLongArr(int n) throws NumberFormatException, IOException {
+109 			long[] retArr = new long[n];
+110 			for (int i = 0; i < n; i++) {
+111 				retArr[i] = nextLong();
+112 			}
+113 			return retArr;
+114 		}
+115 
+116 		public void close() throws IOException {
+117 			reader.close();
+118 		}
+119 	}
+120 
+121 }

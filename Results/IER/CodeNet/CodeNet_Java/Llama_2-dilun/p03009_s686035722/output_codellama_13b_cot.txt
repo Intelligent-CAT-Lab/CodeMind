@@ -1,0 +1,91 @@
+
+<<<Analysis>>>
+The variable n, variable a and variable b are initialized with 2, 2 and 1 respectively according to the input. And variable sum is initialized with 0.
+It enters a for loop and it iterates from 1 to 2 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [2, 1]. If it does, it adds the current interger i to variable answer. The condition is met when i is 2.
+After the loop finishes, it print the fianl value of variable answer as output, which is 2.
+<<<Output>>>
+2
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.InputMismatchException;
+
+// 合計がh、トビ幅が最大d, 最後にn-1個の0
+// 1 0 1 0 *4
+// 1 1 0 *2
+// 最初は1, 0は連続でn-1個まで
+// (0が登場した回数+1)!の積っぽい
+
+public class Main {
+	static InputStream is;
+	static PrintWriter out;
+	static String INPUT = "";
+	
+	static void solve()
+	{
+		int n = ni(), h = ni(), D = ni();
+		long f = 1;
+		long fs = 1;
+		int mod = 1000000007;
+		for(int i = 1;i <= n-1;i++){
+			f = f * (i+1) % mod;
+			fs += f;
+		}
+		fs %= mod;
+		
+		long[] ft = new long[h+5];
+		addFenwick(ft, 0, f);
+		addFenwick(ft, 1, mod-f);
+		long ans = 0;
+		for(int i = 0;i < h;i++){
+			long cur = sumFenwick(ft, i);
+			if(i+D >= h){
+				ans += cur;
+			}
+			cur = cur * fs % mod;
+			addFenwick(ft, i+1, cur);
+			if(i+D+1 <= h){
+				addFenwick(ft, i+D+1, mod-cur);
+			}
+		}
+		
+		out.println(ans%mod);
+	}
+	
+	public static final int mod = 1000000007;
+	
+	public static long sumFenwick(long[] ft, int i)
+	{
+		long sum = 0;
+		for(i++;i > 0;i -= i&-i){
+			sum += ft[i];
+			if(sum >= mod)sum -= mod;
+		}
+		return sum;
+	}
+	
+	public static void addFenwick(long[] ft, int i, long v)
+	{
+		v %= mod;
+		if(v < 0)v += mod;
+		if(v == 0)return;
+		int n = ft.length;
+		for(i++;i < n;i += i&-i){
+			ft[i] += v;
+			if(ft[i] >= mod)ft[i] -= mod;
+		}
+	}
+	
+
+	
+	public static void main(String[] args) throws Exception
+	{
+		long S = System.currentTime

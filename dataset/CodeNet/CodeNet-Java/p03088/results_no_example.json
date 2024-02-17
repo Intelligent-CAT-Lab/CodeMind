@@ -1,0 +1,8 @@
+{
+    "0": {
+        "prompt": "Consider the following code:\n\nimport java.util.Scanner;\n\npublic class Main {\n\t\n\tstatic int mod = 1000000007;\n\n\tpublic static void main(String[] args) {\n\t\tScanner sc = new Scanner(System.in);\n\t\t\n\t\tint n = Integer.parseInt(sc.next());\n\t\t\n\t\tlong [][][][]dp = new long [n+1][5][5][5];\n\t\t\n\t\t//\u5de6\u304b\u3089\u73fe\u5728\u306e\u6841\u6570\u3001n-2,n-1,n,\u756a\u76ee\u306e\u6587\u5b57\u304c\u3044\u304f\u3064\u304b\n\t\t//0 -> null,1 -> A, 2 -> G,3 -> C, 4 -> T \u306e\u3088\u3046\u306b\u3057\u305f\n\t\t\n\t\t// \n\t\tdp[0][0][0][0] = 1L;\n\t\t\n\t\tfor(int i = 1 ; i <= n ;i++) {\n\t\t\tfor(int j = 0 ; j < 5 ; j++) {\n\t\t\t\tfor(int k = 0 ; k < 5 ; k++) {\n\t\t\t\t\tfor(int l = 0 ; l < 5 ; l++) {\n\t\t\t\t\t\tfor(int m = 1 ; m < 5 ; m++) {\n\t\t\t\t\t\t\tif(j == 1 && l == 2 && m == 3) {continue;}\n\t\t\t\t\t\t\tif(j == 1 && k == 2 && m == 3) {continue;}\n\t\t\t\t\t\t\tif(k == 1 && l == 2 && m == 3) {continue;}\n\t\t\t\t\t\t\tif(k == 1 && l == 3 && m == 2) {continue;}\n\t\t\t\t\t\t\tif(k == 2 && l == 1 && m == 3) {continue;}\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\tdp[i][k][l][m] = (dp[i][k][l][m] + dp[i-1][j][k][l])% mod;\n\t\t\t\t\t\t\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\t\n\t\t\n\t\tlong ans = 0;\n\t\t\n\t\tfor(int i = 1 ; i < 5 ;i++) {\n\t\t\tfor(int j = 1 ; j < 5 ; j++) {\n\t\t\t\tfor(int k = 1 ; k < 5 ; k++) {\n\t\t\t\t\tans = (ans + dp[n][i][j][k])%mod;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\n\t\tSystem.out.println(ans);\n\t\t\n\t}\t\n\t\t\n}\nGicen the following input:\n3\nPrint only the output of the code, ends with \"END-OF-OUTPUT\":",
+        "status": "NAN",
+        "gorund_truth": "61\n",
+        "predict": "12"
+    }
+}

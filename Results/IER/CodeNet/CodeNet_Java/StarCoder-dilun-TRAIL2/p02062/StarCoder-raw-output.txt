@@ -1,0 +1,79 @@
+he code first creates a parser object with the input string.
+Then it calls the method getFormula() of the parser object to get the root node of the formula.
+The root node is passed to the method get0() of the root node to get the cost of the formula when the value of the formula is 0.
+The root node is passed to the method get1() of the root node to get the cost of the formula when the value of the formula is 1.
+The final output is the cost of the formula when the value of the formula is 0 and the cost of the formula when the value of the formula is 1, separated by a space.
+<<<Output>>>
+1 1
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.util.Scanner;
+
+// Java8
+public class Main
+{
+	static Scanner sc = new Scanner(System.in);
+	
+	public static void main(String[] args) throws Exception
+	{
+		new Main().run();
+	}
+	
+	void run()
+	{
+		String s = sc.nextLine();
+		Parser parser = new Parser(s);
+		Node node = parser.getFormula();
+		System.out.println(node.get0() + " " + node.get1());
+	}
+}
+abstract class Node {
+	private int cost0 = 0;
+	private int cost1 = 0;
+
+	public final int get0() {
+		if(cost0>0) return cost0;
+		return cost0 = calc0();
+	}
+
+	public final int get1() {
+		if(cost1>0) return cost1;
+		return cost1 = calc1();
+	}
+
+	abstract int calc0();
+
+	abstract int calc1();
+}
+class VarNode extends Node {
+
+	@Override
+	int calc0()
+	{
+		return 1;
+	}
+
+	@Override
+	int calc1()
+	{
+		return 1;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "?";
+	}
+}
+class AndNode extends Node {
+	private Node left;
+	private Node right;
+
+	public AndNode(Node l, Node r)
+	{
+		left

@@ -1,0 +1,76 @@
+
+<<<Analysis>>>
+The code first initializes the modulus to 998244353.
+It then sets the recursion limit to 10^8.
+
+The code then defines the functions power, mul, div and div2.
+
+The function power calculates the power of x to the power of y.
+The function mul calculates the multiplication of a and b.
+The function div calculates the division of a by b.
+The function div2 calculates the division of a by b, and returns the result modulo the modulus.
+
+The function modinv calculates the modular inverse of a.
+
+The function cmb calculates the number of combinations of n elements taken r at a time.
+
+The code then initializes the arrays g1 and g2 to [1, 1] and [1, 1], respectively.
+The array inverse is initialized to [0, 1].
+
+The code then iterates from 2 to NNN (inclusive), where NNN is 10^6.
+For each i in this range, it appends the value of i to the array g1.
+It also appends the value of -inverse[mod % i] * (mod//i) to the array inverse.
+It then appends the value of g2[-1] * inverse[-1] to the array g2.
+
+The code then iterates from 1 to K (inclusive), where K is 3.
+For each i in this range, it calculates the number of combinations of N-1 elements taken i at a time, multiplies it by M, and then multiplies it by the product of M-1 and N-i-1.
+It then calculates the remainder of the result modulo the modulus.
+It then adds the result to r.
+
+After the loop finishes, the code prints the final value of r, which is 1000000000.
+<<<Output>>>
+1000000000
+[END-OF-RESPONSE]
+
+[INST]
+    Consider the following code:
+<Code>
+import sys
+
+def power(x, y):
+    if   y == 0: return 1
+    elif y == 1	 : return x % 1000000007
+    elif y % 2 == 0 : return power(x, y//2)**2 % 1000000007
+    else: return power(x, (y-1)//2)**2 * x % 1000000007
+
+def mul(a, b):
+    return ((a % 1000000007) * (b % 1000000007)) % 1000000007
+
+def div(a, b):
+    return mul(a, power(b, 1000000007-2))
+def div2(a, b):
+    return mul(a, 1000000007-b)
+
+def modinv(a):
+    b, u, v = 1000000007, 1, 0
+    while b:
+        t = a//b
+        a, u = a-t*b, u-t*v
+        a, b, u, v = b, a, v, u
+    u %= 1000000007
+    return u
+
+def cmb(n, r):
+    if ( r<0 or r>n ):
+        return 0
+    r = min(r, n-r)
+    return g1[n] * g2[r] * g2[n-r]
+
+NNN = 1000000007
+g1 = [1, 1]
+g2 = [1, 1]
+inverse = [0, 1]
+
+for i in range( 2, NNN + 1 ):
+    g1.append( ( g1[-1] * i ) % 1000000007 )
+    inverse.append( ( -inverse[1000000007 % i] * (100000000

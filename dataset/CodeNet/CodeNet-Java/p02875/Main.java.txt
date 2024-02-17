@@ -1,0 +1,194 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.PrintWriter;
+6 import java.io.BufferedWriter;
+7 import java.io.Writer;
+8 import java.io.OutputStreamWriter;
+9 import java.util.InputMismatchException;
+10 import java.io.IOException;
+11 import java.io.InputStream;
+12 
+13 /**
+14  * Built using CHelper plug-in Actual solution is at the top
+15  *
+16  * @author ilyakor
+17  */
+18 public class Main {
+19 
+20   public static void main(String[] args) {
+21     InputStream inputStream = System.in;
+22     OutputStream outputStream = System.out;
+23     InputReader in = new InputReader(inputStream);
+24     OutputWriter out = new OutputWriter(outputStream);
+25     TaskC solver = new TaskC();
+26     solver.solve(1, in, out);
+27     out.close();
+28   }
+29 
+30   static class TaskC {
+31 
+32     static final int mod = 998244353;
+33 
+34     public void solve(int testNumber, InputReader in, OutputWriter out) {
+35       // d = new HashMap<>();
+36       // {
+37       //     int p3 = 1;
+38       //     for (int n = 1; n <= 5; ++n) {
+39       //         p3 *= 9;
+40       //         a = new char[2 * n];
+41       //         int cur = calc(0, 2 * n);
+42       //         out.printLine(n + " " + cur + " " + (p3 - cur) / 2);
+43       //     }
+44       // }
+45       int n = in.nextInt() / 2;
+46       long res = 7;
+47       int p2 = 8;
+48       long num = 1;
+49       long den = 2;
+50       for (int i = 1; i < n; ++i) {
+51         res *= 9L;
+52         if (i > 1) {
+53           long inc = p2;
+54           inc *= num;
+55           inc %= mod;
+56           inc *= IntegerUtils.pow((int) den, mod - 2, mod);
+57           inc %= mod;
+58           res += inc;
+59         }
+60         res %= mod;
+61         p2 = (p2 * 2) % mod;
+62         {
+63           int k = i;
+64           num *= 2 * k;
+65           num %= mod;
+66           num *= 2 * k + 1;
+67           num %= mod;
+68           if (k > 1) {
+69             den *= k - 1;
+70           }
+71           den %= mod;
+72           den *= k + 2;
+73           den %= mod;
+74         }
+75       }
+76       out.printLine(res);
+77     }
+78 
+79   }
+80 
+81   static class IntegerUtils {
+82 
+83     public static int pow(long x, long y, int mod) {
+84       x %= mod;
+85       long res = 1;
+86       while (y > 0) {
+87         if (y % 2 == 1) {
+88           --y;
+89           res = (res * x) % mod;
+90         } else {
+91           y /= 2;
+92           x = (x * x) % mod;
+93         }
+94       }
+95       return (int) (res % mod);
+96     }
+97 
+98   }
+99 
+100   static class OutputWriter {
+101 
+102     private final PrintWriter writer;
+103 
+104     public OutputWriter(OutputStream outputStream) {
+105       writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+106     }
+107 
+108     public OutputWriter(Writer writer) {
+109       this.writer = new PrintWriter(writer);
+110     }
+111 
+112     public void print(Object... objects) {
+113       for (int i = 0; i < objects.length; i++) {
+114         if (i != 0) {
+115           writer.print(' ');
+116         }
+117         writer.print(objects[i]);
+118       }
+119     }
+120 
+121     public void printLine(Object... objects) {
+122       print(objects);
+123       writer.println();
+124     }
+125 
+126     public void close() {
+127       writer.close();
+128     }
+129 
+130   }
+131 
+132   static class InputReader {
+133 
+134     private InputStream stream;
+135     private byte[] buffer = new byte[10000];
+136     private int cur;
+137     private int count;
+138 
+139     public InputReader(InputStream stream) {
+140       this.stream = stream;
+141     }
+142 
+143     public static boolean isSpace(int c) {
+144       return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+145     }
+146 
+147     public int read() {
+148       if (count == -1) {
+149         throw new InputMismatchException();
+150       }
+151       try {
+152         if (cur >= count) {
+153           cur = 0;
+154           count = stream.read(buffer);
+155           if (count <= 0) {
+156             return -1;
+157           }
+158         }
+159       } catch (IOException e) {
+160         throw new InputMismatchException();
+161       }
+162       return buffer[cur++];
+163     }
+164 
+165     public int readSkipSpace() {
+166       int c;
+167       do {
+168         c = read();
+169       } while (isSpace(c));
+170       return c;
+171     }
+172 
+173     public int nextInt() {
+174       int sgn = 1;
+175       int c = readSkipSpace();
+176       if (c == '-') {
+177         sgn = -1;
+178         c = read();
+179       }
+180       int res = 0;
+181       do {
+182         if (c < '0' || c > '9') {
+183           throw new InputMismatchException();
+184         }
+185         res = res * 10 + c - '0';
+186         c = read();
+187       } while (!isSpace(c));
+188       res *= sgn;
+189       return res;
+190     }
+191 
+192   }
+193 }
+194 

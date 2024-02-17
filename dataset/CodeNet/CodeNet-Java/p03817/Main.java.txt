@@ -1,0 +1,110 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.PrintWriter;
+4 import java.util.NoSuchElementException;
+5 
+6 public class Main {
+7 	
+8 	public static void main(String[] args) {
+9 		Scanner sc = new Scanner(System.in);
+10 		PrintWriter out = new PrintWriter(System.out);
+11 		
+12 		long x = sc.nextLong();
+13 		sc.close();
+14 		
+15 		long ans = x / 11 * 2 + x % 11 / 7 + Math.min(x % 11, 1);
+16 		out.println(ans);
+17 		out.flush();
+18 	}
+19 	
+20 }
+21 
+22 class Scanner {
+23 	private final InputStream in;
+24 	private final byte[] buffer;
+25 	private int ptr;
+26 	private int buflen;
+27 	
+28 	public Scanner(InputStream in) {
+29 		this.in = in;
+30 		this.buffer = new byte[1024];
+31 		this.ptr = 0;
+32 		this.buflen = 0;
+33 	}
+34 	
+35 	public void close() {
+36 		try {
+37 			this.in.close();
+38 		} catch (IOException e) {
+39 			e.printStackTrace();
+40 		}
+41 	}
+42 	
+43 	private boolean hasNextByte() {
+44 		if (ptr < buflen) {
+45 			return true;
+46 		} else {
+47 			ptr = 0;
+48 			try {
+49 				buflen = in.read(buffer);
+50 			} catch (IOException e) {
+51 				e.printStackTrace();
+52 			}
+53 			if (buflen <= 0) {
+54 				return false;
+55 			}
+56 		}
+57 		return true;
+58 	}
+59 	
+60 	private byte readByte() {
+61 		if (hasNextByte()) {
+62 			return buffer[ptr++];
+63 		} else {
+64 			return -1;
+65 		}
+66 	}
+67 	
+68 	private boolean isPrintableChar(int c) {
+69 		return '!' <= c && c <= '~';
+70 	}
+71 	
+72 	private void skipUnprintable() {
+73 		while (hasNextByte() && !isPrintableChar(buffer[ptr])) {
+74 			ptr++;
+75 		}
+76 	}
+77 	
+78 	public boolean hasNext() {
+79 		skipUnprintable();
+80 		return hasNextByte();
+81 	}
+82 	
+83 	public long nextLong() {
+84 		if (!hasNext()) {
+85 			throw new NoSuchElementException();
+86 		}
+87 		long n = 0;
+88 		boolean minus = false;
+89 		byte b = readByte();
+90 		if (b == '-') {
+91 			minus = true;
+92 			b = readByte();
+93 		}
+94 		if (b < '0' || '9' < b) {
+95 			throw new NumberFormatException();
+96 		}
+97 		while (true) {
+98 			if ('0' <= b && b <= '9') {
+99 				n *= 10;
+100 				n += b - '0';
+101 			} else if (b == -1 || !isPrintableChar(b)) {
+102 				return minus ? -n : n;
+103 			} else {
+104 				throw new NumberFormatException();
+105 			}
+106 			b = readByte();
+107 		}
+108 	}
+109 	
+110 }

@@ -1,0 +1,26 @@
+1 import java.util.Scanner;
+2 import java.util.Stack;
+3 
+4 public class Main {
+5 	static Scanner sc = new Scanner(System.in);
+6 
+7 	public static void main(String[] args) {
+8 		int[] mem = new int[10];
+9 		int pos = 0;
+10 		StringBuilder sb = new StringBuilder();
+11 		for (char c : sc.next().toCharArray()) {
+12 			int idx = (c - 33) / 10;
+13 			for (int i = 0; i < Math.abs(pos - idx); ++i) {
+14 				sb.append(idx < pos ? '<' : '>');
+15 			}
+16 			pos = idx;
+17 			for (int i = 0; i < Math.abs(mem[pos] - c); ++i) {
+18 				sb.append(c < mem[pos] ? '-' : '+');
+19 			}
+20 			mem[pos] = c;
+21 			sb.append('.');
+22 		}
+23 		System.out.println(sb);
+24 	}
+25 
+26 }

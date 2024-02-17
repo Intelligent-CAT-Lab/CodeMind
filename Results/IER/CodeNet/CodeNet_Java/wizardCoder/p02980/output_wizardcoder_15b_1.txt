@@ -1,0 +1,171 @@
+Below is an instruction that describes a task, paired with an input that
+provides further context.  Write a response that appropriately completes
+the request.
+
+### Instruction:
+Below is an example:
+[[[Example Start]]]
+I want to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the output of the code.
+Consider the following code:
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class Main {
+
+    public static void main(String[] args) {
+        try {
+            InputStreamReader isr = new InputStreamReader(System.in);
+            BufferedReader br = new BufferedReader(isr);
+            String strArr[] = br.readLine().split(" ");
+
+            int n = Integer.parseInt(strArr[0]);
+            int a = Integer.parseInt(strArr[1]);
+            int b = Integer.parseInt(strArr[2]);
+            int answer = 0;
+
+            for (int i = 1; i < n + 1; i++) {
+                int num = i;
+                int sum = 0;
+
+                while (num!= 0) {
+                        sum += num % 10;
+                        num /= 10;
+                }
+
+                if (sum >= a && sum <= b ) {
+                        answer = answer + i;
+                }
+            }
+            System.out.println(answer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+<<Question>>
+What would be the output of code executiion given the following input:
+20 2 5
+Only print the output of code execution and end your response with "END-OF-OUTPUT":
+<<Answer>>
+84
+END-OF-OUTPUT
+[[[Example End]]]
+
+
+Consider the following code: 
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskF solver = new TaskF();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class TaskF {
+        static final long MODULO = 998244353;
+        static long[] invs;
+        static long[] facts;
+        static long[] invfacts;
+
+        static {
+            int k = (int) 5e5;
+            invs = new long[k + 2];
+            invs[1] = 1;
+            for (int i = 2; i <= k + 1; ++i) {
+                invs[i] = ((MODULO - (MODULO / i) * (long) invs[(int) (MODULO % i)] % MODULO) % MODULO);
+            }
+            facts = new long[k + 2];
+            invfacts = new long[k + 2];
+            facts[0] = 1;
+            invfacts[0] = 1;
+            for (int i = 1; i <= k + 1; ++i) {
+                facts[i] = (facts[i - 1] * (long) i % MODULO);
+                invfacts[i] = (invfacts[i - 1] * (long) invs[i] % MODULO);
+            }
+        }
+
+        public void solve(int testNumber, InputReader in, PrintWriter out) {
+            int height = in.nextInt();
+            int width = in.nextInt();
+            long[] ph = new long[width + 1];
+            ph[0] = 1;
+            for (int i = 1; i < ph.length; ++i) {
+                ph[i] = ph[i - 1] * (height + 1) % MODULO;
+            }
+            long[] pw = new long[height + 1];
+            pw[0] = 1;
+            for (int i = 1; i < pw.length; ++i) {
+                pw[i] = pw[i - 1] * (width + 1) % MODULO;
+            }
+            long res = 0;
+            for (int common = 0; common <= height && common <= width; ++common) {
+                long ways = facts[height] * invfacts[common] % MODULO * invfacts[height - common] % MODULO
+                        * facts[width] % MODULO * invfacts[width - common] % MODULO
+                        * ph[width - common] % MODULO * pw[height - common] % MODULO;
+                if (common % 2 == 0) {
+                    res += ways;
+                } else {
+                    res -= ways;
+                }
+            }
+            res %= MODULO;
+            if (res < 0) res += MODULO;
+            out.println(res);
+        }
+
+    }
+
+    static class InputReader {
+        public BufferedReader reader;
+        public StringTokenizer tokenizer;
+
+        public InputReader(InputStream stream) {
+            reader = new BufferedReader(new InputStreamReader(stream), 32768);
+            tokenizer = null;
+        }
+
+        public String next() {
+            while (tokenizer == null ||!tokenizer.hasMoreTokens()) {
+                try {
+                    tokenizer = new StringTokenizer(reader.readLine());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return tokenizer.nextToken();
+        }
+
+        public int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+    }
+}
+
+
+<<Question>>
+What would be the output of code executiion given the following input:
+1 2
+
+Only print the output of code execution and end your response with "END-OF-OUTPUT":\<<Answer>>
+### Response:
+1
+END-OF-OUTPUT

@@ -1,0 +1,285 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.IOException;
+6 import java.io.UncheckedIOException;
+7 import java.io.Closeable;
+8 import java.io.Writer;
+9 import java.io.OutputStreamWriter;
+10 import java.io.InputStream;
+11 
+12 /**
+13  * Built using CHelper plug-in
+14  * Actual solution is at the top
+15  */
+16 public class Main {
+17     public static void main(String[] args) throws Exception {
+18         Thread thread = new Thread(null, new TaskAdapter(), "", 1 << 29);
+19         thread.start();
+20         thread.join();
+21     }
+22 
+23     static class TaskAdapter implements Runnable {
+24         @Override
+25         public void run() {
+26             InputStream inputStream = System.in;
+27             OutputStream outputStream = System.out;
+28             FastInput in = new FastInput(inputStream);
+29             FastOutput out = new FastOutput(outputStream);
+30             FDISCOSMOS solver = new FDISCOSMOS();
+31             solver.solve(1, in, out);
+32             out.close();
+33         }
+34     }
+35 
+36     static class FDISCOSMOS {
+37         public void solve(int testNumber, FastInput in, FastOutput out) {
+38             int h = in.readInt();
+39             int w = in.readInt();
+40             int t = in.readInt();
+41 
+42             int hh = h / GCDs.gcd(h, t);
+43             int ww = w / GCDs.gcd(w, t);
+44 
+45 
+46             Modular mod = new Modular(1e9 + 7);
+47             Power pow = new Power(mod);
+48             int way = 1;
+49             way = mod.plus(way, mod.subtract(pow.pow(2, hh), 2));
+50             way = mod.plus(way, mod.subtract(pow.pow(2, ww), 2));
+51             way = mod.plus(way, pow.pow(2, GCDs.gcd(hh, ww)));
+52 
+53 
+54             Modular powMod = mod.getModularForPowerComputation();
+55             int p = powMod.mul(h / hh, w / ww);
+56             way = pow.pow(way, p);
+57             out.println(way);
+58         }
+59 
+60     }
+61 
+62     static interface InverseNumber {
+63     }
+64 
+65     static class GCDs {
+66         private GCDs() {
+67         }
+68 
+69         public static int gcd(int a, int b) {
+70             return a >= b ? gcd0(a, b) : gcd0(b, a);
+71         }
+72 
+73         private static int gcd0(int a, int b) {
+74             return b == 0 ? a : gcd0(b, a % b);
+75         }
+76 
+77     }
+78 
+79     static class FastInput {
+80         private final InputStream is;
+81         private byte[] buf = new byte[1 << 13];
+82         private int bufLen;
+83         private int bufOffset;
+84         private int next;
+85 
+86         public FastInput(InputStream is) {
+87             this.is = is;
+88         }
+89 
+90         private int read() {
+91             while (bufLen == bufOffset) {
+92                 bufOffset = 0;
+93                 try {
+94                     bufLen = is.read(buf);
+95                 } catch (IOException e) {
+96                     bufLen = -1;
+97                 }
+98                 if (bufLen == -1) {
+99                     return -1;
+100                 }
+101             }
+102             return buf[bufOffset++];
+103         }
+104 
+105         public void skipBlank() {
+106             while (next >= 0 && next <= 32) {
+107                 next = read();
+108             }
+109         }
+110 
+111         public int readInt() {
+112             int sign = 1;
+113 
+114             skipBlank();
+115             if (next == '+' || next == '-') {
+116                 sign = next == '+' ? 1 : -1;
+117                 next = read();
+118             }
+119 
+120             int val = 0;
+121             if (sign == 1) {
+122                 while (next >= '0' && next <= '9') {
+123                     val = val * 10 + next - '0';
+124                     next = read();
+125                 }
+126             } else {
+127                 while (next >= '0' && next <= '9') {
+128                     val = val * 10 - next + '0';
+129                     next = read();
+130                 }
+131             }
+132 
+133             return val;
+134         }
+135 
+136     }
+137 
+138     static class FastOutput implements AutoCloseable, Closeable, Appendable {
+139         private StringBuilder cache = new StringBuilder(10 << 20);
+140         private final Writer os;
+141 
+142         public FastOutput append(CharSequence csq) {
+143             cache.append(csq);
+144             return this;
+145         }
+146 
+147         public FastOutput append(CharSequence csq, int start, int end) {
+148             cache.append(csq, start, end);
+149             return this;
+150         }
+151 
+152         public FastOutput(Writer os) {
+153             this.os = os;
+154         }
+155 
+156         public FastOutput(OutputStream os) {
+157             this(new OutputStreamWriter(os));
+158         }
+159 
+160         public FastOutput append(char c) {
+161             cache.append(c);
+162             return this;
+163         }
+164 
+165         public FastOutput append(int c) {
+166             cache.append(c);
+167             return this;
+168         }
+169 
+170         public FastOutput println(int c) {
+171             return append(c).println();
+172         }
+173 
+174         public FastOutput println() {
+175             cache.append(System.lineSeparator());
+176             return this;
+177         }
+178 
+179         public FastOutput flush() {
+180             try {
+181                 os.append(cache);
+182                 os.flush();
+183                 cache.setLength(0);
+184             } catch (IOException e) {
+185                 throw new UncheckedIOException(e);
+186             }
+187             return this;
+188         }
+189 
+190         public void close() {
+191             flush();
+192             try {
+193                 os.close();
+194             } catch (IOException e) {
+195                 throw new UncheckedIOException(e);
+196             }
+197         }
+198 
+199         public String toString() {
+200             return cache.toString();
+201         }
+202 
+203     }
+204 
+205     static class Modular {
+206         int m;
+207 
+208         public Modular(int m) {
+209             this.m = m;
+210         }
+211 
+212         public Modular(long m) {
+213             this.m = (int) m;
+214             if (this.m != m) {
+215                 throw new IllegalArgumentException();
+216             }
+217         }
+218 
+219         public Modular(double m) {
+220             this.m = (int) m;
+221             if (this.m != m) {
+222                 throw new IllegalArgumentException();
+223             }
+224         }
+225 
+226         public int valueOf(int x) {
+227             x %= m;
+228             if (x < 0) {
+229                 x += m;
+230             }
+231             return x;
+232         }
+233 
+234         public int valueOf(long x) {
+235             x %= m;
+236             if (x < 0) {
+237                 x += m;
+238             }
+239             return (int) x;
+240         }
+241 
+242         public int mul(int x, int y) {
+243             return valueOf((long) x * y);
+244         }
+245 
+246         public int plus(int x, int y) {
+247             return valueOf(x + y);
+248         }
+249 
+250         public int subtract(int x, int y) {
+251             return valueOf(x - y);
+252         }
+253 
+254         public Modular getModularForPowerComputation() {
+255             return new Modular(m - 1);
+256         }
+257 
+258         public String toString() {
+259             return "mod " + m;
+260         }
+261 
+262     }
+263 
+264     static class Power implements InverseNumber {
+265         final Modular modular;
+266 
+267         public Power(Modular modular) {
+268             this.modular = modular;
+269         }
+270 
+271         public int pow(int x, int n) {
+272             if (n == 0) {
+273                 return modular.valueOf(1);
+274             }
+275             long r = pow(x, n >> 1);
+276             r = modular.valueOf(r * r);
+277             if ((n & 1) == 1) {
+278                 r = modular.valueOf(r * x);
+279             }
+280             return (int) r;
+281         }
+282 
+283     }
+284 }
+285 

@@ -1,0 +1,355 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.PrintWriter;
+4 import java.util.ArrayDeque;
+5 import java.util.NoSuchElementException;
+6 
+7 public class Main {
+8 	public static void main(String[] args) {
+9 		new Main().solve();
+10 		pw.close();
+11 	}
+12 
+13 	/**
+14 	 * ASCII
+15 	 * 0 48
+16 	 * A 65
+17 	 * a 97
+18 	 */
+19 
+20 	static PrintWriter pw = new PrintWriter(System.out);
+21 
+22 	long MOD = 1_000_000_007;
+23 
+24 	void solve() {
+25 		FastScanner sc = new FastScanner();
+26 		char X = sc.next().charAt(0);
+27 		char Y = sc.next().charAt(0);
+28 		String ans = "=";
+29 		if (X - Y < 0) {
+30 			ans = "<";
+31 		} else if (X - Y > 0) {
+32 			ans = ">";
+33 		}
+34 		out(ans);
+35 	}
+36 
+37 	double getD(double x1, double x2, double y1, double y2) {
+38 		return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2, 2));
+39 	}
+40 
+41 	int[][] d4 = new int[][] {{1,0},{0,1},{-1,0},{0,-1}};
+42 	int[][] d8 = new int[][] {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1}};
+43 
+44 	class Data {
+45 		int a;
+46 		int b;
+47 		int c;
+48 		Data(){}
+49 		Data(int a) {
+50 			this.a = a;
+51 		}
+52 		Data(int a, int b, int c) {
+53 			this.a = a;
+54 			this.b = b;
+55 			this.c = c;
+56 		}
+57 		Data(int a, int b) {
+58 			this.a = a;
+59 			this.b = b;
+60 		}
+61 	}
+62 
+63 	class Permutation {
+64 		int[] array;
+65 
+66 		Permutation(int N) {
+67 			array = new int[N];
+68 			for (int i = 0; i < N; i++) {
+69 				array[i] = i+1;
+70 			}
+71 		}
+72 
+73 		boolean nextPermutation() {
+74 		    int i = array.length - 1;
+75 		    while (i > 0 && array[i - 1] >= array[i])
+76 		        i--;
+77 		    if (i <= 0)
+78 		        return false;
+79 
+80 		    int j = array.length - 1;
+81 		    while (array[j] <= array[i - 1])
+82 		        j--;
+83 		    int temp = array[i - 1];
+84 		    array[i - 1] = array[j];
+85 		    array[j] = temp;
+86 
+87 		    j = array.length - 1;
+88 		    while (i < j) {
+89 		        temp = array[i];
+90 		        array[i] = array[j];
+91 		        array[j] = temp;
+92 		        i++;
+93 		        j--;
+94 		    }
+95 		    return true;
+96 		}
+97 	}
+98 
+99 	class UnionFind {
+100 		int[] parents;
+101 		int[] counts;
+102 
+103 		public UnionFind(int size) {
+104 			parents = new int[size];
+105 			counts = new int[size];
+106 			for (int i = 0; i < size; i++) {
+107 				parents[i] = i;
+108 				counts[i] = 1;
+109 			}
+110 		}
+111 
+112 		public int find(int a) {
+113 			if (parents[a] == a) return a;
+114 			parents[a] = find(parents[a]);
+115 			return parents[a];
+116 		}
+117 
+118 		public void unite(int a, int b) {
+119 			a = find(a);
+120 			b = find(b);
+121 			if (a == b) return;
+122 			if (counts[a] < counts[b]) {
+123 				parents[a] = b;
+124 				counts[b] += counts[a];
+125 			} else {
+126 				parents[b] = a;
+127 				counts[a] += counts[b];
+128 			}
+129 		}
+130 
+131 		public boolean differ(int a, int b) {
+132 			a = find(a);
+133 			b = find(b);
+134 			return a != b;
+135 		}
+136 
+137 		public int count(int a) {
+138 			return counts[find(a)];
+139 		}
+140 	}
+141 
+142 	class Combination {
+143 		final int mod;
+144 		final int max;
+145 
+146 		final long[] fact;
+147 		final long[] inv;
+148 		final long[] invfact;
+149 
+150 		public Combination(int n) {
+151 			this(n, 1_000_000_007);
+152 		}
+153 
+154 		public Combination(int n, int mod) {
+155 			this.mod = mod;
+156 			max = n + 1;
+157 			fact = new long[max];
+158 			invfact = new long[max];
+159 			inv = new long[max];
+160 
+161 			inv[1] = 1;
+162 			for (int i = 2; i < inv.length; i++) {
+163 				inv[i] = inv[mod % i] * (mod - mod / i) % mod;
+164 			}
+165 
+166 			fact[0] = 1;
+167 			invfact[0] = 1;
+168 			for (int i = 1; i < inv.length; i++) {
+169 				fact[i] = i * fact[i - 1] % mod;
+170 				invfact[i] = inv[i] * invfact[i - 1] % mod;
+171 			}
+172 		}
+173 
+174 		public long get(int n, int r) {
+175 			return fact[n] * invfact[n - r] % mod * invfact[r] % mod;
+176 		}
+177 
+178 		public long gcd(long a, long b) {
+179 			if (b == 0) return a;
+180 			else {
+181 				b %= MOD;
+182 				if (b < 0) b+=MOD;
+183 				return gcd(b, (b-a*inv[(int)b]%MOD*b%MOD)%MOD);
+184 			}
+185 		}
+186 	}
+187 
+188 	public long gcd(long a, long b) {
+189 		if (b == 0) return a;
+190 		else return gcd(b, a%b);
+191 	}
+192 
+193 	public void reverse(int[] a) {
+194 		int last = a.length-1;
+195 		int n = a.length / 2;
+196 		for (int i = 0; i < n; i++) {
+197 			int t = a[i];
+198 			a[i] = a[last-i];
+199 			a[last-i] = t;
+200 		}
+201 	}
+202 
+203 	public void reverse(long[] a) {
+204 		int last = a.length-1;
+205 		int n = a.length / 2;
+206 		for (int i = 0; i < n; i++) {
+207 			long t = a[i];
+208 			a[i] = a[last-i];
+209 			a[last-i] = t;
+210 		}
+211 	}
+212 
+213 	void out() {
+214 		pw.println();
+215 	}
+216 
+217 	void out(String a) {
+218 		pw.println(a);
+219 	}
+220 	void out(boolean a) {
+221 		pw.println(a);
+222 	}
+223 
+224 	void out(int a) {
+225 		pw.println(a);
+226 	}
+227 
+228 	void out(long a) {
+229 		pw.println(a);
+230 	}
+231 
+232 	void out(double a) {
+233 		pw.println(a);
+234 	}
+235 
+236 	void out(char a) {
+237 		pw.println(a);
+238 	}
+239 
+240 	void rout(String a) {
+241 		out(a);
+242 		pw.close();
+243 		System.exit(0);
+244 	}
+245 	void rout(int a) {
+246 		out(a);
+247 		pw.close();
+248 		System.exit(0);
+249 	}
+250 	void rout(long a) {
+251 		out(a);
+252 		pw.close();
+253 		System.exit(0);
+254 	}
+255 	void rout(double a) {
+256 		out(a);
+257 		pw.close();
+258 		System.exit(0);
+259 	}
+260 	void rout(char a) {
+261 		out(a);
+262 		pw.close();
+263 		System.exit(0);
+264 	}
+265 }
+266 
+267 
+268 class FastScanner {
+269     private final InputStream in = System.in;
+270     private final byte[] buffer = new byte[1024];
+271     private int ptr = 0;
+272     private int buflen = 0;
+273     private boolean hasNextByte() {
+274         if (ptr < buflen) {
+275             return true;
+276         } else {
+277             ptr = 0;
+278             try {
+279                 buflen = in.read(buffer);
+280             } catch (IOException e) {
+281                 e.printStackTrace();
+282             }
+283             if (buflen <= 0) {
+284                 return false;
+285             }
+286         }
+287         return true;
+288     }
+289 
+290     private int readByte() {
+291         if (hasNextByte())
+292             return buffer[ptr++];
+293         else
+294             return -1;
+295     }
+296 
+297     private boolean isPrintableChar(int c) {
+298         return 33 <= c && c <= 126;
+299     }
+300 
+301     public boolean hasNext() {
+302         while (hasNextByte() && !isPrintableChar(buffer[ptr]))
+303             ptr++;
+304         return hasNextByte();
+305     }
+306 
+307     public String next() {
+308         if (!hasNext())
+309             throw new NoSuchElementException();
+310         StringBuilder sb = new StringBuilder();
+311         int b = readByte();
+312         while (isPrintableChar(b)) {
+313             sb.appendCodePoint(b);
+314             b = readByte();
+315         }
+316         return sb.toString();
+317     }
+318 
+319     public long nextLong() {
+320         if (!hasNext())
+321             throw new NoSuchElementException();
+322         long n = 0;
+323         boolean minus = false;
+324         int b = readByte();
+325         if (b == '-') {
+326             minus = true;
+327             b = readByte();
+328         }
+329         if (b < '0' || '9' < b) {
+330             throw new NumberFormatException();
+331         }
+332         while (true) {
+333             if ('0' <= b && b <= '9') {
+334                 n *= 10;
+335                 n += b - '0';
+336             } else if (b == -1 || !isPrintableChar(b)) {
+337                 return minus ? -n : n;
+338             } else {
+339                 throw new NumberFormatException();
+340             }
+341             b = readByte();
+342         }
+343     }
+344 
+345     public int nextInt() {
+346         long nl = nextLong();
+347         if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE)
+348             throw new NumberFormatException();
+349         return (int) nl;
+350     }
+351 
+352     public double nextDouble() {
+353         return Double.parseDouble(next());
+354     }
+355 }

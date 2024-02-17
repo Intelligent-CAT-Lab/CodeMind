@@ -1,0 +1,241 @@
+1 import java.util.*;
+2 import java.util.Map.Entry;
+3 import java.lang.*;
+4 import java.math.*;
+5 import java.io.*;
+6 import static java.lang.Math.*;
+7 import static java.util.Arrays.*;
+8 import static java.util.Collections.*;
+9 
+10 // MinimumCostPath
+11 // 2012/09/19
+12 public class Main{
+13 	Scanner sc=new Scanner(System.in);
+14 
+15 	int INF=1<<28;
+16 	int LIM=70;
+17 
+18 	int[] dx={0, 0, -1, 1};
+19 	int[] dy={-1, 1, 0, 0};
+20 
+21 	int n, m;
+22 	int[] xs, ys;
+23 	long[] factMod, factInvMod;
+24 
+25 	int mod=(int)1e9+9;
+26 
+27 	void run(){
+28 		n=sc.nextInt();
+29 		m=sc.nextInt();
+30 		xs=new int[m];
+31 		ys=new int[m];
+32 		for(int i=0; i<m; i++){
+33 			xs[i]=sc.nextInt()-1;
+34 			ys[i]=sc.nextInt()-1;
+35 		}
+36 		solve();
+37 	}
+38 
+39 	void solveNaive(){
+40 		LIM=1000;
+41 		TreeMap<P, Long> paths=new TreeMap<P, Long>();
+42 		TreeMap<P, Integer> ds=new TreeMap<P, Integer>();
+43 		bfsLim(paths, ds, new P(0, 0));
+44 		if(paths.containsKey(new P(n-1, n-1))){
+45 			println(paths.get(new P(n-1, n-1))+"");
+46 		}else{
+47 			println("0");
+48 		}
+49 	}
+50 
+51 	void bfsLim(TreeMap<P, Long> path, TreeMap<P, Integer> d, P p0){
+52 		HashSet<P> wall=new HashSet<P>();
+53 
+54 		for(int i=0; i<m; i++){
+55 			wall.add(new P(xs[i], ys[i]));
+56 		}
+57 
+58 		path.put(p0, 1L);
+59 		d.put(p0, 0);
+60 
+61 		LinkedList<P> que=new LinkedList<P>();
+62 		que.offer(p0);
+63 
+64 		for(; !que.isEmpty();){
+65 			P p=que.poll();
+66 			if(d.get(p)==LIM){
+67 				break;
+68 			}
+69 			for(int i=0; i<4; i++){
+70 				P q=new P(p.x+dx[i], p.y+dy[i]);
+71 				if(q.x>=0&&q.x<n&&q.y>=0&&q.y<n&&!wall.contains(q)){
+72 					if(!d.containsKey(q)){
+73 						d.put(q, d.get(p)+1);
+74 						que.offer(q);
+75 					}
+76 					if(d.get(p)+1==d.get(q)){
+77 						if(!path.containsKey(q)){
+78 							path.put(q, 0L);
+79 						}
+80 						path.put(q, (path.get(q)+path.get(p))%mod);
+81 					}
+82 				}
+83 			}
+84 		}
+85 	}
+86 
+87 	void solve(){
+88 		if(n<=200){
+89 			solveNaive();
+90 			return;
+91 		}
+92 
+93 		// fact mod
+94 		int max=2000000;
+95 		factMod=new long[max];
+96 		factInvMod=new long[max];
+97 		factMod[0]=factInvMod[0]=1;
+98 		for(int i=1; i<max; i++){
+99 			factMod[i]=factMod[i-1]*i%mod;
+100 			factInvMod[i]=factInvMod[i-1]*powMod(i, mod-2, mod)%mod;
+101 		}
+102 
+103 		// BFS
+104 		TreeMap<P, Long> pathsS=new TreeMap<P, Long>();
+105 		TreeMap<P, Integer> dsS=new TreeMap<P, Integer>();
+106 		TreeMap<P, Long> pathsG=new TreeMap<P, Long>();
+107 		TreeMap<P, Integer> dsG=new TreeMap<P, Integer>();
+108 
+109 		bfsLim(pathsS, dsS, new P(0, 0));
+110 		bfsLim(pathsG, dsG, new P(n-1, n-1));
+111 
+112 		int dMin=INF;
+113 		for(Entry<P, Integer> entryS : dsS.entrySet()){
+114 			for(Entry<P, Integer> entryG : dsG.entrySet()){
+115 				int ds=entryS.getValue();
+116 				int dg=entryG.getValue();
+117 				P p=entryS.getKey();
+118 				P q=entryG.getKey();
+119 				if(ds==LIM&&dg==LIM){
+120 					dMin=min(dMin, ds+abs(p.x-q.x)+abs(p.y-q.y)+dg);
+121 				}
+122 			}
+123 		}
+124 
+125 		if(dMin==INF){
+126 			println("0");
+127 			return;
+128 		}
+129 
+130 		HashSet<P> setS=new HashSet<P>();
+131 		HashSet<P> setG=new HashSet<P>();
+132 
+133 		for(Entry<P, Integer> entryS : dsS.entrySet()){
+134 			for(Entry<P, Integer> entryG : dsG.entrySet()){
+135 				int ds=entryS.getValue();
+136 				int dg=entryG.getValue();
+137 				P p=entryS.getKey();
+138 				P q=entryG.getKey();
+139 				if(ds==LIM&&dg==LIM&&ds+abs(p.x-q.x)+abs(p.y-q.y)+dg==dMin){
+140 					setS.add(p);
+141 					setG.add(q);
+142 				}
+143 			}
+144 		}
+145 
+146 		P[] ps=new P[m];
+147 		for(int i=0; i<m; i++){
+148 			ps[i]=new P(xs[i], ys[i]);
+149 		}
+150 		sort(ps);
+151 
+152 		long[] dp=new long[m];
+153 		for(P p : setS){
+154 			for(int i=0; i<m; i++){
+155 				dp[i]=(dp[i]+pathsS.get(p)*nPath(p, ps[i])%mod)%mod;
+156 			}
+157 		}
+158 		for(int j=0; j<m; j++){
+159 			for(int i=j+1; i<m; i++){
+160 				dp[i]=(dp[i]-dp[j]*nPath(ps[j], ps[i])%mod+mod)%mod;
+161 			}
+162 		}
+163 		long ans=0;
+164 		for(P p : setG){
+165 			long sum=0;
+166 			for(P q : setS){
+167 				sum=(sum+pathsS.get(q)*nPath(q, p)%mod*pathsG.get(p)%mod)%mod;
+168 			}
+169 			for(int i=0; i<m; i++){
+170 				sum=(sum-dp[i]*nPath(ps[i], p)%mod*pathsG.get(p)%mod+mod)%mod;
+171 			}
+172 			ans=(ans+sum)%mod;
+173 		}
+174 
+175 		println(ans+"");
+176 	}
+177 
+178 	long nPath(P p, P q){
+179 		int dx=q.x-p.x;
+180 		int dy=q.y-p.y;
+181 		return modComb(dx+dy, dx);
+182 	}
+183 
+184 	long modComb(int n, int k){
+185 		if(n<0||k<0||n<k){
+186 			return 0;
+187 		}
+188 		return factMod[n]*factInvMod[k]%mod*factInvMod[n-k]%mod;
+189 	}
+190 
+191 	long powMod(long x, int k, int mod){
+192 		if(k==0)
+193 			return 1;
+194 		else if((k&1)==0)
+195 			return powMod(x*x%mod, k>>>1, mod);
+196 		else
+197 			return x*powMod(x, k-1, mod)%mod;
+198 	}
+199 
+200 	class P implements Comparable<P>{
+201 		int x, y;
+202 
+203 		P(int x, int y){
+204 			this.x=x;
+205 			this.y=y;
+206 		}
+207 
+208 		@Override
+209 		public int compareTo(P p){
+210 			if(y!=p.y){
+211 				return y-p.y;
+212 			}else{
+213 				return x-p.x;
+214 			}
+215 		}
+216 
+217 		@Override
+218 		public int hashCode(){
+219 			return x|(y<<16);
+220 		}
+221 
+222 		@Override
+223 		public boolean equals(Object o){
+224 			P p=(P)o;
+225 			return x==p.x&&y==p.y;
+226 		}
+227 
+228 		@Override
+229 		public String toString(){
+230 			return "("+x+","+y+")";
+231 		}
+232 	}
+233 
+234 	void println(String s){
+235 		System.out.println(s);
+236 	}
+237 
+238 	public static void main(String[] args){
+239 		new Main().run();
+240 	}
+241 }

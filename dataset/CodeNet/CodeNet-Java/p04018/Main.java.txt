@@ -1,0 +1,437 @@
+1 
+2 
+3 import java.io.FileInputStream;
+4 import java.io.IOException;
+5 import java.io.InputStream;
+6 import java.io.OutputStream;
+7 import java.nio.charset.Charset;
+8 import java.util.Arrays;
+9 
+10 public class Main {
+11     public static void main(String[] args) throws Exception {
+12         boolean local = false;
+13         boolean async = false;
+14 
+15         Charset charset = Charset.forName("ascii");
+16 
+17         FastIO io = local ? new FastIO(new FileInputStream("D:\\DATABASE\\TESTCASE\\Code.in"), System.out, charset) : new FastIO(System.in, System.out, charset);
+18         Task task = new Task(io, new Debug(local));
+19 
+20         if (async) {
+21             Thread t = new Thread(null, task, "dalt", 1 << 27);
+22             t.setPriority(Thread.MAX_PRIORITY);
+23             t.start();
+24             t.join();
+25         } else {
+26             task.run();
+27         }
+28 
+29         if (local) {
+30             io.cache.append("\n\n--memory -- \n" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) >> 20) + "M");
+31         }
+32 
+33         io.flush();
+34     }
+35 
+36     public static class Task implements Runnable {
+37         final FastIO io;
+38         final Debug debug;
+39         int inf = (int) 1e8;
+40         long lInf = (long) 1e18;
+41         double dInf = 1e50;
+42 
+43         public Task(FastIO io, Debug debug) {
+44             this.io = io;
+45             this.debug = debug;
+46         }
+47 
+48         @Override
+49         public void run() {
+50             solve();
+51         }
+52 
+53         public void solve() {
+54             char[] s = new char[1000000];
+55             int n = io.readString(s, 0);
+56 
+57             KMPAutomaton kmp = new KMPAutomaton(n);
+58             KMPAutomaton inv = new KMPAutomaton(n);
+59             for (int i = 0; i < n; i++) {
+60                 kmp.build(s[i]);
+61                 inv.build(s[n - i - 1]);
+62             }
+63             int p = n - kmp.fail[n];
+64             if (n % p != 0) {
+65                 p = n;
+66             }
+67 
+68             if (p == 1) {
+69                 answer(n, 1);
+70                 return;
+71             }
+72             if (p == n) {
+73                 answer(1, 1);
+74                 return;
+75             }
+76             int cnt = 0;
+77             for (int i = 2; i <= n; i++) {
+78                 int p1 = i - 1 - kmp.fail[i - 1];
+79                 int p2 = (n + 1 - i) - inv.fail[n + 1 - i];
+80 
+81                 boolean f1 = p1 == (i - 1) || (i - 1) % p1 != 0;
+82                 boolean f2 = p2 == (n + 1 - i) || (n + 1 - i) % p2 != 0;
+83                 if (f1 && f2) {
+84                     cnt++;
+85                 }
+86             }
+87 
+88             answer(2, cnt);
+89         }
+90 
+91         public void answer(int len, int cnt) {
+92             io.cache.append(len).append('\n').append(cnt);
+93         }
+94 
+95     }
+96 
+97     public static class KMPAutomaton {
+98         char[] data;
+99         int[] fail;
+100         int buildLast;
+101         int matchLast = 0;
+102         int length;
+103 
+104         public KMPAutomaton(int cap) {
+105             data = new char[cap + 2];
+106             fail = new int[cap + 2];
+107             fail[0] = -1;
+108             buildLast = 0;
+109             length = cap;
+110         }
+111 
+112         public KMPAutomaton(KMPAutomaton automaton) {
+113             data = automaton.data;
+114             fail = automaton.fail;
+115             buildLast = automaton.buildLast;
+116             length = automaton.length;
+117         }
+118 
+119         public boolean isMatch() {
+120             return matchLast == length;
+121         }
+122 
+123         public int length() {
+124             return length;
+125         }
+126 
+127         public void beginMatch() {
+128             matchLast = 0;
+129         }
+130 
+131         public void match(char c) {
+132             matchLast = visit(c, matchLast) + 1;
+133         }
+134 
+135         public int visit(char c, int trace) {
+136             while (trace >= 0 && data[trace + 1] != c) {
+137                 trace = fail[trace];
+138             }
+139             return trace;
+140         }
+141 
+142         public void build(char c) {
+143             buildLast++;
+144             fail[buildLast] = visit(c, fail[buildLast - 1]) + 1;
+145             data[buildLast] = c;
+146         }
+147 
+148     }
+149 
+150 
+151     public static class FastIO {
+152         public final StringBuilder cache = new StringBuilder(1 << 13);
+153         private final InputStream is;
+154         private final OutputStream os;
+155         private final Charset charset;
+156         private StringBuilder defaultStringBuf = new StringBuilder(1 << 13);
+157         private byte[] buf = new byte[1 << 13];
+158         private int bufLen;
+159         private int bufOffset;
+160         private int next;
+161 
+162         public FastIO(InputStream is, OutputStream os, Charset charset) {
+163             this.is = is;
+164             this.os = os;
+165             this.charset = charset;
+166         }
+167 
+168         public FastIO(InputStream is, OutputStream os) {
+169             this(is, os, Charset.forName("ascii"));
+170         }
+171 
+172         private int read() {
+173             while (bufLen == bufOffset) {
+174                 bufOffset = 0;
+175                 try {
+176                     bufLen = is.read(buf);
+177                 } catch (IOException e) {
+178                     throw new RuntimeException(e);
+179                 }
+180                 if (bufLen == -1) {
+181                     return -1;
+182                 }
+183             }
+184             return buf[bufOffset++];
+185         }
+186 
+187         public void skipBlank() {
+188             while (next >= 0 && next <= 32) {
+189                 next = read();
+190             }
+191         }
+192 
+193         public int readInt() {
+194             int sign = 1;
+195 
+196             skipBlank();
+197             if (next == '+' || next == '-') {
+198                 sign = next == '+' ? 1 : -1;
+199                 next = read();
+200             }
+201 
+202             int val = 0;
+203             if (sign == 1) {
+204                 while (next >= '0' && next <= '9') {
+205                     val = val * 10 + next - '0';
+206                     next = read();
+207                 }
+208             } else {
+209                 while (next >= '0' && next <= '9') {
+210                     val = val * 10 - next + '0';
+211                     next = read();
+212                 }
+213             }
+214 
+215             return val;
+216         }
+217 
+218         public long readLong() {
+219             int sign = 1;
+220 
+221             skipBlank();
+222             if (next == '+' || next == '-') {
+223                 sign = next == '+' ? 1 : -1;
+224                 next = read();
+225             }
+226 
+227             long val = 0;
+228             if (sign == 1) {
+229                 while (next >= '0' && next <= '9') {
+230                     val = val * 10 + next - '0';
+231                     next = read();
+232                 }
+233             } else {
+234                 while (next >= '0' && next <= '9') {
+235                     val = val * 10 - next + '0';
+236                     next = read();
+237                 }
+238             }
+239 
+240             return val;
+241         }
+242 
+243         public double readDouble() {
+244             boolean sign = true;
+245             skipBlank();
+246             if (next == '+' || next == '-') {
+247                 sign = next == '+';
+248                 next = read();
+249             }
+250 
+251             long val = 0;
+252             while (next >= '0' && next <= '9') {
+253                 val = val * 10 + next - '0';
+254                 next = read();
+255             }
+256             if (next != '.') {
+257                 return sign ? val : -val;
+258             }
+259             next = read();
+260             long radix = 1;
+261             long point = 0;
+262             while (next >= '0' && next <= '9') {
+263                 point = point * 10 + next - '0';
+264                 radix = radix * 10;
+265                 next = read();
+266             }
+267             double result = val + (double) point / radix;
+268             return sign ? result : -result;
+269         }
+270 
+271         public String readString(StringBuilder builder) {
+272             skipBlank();
+273 
+274             while (next > 32) {
+275                 builder.append((char) next);
+276                 next = read();
+277             }
+278 
+279             return builder.toString();
+280         }
+281 
+282         public String readString() {
+283             defaultStringBuf.setLength(0);
+284             return readString(defaultStringBuf);
+285         }
+286 
+287         public int readLine(char[] data, int offset) {
+288             int originalOffset = offset;
+289             while (next != -1 && next != '\n') {
+290                 data[offset++] = (char) next;
+291                 next = read();
+292             }
+293             return offset - originalOffset;
+294         }
+295 
+296         public int readString(char[] data, int offset) {
+297             skipBlank();
+298 
+299             int originalOffset = offset;
+300             while (next > 32) {
+301                 data[offset++] = (char) next;
+302                 next = read();
+303             }
+304 
+305             return offset - originalOffset;
+306         }
+307 
+308         public int readString(byte[] data, int offset) {
+309             skipBlank();
+310 
+311             int originalOffset = offset;
+312             while (next > 32) {
+313                 data[offset++] = (byte) next;
+314                 next = read();
+315             }
+316 
+317             return offset - originalOffset;
+318         }
+319 
+320         public char readChar() {
+321             skipBlank();
+322             char c = (char) next;
+323             next = read();
+324             return c;
+325         }
+326 
+327         public void flush() throws IOException {
+328             os.write(cache.toString().getBytes(charset));
+329             os.flush();
+330             cache.setLength(0);
+331         }
+332 
+333         public boolean hasMore() {
+334             skipBlank();
+335             return next != -1;
+336         }
+337     }
+338 
+339     public static class Debug {
+340         private boolean allowDebug;
+341 
+342         public Debug(boolean allowDebug) {
+343             this.allowDebug = allowDebug;
+344         }
+345 
+346         public void assertTrue(boolean flag) {
+347             if (!allowDebug) {
+348                 return;
+349             }
+350             if (!flag) {
+351                 fail();
+352             }
+353         }
+354 
+355         public void fail() {
+356             throw new RuntimeException();
+357         }
+358 
+359         public void assertFalse(boolean flag) {
+360             if (!allowDebug) {
+361                 return;
+362             }
+363             if (flag) {
+364                 fail();
+365             }
+366         }
+367 
+368         private void outputName(String name) {
+369             System.out.print(name + " = ");
+370         }
+371 
+372         public void debug(String name, int x) {
+373             if (!allowDebug) {
+374                 return;
+375             }
+376 
+377             outputName(name);
+378             System.out.println("" + x);
+379         }
+380 
+381         public void debug(String name, long x) {
+382             if (!allowDebug) {
+383                 return;
+384             }
+385             outputName(name);
+386             System.out.println("" + x);
+387         }
+388 
+389         public void debug(String name, double x) {
+390             if (!allowDebug) {
+391                 return;
+392             }
+393             outputName(name);
+394             System.out.println("" + x);
+395         }
+396 
+397         public void debug(String name, int[] x) {
+398             if (!allowDebug) {
+399                 return;
+400             }
+401             outputName(name);
+402             System.out.println(Arrays.toString(x));
+403         }
+404 
+405         public void debug(String name, long[] x) {
+406             if (!allowDebug) {
+407                 return;
+408             }
+409             outputName(name);
+410             System.out.println(Arrays.toString(x));
+411         }
+412 
+413         public void debug(String name, double[] x) {
+414             if (!allowDebug) {
+415                 return;
+416             }
+417             outputName(name);
+418             System.out.println(Arrays.toString(x));
+419         }
+420 
+421         public void debug(String name, Object x) {
+422             if (!allowDebug) {
+423                 return;
+424             }
+425             outputName(name);
+426             System.out.println("" + x);
+427         }
+428 
+429         public void debug(String name, Object... x) {
+430             if (!allowDebug) {
+431                 return;
+432             }
+433             outputName(name);
+434             System.out.println(Arrays.deepToString(x));
+435         }
+436     }
+437 }

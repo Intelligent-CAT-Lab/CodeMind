@@ -1,0 +1,277 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 class Main{
+5     final static long INF = Long.MAX_VALUE / 2;
+6     final static int MOD = 1_000_000_007;
+7     final static int SIZE = 1_000_000;
+8     long[] fac = new long[SIZE];
+9     long[] inv = new long[SIZE];
+10     long[] finv = new long[SIZE];
+11     FastScanner sc = new FastScanner();
+12 
+13     public static void main(String[] args) {
+14         new Main().solve();
+15     }
+16 
+17     void solve(){
+18 
+19         int s = sc.nextInt();
+20         int w = sc.nextInt();
+21 
+22         if(w >= s) System.out.println("unsafe");
+23         else System.out.println("safe");
+24 
+25     }
+26 
+27     long gcd(long a, long b){ // return aとbの最大公約数
+28         if(b == 0){
+29           return a;
+30         }
+31         return gcd(b, a % b);
+32     }
+33 
+34     long lcm(long a, long b){ // return aとbの最小公倍数
+35         return a * b / gcd(a, b);
+36     }
+37 
+38     long inv(long a){ // return aの逆元 (mod MOD)
+39         return pow(a, MOD - 2);
+40     }
+41 
+42     long pow(long a, long r){ // return a^r (mod MOD)
+43         long sum = 1;
+44         while(r > 0){
+45             if((r & 1) == 1){ // 2進数表記で末尾1の時
+46                 sum *= a;
+47                 sum %= MOD;
+48             }
+49             a *= a;
+50             a %= MOD;
+51             r >>= 1;
+52         }
+53         return sum;
+54     }
+55 
+56     long modFact(long n){ // retur n! (mod MOD)
+57         if(n == 0){
+58             return 1;
+59         }
+60         return n * modFact(n - 1) % MOD;
+61     }
+62 
+63     long fact(long n){ // return n!
+64         if(n == 0){
+65             return 1;
+66         }
+67         return n * fact(n - 1);
+68     }
+69 
+70     void initCOMB(){
+71         fac[0] = fac[1] = 1;
+72         inv[1] = 1;
+73         finv[0] = finv[1] = 1;
+74         for(int i = 2; i < SIZE; i++){
+75             fac[i] = fac[i - 1] * i % MOD;
+76             inv[i] = MOD - inv[MOD % i] * (MOD / i) % MOD;
+77             finv[i] = finv[i - 1] * inv[i] % MOD;
+78         }
+79     }
+80 
+81     long modComb(int n, int r){ // return nCr (先にinitCOMB()必要)
+82         if(n < r || n < 0 || r < 0) return 0;
+83         return fac[n] * finv[r] % MOD * finv[n - r] % MOD;
+84     }
+85 
+86     long comb(long n, long r){ // return nCr
+87         long num = 1;
+88         for(long i = 1; i <= r; i++){
+89             num = num * (n - i + 1) / i;
+90         }
+91         return num;
+92     }
+93 
+94     boolean isPrime(long a){ // aの素数判定
+95         if(a <= 1) return false;
+96         for(int i = 2; i * i <= a; i++){
+97             if(a % i == 0) return false;
+98         }
+99         return true;
+100     }
+101 
+102     String nextPermutation(String s){ // return sの次の順列
+103         ArrayList<Character> list = new ArrayList<>();
+104         for(int i = 0; i < s.length(); i++) list.add(s.charAt(i));
+105 
+106         int pivotPos = -1;
+107         char pivot = 0;
+108         for(int i = list.size() - 2; i >= 0; i--){
+109             if(list.get(i) < list.get(i+1)){
+110     			pivotPos = i;
+111     			pivot = list.get(i);
+112     			break;
+113     		}
+114     	}
+115 
+116         if(pivotPos == -1 && pivot == 0) return null;
+117 
+118         int L = pivotPos + 1;
+119         int R = list.size() - 1;
+120     	int minPos = -1;
+121     	char min = Character.MAX_VALUE;
+122     	for(int i = R; i >= L; i--){
+123     		if(pivot < list.get(i)){
+124     			if(list.get(i) < min){
+125     				min = list.get(i);
+126     				minPos = i;
+127     			}
+128     		}
+129     	}
+130 
+131     	Collections.swap(list, pivotPos, minPos);
+132     	Collections.sort(list.subList(L, R + 1));
+133 
+134     	StringBuilder sb = new StringBuilder();
+135     	for(int i=0; i<list.size(); i++) sb.append(list.get(i));
+136 
+137     	return sb.toString();
+138     }
+139 
+140     boolean nextPermutation(long[] a){
+141         for(int i = a.length - 1; i > 0; i--){
+142             if(a[i - 1] < a[i]){
+143                 int swapIndex = find(a[i - 1], a, i, a.length - 1);
+144                 long temp = a[swapIndex];
+145                 a[swapIndex] = a[i - 1];
+146                 a[i - 1] = temp;
+147                 Arrays.sort(a, i, a.length);
+148                 return true;
+149             }
+150         }
+151         return false;
+152     }
+153 
+154     int find(long dest, long[] a, int s, int e){
+155         if(s == e){
+156             return s;
+157         }
+158         int m = (s + e + 1) / 2;
+159         return a[m] <= dest ? find(dest, a, s, m - 1) : find(dest, a, m, e);
+160     }
+161 
+162     void elimination(int[][] a, int[] b) {
+163         int n = a.length;
+164         double f;
+165         for(int k = 0; k < n - 1; k++){
+166             for(int i = k + 1; i < n; i++){
+167                 f = - a[i][k] / a[k][k];
+168                 for(int j = k + 1; j < n; j++){
+169                     a[i][j] += f * a[k][j];
+170                 }
+171                 b[i] += f * b[k];
+172             }
+173             for(int i = n - 1; i >= 0; i--){
+174                 for(int j = i + 1; j < n; j++){
+175                     b[i] -= a[i][j] * b[j];
+176                 }
+177                 b[i] = b[i] / a[i][i];
+178             }
+179         }
+180    }
+181 
+182 }
+183 
+184 
+185 
+186 class Pair implements Comparable<Pair>{
+187     long a, b;
+188     public Pair(long i, long j){
+189         a = i;
+190         b = j;
+191     }
+192 
+193     @Override
+194     public int compareTo(Pair p){
+195         if(this.b < p.b) return -1;
+196         else if(this.b > p.b) return 1;
+197         else return 0;
+198     }
+199 }
+200 
+201 
+202 
+203 class FastScanner {
+204     private final InputStream in = System.in;
+205     private final byte[] buffer = new byte[1024];
+206     private int ptr = 0;
+207     private int buflen = 0;
+208     private boolean hasNextByte(){
+209         if(ptr < buflen){
+210             return true;
+211         }else{
+212             ptr = 0;
+213             try{
+214                 buflen = in.read(buffer);
+215             }catch(IOException e){
+216                 e.printStackTrace();
+217             }
+218             if(buflen <= 0){
+219                 return false;
+220             }
+221         }
+222         return true;
+223     }
+224     private int readByte(){
+225         if(hasNextByte()) return buffer[ptr++];
+226         else return -1;
+227     }
+228     private static boolean isPrintableChar(int c){
+229         return 33 <= c && c <= 126;
+230     }
+231     public boolean hasNext(){
+232         while(hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++;
+233         return hasNextByte();
+234     }
+235     public String next(){
+236         if(!hasNext()) throw new NoSuchElementException();
+237         StringBuilder sb = new StringBuilder();
+238         int b = readByte();
+239         while(isPrintableChar(b)){
+240             sb.appendCodePoint(b);
+241             b = readByte();
+242         }
+243         return sb.toString();
+244     }
+245     public long nextLong(){
+246         if(!hasNext()) throw new NoSuchElementException();
+247         long n = 0;
+248         boolean minus = false;
+249         int b = readByte();
+250         if(b == '-'){
+251             minus = true;
+252             b = readByte();
+253         }
+254         if(b < '0' || '9' < b){
+255             throw new NumberFormatException();
+256         }
+257         while(true){
+258             if('0' <= b && b <= '9'){
+259                 n *= 10;
+260                 n += b - '0';
+261             }else if(b == -1 || !isPrintableChar(b)){
+262                 return minus ? -n : n;
+263             }else{
+264                 throw new NumberFormatException();
+265             }
+266             b = readByte();
+267         }
+268     }
+269     public int nextInt(){
+270         long nl = nextLong();
+271         if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE) throw new NumberFormatException();
+272         return (int) nl;
+273     }
+274     public double nextDouble(){
+275         return Double.parseDouble(next());
+276     }
+277 }

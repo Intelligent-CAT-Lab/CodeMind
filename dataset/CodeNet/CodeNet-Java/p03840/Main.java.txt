@@ -1,0 +1,152 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStreamReader;
+4 import java.io.PrintWriter;
+5 import java.util.StringJoiner;
+6 import java.util.StringTokenizer;
+7 import java.util.function.IntUnaryOperator;
+8 import java.util.function.LongUnaryOperator;
+9 
+10 public class Main {
+11     static In in = new In();
+12     static Out out = new Out();
+13     static long mod = 1000000007;
+14     static int iinf = 0xfffffff;
+15     static long inf = 0xfffffffffffffffL;
+16 
+17     void solve() {
+18         long ai = in.nextInt();
+19         long ao = in.nextInt();
+20         long at = in.nextInt();
+21         long aj = in.nextInt();
+22         long al = in.nextInt();
+23         long as = in.nextInt();
+24         long az = in.nextInt();
+25         long ans = 0;
+26         ans += ao;
+27         if (ai % 2 + aj % 2 + al % 2 == 3) {
+28             ans += ai + aj + al;
+29         } else if (ai % 2 + aj % 2 + al % 2 == 2) {
+30             if (ai != 0 && aj != 0 && al != 0) {
+31                 ans += ai + aj + al - 1;
+32             } else {
+33                 ans += ai + aj + al - 2;
+34             }
+35         } else if (ai % 2 + aj % 2 + al % 2 == 1) {
+36             ans += ai + aj + al - 1;
+37         } else {
+38             ans += ai + aj + al;
+39         }
+40         out.println(ans);
+41     }
+42 
+43     public static void main(String[]$) {
+44         new Main().solve();
+45         out.flush();
+46     }
+47 }
+48 
+49 class In {
+50     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in), 0x10000);
+51     private StringTokenizer tokenizer;
+52 
+53     String next() {
+54         try {
+55             while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+56                 tokenizer = new StringTokenizer(reader.readLine());
+57             }
+58         } catch (IOException ignored) {
+59         }
+60         return tokenizer.nextToken();
+61     }
+62 
+63     int nextInt() {
+64         return Integer.parseInt(next());
+65     }
+66 
+67     long nextLong() {
+68         return Long.parseLong(next());
+69     }
+70 
+71     char[][] nextCharArray(int n, int m) {
+72         char[][] a = new char[n][m];
+73         for (int i = 0; i < n; i++) {
+74             a[i] = next().toCharArray();
+75         }
+76         return a;
+77     }
+78 
+79     int[] nextIntArray(int n) {
+80         int[] a = new int[n];
+81         for (int i = 0; i < n; i++) {
+82             a[i] = nextInt();
+83         }
+84         return a;
+85     }
+86 
+87     int[] nextIntArray(int n, IntUnaryOperator op) {
+88         int[] a = new int[n];
+89         for (int i = 0; i < n; i++) {
+90             a[i] = op.applyAsInt(nextInt());
+91         }
+92         return a;
+93     }
+94 
+95     long[] nextLongArray(int n) {
+96         long[] a = new long[n];
+97         for (int i = 0; i < n; i++) {
+98             a[i] = nextLong();
+99         }
+100         return a;
+101     }
+102 
+103     long[] nextLongArray(int n, LongUnaryOperator op) {
+104         long[] a = new long[n];
+105         for (int i = 0; i < n; i++) {
+106             a[i] = op.applyAsLong(nextLong());
+107         }
+108         return a;
+109     }
+110 }
+111 
+112 class Out {
+113     private PrintWriter out = new PrintWriter(System.out);
+114     boolean autoFlush = false;
+115 
+116     void println(Object... a) {
+117         StringJoiner joiner = new StringJoiner(" ");
+118         for (Object obj : a) {
+119             joiner.add(String.valueOf(obj));
+120         }
+121         out.println(joiner);
+122         if (autoFlush) {
+123             out.flush();
+124         }
+125     }
+126 
+127     void println(int[] a) {
+128         StringJoiner joiner = new StringJoiner(" ");
+129         for (int i : a) {
+130             joiner.add(Integer.toString(i));
+131         }
+132         out.println(joiner);
+133         if (autoFlush) {
+134             out.flush();
+135         }
+136     }
+137 
+138     void println(long[] a) {
+139         StringJoiner joiner = new StringJoiner(" ");
+140         for (long i : a) {
+141             joiner.add(Long.toString(i));
+142         }
+143         out.println(joiner);
+144         if (autoFlush) {
+145             out.flush();
+146         }
+147     }
+148 
+149     void flush() {
+150         out.flush();
+151     }
+152 }

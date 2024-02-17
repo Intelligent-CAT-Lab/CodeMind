@@ -1,0 +1,81 @@
+1 import static java.lang.Integer.parseInt;
+2 import static java.lang.Long.parseLong;
+3 import static java.lang.System.exit;
+4 
+5 import java.io.BufferedReader;
+6 import java.io.IOException;
+7 import java.io.InputStreamReader;
+8 import java.io.PrintWriter;
+9 import java.util.StringTokenizer;
+10 
+11 public class Main {
+12 
+13 	static void solve() throws Exception {
+14 		int n = scanInt();
+15 		int d1 = scanInt();
+16 		int d2 = scanInt();
+17 		int d1s = 0, d2s = 0;
+18 		while ((d1 & 3) == 0) {
+19 			++d1s;
+20 			d1 >>= 2;
+21 		}
+22 		while ((d2 & 3) == 0) {
+23 			++d2s;
+24 			d2 >>= 2;
+25 		}
+26 		int need = n * n;
+27 		for (int i = 0; i < 2 * n; i++) {
+28 			for (int j = 0; j < 2 * n; j++) {
+29 				if ((d1 & 3) == 1 && (((i >> d1s) ^ (j >> d1s)) & 1) != 0) {
+30 					continue;
+31 				}
+32 				if ((d1 & 3) == 2 && ((i >> d1s) & 1) != 0) {
+33 					continue;
+34 				}
+35 				if ((d2 & 3) == 1 && (((i >> d2s) ^ (j >> d2s)) & 1) != 0) {
+36 					continue;
+37 				}
+38 				if ((d2 & 3) == 2 && ((i >> d2s) & 1) != 0) {
+39 					continue;
+40 				}
+41 				out.println(i + " " + j);
+42 				if (--need == 0) {
+43 					return;
+44 				}
+45 			}
+46 		}
+47 		throw new AssertionError();
+48 	}
+49 
+50 	static int scanInt() throws IOException {
+51 		return parseInt(scanString());
+52 	}
+53 
+54 	static long scanLong() throws IOException {
+55 		return parseLong(scanString());
+56 	}
+57 
+58 	static String scanString() throws IOException {
+59 		while (tok == null || !tok.hasMoreTokens()) {
+60 			tok = new StringTokenizer(in.readLine());
+61 		}
+62 		return tok.nextToken();
+63 	}
+64 
+65 	static BufferedReader in;
+66 	static PrintWriter out;
+67 	static StringTokenizer tok;
+68 
+69 	public static void main(String[] args) {
+70 		try {
+71 			in = new BufferedReader(new InputStreamReader(System.in));
+72 			out = new PrintWriter(System.out);
+73 			solve();
+74 			in.close();
+75 			out.close();
+76 		} catch (Throwable e) {
+77 			e.printStackTrace();
+78 			exit(1);
+79 		}
+80 	}
+81 }

@@ -1,0 +1,90 @@
+
+<<<Analysis>>>
+The variable n, variable a and variable b are initialized with 3 and 5 respectively according to the input.
+It enters a for loop and it iterates from 1 to 3 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [2, 5]. If it does, it adds the current interger i to variable answer. The condition is met when i is 2,3,4,5,11,12,13,14 and 20.
+After the loop finishes, it print the fianl value of variable answer as output, which is 84.
+<<<Output>>>
+84
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+ 
+public class Main implements Runnable {
+	
+    public static void main(String[] args) {
+    	new Thread(null, new Main(), "", 16 * 1024 * 1024).start();
+    }
+    
+    public void run() {
+        FastScanner sc = new FastScanner();
+        
+        int n = sc.nextInt();
+        int k = sc.nextInt();
+        
+        Combinatrics c = new Combinatrics(k);
+
+    	System.out.println(c.combination(k, n));
+    }
+}
+
+
+
+class Combinatrics {
+	
+	static long mod = 1000000007; //逆元を取るので素数前提
+	static long[] fact; //階乗のテーブル
+	static long[] inv;	//逆元のテーブル
+	static long[] finv; //階乗の逆元のテーブル
+	
+	public Combinatrics(int n){
+		fact = new long[n+1];
+		inv = new long[n+1];
+		finv = new long[n+1];
+	    fact[0] = fact[1] = 1;
+	    finv[0] = finv[1] = 1;
+	    inv[1] = 1;
+	    for(int i=2;i<n+1; i++){
+	        fact[i] = fact[i-1] * i % mod;
+	        inv[i] = mod - inv[(int)mod%i] * (mod / i) % mod;
+	        finv[i] = finv[i-1] * inv[i] % mod;
+	    }
+	}
+	
+	//逆元
+	int inv(int n){
+		return (int)inv[n];
+	}
+	
+	//n!
+	int factorial(int n){
+		return (int)fact[n];
+	}
+	
+	//n!の逆元
+	int factInv(int n){
+		return (int)finv[n];
+	}
+	
+	//nCr（n個からr個選ぶ）
+    int combination(int n, int r) {
+        if(n<r|| r<0){
+        	return 0;
+        }
+        return (int)(fact[n]*finv[r]%mod*finv[n-r]%mod);
+    }
+
+    //nPr (=n*(n-1)*...*(n-r+1))（n個からr個選んで並べる）
+    int permutation(int n, int r) {
+        if(n<r || r<0){
+        	return 0;
+        }
+        return (int)(fact[n]*finv[n-r]%mod);
+    }
+
+    //nHr (=n+r-1Cr)（n個

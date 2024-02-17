@@ -1,0 +1,147 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.util.InputMismatchException;
+4 import java.util.LinkedList;
+5 
+6 public class Main {
+7 	public static void main(String[] args) {
+8 		new Main();
+9 	}
+10 
+11 	public Main() {
+12 		FasterScanner sc = new FasterScanner(System.in);
+13 
+14 		int k = sc.nextInt();
+15 		LinkedList<Long> list = new LinkedList<Long>();
+16 		for (long i = 1; i <= 9; i++) {
+17 			list.add(i);
+18 		}
+19 		long val = -1;
+20 		while(k > 0) {
+21 			val = list.getFirst();
+22 			list.removeFirst();
+23 			if (val % 10 != 0) {
+24 				list.add(10*val + val%10 - 1);
+25 			}
+26 			list.add(10*val + val%10);
+27 			if (val % 10 != 9) {
+28 				list.add(10*val + val%10 + 1);
+29 			}
+30 			k--;
+31 		}
+32 		System.out.println(val);
+33 				
+34 		sc.close();
+35 	}
+36 	
+37 	class FasterScanner {
+38 		private InputStream mIs;
+39 		private byte[] buf = new byte[1024];
+40 		private int curChar;
+41 		private int numChars;
+42 
+43 		public FasterScanner() {
+44 			this(System.in);
+45 		}
+46 
+47 		public FasterScanner(InputStream is) {
+48 			mIs = is;
+49 		}
+50 
+51 		public int read() {
+52 			if (numChars == -1)
+53 				throw new InputMismatchException();
+54 			if (curChar >= numChars) {
+55 				curChar = 0;
+56 				try {
+57 					numChars = mIs.read(buf);
+58 				} catch (IOException e) {
+59 					throw new InputMismatchException();
+60 				}
+61 				if (numChars <= 0)
+62 					return -1;
+63 			}
+64 			return buf[curChar++];
+65 		}
+66 
+67 		public String nextLine() {
+68 			int c = read();
+69 			while (isSpaceChar(c))
+70 				c = read();
+71 			StringBuilder res = new StringBuilder();
+72 			do {
+73 				res.appendCodePoint(c);
+74 				c = read();
+75 			} while (!isEndOfLine(c));
+76 			return res.toString();
+77 		}
+78 
+79 		public String nextString() {
+80 			int c = read();
+81 			while (isSpaceChar(c))
+82 				c = read();
+83 			StringBuilder res = new StringBuilder();
+84 			do {
+85 				res.appendCodePoint(c);
+86 				c = read();
+87 			} while (!isSpaceChar(c));
+88 			return res.toString();
+89 		}
+90 
+91 		public long nextLong() {
+92 			int c = read();
+93 			while (isSpaceChar(c))
+94 				c = read();
+95 			int sgn = 1;
+96 			if (c == '-') {
+97 				sgn = -1;
+98 				c = read();
+99 			}
+100 			long res = 0;
+101 			do {
+102 				if (c < '0' || c > '9')
+103 					throw new InputMismatchException();
+104 				res *= 10;
+105 				res += c - '0';
+106 				c = read();
+107 			} while (!isSpaceChar(c));
+108 			return res * sgn;
+109 		}
+110 
+111 		public int nextInt() {
+112 			int c = read();
+113 			while (isSpaceChar(c))
+114 				c = read();
+115 			int sgn = 1;
+116 			if (c == '-') {
+117 				sgn = -1;
+118 				c = read();
+119 			}
+120 			int res = 0;
+121 			do {
+122 				if (c < '0' || c > '9')
+123 					throw new InputMismatchException();
+124 				res *= 10;
+125 				res += c - '0';
+126 				c = read();
+127 			} while (!isSpaceChar(c));
+128 			return res * sgn;
+129 		}
+130 
+131 		public boolean isSpaceChar(int c) {
+132 			return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+133 		}
+134 
+135 		public boolean isEndOfLine(int c) {
+136 			return c == '\n' || c == '\r' || c == -1;
+137 		}
+138 
+139 		public void close() {
+140 			try {
+141 				mIs.close();
+142 			} catch (IOException e) {
+143 				e.printStackTrace();
+144 			}
+145 		}
+146 	}
+147 }

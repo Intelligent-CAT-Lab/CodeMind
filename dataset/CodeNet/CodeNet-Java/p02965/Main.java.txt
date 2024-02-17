@@ -1,0 +1,111 @@
+1 import static java.lang.Integer.parseInt;
+2 import static java.lang.Long.parseLong;
+3 import static java.lang.Math.max;
+4 import static java.lang.System.exit;
+5 
+6 import java.io.BufferedReader;
+7 import java.io.IOException;
+8 import java.io.InputStreamReader;
+9 import java.io.PrintWriter;
+10 import java.util.StringTokenizer;
+11 
+12 public class Main {
+13 
+14 	static final int MOD = 998244353;
+15 
+16 	static int add(int a, int b) {
+17 		int res = a + b;
+18 		return res >= MOD ? res - MOD : res;
+19 	}
+20 
+21 	static int sub(int a, int b) {
+22 		int res = a - b;
+23 		return res < 0 ? res + MOD : res;
+24 	}
+25 
+26 	static int mul(int a, int b) {
+27 		int res = (int) ((long) a * b % MOD);
+28 		return res < 0 ? res + MOD : res;
+29 	}
+30 
+31 	static int pow(int a, int e) {
+32 		if (e == 0) {
+33 			return 1;
+34 		}
+35 		int r = a;
+36 		for (int i = 30 - Integer.numberOfLeadingZeros(e); i >= 0; i--) {
+37 			r = mul(r, r);
+38 			if ((e & (1 << i)) != 0) {
+39 				r = mul(r, a);
+40 			}
+41 		}
+42 		return r;
+43 	}
+44 
+45 	static int inv(int a) {
+46 		return pow(a, MOD - 2);
+47 	}
+48 
+49 	static int facts[], factsInv[];
+50 
+51 	static int c(int x, int y) {
+52 		return mul(mul(facts[x + y], factsInv[x]), factsInv[y]);
+53 	}
+54 
+55 	static void solve() throws Exception {
+56 		int n = scanInt(), m = scanInt();
+57 		facts = new int[n + 3 * m / 2 + 1];
+58 		facts[0] = 1;
+59 		for (int i = 1; i < facts.length; i++) {
+60 			facts[i] = mul(facts[i - 1], i);
+61 		}
+62 		factsInv = new int[facts.length];
+63 		factsInv[facts.length - 1] = inv(facts[facts.length - 1]);
+64 		for (int i = facts.length - 1; i > 0; i--) {
+65 			factsInv[i - 1] = mul(factsInv[i], i);
+66 		}
+67 		int ans = 0;
+68 		for (int nOdd = m % 2; nOdd <= m && nOdd <= n; nOdd += 2) {
+69 			int cans = c(nOdd, n - nOdd);
+70 			int cans1 = c((3 * m - nOdd) / 2, n - 1);
+71 			int cans2 = mul(nOdd, c((m - nOdd) / 2, n - 1));
+72 			if (nOdd < m) {
+73 				cans2 = add(cans2, mul(n - nOdd, c((m - nOdd) / 2 - 1, n - 1)));
+74 			}
+75 			ans = add(ans, mul(cans, sub(cans1, cans2)));
+76 		}
+77 		out.print(ans);
+78 	}
+79 
+80 	static int scanInt() throws IOException {
+81 		return parseInt(scanString());
+82 	}
+83 
+84 	static long scanLong() throws IOException {
+85 		return parseLong(scanString());
+86 	}
+87 
+88 	static String scanString() throws IOException {
+89 		while (tok == null || !tok.hasMoreTokens()) {
+90 			tok = new StringTokenizer(in.readLine());
+91 		}
+92 		return tok.nextToken();
+93 	}
+94 
+95 	static BufferedReader in;
+96 	static PrintWriter out;
+97 	static StringTokenizer tok;
+98 
+99 	public static void main(String[] args) {
+100 		try {
+101 			in = new BufferedReader(new InputStreamReader(System.in));
+102 			out = new PrintWriter(System.out);
+103 			solve();
+104 			in.close();
+105 			out.close();
+106 		} catch (Throwable e) {
+107 			e.printStackTrace();
+108 			exit(1);
+109 		}
+110 	}
+111 }

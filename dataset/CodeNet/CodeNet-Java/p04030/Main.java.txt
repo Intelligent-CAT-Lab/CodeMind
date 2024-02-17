@@ -1,0 +1,188 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.util.NoSuchElementException;
+4 
+5 public class Main {
+6 
+7 	public static void main(String[] args) {
+8 		FastScanner sc = new FastScanner();
+9 		String s = sc.next();
+10 		String t = "";
+11 		for (int i = 0; i < s.length(); i++) {
+12 			if (s.charAt(i) != 'B') {
+13 				t += s.substring(i, i + 1);
+14 			} else if (t.equals("")) {
+15 				continue;
+16 			} else {
+17 				t = t.substring(0, t.length() - 1);
+18 			}
+19 		}
+20 		System.out.println(t);
+21 
+22 	}
+23 
+24 	//以下、自作ライブラリ
+25 
+26 	//階乗
+27 	public static int fact(int n) {
+28 		if (n == 1 || n == 0)
+29 			return 1;
+30 		else
+31 			return n * fact(n - 1);
+32 	}
+33 
+34 	//指定した値以上の要素が最初に現れる位置
+35 	//要素の数は+1（配列のズレ)
+36 	public static long lowerBound(int n, long[] x, long y) {
+37 		int left = 0;
+38 		int right = n;
+39 		while (left < right) {
+40 			int mid = (left + right) / 2;
+41 			if (x[mid] < y) {
+42 				left = mid + 1;
+43 			} else {
+44 				right = mid;
+45 			}
+46 		}
+47 		return left;
+48 	}
+49 
+50 	//指定した値より大きい要素が最初に現れる位置
+51 	//要素の数は+1（配列のズレ)
+52 	public static long upperBound(int n, long[] x, long y) {
+53 		int left = 0;
+54 		int right = n;
+55 		while (left < right) {
+56 			int mid = (left + right) / 2;
+57 			if (x[mid] <= y) {
+58 				left = mid + 1;
+59 			} else {
+60 				right = mid;
+61 			}
+62 		}
+63 		return left;
+64 	}
+65 
+66 	//最大公約数
+67 	public static long gcd(long a, long b) {
+68 		if (a < b)
+69 			return gcd(b, a);
+70 		long c = 0;
+71 		c = a % b;
+72 		if (c == 0)
+73 			return b;
+74 		return gcd(b, c);
+75 	}
+76 
+77 	//最小公倍数
+78 	public static long lcm(long m, long n) {
+79 		return m * n / gcd(m, n);
+80 	}
+81 
+82 	//素数判定
+83 	public static boolean isPrime(int n) {
+84 		if (n < 2)
+85 			return false;
+86 		if (n == 2)
+87 			return true;
+88 		if (n % 2 == 0)
+89 			return false;
+90 
+91 		for (int i = 3; i * i <= n; i += 2) {
+92 			if (n % i == 0)
+93 				return false;
+94 		}
+95 		return true;
+96 	}
+97 }
+98 
+99 //以下、高速スキャナークラス
+100 class FastScanner {
+101 	private final InputStream in = System.in;
+102 	private final byte[] buffer = new byte[1024];
+103 	private int ptr = 0;
+104 	private int buflen = 0;
+105 
+106 	private boolean hasNextByte() {
+107 		if (ptr < buflen) {
+108 			return true;
+109 		} else {
+110 			ptr = 0;
+111 			try {
+112 				buflen = in.read(buffer);
+113 			} catch (IOException e) {
+114 				e.printStackTrace();
+115 			}
+116 			if (buflen <= 0) {
+117 				return false;
+118 			}
+119 		}
+120 		return true;
+121 	}
+122 
+123 	private int readByte() {
+124 		if (hasNextByte())
+125 			return buffer[ptr++];
+126 		else
+127 			return -1;
+128 	}
+129 
+130 	private static boolean isPrintableChar(int c) {
+131 		return 33 <= c && c <= 126;
+132 	}
+133 
+134 	public boolean hasNext() {
+135 		while (hasNextByte() && !isPrintableChar(buffer[ptr]))
+136 			ptr++;
+137 		return hasNextByte();
+138 	}
+139 
+140 	public String next() {
+141 		if (!hasNext())
+142 			throw new NoSuchElementException();
+143 		StringBuilder sb = new StringBuilder();
+144 		int b = readByte();
+145 		while (isPrintableChar(b)) {
+146 			sb.appendCodePoint(b);
+147 			b = readByte();
+148 		}
+149 		return sb.toString();
+150 	}
+151 
+152 	public long nextLong() {
+153 		if (!hasNext())
+154 			throw new NoSuchElementException();
+155 		long n = 0;
+156 		boolean minus = false;
+157 		int b = readByte();
+158 		if (b == '-') {
+159 			minus = true;
+160 			b = readByte();
+161 		}
+162 		if (b < '0' || '9' < b) {
+163 			throw new NumberFormatException();
+164 		}
+165 		while (true) {
+166 			if ('0' <= b && b <= '9') {
+167 				n *= 10;
+168 				n += b - '0';
+169 			} else if (b == -1 || !isPrintableChar(b)) {
+170 				return minus ? -n : n;
+171 			} else {
+172 				throw new NumberFormatException();
+173 			}
+174 			b = readByte();
+175 		}
+176 	}
+177 
+178 	public int nextInt() {
+179 		long nl = nextLong();
+180 		if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE)
+181 			throw new NumberFormatException();
+182 		return (int) nl;
+183 	}
+184 
+185 	public double nextDouble() {
+186 		return Double.parseDouble(next());
+187 	}
+188 }

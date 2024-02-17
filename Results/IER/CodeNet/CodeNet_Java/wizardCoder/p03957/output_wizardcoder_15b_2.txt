@@ -1,0 +1,202 @@
+Below is an instruction that describes a task, paired with an input that
+provides further context.  Write a response that appropriately completes
+the request.
+
+### Instruction:
+Below is an example:
+[[[Example Start]]]
+I want to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the output of the code.
+Consider the following code:
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class Main {
+
+    public static void main(String[] args) {
+        try {
+            InputStreamReader isr = new InputStreamReader(System.in);
+            BufferedReader br = new BufferedReader(isr);
+            String strArr[] = br.readLine().split(" ");
+
+            int n = Integer.parseInt(strArr[0]);
+            int a = Integer.parseInt(strArr[1]);
+            int b = Integer.parseInt(strArr[2]);
+            int answer = 0;
+
+            for (int i = 1; i < n + 1; i++) {
+                int num = i;
+                int sum = 0;
+
+                while (num!= 0) {
+                        sum += num % 10;
+                        num /= 10;
+                }
+
+                if (sum >= a && sum <= b ) {
+                        answer = answer + i;
+                }
+            }
+            System.out.println(answer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+<<Question>>
+What would be the output of code executiion given the following input:
+20 2 5
+Only print the output of code execution and end your response with "END-OF-OUTPUT":
+<<Answer>>
+84
+END-OF-OUTPUT
+[[[Example End]]]
+
+
+Consider the following code: 
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.io.Closeable;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in Actual solution is at the top
+ * 
+ * @author daltao
+ */
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Thread thread = new Thread(null, new TaskAdapter(), "daltao", 1 << 27);
+        thread.start();
+        thread.join();
+    }
+
+    static class TaskAdapter implements Runnable {
+        @Override
+        public void run() {
+            InputStream inputStream = System.in;
+            OutputStream outputStream = System.out;
+            FastInput in = new FastInput(inputStream);
+            FastOutput out = new FastOutput(outputStream);
+            TaskA solver = new TaskA();
+            solver.solve(1, in, out);
+            out.close();
+        }
+    }
+    static class TaskA {
+        public void solve(int testNumber, FastInput in, FastOutput out) {
+            String s = in.readString();
+            int cIndex = s.indexOf('C');
+            int fIndex = s.lastIndexOf('F');
+            if (cIndex < 0 || fIndex < 0 || fIndex < cIndex) {
+                out.println("No");
+            } else {
+                out.println("Yes");
+            }
+        }
+
+    }
+    static class FastInput {
+        private final InputStream is;
+        private StringBuilder defaultStringBuf = new StringBuilder(1 << 13);
+        private byte[] buf = new byte[1 << 13];
+        private int bufLen;
+        private int bufOffset;
+        private int next;
+
+        public FastInput(InputStream is) {
+            this.is = is;
+        }
+
+        private int read() {
+            while (bufLen == bufOffset) {
+                bufOffset = 0;
+                try {
+                    bufLen = is.read(buf);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                if (bufLen == -1) {
+                    return -1;
+                }
+            }
+            return buf[bufOffset++];
+        }
+
+        public void skipBlank() {
+            while (next >= 0 && next <= 32) {
+                next = read();
+            }
+        }
+
+        public String readString(StringBuilder builder) {
+            skipBlank();
+
+            while (next > 32) {
+                builder.append((char) next);
+                next = read();
+            }
+
+            return builder.toString();
+        }
+
+        public String readString() {
+            defaultStringBuf.setLength(0);
+            return readString(defaultStringBuf);
+        }
+
+    }
+    static class FastOutput implements AutoCloseable, Closeable {
+        private StringBuilder cache = new StringBuilder(1 << 20);
+        private final Writer os;
+
+        public FastOutput(Writer os) {
+            this.os = os;
+        }
+
+        public FastOutput(OutputStream os) {
+            this(new OutputStreamWriter(os));
+        }
+
+        public FastOutput println(String c) {
+            cache.append(c).append('\n');
+            return this;
+        }
+
+        public FastOutput flush() {
+            try {
+                os.append(cache);
+                cache.setLength(0);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+            return this;
+        }
+
+        public void close() {
+            flush();
+            try {
+                os.close();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+
+    }
+}
+
+
+<<Question>>
+What would be the output of code executiion given the following input:
+CODEFESTIVAL
+
+Only print the output of code execution and end your response with "END-OF-OUTPUT":\<<Answer>>
+### Response:
+No
+END-OF-OUTPUT

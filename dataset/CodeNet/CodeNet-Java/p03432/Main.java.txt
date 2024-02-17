@@ -1,0 +1,303 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.Arrays;
+6 import java.util.StringTokenizer;
+7 import java.io.IOException;
+8 import java.io.BufferedReader;
+9 import java.io.InputStreamReader;
+10 import java.io.InputStream;
+11 
+12 /**
+13  * Built using CHelper plug-in
+14  * Actual solution is at the top
+15  */
+16 public class Main {
+17     public static void main(String[] args) {
+18         InputStream inputStream = System.in;
+19         OutputStream outputStream = System.out;
+20         InputReader in = new InputReader(inputStream);
+21         PrintWriter out = new PrintWriter(outputStream);
+22         TaskF solver = new TaskF();
+23         solver.solve(1, in, out);
+24         out.close();
+25     }
+26 
+27     static class TaskF {
+28         static final int MODULO = 998244353;
+29         static int[] invs;
+30         static int[] facts;
+31         static int[] invfacts;
+32 
+33         static {
+34             int k = (int) 8010;
+35             invs = new int[k + 2];
+36             invs[1] = 1;
+37             for (int i = 2; i <= k + 1; ++i) {
+38                 invs[i] = (int) ((MODULO - (MODULO / i) * (long) invs[(int) (MODULO % i)] % MODULO) % MODULO);
+39             }
+40             facts = new int[k + 2];
+41             invfacts = new int[k + 2];
+42             facts[0] = 1;
+43             invfacts[0] = 1;
+44             for (int i = 1; i <= k + 1; ++i) {
+45                 facts[i] = (int) (facts[i - 1] * (long) i % MODULO);
+46                 invfacts[i] = (int) (invfacts[i - 1] * (long) invs[i] % MODULO);
+47             }
+48         }
+49 
+50         public void solve(int testNumber, InputReader in, PrintWriter out) {
+51             int m = in.nextInt();
+52             int n = in.nextInt();
+53             int[] w = new int[m + 1];
+54             int[] nw = new int[m + 1];
+55             int[] tw = new int[m + 1];
+56             for (int i = 0; i <= m; ++i) {
+57                 w[i] = (int) ((long) facts[m] * invfacts[m - i] % MODULO);
+58             }
+59             int[] other = new int[m + 1];
+60             for (int i = 3; i <= m + 2; ++i) {
+61                 other[m + 2 - i] = invfacts[i];
+62             }
+63             FastFourierTransformModulo fftm = new FastFourierTransformModulo(MODULO);
+64             for (int step = 0; step < n; ++step) {
+65                 Arrays.fill(nw, 0);
+66                 for (int j = 0; j <= m; ++j) {
+67                     tw[j] = (int) (w[j] * (long) (j + 1) % MODULO * (long) (j + 2) % MODULO);
+68                 }
+69                 int[] prod = fftm.mul(tw, other);
+70                 for (int i = 0; i <= m; ++i) {
+71                     long s = prod[m + i];
+72                 /*long s = 0;
+73                 for (int j = i + 1; j <= m; ++j) {
+74                     s += w[j] * (long) (j + 1) % MODULO * (long) (j + 2) % MODULO * invfacts[j + 2 - i] % MODULO;
+75                 }
+76                 if (s != s1) {
+77                     throw new RuntimeException();
+78                 }*/
+79                     s = s % MODULO;
+80                     s = (s + w[i] * (long) (1 + i * (i + 1) / 2)) % MODULO;
+81                     nw[i] = (int) s;
+82                 }
+83                 int[] tmp = w;
+84                 w = nw;
+85                 nw = tmp;
+86             }
+87             long res = w[0];
+88             out.println(res);
+89         }
+90 
+91     }
+92 
+93     static class FastFourierTransformModulo {
+94         final int MODULO;
+95         final int[] roots;
+96         final int[][] allpows;
+97         final int[][] allinvpows;
+98 
+99         public FastFourierTransformModulo(int MODULO) {
+100             for (int i = 2; i * i <= MODULO; ++i) if (MODULO % i == 0) throw new RuntimeException();
+101             this.MODULO = MODULO;
+102             int p2 = getP2(MODULO);
+103             if (p2 == 0) throw new RuntimeException();
+104             roots = new int[p2 + 1];
+105             allpows = new int[p2 + 1][];
+106             allinvpows = new int[p2 + 1][];
+107             int start;
+108             for (start = 2; ; ++start)
+109                 if (pow(start, (MODULO - 1) / 2) != 1) break;
+110             int pw = MODULO - 1;
+111             for (int i = 0; i <= p2; ++i) {
+112                 roots[i] = pow(start, pw);
+113                 allpows[i] = makePows(roots[i], (MODULO - 1) / pw);
+114                 allinvpows[i] = makePows(pow(roots[i], MODULO - 2), (MODULO - 1) / pw);
+115                 pw /= 2;
+116             }
+117         }
+118 
+119         public static int getP2(int MODULO) {
+120             int t = MODULO - 1;
+121             int p2 = 0;
+122             while (t % 2 == 0) {
+123                 t /= 2;
+124                 ++p2;
+125             }
+126             return p2;
+127         }
+128 
+129         private int[] makePows(int a, int k) {
+130             int[] res = new int[k + 1];
+131             res[0] = 1;
+132             for (int i = 1; i <= k; ++i) {
+133                 res[i] = (int) (a * (long) res[i - 1] % MODULO);
+134             }
+135             return res;
+136         }
+137 
+138         public int[] mul(int[] a, int[] b) {
+139             int len = MathUtils.nextPowerOfTwo(a.length + b.length - 1);
+140         /*CacheKey ca = new CacheKey(a, len);
+141         if (cache.containsKey(ca)) {
+142             a = cache.get(ca).clone();
+143         } else {
+144             a = Arrays.copyOf(a, len);
+145             fft(a, false);
+146             cache.put(ca, a.clone());
+147         }
+148         CacheKey cb = new CacheKey(b, len);
+149         if (cache.containsKey(cb)) {
+150             b = cache.get(cb).clone();
+151         } else {
+152             b = Arrays.copyOf(b, len);
+153             fft(b, false);
+154             cache.put(cb, b.clone());
+155         }*/
+156             a = Arrays.copyOf(a, len);
+157             fft(a, false);
+158             b = Arrays.copyOf(b, len);
+159             fft(b, false);
+160             int[] c = pointwiseMultiply(a, b);
+161             fft(c, true);
+162             {
+163                 int mult = pow(c.length, MODULO - 2);
+164                 for (int i = 0; i < c.length; ++i) {
+165                     c[i] = (int) (c[i] * (long) mult % MODULO);
+166                 }
+167             }
+168             return c;
+169         }
+170 
+171         public int[] pointwiseMultiply(int[] a, int[] b) {
+172             if (a.length != b.length) throw new RuntimeException();
+173             int[] c = new int[a.length];
+174             for (int i = 0; i < a.length; ++i) {
+175                 c[i] = (int) (a[i] * (long) b[i] % MODULO);
+176 
+177             }
+178             return c;
+179         }
+180 
+181         private int pow(int a, int k) {
+182             if (k == 0) return 1;
+183             if (k % 2 == 0)
+184                 return pow((int) (a * (long) a % MODULO), k / 2);
+185             return (int) (a * (long) pow(a, k - 1) % MODULO);
+186         }
+187 
+188         public void fft(int[] arr, boolean inv) {
+189             if (MathUtils.nextPowerOfTwo(arr.length) != arr.length) throw new RuntimeException();
+190             int n = arr.length;
+191             int[] invbits = FastFourierTransformModulo.InvBitsCache.INSTANCE.getInvBits(n);
+192             for (int i = 0; i < n; ++i) {
+193                 int j = invbits[i];
+194                 if (j > i) {
+195                     int tmp = arr[i];
+196                     arr[i] = arr[j];
+197                     arr[j] = tmp;
+198                 }
+199             }
+200             for (int p2 = 1, pow2 = 1; p2 < n; p2 *= 2, pow2 += 1) {
+201                 int w = roots[pow2];
+202                 int[] ap = allpows[pow2];
+203                 if (inv) {
+204                     w = pow(w, MODULO - 2);
+205                     ap = allinvpows[pow2];
+206                 }
+207                 for (int big = 0; big < n; big += 2 * p2) {
+208                     int cur = 1;
+209                     int curp = 0;
+210                     for (int small = big; small < big + p2; ++small) {
+211                         int i = small;
+212                         int j = small + p2;
+213                         int u = arr[i];
+214                         int o = arr[j];
+215                         int v = (int) (o * (long) cur % MODULO);
+216                         arr[i] = u + v;
+217                         if (arr[i] >= MODULO) arr[i] -= MODULO;
+218                         arr[j] = u - v;
+219                         if (arr[j] < 0) arr[j] += MODULO;
+220                         ++curp;
+221                     /*if (ap[curp] != (int) (cur * (long) w % MODULO)) {
+222                         throw new RuntimeException();
+223                     }*/
+224                         cur = ap[curp];
+225                     }
+226                 }
+227             }
+228         }
+229 
+230         public static int calcInvBits(int at, int total) {
+231             int res = 0;
+232             int rev = total >> 1;
+233             for (int p2 = 1; p2 < total; p2 <<= 1, rev >>= 1)
+234                 if ((at & p2) != 0)
+235                     res |= rev;
+236             return res;
+237         }
+238 
+239         static class InvBitsCache {
+240             int[][] cache = new int[0][];
+241             static FastFourierTransformModulo.InvBitsCache INSTANCE = new FastFourierTransformModulo.InvBitsCache();
+242 
+243             private InvBitsCache() {
+244             }
+245 
+246             synchronized int[] getInvBits(int size) {
+247                 int logsize = MathUtils.log2(size);
+248                 if (logsize >= cache.length) {
+249                     cache = Arrays.copyOf(cache, logsize + 1);
+250                 }
+251                 if (cache[logsize] == null) {
+252                     cache[logsize] = new int[size];
+253                     for (int i = 0; i < size; ++i) cache[logsize][i] = calcInvBits(i, size);
+254                 }
+255                 return cache[logsize];
+256             }
+257 
+258         }
+259 
+260     }
+261 
+262     static class InputReader {
+263         public BufferedReader reader;
+264         public StringTokenizer tokenizer;
+265 
+266         public InputReader(InputStream stream) {
+267             reader = new BufferedReader(new InputStreamReader(stream), 32768);
+268             tokenizer = null;
+269         }
+270 
+271         public String next() {
+272             while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+273                 try {
+274                     tokenizer = new StringTokenizer(reader.readLine());
+275                 } catch (IOException e) {
+276                     throw new RuntimeException(e);
+277                 }
+278             }
+279             return tokenizer.nextToken();
+280         }
+281 
+282         public int nextInt() {
+283             return Integer.parseInt(next());
+284         }
+285 
+286     }
+287 
+288     static class MathUtils {
+289         public static int nextPowerOfTwo(int x) {
+290             if (x < 0 || x > (1 << 30)) throw new RuntimeException();
+291             if (x == 0) return 1;
+292             if ((x & (x - 1)) == 0) return x;
+293             return Integer.highestOneBit(x) << 1;
+294         }
+295 
+296         static int log2(int x) {
+297             if (x <= 0 || (x & (x - 1)) != 0) throw new RuntimeException();
+298             return Integer.numberOfTrailingZeros(x);
+299         }
+300 
+301     }
+302 }
+303 

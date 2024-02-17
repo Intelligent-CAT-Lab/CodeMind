@@ -1,0 +1,73 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.Arrays;
+6 import java.util.StringTokenizer;
+7 import java.io.IOException;
+8 import java.io.BufferedReader;
+9 import java.io.InputStreamReader;
+10 import java.io.InputStream;
+11 
+12 /**
+13  * Built using CHelper plug-in
+14  * Actual solution is at the top
+15  */
+16 public class Main {
+17 	public static void main(String[] args) {
+18 		InputStream inputStream = System.in;
+19 		OutputStream outputStream = System.out;
+20 		FastScanner in = new FastScanner(inputStream);
+21 		PrintWriter out = new PrintWriter(outputStream);
+22 		TaskD solver = new TaskD();
+23 		solver.solve(1, in, out);
+24 		out.close();
+25 	}
+26 
+27 	static class TaskD {
+28 		public void solve(int testNumber, FastScanner in, PrintWriter out) {
+29 			char[] s = in.next().toCharArray();
+30 			int[] d = new int[1 << 26];
+31 			Arrays.fill(d, s.length);
+32 			d[0] = 0;
+33 			int mask = 0;
+34 			int ans = s.length;
+35 			for (int i = 0; i < s.length; i++) {
+36 				int c = s[i] - 'a';
+37 				mask ^= 1 << c;
+38 				for (int j = -1; j < 26; j++) {
+39 					int m = j < 0 ? 0 : (1 << j);
+40 					int cur = 1 + d[m ^ mask];
+41 					d[mask] = Math.min(d[mask], cur);
+42 					if (i == s.length - 1) {
+43 						ans = Math.min(ans, cur);
+44 					}
+45 				}
+46 			}
+47 			out.println(ans);
+48 		}
+49 
+50 	}
+51 
+52 	static class FastScanner {
+53 		private BufferedReader in;
+54 		private StringTokenizer st;
+55 
+56 		public FastScanner(InputStream stream) {
+57 			in = new BufferedReader(new InputStreamReader(stream));
+58 		}
+59 
+60 		public String next() {
+61 			while (st == null || !st.hasMoreTokens()) {
+62 				try {
+63 					st = new StringTokenizer(in.readLine());
+64 				} catch (IOException e) {
+65 					throw new RuntimeException(e);
+66 				}
+67 			}
+68 			return st.nextToken();
+69 		}
+70 
+71 	}
+72 }
+73 

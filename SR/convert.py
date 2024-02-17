@@ -2,22 +2,22 @@ import jsonlines
 import os
 import json
 import sys
+import argparse
 
-def parse_code(jsonl_path, mid_token, code_start_token, code_end_token, dataset_path, dataset_name, write_root):
-    if  "mutate" in jsonl_path:
-        write_root = f"{write_root}/mutate"
-        write_folder = os.path.join(write_root, jsonl_path.split("/")[-3])
-        write_subfolder = os.path.join(write_folder, jsonl_path.split("/")[-4])
-    else:
-        write_folder = os.path.join(write_root, jsonl_path.split("/")[-2])
-        write_subfolder = os.path.join(write_folder, jsonl_path.split("/")[-3])
+def parse_code(jsonl_path, mid_token, code_start_token, code_end_token, dataset_name, write_root):
+    # if  "mutate" in jsonl_path:
+    #     write_root = f"{write_root}/mutate"
+    #     write_folder = os.path.join(write_root, jsonl_path.split("/")[-3])
+    #     write_subfolder = os.path.join(write_folder, jsonl_path.split("/")[-4])
+    # else:
+    write_folder = os.path.join(write_root, jsonl_path.split("/")[-2])
+    write_subfolder = os.path.join(write_folder, jsonl_path.split("/")[-3])
     
     if not os.path.exists(write_folder):
-        os.mkdir(write_folder)
+        os.makedirs(write_folder)
     if not os.path.exists(write_subfolder):
-        os.mkdir(write_subfolder)
-    
-    # test_data = load_tests(dataset_path, dataset_name)
+        os.makedirs(write_subfolder)
+
     
     
     with open(jsonl_path, 'r') as f:
@@ -61,7 +61,20 @@ def parse_code(jsonl_path, mid_token, code_start_token, code_end_token, dataset_
                 wr.write(code_with_test)
 
 if __name__ == "__main__":
-    config_path = sys.argv[1]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model", type=str, default='none')
+    parser.add_argument("--outDir", type=str, default='none')
+    parser.add_argument("--dataset", type=str, default='none')
+    parser.add_argument("--underTestDir", type=str, default='none')
+    args = parser.parse_args()
+    
+    model = args.model
+    out_dir = args.outDir
+    dataset = args.dataset
+    ut_dir = args.underTestDir
+    
+    config_path = f"./config/{model}.json"
+    
     with open(config_path, 'r', encoding='utf-8') as readFile:
         config = json.load(readFile)
     
@@ -69,16 +82,14 @@ if __name__ == "__main__":
     code_start_token = config["generation_config"]["code_start_token"]
     code_end_token = config["generation_config"]["code_end_token"]
     
-    jsonl_path = os.path.join(config["output_directory"], config["model_name"], config["dataset_name"], "output.jsonl")
-    dataset_path = config["dataset_path"]
-    dataset_name = config["dataset_name"]
-    write_folder = config["under_test_directory"]
+    jsonl_path = os.path.join(out_dir, model, dataset, "output.jsonl")
+    dataset_name = dataset
+    write_folder = ut_dir
     
     parse_code(jsonl_path=jsonl_path, 
                mid_token=sep_token, 
                code_start_token=code_start_token, 
                code_end_token=code_end_token,
-               dataset_path=dataset_path,
                dataset_name = dataset_name,
                write_root = write_folder
                )

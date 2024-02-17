@@ -1,0 +1,94 @@
+
+<<<Analysis>>>
+The variable n, variable a and variable b are initialized with 8 and 1 respectively according to the input.
+It enters a for loop and it iterates from 1 to 8 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [1, 5]. If it does, it adds the current interger i to variable answer. The condition is met when i is 1,2,3,4,5,6,7 and 8.
+After the loop finishes, it print the fianl value of variable answer as output, which is 84.
+<<<Output>>>
+84
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.InputMismatchException;
+
+public class Main {
+	static InputStream is;
+	static PrintWriter out;
+	static String INPUT = "";
+	
+	static long pow(long x, int n)
+	{
+		long ret = 1;
+		for(int i = 0;i < n;i++)ret *= x;
+		return ret;
+	}
+	
+	static void solve()
+	{
+		long n = nl(), A = nl();
+		long ret = n;
+		out:
+		for(int dep = 1;dep <= 40;dep++){
+			if(n <= dep)break;
+			long num = dep*2+1;
+			long base = 1;
+			int me = 0, en = dep;
+			for(long m = 0;;){
+				long plus = pow(base, me) * pow(base+1, en);
+				if(n <= m + plus){
+					if(num + (double)dep*A > 1e13)continue out;
+					ret = Math.min(ret, num + dep*A);
+					continue out;
+				}
+				num++;
+				if(m > 0){
+					me--; en++;
+					if(me < 0){
+						base++;
+						me = dep; en = 0;
+					}
+				}
+				m += plus;
+			}
+		}
+		out.println(ret);
+	}
+	
+	public static void main(String[] args) throws Exception
+	{
+		long S = System.currentTimeMillis();
+		is = INPUT.isEmpty()? System.in : new ByteArrayInputStream(INPUT.getBytes());
+		out = new PrintWriter(System.out);
+		
+		solve();
+		out.flush();
+		long G = System.currentTimeMillis();
+		tr(G-S+"ms");
+	}
+	
+	private static boolean eof()
+	{
+		if(lenbuf == -1)return true;
+		int lptr = ptrbuf;
+		while(lptr < lenbuf)if(!isSpaceChar(inbuf[lptr++]))return false;
+		
+		try {
+			is.mark(1000);
+			while(true){
+				int b = is.read();
+				if(b == -1){
+					is.reset();
+					return true;
+				}else if(!isSpaceChar(b)){
+					is.reset();
+					return false;
+				}
+			}
+		} catch (IOException e

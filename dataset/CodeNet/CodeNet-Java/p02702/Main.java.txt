@@ -1,0 +1,71 @@
+1 import java.util.*;
+2 
+3 public class Main {
+4     public static void main(String[] args) throws Exception {
+5         // Your code here!
+6         Scanner sc = new Scanner(System.in);
+7         String str = sc.next();
+8         char c[] = str.toCharArray();
+9         int n = str.length();
+10         int p = 2019;
+11         
+12         // ans: i桁目～j桁目の部分列が2019の倍数であるパターン数
+13         // ex. 1817181712114
+14         //         ^^^^^
+15         long ans = 0;
+16         
+17         // 2019の倍数になる桁i, jの組み合わせ全探索はO(N^2)
+18         // -> 各桁の「2019の余り」をO(N)で計算する。
+19         
+20         // d'[i]: 右からi桁目の値 * 10^i (mod 2019)
+21         // ex. 1817181712114
+22         // d'[0]: 4 % 2019 -> 4
+23         // d'[1]: 10 % 2019 -> 10
+24         // d'[5]: 700000 (mod 2019) -> ?
+25         // ≡ 7 * 10 * 10^4
+26         // ≡ 7 * 19240
+27         // ≡ 7 * 1069 = 7483 % 2019 = 1426
+28         
+29         // d[i]: d'[i]の累積和
+30         // d = {4,14,114,95}
+31         int[] d = new int[n+1];
+32         // ten: 10^i (mod 2019)
+33         int ten = 1;
+34         
+35         // d[i]を計算する
+36         // (右の桁(c[n-1])から順に見る)
+37         for (int i = n - 1; i >= 0; i--) {
+38             // 1000000 % 2019は計算しんどいので、
+39             int a = ((c[i] - '0') * ten) % p;
+40             d[i] = (d[i+1] + a) % p;
+41             ten = (ten * 10) % p;
+42         }
+43         
+44         // 「d[i] = d[j]となる」とは、
+45         // 「ex. 181712114 % 2019 = 2114 % 2019」。
+46         // -> 181710000 ≡ 0 (mod 2019)
+47         // -> (合同式で割り算はmod pと互いに素でないと不能)
+48         // -> (gcd(2019, 10) = 1)
+49         // -> 18171 ≡ 0 (mod 2019)
+50         // -> 18171 % 2019 = 0
+51         // -> 18171は2019の倍数
+52         
+53         // map: d[]の値の頻度
+54         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+55         for (int i = n; i >= 0; i--) {
+56             int key = d[i];
+57             if (!map.containsKey(key)) {
+58                 map.put(key, 1);
+59             } else {
+60                 int val = map.get(key);
+61                 map.put(key, val + 1);
+62             }
+63         }
+64         // 同じ値の個数nから2つ選ぶパターン数 = nC2
+65         for (Integer key : map.keySet()) {
+66             int val = map.get(key);
+67             ans += (long)val * (val-1) / 2;
+68         }
+69         System.out.println(ans);
+70     }
+71 }

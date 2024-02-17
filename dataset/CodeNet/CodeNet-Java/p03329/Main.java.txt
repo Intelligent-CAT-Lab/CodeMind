@@ -1,0 +1,33 @@
+1 import java.util.Arrays;
+2 import java.util.Scanner;
+3 
+4 /* 参考:　貰う DP と配る DP、メモ化再帰、個数制限なしナップサック問題 @drken https://qiita.com/drken/items/ace3142967c4f01d42e9#%E8%A7%A3%E6%B3%95-1-1-%E3%83%88%E3%83%83%E3%83%97%E3%83%80%E3%82%A6%E3%83%B3%E3%81%AB-n-%E3%82%92%E9%99%8D%E4%B8%8B%E3%81%97%E3%81%A6%E3%81%84%E3%81%8F%E3%83%A1%E3%83%A2%E5%8C%96%E5%86%8D%E5%B8%B0 */
+5 
+6 public class Main {
+7 	static final int MAX_N = 110000;
+8 	static int[] memo = new int[MAX_N]; // memo[i]:i=Nのときの最低値
+9 	static {
+10 		Arrays.fill(memo, -1); // 初期化
+11 	}
+12 	public static void main(String[] args) {
+13 		Scanner sc = new Scanner(System.in);
+14 		int n = sc.nextInt();
+15 		int ans = calc(n);
+16 		System.out.println(ans);
+17 	}
+18 
+19 	static int calc(int n) {
+20 		if (n == 0) return 0;
+21 		if (memo[n] != -1) return memo[n]; // メモ済みならその値を返す
+22 
+23 		int res = n; // 1円ずつ引き出した場合 resはresponseのres?
+24 		for (int pow6 = 1; pow6 <= n; pow6 *= 6) {
+25 			res = Math.min(res, calc(n - pow6) + 1); // resとnを間違えていた
+26 		}
+27 		for (int pow9 = 1; pow9 <= n; pow9 *= 9) {
+28 			res = Math.min(res, calc(n - pow9) + 1);
+29 		}
+30 		memo[n] = res;
+31 		return memo[n];
+32 	}
+33 }

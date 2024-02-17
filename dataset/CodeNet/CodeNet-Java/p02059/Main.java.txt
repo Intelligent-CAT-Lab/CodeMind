@@ -1,0 +1,126 @@
+1 import java.util.Scanner;
+2 
+3 public class Main {
+4 	static Scanner sc = new Scanner(System.in);
+5 	static final long MOD = 998244353;
+6 
+7 	public static void main(String[] args) {
+8 		char[] S = sc.next().toCharArray();
+9 		int N = S.length;
+10 		long[] pow3 = new long[N + 1];
+11 		pow3[0] = 1;
+12 		for (int i = 0; i < N; i++) {
+13 			pow3[i + 1] = pow3[i] * 3 % MOD;
+14 		}
+15 		Bits bsf1 = new Bits(N + 64);
+16 		Bits bsf2 = new Bits(N + 64);
+17 		Bits bsb1 = new Bits(N + 64);
+18 		Bits bsb2 = new Bits(N + 64);
+19 		int Q = 0;
+20 		for (int i = 0; i < N; i++) {
+21 			if (S[i] == 'G') {
+22 				bsf1.set(i);
+23 			} else if (S[i] == '?') {
+24 				bsf2.set(i);
+25 				Q++;
+26 			}
+27 			if (S[N - 1 - i] == 'U') {
+28 				bsb1.set(i);
+29 			} else if (S[N - 1 - i] == '?') {
+30 				bsb2.set(i);
+31 			}
+32 		}
+33 		long ans = 0;
+34 		long[] buff1 = new long[bsf1.bits.length];
+35 		long[] buff2 = new long[bsf1.bits.length];
+36 		long[] bufb1 = new long[bsf2.bits.length];
+37 		long[] bufb2 = new long[bsf2.bits.length];
+38 		for (int i = 1; i < N - 1; i++) {
+39 			if (S[i] == 'M' || S[i] == '?') {
+40 				int q = S[i] == 'M' ? Q : Q - 1;
+41 				bsf1.copy(buff1, i + 1);
+42 				bsf2.copy(buff2, i + 1);
+43 				bsb1.copy(bufb1, N - i);
+44 				bsb2.copy(bufb2, N - i);
+45 				int len = (Math.min(N - 1 - i, i) + 63) / 64;
+46 				for (int j = 0; j < len; j++) {
+47 					ans += Long.bitCount(buff1[j] & bufb1[j]) * pow3[q];
+48 					if (q >= 1) {
+49 						ans += Long.bitCount(buff1[j] & bufb2[j]) * pow3[q - 1];
+50 						ans += Long.bitCount(buff2[j] & bufb1[j]) * pow3[q - 1];
+51 					}
+52 					if (q >= 2) {
+53 						ans += Long.bitCount(buff2[j] & bufb2[j]) * pow3[q - 2];
+54 					}
+55 				}
+56 				ans %= MOD;
+57 			}
+58 		}
+59 		System.out.println(ans);
+60 	}
+61 
+62 	static class Bits {
+63 		long[] bits;
+64 
+65 		Bits(int size) {
+66 			bits = new long[(size + 63) / 64];
+67 		}
+68 
+69 		void copy(long[] buf, int from) {
+70 			int start = from >> 6;
+71 			int rem = from & 63;
+72 			if (rem == 0) {
+73 				for (int i = start; i < bits.length; i++) {
+74 					buf[i - start] = bits[i];
+75 				}
+76 			} else {
+77 				for (int i = start; i < bits.length; i++) {
+78 					buf[i - start] = bits[i] >>> rem;
+79 					if (i < bits.length - 1) {
+80 						buf[i - start] |= bits[i + 1] << (64 - rem);
+81 					}
+82 				}
+83 			}
+84 			if (start > 0) buf[bits.length - start] = 0;
+85 		}
+86 
+87 		void shiftLOr(int shift) {
+88 			int m1 = shift >> 6;
+89 			int m2 = shift & 63;
+90 			if (m2 == 0) {
+91 				for (int i = bits.length - 1 - m1; i >= 0; i--) {
+92 					bits[i + m1] |= bits[i];
+93 				}
+94 			} else {
+95 				for (int i = bits.length - 1 - m1; i >= 0; i--) {
+96 					int p1 = i + m1 + 1;
+97 					int p2 = i + m1;
+98 					long v1 = bits[i] >>> (64 - m2);
+99 					long v2 = bits[i] << m2;
+100 					if (p1 < bits.length) {
+101 						bits[p1] |= v1;
+102 					}
+103 					bits[p2] |= v2;
+104 				}
+105 			}
+106 		}
+107 
+108 		boolean get(int pos) {
+109 			return ((bits[pos >> 6] >>> (pos & 63)) & 1) != 0;
+110 		}
+111 
+112 		void set(int pos) {
+113 			bits[pos >> 6] |= (1L << (pos & 63));
+114 		}
+115 
+116 		public String toString() {
+117 			StringBuilder sb = new StringBuilder();
+118 			for (int i = 0; i < bits.length; i++) {
+119 				sb.append(Long.toString(bits[i], 16));
+120 				sb.append(',');
+121 			}
+122 			return sb.toString();
+123 		}
+124 	}
+125 }
+126 

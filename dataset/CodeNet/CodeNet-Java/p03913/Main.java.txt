@@ -1,0 +1,50 @@
+1 import java.util.ArrayDeque;
+2 import java.util.Arrays;
+3 import java.util.Scanner;
+4 
+5 public class Main {
+6 	public static void main(String[] args) {
+7 		// long t = System.currentTimeMillis();
+8 		new Main().run();
+9 		// System.err.println(System.currentTimeMillis() - t);
+10 	}
+11 
+12 	public void run() {
+13 		Scanner sc = new Scanner(System.in);
+14 		solver(sc.nextLong(), sc.nextLong());
+15 	}
+16 
+17 	void solver(long n, long a) {
+18 		long ans = n;
+19 		for (int m = 2; m <= 40; ++m) {
+20 			long c = (long) Math.pow(n, 1.0 / m);
+21 			for (long i = Math.max(c - 2, 2); i <= c + 2; ++i) {
+22 				if (Math.log(i) * (m - 1) > 40 * Math.log(2))
+23 					continue;
+24 				for (int j = 0; j <= m - 1; ++j) {
+25 					long res = a * (m - 1);
+26 					res += j * i + (m - 1 - j) * (i + 1);
+27 					long den = pow(i, j) * pow(i + 1, m - 1 - j);
+28 					res += (n + den - 1) / den;
+29 					ans = Math.min(ans, res);
+30 				}
+31 			}
+32 		}
+33 		System.out.println(ans);
+34 	}
+35 
+36 	long pow(long a, long n) {
+37 		long ret = 1;
+38 		for (; n > 0; n >>= 1, a *= a) {
+39 			if (n % 2 == 1) {
+40 				ret *= a;
+41 			}
+42 		}
+43 		return ret;
+44 	}
+45 
+46 	static void tr(Object... objects) {
+47 		System.out.println(Arrays.deepToString(objects));
+48 	}
+49 
+50 }

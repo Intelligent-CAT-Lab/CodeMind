@@ -1,0 +1,76 @@
+1 import java.util.ArrayList;
+2 import java.util.Arrays;
+3 import java.util.Scanner;
+4 
+5 public class Main {
+6 	public static void main(String[] args) {
+7 		new Main().run();
+8 	}
+9 
+10 	void run() {
+11 		solver();
+12 	}
+13 
+14 	void solver() {
+15 		Scanner sc = new Scanner(System.in);
+16 		int M = sc.nextInt();
+17 		int N = sc.nextInt();
+18 		int m0 = sc.nextInt();
+19 		int md = sc.nextInt();
+20 		int n0 = sc.nextInt();
+21 		int nd = sc.nextInt();
+22 		int[] m = new int[M];
+23 		int[] n = new int[N];
+24 		m[0] = m0;
+25 		n[0] = n0;
+26 
+27 		for (int i = 1; i < M; ++i) {
+28 			m[i] = (m[i - 1] * 58 + md) % (N + 1);
+29 		}
+30 		for (int i = 1; i < N; ++i) {
+31 			n[i] = (n[i - 1] * 58 + nd) % (M + 1);
+32 		}
+33 
+34 		m = sort(m, N);
+35 		n = sort(n, M);
+36 		
+37 		long[] accumN = new long[N + 1];
+38 		long[] accumM = new long[M + 1];
+39 		for (int i = 0; i < N; ++i) {
+40 			accumN[i + 1] = accumN[i] + n[i];
+41 		}
+42 		for (int i = 0; i < M; ++i) {
+43 			accumM[i + 1] = accumM[i] + m[i];
+44 		}
+45 		
+46 		int cur = N;
+47 		long sum = accumM[0] + accumN[cur] + (N - cur) * (M - 0);
+48 		for (int i = 0; i <= M; ++i) {
+49 			while (cur >= 1 && accumM[i] + accumN[cur] + (long)(N - cur) * (M - i) >= accumM[i] + accumN[cur - 1]
+50 					+ (long)(N - (cur - 1)) *(M - i))
+51 				--cur;
+52 			sum = Math.min(sum, accumM[i] + accumN[cur] + (long)(N - cur) * (M - i));
+53 		}
+54 		
+55 		System.out.println(sum);
+56 		sc.close();
+57 	}
+58 
+59 	int[] sort(int[] a, int max) {
+60 		int[] counter = new int[max + 1];
+61 		for (int i = 0; i < a.length; ++i) {
+62 			counter[a[i]]++;
+63 		}
+64 		int pos = 0;
+65 		for (int i = 0; i < counter.length; ++i) {
+66 			while (counter[i]-- > 0) {
+67 				a[pos++] = i;
+68 			}
+69 		}
+70 		return a;
+71 	}
+72 
+73 	void tr(Object... objects) {
+74 		System.out.println(Arrays.deepToString(objects));
+75 	}
+76 }

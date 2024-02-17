@@ -1,0 +1,646 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 class Point implements Comparable<Point> {
+5   final long x, y;
+6 
+7   Point(long x, long y) {
+8     this.x = x;
+9     this.y = y;
+10   }
+11 
+12   public int compareTo(Point point) {
+13     if (this.x != point.x) {
+14       return Long.compare(this.x, point.x);
+15     }
+16     return Long.compare(this.y, point.y);
+17   }
+18 
+19   public String toString() {
+20     return String.format("(%d, %d)", x, y);
+21   }
+22 }
+23 
+24 class NaiveSolver {
+25   final int w, h, k;
+26 
+27   NaiveSolver(int w, int h, int k) {
+28     this.w = w;
+29     this.h = h;
+30     this.k = k;
+31   }
+32 
+33   private static long gcdRec(long a, long b) {
+34     return a % b == 0 ? b : gcd(b, a % b);
+35   }
+36 
+37   private static long gcd(long a, long b) {
+38     long absA = Math.abs(a);
+39     long absB = Math.abs(b);
+40     if (absA == 0 || absB == 0) {
+41       return absA + absB;
+42     }
+43     return gcdRec(absA, absB);
+44   }
+45 
+46   private boolean accept(long x1, long y1, long x2, long y2, long x3, long y3) {
+47     long dx2 = x2 - x1;
+48     long dy2 = y2 - y1;
+49     long dx3 = x3 - x1;
+50     long dy3 = y3 - y1;
+51     long sDouble = Math.abs(dx2 * dy3 - dx3 * dy2);
+52     long g1 = gcd(x1 - x2, y1 - y2);
+53     long g2 = gcd(x2 - x3, y2 - y3);
+54     long g3 = gcd(x3 - x1, y3 - y1);
+55     long g = g1 + g2 + g3;
+56     return sDouble - g + 2 <= 2 * k;
+57   }
+58 
+59   public long solve() {
+60     long answer = 0;
+61     for (long x1 = 1; x1 < w; x1++) {
+62       for (long y1 = 1; y1 < h; y1++) {
+63         for (long x2 = 1; x2 < w; x2++) {
+64           //(x1, 0), (0, y1), (x2, h)
+65           //(x1, 0), (w, y1), (x2, h)
+66           if (accept(x1, 0, 0, y1, x2, h)) {
+67             answer++;
+68           }
+69           if (accept(x1, 0, w, y1, x2, h)) {
+70             answer++;
+71           }
+72         }
+73         for (long y2 = 1; y2 < h; y2++) {
+74           //(x1, 0), (0, y1), (w, y2)
+75           //(x1, h), (0, y1), (w, y2)
+76           if (accept(x1, 0, 0, y1, w, y2)) {
+77             answer++;
+78           }
+79           if (accept(x1, h, 0, y1, w, y2)) {
+80             answer++;
+81           }
+82         }
+83       }
+84     }
+85     return answer;
+86   }
+87 
+88   private void addAnswer(List<List<Point>> answers, long x1, long y1, long x2, long y2, long x3, long y3) {
+89     List<Point> list = List.of(new Point(x1, y1), new Point(x2, y2), new Point(x3, y3));
+90     List<Point> sortedList = new ArrayList<>();
+91     sortedList.addAll(list);
+92     Collections.sort(sortedList);
+93     answers.add(sortedList);
+94   }
+95 
+96   public List<List<Point>> solveList() {
+97     List<List<Point>> answers = new ArrayList<>();
+98     for (long x1 = 1; x1 < w; x1++) {
+99       for (long y1 = 1; y1 < h; y1++) {
+100         for (long x2 = 1; x2 < w; x2++) {
+101           //(x1, 0), (0, y1), (x2, h)
+102           //(x1, 0), (w, y1), (x2, h)
+103           if (accept(x1, 0, 0, y1, x2, h)) {
+104             addAnswer(answers, x1, 0L, 0L, y1, x2, (long)h);
+105           }
+106           if (accept(x1, 0, w, y1, x2, h)) {
+107             addAnswer(answers, x1, 0L, (long)w, y1, x2, (long)h);
+108           }
+109         }
+110         for (long y2 = 1; y2 < h; y2++) {
+111           //(x1, 0), (0, y1), (w, y2)
+112           //(x1, h), (0, y1), (w, y2)
+113           if (accept(x1, 0, 0, y1, w, y2)) {
+114             addAnswer(answers, x1, 0L, 0L, y1, (long)w, y2);
+115           }
+116           if (accept(x1, h, 0, y1, w, y2)) {
+117             addAnswer(answers, x1, (long)h, 0L, y1, (long)w, y2);
+118           }
+119         }
+120       }
+121     }
+122     Collections.sort(answers, new Comparator<List<Point>>(){
+123       public int compare(List<Point> l1, List<Point> l2) {
+124         for (int i = 0; i < l1.size(); i++) {
+125           int result = l1.get(i).compareTo(l2.get(i));
+126           if (result != 0) {
+127             return result;
+128           }
+129         }
+130         return 0;
+131       }
+132     });
+133     return answers;
+134   }
+135 }
+136 
+137 class SubSolver {
+138   final int w, h, k;
+139   final boolean rotate;
+140 
+141   SubSolver(int w, int h, int k, boolean rotate) {
+142     this.w = w;
+143     this.h = h;
+144     this.k = k;
+145     this.rotate = rotate;
+146   }
+147 
+148   private static long gcd(long a, long b) {
+149     if (a == 0 || b == 0) {
+150       return a + b;
+151     }
+152     return a % b == 0 ? b : gcd(b, a % b);
+153   }
+154 
+155   // P1: (x, 0)
+156   // P2: (0, y)
+157   // P3: (w, y + s)
+158   // (0 < x < w),
+159   // (0 < y < h)
+160   // (0 <= s < h - 1)
+161   // TriangleArea = NumLatticeInside + NumLatticeBoundary / 2 - 1
+162   // NumLatticeInside = TriangleArea - NumLatticeBoundary / 2 + 1
+163   // NumLatticeInside <= k
+164   // TriangleArea - NumLatticeBoundary / 2 + 1 <= k
+165   // 2 * TriangleArea - NumLatticeBoundary + 2 <= 2k
+166   // TriangleArea
+167   // = (y + y + s) * w / 2 - x * y / 2 - (w - x) * (y + s) / 2
+168   // = yw + sw/2 - xy/2 - wy/2 - ws/2 + xy/2 + xs/2
+169   // = yw/2 + xs/2
+170   // NumLatticeBoundary
+171   // = gcd(s, w) + gcd(x, y) + gcd(w - x, y + s)
+172   // 2 * (yw / 2 + xs/2) - gcd(s, w) - gcd(x, y) - gcd(w - x, y + s) + 2 <= 2k
+173   // wy - gcd(x, y) - gcd(w - x, y + s) <= 2k + gcd(s, w) - xs - 2
+174   // 2k + gcd(s, w) - xs - 2 >= 0
+175   // sx <= 2k + gcd(s, w) - 2 <= 2k + w - 2
+176   public long solve() {
+177     long answer = 0;
+178     // s == 0
+179     for (long x = 1; x < w; x++) {
+180       answer += solve(0, x);
+181     }
+182 
+183     for (long s = 1; s < h - 1; s++) {
+184       long gcdSw = gcd(s, w);
+185       for (long x = 1; x < w && s * x <= 2 * k + gcdSw - 2; x++) {
+186         answer += 2 * solve(s, x);
+187       }
+188     }
+189 
+190     return answer;
+191   }
+192 
+193   private long solve(long s, long x) {
+194     long r = 2 * k + gcd(s, w) - s * x - 2;
+195     // y + s < h
+196     // y < h - s
+197     // y <= h - s - 1
+198     long answer = Math.min(r / w, h - s - 1);
+199     boolean a = false;
+200     if (accept(s, x, r, r / w + 1)) {
+201       a = true;
+202       answer++;
+203     }
+204 //    System.err.printf("%d %d %s %d\n", s, x, a, answer);
+205     return answer;
+206   }
+207 
+208   private boolean accept(long s, long x, long r, long y) {
+209     return y + s < h && w * y - gcd(x, y) - gcd(w - x, y + s) <= r;
+210   }
+211 
+212   public List<List<Point>> solveList() {
+213     List<List<Point>> answers = new ArrayList<>();
+214     // s == 0
+215     for (long x = 1; x < w; x++) {
+216       answers.addAll(solveList(0, x));
+217     }
+218 
+219     for (long s = 1; s < h - 1; s++) {
+220       long gcdSw = gcd(s, w);
+221       for (long x = 1; x < w && s * x <= 2 * k + gcdSw - 2; x++) {
+222         answers.addAll(solveList(s, x));
+223       }
+224     }
+225 
+226     return answers;
+227   }
+228 
+229   private List<List<Point>> solveList(long s, long x) {
+230     List<List<Point>> answers = new ArrayList<>();
+231 
+232     long r = 2 * k + gcd(s, w) - s * x - 2;
+233     /*
+234     long answer = r / w;
+235     boolean a = false;
+236     if (accept(s, x, r, r / w + 1)) {
+237       a = true;
+238       answer++;
+239     }
+240     System.err.printf("%d %d %s %d\n", s, x, a, answer);
+241     */
+242     for (int y = 1; y <= r / w && y + s < h; y++) {
+243       addAnswer(answers, s, x, y);
+244     }
+245     if (accept(s, x, r, r / w + 1)) {
+246       addAnswer(answers, s, x, r / w + 1);
+247     }
+248     return answers;
+249   }
+250 
+251   private void addAnswer(List<List<Point>> answers, long s, long x, long y) {
+252     if (y + s < 0 || y + s > h) {
+253       System.err.printf("%d %d %d\n", s, x, y);
+254       throw new RuntimeException();
+255     }
+256     {
+257       addAnswer1(answers, x,     0, 0, y, w, y + s);
+258     }
+259     if (s != 0) {
+260       addAnswer1(answers, w - x, 0, w, y, 0, y + s);
+261     }   
+262   }
+263 
+264   private void addAnswer1(List<List<Point>> answers, long x1, long y1, long x2, long y2, long x3, long y3) {
+265     if (y3 < 0 || y3 > h) {
+266       System.err.printf("%d %d %d %d %d %d\n", x1, y1, x2, y2, x3, y3);
+267       throw new RuntimeException();
+268     }
+269     addAnswer2(answers, x1, y1, x2, y2, x3, y3);
+270     addAnswer2(answers, x1, h - y1, x2, h - y2, x3, h - y3);
+271   }
+272 
+273   private void addAnswer2(List<List<Point>> answers, long x1, long y1, long x2, long y2, long x3, long y3) {
+274     if (x1 < 0 || x2 < 0 || x3 < 0 || y1 < 0 || y2 < 0 || y3 < 0) {
+275       System.err.printf("%d %d %d %d %d %d\n", x1, y1, x2, y2, x3, y3);
+276       throw new RuntimeException();
+277     }
+278     if (!rotate) {
+279       addAnswer3(answers, x1, y1, x2, y2, x3, y3);
+280     } else {
+281       addAnswer3(answers, y1, x1, y2, x2, y3, x3);
+282     }
+283   }
+284 
+285   private void addAnswer3(List<List<Point>> answers, long x1, long y1, long x2, long y2, long x3, long y3) {
+286     if (x1 < 0 || x2 < 0 || x3 < 0 || y1 < 0 || y2 < 0 || y3 < 0) {
+287       System.err.printf("%d %d %d %d %d %d\n", x1, y1, x2, y2, x3, y3);
+288       throw new RuntimeException();
+289     }
+290     List<Point> list = List.of(new Point(x1, y1), new Point(x2, y2), new Point(x3, y3));
+291     List<Point> sortedList = new ArrayList<>();
+292     sortedList.addAll(list);
+293     Collections.sort(sortedList);
+294     answers.add(sortedList);
+295   }
+296 }
+297 
+298 class Solver {
+299   final int w, h, k;
+300 
+301   Solver(int w, int h, int k) {
+302     this.w = w;
+303     this.h = h;
+304     this.k = k;
+305   }
+306 
+307   public long solve() {
+308     SubSolver subSolver1 = new SubSolver(w, h, k, false);
+309     SubSolver subSolver2 = new SubSolver(h, w, k, true);
+310     long answer1 = subSolver1.solve();
+311     long answer2 = subSolver2.solve();
+312     return 2 * (answer1 + answer2);
+313   }
+314 
+315   public List<List<Point>> solveList() {
+316     SubSolver subSolver1 = new SubSolver(w, h, k, false);
+317     SubSolver subSolver2 = new SubSolver(h, w, k, true);
+318     List<List<Point>> answers = new ArrayList<>();
+319     answers.addAll(subSolver1.solveList());
+320     answers.addAll(subSolver2.solveList());
+321     Collections.sort(answers, new Comparator<List<Point>>(){
+322       public int compare(List<Point> l1, List<Point> l2) {
+323         for (int i = 0; i < l1.size(); i++) {
+324           int result = l1.get(i).compareTo(l2.get(i));
+325           if (result != 0) {
+326             return result;
+327           }
+328         }
+329         return 0;
+330       }
+331     });
+332     return answers;
+333   }
+334 }
+335 
+336 public class Main {
+337   private static void execute(ContestReader reader, ContestWriter out) {
+338     int w = reader.nextInt();
+339     int h = reader.nextInt();
+340     int k = reader.nextInt();
+341     out.println(new Solver(w, h, k).solve());
+342 //    out.println(new NaiveSolver(w, h, k).solve());
+343 //    out.printList(new NaiveSolver(w, h, k).solveList());
+344 //    out.printList(new Solver(w, h, k).solveList());
+345   }
+346   
+347   public static void main(String[] args) {
+348     ContestReader reader = new ContestReader(System.in);
+349     ContestWriter out = new ContestWriter(System.out);
+350     execute(reader, out);
+351     out.flush();
+352   }
+353 }
+354 
+355 class ContestWriter extends PrintWriter {
+356   ContestWriter(PrintStream printStream) {
+357     super(printStream);
+358   }
+359 
+360   public void printList(List<? extends Object> list) {
+361     for (Object object : list) {
+362       println(object);
+363     }
+364   }
+365 
+366   public void printListOneLine(List<? extends Object> list) {
+367     List<String> stringList = new ArrayList<>();
+368     for (Object object : list) {
+369       stringList.add(object.toString());
+370     }
+371     println(String.join(" ", stringList));
+372   }
+373 }
+374 
+375 class ContestReader {
+376   private static final int BUFFER_SIZE = 1024;
+377   
+378   private final InputStream stream;
+379   private final byte[] buffer;
+380   private int pointer;
+381   private int bufferLength;
+382   
+383   ContestReader(InputStream stream) {
+384     this.stream = stream;
+385     this.buffer = new byte[BUFFER_SIZE];
+386     this.pointer = 0;
+387     this.bufferLength = 0;
+388   }
+389   
+390   private boolean hasNextByte() {
+391     if (pointer < bufferLength) {
+392       return true;
+393     }
+394     
+395     pointer = 0;
+396     try {
+397       bufferLength = stream.read(buffer);
+398     } catch (IOException e) {
+399       throw new RuntimeException(e);
+400     }
+401     return bufferLength > 0;
+402   }
+403   
+404   private int readByte() {
+405     if (hasNextByte()) {
+406       return buffer[pointer++];
+407     } else {
+408       return -1;
+409     }
+410   }
+411   
+412   private static boolean isPrintableChar(int c) {
+413     return 33 <= c && c <= 126;
+414   }
+415   
+416   public boolean hasNext() {
+417     while (hasNextByte() && !isPrintableChar(buffer[pointer])) {
+418       pointer++;
+419     }
+420     return hasNextByte();
+421   }
+422   
+423   public String next() {
+424     if (!hasNext()) {
+425       throw new NoSuchElementException();
+426     }
+427     StringBuilder sb = new StringBuilder();
+428     while(true) {
+429       int b = readByte();
+430       if (!isPrintableChar(b)) {
+431         break;
+432       }
+433       sb.appendCodePoint(b);
+434     }
+435     return sb.toString();
+436   }
+437   
+438   public String nextLine() {
+439     if (!hasNext()) {
+440       throw new NoSuchElementException();
+441     }
+442     StringBuilder sb = new StringBuilder();
+443     while(true) {
+444       int b = readByte();
+445       if (!isPrintableChar(b) && b != 0x20) {
+446         break;
+447       }
+448       sb.appendCodePoint(b);
+449     }
+450     return sb.toString();
+451   }
+452   
+453   public char nextChar() {
+454     return next().charAt(0);
+455   }
+456   
+457   public int nextInt() {
+458     if (!hasNext()) {
+459       throw new NoSuchElementException();
+460     }
+461     
+462     int n = 0;
+463     boolean minus = false;
+464     
+465     {
+466       int b = readByte();
+467       if (b == '-') {
+468         minus = true;
+469       } else if ('0' <= b && b <= '9') {
+470         n = b - '0';
+471       } else {
+472         throw new NumberFormatException();
+473       }
+474     }
+475     
+476     while(true){
+477       int b = readByte();
+478       if ('0' <= b && b <= '9') {
+479         n *= 10;
+480         n += b - '0';
+481       } else if (b == -1 || !isPrintableChar(b)) {
+482         return minus ? -n : n;
+483       } else {
+484         throw new NumberFormatException();
+485       }
+486     }
+487   }
+488   
+489   public long nextLong() {
+490     if (!hasNext()) {
+491       throw new NoSuchElementException();
+492     }
+493     
+494     long n = 0;
+495     boolean minus = false;
+496     
+497     {
+498       int b = readByte();
+499       if (b == '-') {
+500         minus = true;
+501       } else if ('0' <= b && b <= '9') {
+502         n = b - '0';
+503       } else {
+504         throw new NumberFormatException();
+505       }
+506     }
+507     
+508     while(true){
+509       int b = readByte();
+510       if ('0' <= b && b <= '9') {
+511         n *= 10;
+512         n += b - '0';
+513       } else if (b == -1 || !isPrintableChar(b)) {
+514         return minus ? -n : n;
+515       } else {
+516         throw new NumberFormatException();
+517       }
+518     }
+519   }
+520   
+521   public double nextDouble() {
+522     return Double.parseDouble(next());
+523   }
+524   
+525   public String[] next(int n) {
+526     String[] array = new String[n];
+527     for (int i = 0; i < n; i++) {
+528       array[i] = next();
+529     }
+530     return array;
+531   }
+532   
+533   public String[] nextLine(int n) {
+534     String[] array = new String[n];
+535     for (int i = 0; i < n; i++) {
+536       array[i] = nextLine();
+537     }
+538     return array;
+539   }
+540   
+541   public char[] nextChar(int n) {
+542     char[] array = new char[n];
+543     for (int i = 0; i < n; i++) {
+544       array[i] = nextChar();
+545     }
+546     return array;
+547   }
+548   
+549   public int[] nextInt(int n) {
+550     int[] array = new int[n];
+551     for (int i = 0; i < n; i++) {
+552       array[i] = nextInt();
+553     }
+554     return array;
+555   }
+556   
+557   public long[] nextLong(int n) {
+558     long[] array = new long[n];
+559     for (int i = 0; i < n; i++) {
+560       array[i] = nextLong();
+561     }
+562     return array;
+563   }
+564   
+565   public double[] nextDouble(int n) {
+566     double[] array = new double[n];
+567     for (int i = 0; i < n; i++) {
+568       array[i] = nextDouble();
+569     }
+570     return array;
+571   }
+572   
+573   public char[] nextCharArray() {
+574     return next().toCharArray();
+575   }
+576   
+577   public String[][] next(int n, int m) {
+578     String[][] matrix = new String[n][m];
+579     for (int i = 0; i < n; i++) {
+580       for (int j = 0; j < m; j++) {
+581         matrix[i][j] = next();
+582       }
+583     }
+584     return matrix;
+585   }
+586   
+587   public int[][] nextInt(int n, int m) {
+588     int[][] matrix = new int[n][m];
+589     for (int i = 0; i < n; i++) {
+590       for (int j = 0; j < m; j++) {
+591         matrix[i][j] = nextInt();
+592       }
+593     }
+594     return matrix;
+595   }
+596   
+597   public char[][] nextChar(int n, int m) {
+598     char[][] matrix = new char[n][m];
+599     for (int i = 0; i < n; i++) {
+600       for (int j = 0; j < m; j++) {
+601         matrix[i][j] = nextChar();
+602       }
+603     }
+604     return matrix;
+605   }
+606   
+607   public long[][] nextLong(int n, int m) {
+608     long[][] matrix = new long[n][m];
+609     for (int i = 0; i < n; i++) {
+610       for (int j = 0; j < m; j++) {
+611         matrix[i][j] = nextLong();
+612       }
+613     }
+614     return matrix;
+615   }
+616   
+617   public double[][] nextDouble(int n, int m) {
+618     double[][] matrix = new double[n][m];
+619     for (int i = 0; i < n; i++) {
+620       for (int j = 0; j < m; j++) {
+621         matrix[i][j] = nextDouble();
+622       }
+623     }
+624     return matrix;
+625   }
+626   
+627   public char[][] nextCharArray(int n) {
+628     char[][] matrix = new char[n][];
+629     for (int i = 0; i < n; i++) {
+630       matrix[i] = next().toCharArray();
+631     }
+632     return matrix;
+633   }
+634 }
+635 
+636 class MyAssert {
+637   public static void myAssert(boolean flag, String message) {
+638     if (!flag) {
+639       throw new RuntimeException(message);
+640     }
+641   }
+642  
+643   public static void myAssert(boolean flag) {
+644     myAssert(flag, "");
+645   }
+646 }

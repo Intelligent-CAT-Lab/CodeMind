@@ -1,0 +1,107 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 public class Main {
+5 
+6 	static final int P = 998244353;
+7 
+8 	HashMap<String, Integer> map = new HashMap<>();
+9 
+10 	int go(String s) {
+11 		if (s.isEmpty()) {
+12 			return 1;
+13 		}
+14 		if (map.containsKey(s)) {
+15 			return map.get(s);
+16 		}
+17 
+18 		long ret = (long) (1 + s.charAt(0) - '0') * go(s.substring(1)) % P;
+19 		for (int x = 1; 2 * x <= s.length(); x++) {
+20 			char[] buf = s.substring(0, x).toCharArray();
+21 			for (int k = 2; x * k <= s.length(); k++) {
+22 				for (int i = 0; i < x; i++) {
+23 					if (s.charAt((k - 1) * x + i) == '0') {
+24 						buf[i] = '0';
+25 					}
+26 				}
+27 				ret += (long) go(new String(buf)) * go(s.substring(k * x)) % P;
+28 			}
+29 		}
+30 
+31 		int iret = (int) (ret % P);
+32 		map.put(s, iret);
+33 		return iret;
+34 	}
+35 
+36 	void submit() {
+37 		String s = nextToken();
+38 		out.println(go(s));
+39 	}
+40 
+41 	void preCalc() {
+42 
+43 	}
+44 
+45 	void stress() {
+46 
+47 	}
+48 
+49 	void test() {
+50 
+51 	}
+52 
+53 	Main() throws IOException {
+54 		br = new BufferedReader(new InputStreamReader(System.in));
+55 		out = new PrintWriter(System.out);
+56 		preCalc();
+57 		submit();
+58 		// stress();
+59 		// test();
+60 		out.close();
+61 	}
+62 
+63 	static final Random rng = new Random();
+64 
+65 	static int rand(int l, int r) {
+66 		return l + rng.nextInt(r - l + 1);
+67 	}
+68 
+69 	public static void main(String[] args) throws IOException {
+70 		new Main();
+71 	}
+72 
+73 	BufferedReader br;
+74 	PrintWriter out;
+75 	StringTokenizer st;
+76 
+77 	String nextToken() {
+78 		while (st == null || !st.hasMoreTokens()) {
+79 			try {
+80 				st = new StringTokenizer(br.readLine());
+81 			} catch (IOException e) {
+82 				throw new RuntimeException(e);
+83 			}
+84 		}
+85 		return st.nextToken();
+86 	}
+87 
+88 	String nextString() {
+89 		try {
+90 			return br.readLine();
+91 		} catch (IOException e) {
+92 			throw new RuntimeException(e);
+93 		}
+94 	}
+95 
+96 	int nextInt() {
+97 		return Integer.parseInt(nextToken());
+98 	}
+99 
+100 	long nextLong() {
+101 		return Long.parseLong(nextToken());
+102 	}
+103 
+104 	double nextDouble() {
+105 		return Double.parseDouble(nextToken());
+106 	}
+107 }

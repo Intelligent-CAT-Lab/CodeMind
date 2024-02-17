@@ -1,0 +1,46 @@
+1 import java.util.*;
+2 
+3 class Main {
+4     static long powerMod(long x, long exponent) {
+5 	long prod = 1;
+6 	for (int i = 63; i >= 0; --i) {
+7 	    prod = (prod * prod) % MOD;
+8 	    if ((exponent & 1L << i) != 0) {
+9 		prod = (prod * x) % MOD;
+10 	    }
+11 	}
+12 	return prod;
+13     }
+14     static int f(int n, int k) {
+15         int t=0;
+16         for(int i=n;i>=1;--i){
+17             t+=(t+i)/i;
+18         }
+19         return t;
+20     }
+21     static final long MOD=1000000007;
+22     public static void main(String[] args) {
+23         Scanner scan = new Scanner(System.in);
+24         int n=scan.nextInt();
+25         int k=scan.nextInt();
+26         int x=0;
+27         int l=f(n,k);
+28         long[][]dp=new long[n+1][l+1];
+29         for(int i=1;i<=n;++i){
+30             long m=powerMod(k+1,i-1);
+31             for(int u=0;u<=l;++u){
+32                 long t=0;
+33                 for(int j=0;j<=Math.min(i,k);++j)
+34                     if(u+(u+j)/i<=l){
+35                         t+=dp[i-1][u+(u+j)/i];
+36                         t+=((u+j)%i)*m%MOD;
+37                         t%=MOD;
+38                     }
+39                 for(int j=Math.min(i,k)+1;j<=k;++j)
+40                     t=(t+dp[i-1][u]+(j+u)*m)%MOD;
+41                 dp[i][u]=t;
+42             }
+43         }
+44         System.out.println(dp[n][0]);
+45     }
+46 }

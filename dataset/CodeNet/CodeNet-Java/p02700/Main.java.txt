@@ -1,0 +1,149 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStreamReader;
+4 
+5 public class Main {
+6 
+7     public static void main(String[] args) {
+8         int []insn = GetInput.getArrayInt();
+9         int a = insn[0];
+10         int b = insn[1];
+11         int c = insn[2];
+12         int d = insn[3];
+13 
+14         int t = c/b;
+15         int tt = c%b;
+16         int y = a/d;
+17         int u = a%d;
+18         while(a >=0|| c>=0){
+19             c = c - b;
+20             if (c <=0){
+21                 System.out.println("Yes");
+22                 return;
+23             }
+24             a = a - d;
+25             if (a<=0){
+26                 System.out.println("No");
+27                 return;
+28             }
+29         }
+30     }
+31 
+32 
+33     private static long ff(long combinationSum) {
+34         return (long) (combinationSum%(Math.pow(10,9)+7));
+35     }
+36 
+37     private static int combinationSum(long n, int[] coins, int l) {
+38         if (n<0){
+39             return -1;
+40         }
+41         if (n==0){
+42             return l;
+43         }
+44 
+45         int coinCount = Integer.MAX_VALUE;
+46         for (int coin : coins) {
+47             int currCoin = combinationSum(n - coin, coins, l+1);
+48             if (currCoin == -1) {
+49                 continue;
+50             }
+51             if (currCoin < coinCount) {
+52                 coinCount = currCoin;
+53             }
+54         }
+55         if (coinCount == Integer.MAX_VALUE){
+56             return -1;
+57         }
+58         return coinCount;
+59     }
+60 }
+61 
+62 class GetInput {
+63     static BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+64 
+65     static char[] getCharArray() {
+66         char[] charArray;
+67         try {
+68             StringBuilder string = getInputString();
+69             charArray = new char[string.length()];
+70             for (int i = 0; i < string.length(); i++) {
+71                 charArray[i] = string.charAt(i);
+72             }
+73             return charArray;
+74         } catch (Exception e) {
+75             e.printStackTrace();
+76         }
+77         charArray = new char[0];
+78         return charArray;
+79     }
+80 
+81     static int[] getArrayInt() {
+82         String[] string;
+83         int[] array;
+84         try {
+85             string = bufferedReader.readLine().split("\\s+");
+86             array = new int[string.length];
+87             for (int i = 0; i < string.length; i++) {
+88                 array[i] = Integer.parseInt(string[i]);
+89             }
+90             return array;
+91         } catch (IOException e) {
+92             e.printStackTrace();
+93         }
+94 
+95         int[] arra = new int[2];
+96         return arra;
+97     }
+98 
+99     static int getInt() {
+100         try {
+101             String string = bufferedReader.readLine();
+102             return Integer.parseInt(string);
+103         } catch (IOException e) {
+104             e.printStackTrace();
+105         }
+106 
+107         return 0;
+108     }
+109 
+110     static StringBuilder getInputString() {
+111         try {
+112             StringBuilder string = new StringBuilder();
+113             string.append(bufferedReader.readLine());
+114             return string;
+115         } catch (IOException e) {
+116             e.printStackTrace();
+117         }
+118         return new StringBuilder();
+119     }
+120 
+121     static long getLongInput() {
+122         try {
+123             String string = bufferedReader.readLine();
+124             return Long.parseLong(string);
+125         } catch (IOException e) {
+126             e.printStackTrace();
+127         }
+128 
+129         return 0;
+130     }
+131 
+132     static long[] getLongArrayInput() {
+133         String[] string;
+134         long[] array;
+135         try {
+136             string = bufferedReader.readLine().split("\\s+");
+137             array = new long[string.length];
+138             for (int i = 0; i < string.length; i++) {
+139                 array[i] = Long.parseLong(string[i]);
+140             }
+141             return array;
+142         } catch (IOException e) {
+143             e.printStackTrace();
+144         }
+145 
+146         long[] arra = new long[2];
+147         return arra;
+148     }
+149 }

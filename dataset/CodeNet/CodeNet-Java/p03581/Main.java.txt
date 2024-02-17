@@ -1,0 +1,169 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 public class Main {
+5     private FastScanner in;
+6     private PrintWriter out;
+7 
+8     void solve() {
+9         final int mod = (int) 1e9 + 7;
+10         final int M = 2222;
+11         int[][] c = new int[M][M];
+12         c[0][0] = 1;
+13         for (int i = 1; i < M; i++) {
+14             c[i][0] = 1;
+15             for (int j = 1; j < M; j++) {
+16                 c[i][j] = c[i - 1][j - 1] + c[i - 1][j];
+17                 if (c[i][j] >= mod) {
+18                     c[i][j] -= mod;
+19                 }
+20             }
+21         }
+22         int[] pow2 = new int[M];
+23         pow2[0] = 1;
+24         for (int i = 1; i < M; i++) {
+25             pow2[i] = pow2[i - 1] + pow2[i - 1];
+26             if (pow2[i] >= mod) {
+27                 pow2[i] -= mod;
+28             }
+29         }
+30         long[][] dp2 = new long[M][M];
+31         for (int x = 0; x < M; x++) {
+32             for (int y = 0; y < M; y++) {
+33                 if (x == 0 || y == 0) {
+34                     dp2[x][y] = 1;
+35                 } else {
+36                     dp2[x][y] = dp2[x - 1][y - 1] + dp2[x][y - 1];
+37                     if (dp2[x][y] >= mod) {
+38                         dp2[x][y] -= mod;
+39                     }
+40                 }
+41             }
+42         }
+43         long[][] dp2Pref = new long[M][M];
+44         for (int x = 0; x < M; x++) {
+45             for (int y = 0; y < M; y++) {
+46                 dp2Pref[x][y] = dp2[x][y];
+47                 if (x > 0) {
+48                     dp2Pref[x][y] += dp2Pref[x - 1][y];
+49                     if (dp2Pref[x][y] >= mod) {
+50                         dp2Pref[x][y] -= mod;
+51                     }
+52                 }
+53             }
+54         }
+55         int[][] dp = new int[M][M];
+56         for (int red = 0; red < M; red++) {
+57             for (int blue = 0; blue < M; blue++) {
+58                 if (red == 0 || blue == 0) {
+59                     dp[red][blue] = 1;
+60                 } else {
+61                     dp[red][blue] += dp2Pref[red][blue - 1];
+62                     if (dp[red][blue] >= mod) {
+63                         dp[red][blue] -= mod;
+64                     }
+65                 }
+66             }
+67         }
+68         long res = 0;
+69         int a = in.nextInt();
+70         int b = in.nextInt();
+71         for (int startRed = 0; startRed <= a; startRed++) {
+72             for (int cntBlue = 1; cntBlue <= b; cntBlue++) {
+73                 int curC = c[b - 1][cntBlue - 1];
+74                 int redStay = a - startRed - (b - cntBlue);
+75                 if (redStay < 0) {
+76                     continue;
+77                 }
+78                 long add = curC * 1L * dp[redStay][b - cntBlue] % mod;
+79                 res += add;
+80             }
+81         }
+82         out.println(res % mod);
+83     }
+84 
+85     private void run() {
+86         try {
+87             in = new FastScanner(new File("Main.in"));
+88             out = new PrintWriter(new File("Main.out"));
+89 
+90             solve();
+91 
+92             out.close();
+93         } catch (FileNotFoundException e) {
+94             e.printStackTrace();
+95         }
+96     }
+97 
+98     private void runIO() {
+99         in = new FastScanner(System.in);
+100         out = new PrintWriter(System.out);
+101 
+102         solve();
+103 
+104         out.close();
+105     }
+106 
+107     private class FastScanner {
+108         BufferedReader br;
+109         StringTokenizer st;
+110 
+111         FastScanner(File f) {
+112             try {
+113                 br = new BufferedReader(new FileReader(f));
+114             } catch (FileNotFoundException e) {
+115                 e.printStackTrace();
+116             }
+117         }
+118 
+119         FastScanner(InputStream f) {
+120             br = new BufferedReader(new InputStreamReader(f));
+121         }
+122 
+123         String next() {
+124             while (st == null || !st.hasMoreTokens()) {
+125                 String s = null;
+126                 try {
+127                     s = br.readLine();
+128                 } catch (IOException e) {
+129                     e.printStackTrace();
+130                 }
+131                 if (s == null)
+132                     return null;
+133                 st = new StringTokenizer(s);
+134             }
+135             return st.nextToken();
+136         }
+137 
+138         boolean hasMoreTokens() {
+139             while (st == null || !st.hasMoreTokens()) {
+140                 String s = null;
+141                 try {
+142                     s = br.readLine();
+143                 } catch (IOException e) {
+144                     e.printStackTrace();
+145                 }
+146                 if (s == null)
+147                     return false;
+148                 st = new StringTokenizer(s);
+149             }
+150             return true;
+151         }
+152 
+153         int nextInt() {
+154             return Integer.parseInt(next());
+155         }
+156 
+157         long nextLong() {
+158             return Long.parseLong(next());
+159         }
+160 
+161         double nextDouble() {
+162             return Double.parseDouble(next());
+163         }
+164     }
+165 
+166     public static void main(String[] args) {
+167         new Main().runIO();
+168     }
+169 }

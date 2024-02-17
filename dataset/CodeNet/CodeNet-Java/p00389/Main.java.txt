@@ -1,0 +1,31 @@
+1 import java.util.Scanner;
+2 
+3 public class Main {
+4     public static void main(String[] args) {
+5         Scanner sc = new Scanner(System.in);
+6         long base = sc.nextLong(), K = sc.nextLong();
+7         long next;
+8         int ans = 1;
+9         while (base >= 1) {
+10             long low = 0, high = base;
+11             while (high - low > 1) {
+12                 long willNext = (low + high) / 2;
+13                 if(willNext <= K*(base - willNext)) {//OK
+14                     low = willNext;
+15                 } else {
+16                     high = willNext;
+17                 }
+18             }
+19             next = low;
+20 
+21             if (next > 0) {
+22                 base = next;
+23                 ans++;
+24             } else {
+25                 break;
+26             }
+27         }
+28         System.out.println(ans);
+29     }
+30 }
+31 

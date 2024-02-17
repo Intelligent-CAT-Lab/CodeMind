@@ -1,0 +1,238 @@
+1 // Utilities
+2 import java.io.*;
+3 import java.util.*;
+4 
+5 public class Main {
+6 	static int N, K;
+7 	static long res = 0;
+8 	static final int MOD = (int)1e9+7;
+9 
+10 	public static void main(String[] args) throws IOException {
+11 		N = in.iscan(); K = in.iscan(); 
+12 		long[] x = new long[K+1];
+13 		for (int i = K; i >= 1; i--) {
+14 			x[i] = UTILITIES.fast_pow_mod(K/i, N, MOD);
+15 			for (int j = i*2; j <= K; j += i) {
+16 				x[i] -= x[j];
+17 				if (x[i] < 0) x[i] += MOD;
+18 			}
+19 			res = (res + i*x[i]%MOD) % MOD;
+20 		}
+21 		out.println(res);
+22 		out.close();
+23 	} 
+24 	
+25 	static INPUT in = new INPUT(System.in);
+26 	static PrintWriter out = new PrintWriter(System.out);
+27 	private static class INPUT {
+28 
+29 		private InputStream stream;
+30 		private byte[] buf = new byte[1024];
+31 		private int curChar, numChars;
+32 
+33 		public INPUT (InputStream stream) {
+34 			this.stream = stream;
+35 		}
+36 
+37 		public INPUT (String file) throws IOException {
+38 			this.stream = new FileInputStream (file);
+39 		}
+40 
+41 		public int cscan () throws IOException {
+42 			if (curChar >= numChars) {
+43 				curChar = 0;
+44 				numChars = stream.read (buf);
+45 			}
+46 			
+47 			if (numChars == -1)
+48 				return numChars;
+49 
+50 			return buf[curChar++];
+51 		}
+52 
+53 		public int iscan () throws IOException {
+54 			int c = cscan (), sgn = 1;
+55 			
+56 			while (space (c))
+57 				c = cscan ();
+58 
+59 			if (c == '-') {
+60 				sgn = -1;
+61 				c = cscan ();
+62 			}
+63 
+64 			int res = 0;
+65 
+66 			do {
+67 				res = (res << 1) + (res << 3);
+68 				res += c - '0';
+69 				c = cscan ();
+70 			}
+71 			while (!space (c));
+72 
+73 			return res * sgn;
+74 		}
+75 
+76 		public String sscan () throws IOException {
+77 			int c = cscan ();
+78 			
+79 			while (space (c))
+80 				c = cscan ();
+81 
+82 			StringBuilder res = new StringBuilder ();
+83 
+84 			do {
+85 				res.appendCodePoint (c);
+86 				c = cscan ();
+87 			}
+88 			while (!space (c));
+89 
+90 			return res.toString ();
+91 		}
+92 
+93 		public double dscan () throws IOException {
+94 			int c = cscan (), sgn = 1;
+95 			
+96 			while (space (c))
+97 				c = cscan ();
+98 
+99 			if (c == '-') {
+100 				sgn = -1;
+101 				c = cscan ();
+102 			}
+103 
+104 			double res = 0;
+105 
+106 			while (!space (c) && c != '.') {
+107 				if (c == 'e' || c == 'E')
+108 					return res * UTILITIES.fast_pow (10, iscan ());
+109 				
+110 				res *= 10;
+111 				res += c - '0';
+112 				c = cscan ();
+113 			}
+114 
+115 			if (c == '.') {
+116 				c = cscan ();
+117 				double m = 1;
+118 
+119 				while (!space (c)) {
+120 					if (c == 'e' || c == 'E')
+121 						return res * UTILITIES.fast_pow (10, iscan ());
+122 
+123 					m /= 10;
+124 					res += (c - '0') * m;
+125 					c = cscan ();
+126 				}
+127 			}
+128 
+129 			return res * sgn;
+130 		}
+131 
+132 		public long lscan () throws IOException {
+133 			int c = cscan (), sgn = 1;
+134 			
+135 			while (space (c))
+136 				c = cscan ();
+137 
+138 			if (c == '-') {
+139 				sgn = -1;
+140 				c = cscan ();
+141 			}
+142 
+143 			long res = 0;
+144 
+145 			do {
+146 				res = (res << 1) + (res << 3);
+147 				res += c - '0';
+148 				c = cscan ();
+149 			}
+150 			while (!space (c));
+151 
+152 			return res * sgn;
+153 		}
+154 
+155 		public boolean space (int c) {
+156 			return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+157 		}
+158 	}
+159 
+160 	public static class UTILITIES {
+161 
+162 		static final double EPS = 10e-6;
+163 
+164 		public static int lower_bound (int[] arr, int x) {
+165 			int low = 0, high = arr.length, mid = -1;
+166 
+167 			while (low < high) {
+168 				mid = (low + high) / 2;
+169 
+170 				if (arr[mid] >= x)
+171 					high = mid;
+172 				else
+173 					low = mid + 1;
+174 			}
+175 
+176 			return low;
+177 		}
+178 
+179 		public static int upper_bound (int[] arr, int x) {
+180 			int low = 0, high = arr.length, mid = -1;
+181 
+182 			while (low < high) {
+183 				mid = (low + high) / 2;
+184 
+185 				if (arr[mid] > x)
+186 					high = mid;
+187 				else
+188 					low = mid + 1;
+189 			}
+190 
+191 			return low;
+192 		}
+193 
+194 		public static int gcd (int a, int b) {
+195 			return b == 0 ? a : gcd (b, a % b);
+196 		}
+197 
+198 		public static int lcm (int a, int b) {
+199 			return a * b / gcd (a, b);
+200 		}
+201 
+202 		public static long fast_pow_mod (long b, long x, int mod) {
+203 			if (x == 0) return 1;
+204 			if (x == 1) return b;
+205 			if (x % 2 == 0) return fast_pow_mod (b * b % mod, x / 2, mod) % mod;
+206 
+207 			return b * fast_pow_mod (b * b % mod, x / 2, mod) % mod;
+208 		}
+209 
+210 		public static int fast_pow (int b, int x) {
+211 			if (x == 0) return 1;
+212 			if (x == 1) return b;
+213 			if (x % 2 == 0) return fast_pow (b * b, x / 2);
+214 
+215 			return b * fast_pow (b * b, x / 2);
+216 		}
+217 
+218 		public static long choose (long n, long k) {
+219 			k = Math.min (k, n - k);
+220 			long val = 1;
+221 
+222 			for (int i = 0; i < k; ++i)
+223 				val = val * (n - i) / (i + 1);
+224 
+225 			return val;
+226 		}
+227 
+228 		public static long permute (int n, int k) {
+229 			if (n < k) return 0;
+230 			long val = 1;
+231 
+232 			for (int i = 0; i < k; ++i)
+233 				val = (val * (n - i));
+234 
+235 			return val;
+236 		}
+237 	}
+238 }

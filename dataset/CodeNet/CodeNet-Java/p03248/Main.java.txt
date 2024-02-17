@@ -1,0 +1,96 @@
+1 import java.util.*;
+2 import java.io.*;
+3  
+4 import static java.lang.Math.*;
+5 import static java.util.Arrays.*;
+6 import static java.util.Collections.*;
+7  
+8 public class Main{
+9     static final long mod=1000000007;
+10     
+11     public  static void main(String[] args)   throws Exception, IOException{
+12         Reader sc = new Reader(System.in);
+13         PrintWriter out=new PrintWriter(System.out);
+14         // int n=sc.nextInt();
+15         // char c[][] = new char[h][w];
+16         // char c[]=sc.nextString().toCharArray();
+17         // int d[]=new int[n];
+18         // for(int i=0; i<n; i++) {d[i]=sc.nextInt();}
+19 
+20         // int n=sc.nextInt();
+21         char c[]=sc.nextString().toCharArray();
+22         int l=c.length;
+23 
+24         if(c[0]=='0' || c[l-1]=='1'){out.println(-1);out.flush();return;}
+25         else {
+26             for (int i=0; i<l/2; i++) {
+27                 if(c[i]!=c[l-i-2]){out.println(-1);out.flush(); return;}
+28             }
+29         }
+30 
+31         out.println(1+" "+2);
+32 
+33         for (int i=3,s=2; i<=l; i++) {
+34             out.println(s+" "+i);
+35             if(c[i-2]=='1'){
+36                 s=i;
+37             }
+38         }
+39 
+40 
+41       
+42         // out.println(ans);
+43         out.flush();
+44     }
+45 
+46 
+47     static void db(Object... os){
+48         System.err.println(Arrays.deepToString(os));
+49     }  
+50 
+51     static long gcd(long a, long b){
+52         if(min(a,b) == 0)return max(a,b);
+53         return gcd(max(a,b) % min(a,b),min(a,b));
+54     }
+55 }
+56 
+57 class P implements Comparable<P>{
+58     int id, d;
+59     P(int  id, int d) {
+60         this.id=id;
+61         this.d=d;
+62     }
+63     public int compareTo(P p){
+64         return d-p.d; //des
+65     }
+66 }
+67 
+68 class Reader
+69 { 
+70     private BufferedReader x;
+71     private StringTokenizer st;
+72     
+73     public Reader(InputStream in)
+74     {
+75         x = new BufferedReader(new InputStreamReader(in));
+76         st = null;
+77     }
+78     public String nextString() throws IOException
+79     {
+80         while( st==null || !st.hasMoreTokens() )
+81             st = new StringTokenizer(x.readLine());
+82         return st.nextToken();
+83     }
+84     public int nextInt() throws IOException
+85     {
+86         return Integer.parseInt(nextString());
+87     }
+88     public long nextLong() throws IOException
+89     {
+90         return Long.parseLong(nextString());
+91     }
+92     public double nextDouble() throws IOException
+93     {
+94         return Double.parseDouble(nextString());
+95     }
+96 }

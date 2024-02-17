@@ -1,0 +1,99 @@
+
+<<<Analysis>>>
+The variable n, variable a and variable b are initialized with 3, 3 and 3 respectively according to the input. And variable sum is initialized with 0.
+It enters a for loop and it iterates from 1 to 3 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [2, 5]. If it does, it adds the current interger i to variable answer. The condition is met when i is 2,3,4,5,11,12,13,14 and 20.
+After the loop finishes, it print the fianl value of variable answer as output, which is 84.
+<<<Output>>>
+84
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+public class Main {
+
+    static int K;
+    static int N;
+    static final int MOD = 998244353;
+
+    public static void main(String[] args) {
+        FastScanner sc = new FastScanner(System.in);
+        K = sc.nextInt();
+        N = sc.nextInt();
+
+        PrintWriter pw = new PrintWriter(System.out);
+        long[] ans = solve();
+        for (int i = 2; i <= 2*K; i++) {
+            pw.println(ans[i]);
+        }
+        pw.flush();
+    }
+
+    static FermatCombination fc;
+    static int ALL_HCOMB;
+    static int[][] COMB;
+
+    static long[] solve() {
+        fc = new FermatCombination(4010, MOD);
+        COMB = new int[4010][4010];
+        for (int[] arr : COMB) {
+            Arrays.fill(arr, -1);
+        }
+
+        long[] ans = new long[2*K+1];
+        for (int i = 2; i <= 2*K; i++) {
+
+            if( i <= K + 1 ) {
+                ans[i] = calc(i);
+
+            } else {
+                ans[i] = ans[(2*(K+1) - i)];
+            }
+        }
+        return ans;
+    }
+
+    static int comb(int n, int k) {
+        if( COMB[n][k]!= -1 ) {
+            return COMB[n][k];
+        }
+
+        int ret = fc.comb(n, k);
+        COMB[n][k] = ret;
+        return ret;
+    }
+
+    static int hcomb(int k, int n) {
+        return comb(k, n);
+    }
+
+    static long calc(int i) {
+        int g;
+        if( i <= K + 1 ) {
+            g = i / 2;
+
+        } else {
+            // (K+1)からの距離が同じ前半のものと同じと考えると
+            // (K+1) - (i - (K+1))
+            g = (2*(K+1) - i) / 2;
+        }
+
+        if( i % 2 == 0 ) {
+            // gのうち一つは (a, a)みたいなやつ
+            // 0と1の場合を両方やる
+            int r = K-(g-1)*2-1;
+            return add(f(N, r, g-1), f(N-1, r, g-1));
+
+        } else {
+            return f(N, K-g*2, g);
+        }
+    }
+
+    static long f(int

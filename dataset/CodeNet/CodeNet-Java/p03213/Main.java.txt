@@ -1,0 +1,98 @@
+1 import java.util.*;
+2 
+3 public class Main {
+4 static ArrayList<int[]> factorization (int n) {
+5     ArrayList<int[]> list = new ArrayList<int[]>();
+6     int tmp= n ;
+7     for (int i=2;i<=Math.sqrt(n);i++) {
+8         if (tmp%i==0) {
+9             int cnt=0;
+10             while (tmp%i==0) {
+11                 cnt++;
+12                 tmp/=i;
+13             }
+14             int[] x = {i, cnt};
+15             list.add(x);
+16         }
+17     }
+18     if (tmp!=1) {
+19         int[] x = {tmp, 1};
+20         list.add(x);
+21     }
+22 
+23     if (list.size()==0) {
+24         int[] x = {n, 1};
+25         list.add(x);
+26     }
+27     return list;
+28 }
+29     static HashMap<Integer, Integer> map;
+30     static void add_map(Integer x, Integer y) {
+31         if (map.containsKey(x)) {
+32             map.put(x, map.get(x)+y);
+33         } else {
+34             map.put(x, y);
+35         }
+36     }
+37     public static void main(String[] args) {
+38         Scanner sc = new Scanner(System.in);
+39         int N = Integer.parseInt(sc.next());
+40         map = new HashMap<Integer, Integer>();
+41         for (int i=2;i<=N;i++) {
+42             ArrayList<int[]> list = factorization(i);
+43             for (int[] array : list) {
+44                 add_map(array[0], array[1]);
+45             }
+46         }
+47         ArrayList<Integer> values = new ArrayList<Integer>(map.values());
+48         Collections.sort(values);
+49         Collections.reverse(values);
+50         int ans = 0;
+51         for (int i=0;i<values.size();i++) {
+52             if (values.get(i)>=74) {
+53                 ans++;
+54             }
+55         }
+56         for (int i=0;i<values.size();i++) {
+57             if (values.get(i)>=24) {
+58                 for (int j=0;j<values.size();j++) {
+59                     if (i==j) {
+60                         continue;
+61                     }
+62                     if (values.get(j)>=2) {
+63                         ans++;
+64                     }
+65                 }
+66             }
+67         }
+68         for (int i=0;i<values.size();i++) {
+69             if (values.get(i)>=14) {
+70                 for (int j=0;j<values.size();j++) {
+71                     if (i==j) {
+72                         continue;
+73                     }
+74                     if (values.get(j)>=4) {
+75                         ans++;
+76                     }
+77                 }
+78             }
+79         }
+80         for (int i=0;i<values.size();i++) {
+81             if (values.get(i)>=4) {
+82                 for (int j=i+1;j<values.size();j++) {
+83                     if (values.get(j)>=4) {
+84                         for (int k=0;k<values.size();k++) {
+85                             if (i==k || j==k) {
+86                                 continue;
+87                             }
+88                             if (values.get(k)>=2) {
+89                                 ans++;
+90                             }
+91                         }
+92                     }
+93                 }
+94             }
+95         }
+96         System.out.println(ans);
+97     }
+98 }

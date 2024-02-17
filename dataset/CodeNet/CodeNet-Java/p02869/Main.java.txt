@@ -1,0 +1,251 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 public class Main {
+5 
+6     static int N, K;
+7 
+8     public static void main(String[] args) {
+9         FastScanner sc = new FastScanner(System.in);
+10         N = sc.nextInt();
+11         K = sc.nextInt();
+12 
+13         int[][] ans = solve();
+14         if( ans != null ) {
+15             PrintWriter pw = new PrintWriter(System.out);
+16             for (int[] each : ans) {
+17                 pw.print(each[0]);
+18                 pw.print(" ");
+19                 pw.print(each[1]);
+20                 pw.print(" ");
+21                 pw.print(each[2]);
+22                 pw.println();
+23             }
+24             pw.flush();
+25         } else {
+26             System.out.println(-1);
+27         }
+28     }
+29 
+30     static int[][] solve() {
+31         // とりあえず平均的に割り振る
+32         int avg = K + K+N+N-1;
+33         int[][] abi = new int[N][3];
+34         for (int i = 0; i < N; i++) {
+35             int a = K+i;
+36             int b = avg - a;
+37             abi[i][0] = a;
+38             abi[i][1] = b;
+39         }
+40 
+41         // a+bが+1ずつされていくように加工する
+42         // N=7(8)の場合 -2, 0, +2, -3, -1, +1, +3 みたいな気持ち
+43         //    (0, 13) (1, 12) (2, 11) (3, 10) (4, 9) (5, 8) (6, 7)
+44         // -> (3, 10) (0, 13) (4, 9) (1, 12) (5, 8) (2, 11) (6, 7)
+45         // -> (3, 7) (0, 11) (4, 8) (1, 12) (5, 9) (2, 13) (6, 10)
+46         // -> 10, 11, 12, 13, 14, 15, 16
+47         int n;
+48         if( N % 2 == 1 ) {
+49             n = N;
+50         } else {
+51             n = N-1;
+52             abi[N-1][2] = Integer.MAX_VALUE;
+53         }
+54 
+55         // debug("n", n);
+56 
+57         if( (n/2)%2 == 0) {
+58             // n=9に対して
+59             // -4 -2 0 2 4
+60             int eve = -(n/2); // n=9に対して-4
+61             int eveTime = n/2+1;
+62             for (int i = 0; i < eveTime; i++) {
+63                 abi[i][2] = eve;
+64                 eve += 2;
+65             }
+66             // -3 -1 1 3
+67             int odd = -(n/2) + 1;
+68             int oddTime = n/2;
+69             for (int i = 0; i < oddTime; i++) {
+70                 abi[i+eveTime][2] = odd;
+71                 odd += 2;
+72             }
+73 
+74         } else {
+75             // n=11にたいして
+76             // -4 -2 0 2 4
+77             int eve = -(n/2) + 1;
+78             int eveTime = n/2;
+79             for (int i = 0; i < eveTime; i++) {
+80                 abi[i][2] = eve;
+81                 eve += 2;
+82             }
+83             // -5 -3 1 1 3 5
+84             int odd = -n/2;
+85             int oddTime = n/2+1;
+86             for (int i = 0; i < oddTime; i++) {
+87                 abi[i+eveTime][2] = odd;
+88                 odd += 2;
+89             }
+90         }
+91 
+92         Arrays.sort(abi, Comparator.comparingInt(a -> a[2]) );
+93         for (int i = 0; i < n; i++) {
+94             abi[i][1] += abi[i][2];
+95         }
+96 
+97         int[][] ans = new int[N][3];
+98         for (int i = 0; i < N; i++) {
+99             int c = K+N+N+i;
+100             ans[i][0] = abi[i][0];
+101             ans[i][1] = abi[i][1];
+102             ans[i][2] = c;
+103         }
+104 
+105         // debug(ans);
+106 
+107         // 全部満たしていたらok
+108         for (int i = 0; i < N; i++) {
+109             if( ans[i][0] + ans[i][1] > ans[i][2] ) {
+110                 return null;
+111             }
+112         }
+113         return ans;
+114     }
+115 
+116     @SuppressWarnings("unused")
+117     static class FastScanner {
+118         private BufferedReader reader;
+119         private StringTokenizer tokenizer;
+120 
+121         FastScanner(InputStream in) {
+122             reader = new BufferedReader(new InputStreamReader(in));
+123             tokenizer = null;
+124         }
+125 
+126         String next() {
+127             if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+128                 try {
+129                     tokenizer = new StringTokenizer(reader.readLine());
+130                 } catch (IOException e) {
+131                     throw new RuntimeException(e);
+132                 }
+133             }
+134             return tokenizer.nextToken();
+135         }
+136 
+137         String nextLine() {
+138             if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+139                 try {
+140                     return reader.readLine();
+141                 } catch (IOException e) {
+142                     throw new RuntimeException(e);
+143                 }
+144             }
+145             return tokenizer.nextToken("\n");
+146         }
+147 
+148         long nextLong() {
+149             return Long.parseLong(next());
+150         }
+151 
+152         int nextInt() {
+153             return Integer.parseInt(next());
+154         }
+155 
+156         int[] nextIntArray(int n) {
+157             int[] a = new int[n];
+158             for (int i = 0; i < n; i++) a[i] = nextInt();
+159             return a;
+160         }
+161 
+162         int[] nextIntArray(int n, int delta) {
+163             int[] a = new int[n];
+164             for (int i = 0; i < n; i++) a[i] = nextInt() + delta;
+165             return a;
+166         }
+167 
+168         long[] nextLongArray(int n) {
+169             long[] a = new long[n];
+170             for (int i = 0; i < n; i++) a[i] = nextLong();
+171             return a;
+172         }
+173     }
+174 
+175     static void writeLines(int[] as) {
+176         PrintWriter pw = new PrintWriter(System.out);
+177         for (int a : as) pw.println(a);
+178         pw.flush();
+179     }
+180 
+181     static void writeLines(long[] as) {
+182         PrintWriter pw = new PrintWriter(System.out);
+183         for (long a : as) pw.println(a);
+184         pw.flush();
+185     }
+186 
+187     static void writeSingleLine(int[] as) {
+188         PrintWriter pw = new PrintWriter(System.out);
+189         for (int i = 0; i < as.length; i++) {
+190             if (i != 0) pw.print(" ");
+191             pw.print(as[i]);
+192         }
+193         pw.println();
+194         pw.flush();
+195     }
+196 
+197     static int max(int... as) {
+198         int max = Integer.MIN_VALUE;
+199         for (int a : as) max = Math.max(a, max);
+200         return max;
+201     }
+202 
+203     static int min(int... as) {
+204         int min = Integer.MAX_VALUE;
+205         for (int a : as) min = Math.min(a, min);
+206         return min;
+207     }
+208 
+209     static void debug(Object... args) {
+210         StringJoiner j = new StringJoiner(" ");
+211         for (Object arg : args) {
+212             if (arg == null) j.add("null");
+213             else if (arg instanceof int[]) j.add(Arrays.toString((int[]) arg));
+214             else if (arg instanceof long[]) j.add(Arrays.toString((long[]) arg));
+215             else if (arg instanceof double[]) j.add(Arrays.toString((double[]) arg));
+216             else if (arg instanceof Object[]) j.add(Arrays.toString((Object[]) arg));
+217             else j.add(arg.toString());
+218         }
+219         System.err.println(j.toString());
+220     }
+221 
+222     static void printSingleLine(int[] array) {
+223         PrintWriter pw = new PrintWriter(System.out);
+224         for (int i = 0; i < array.length; i++) {
+225             if (i != 0) pw.print(" ");
+226             pw.print(array[i]);
+227         }
+228         pw.println();
+229         pw.flush();
+230     }
+231 
+232     static int lowerBound(int[] array, int value) {
+233         int lo = 0, hi = array.length, mid;
+234         while (lo < hi) {
+235             mid = (hi + lo) / 2;
+236             if (array[mid] < value) lo = mid + 1;
+237             else hi = mid;
+238         }
+239         return lo;
+240     }
+241 
+242     static int upperBound(int[] array, int value) {
+243         int lo = 0, hi = array.length, mid;
+244         while (lo < hi) {
+245             mid = (hi + lo) / 2;
+246             if (array[mid] <= value) lo = mid + 1;
+247             else hi = mid;
+248         }
+249         return lo;
+250     }
+251 }

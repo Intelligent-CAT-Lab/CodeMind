@@ -1,0 +1,281 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.OutputStream;
+4 import java.io.PrintWriter;
+5 import java.util.*;
+6 
+7 /*
+8                    _ooOoo_
+9                   o8888888o
+10                   88" . "88
+11                   (| -_- |)
+12                   O\  =  /O
+13                ____/`---'\____
+14              .'  \\|     |//  `.
+15             /  \\|||  :  |||//  \
+16            /  _||||| -:- |||||-  \
+17            |   | \\\  -  /// |   |
+18            | \_|  ''\---/''  |   |
+19            \  .-\__  `-`  ___/-. /
+20          ___`. .'  /--.--\  `. . __
+21       ."" '<  `.___\_<|>_/___.'  >'"".
+22      | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+23      \  \ `-.   \_ __\ /__ _/   .-` /  /
+24 ======`-.____`-.___\_____/___.-`____.-'======
+25                    `=---='
+26 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+27             pass System Test!
+28 */
+29 @SuppressWarnings("unchecked")
+30 public class Main {
+31   private static class Task {
+32 
+33     void solve(FastScanner in, PrintWriter out) throws Exception {
+34       char[] S = in.next().toCharArray();
+35       int N = S.length;
+36       ArrayDeque<Integer>[] pos = new ArrayDeque[26];
+37       for (int i = 0; i < 26; i++) pos[i] = new ArrayDeque<>();
+38 
+39       for (int i = 0; i < N; i++) {
+40         pos[S[i] - 'a'].add(i);
+41       }
+42 
+43       for (ArrayDeque<Integer> p : pos)
+44         if (p.size() % 2 != 0) {
+45           out.println(-1);
+46           return;
+47         }
+48 
+49       ArrayList<int[]> prefixList = new ArrayList<>();
+50       ArrayList<int[]> suffixList = new ArrayList<>();
+51       for (int i = 0; i < 26; i++) {
+52         int s = pos[i].size();
+53         for (int j = 0; j < s / 2; j++) {
+54           prefixList.add(new int[]{i, pos[i].pollFirst()});
+55         }
+56         for (int j = 0; j < s / 2; j++) {
+57           suffixList.add(new int[]{i, pos[i].pollFirst()});
+58         }
+59       }
+60       Collections.sort(prefixList, (o1, o2) -> Integer.compare(o1[1], o2[1]));
+61       Collections.reverse(prefixList);
+62       Collections.sort(suffixList, (o1, o2) -> Integer.compare(o1[1], o2[1]));
+63 
+64       long ans = 0;
+65       for (int i = 0; i < prefixList.size(); i++) ans += prefixList.get(i)[1] - i;
+66 
+67       int[] prefix = new int[N / 2];
+68       for (int i = 0; i < N / 2; i++) prefix[i] = prefixList.get(i)[0];
+69 
+70       for (int i = 0; i < suffixList.size(); i++) {
+71         pos[suffixList.get(i)[0]].addLast(i);
+72       }
+73       int[] suffix = new int[N / 2];
+74       for (int i = 0; i < N / 2; i++) {
+75         suffix[i] = pos[prefix[i]].pollFirst();
+76       }
+77 
+78       FenwickTree bit = new FenwickTree(N);
+79       for (int i = 0; i < N / 2; i++) {
+80         ans += i - bit.sum(suffix[i]);
+81         bit.add(suffix[i], 1);
+82       }
+83       out.println(ans);
+84     }
+85     class FenwickTree {
+86       int N;
+87       long[] data;
+88 
+89       FenwickTree(int N) {
+90         this.N = N + 1;
+91         data = new long[N + 1];
+92       }
+93 
+94       void add(int k, long val) {
+95         for (int x = k; x < N; x |= x + 1) {
+96           data[x] += val;
+97         }
+98       }
+99 
+100       // [0, k)
+101       long sum(int k) {
+102         if (k >= N) k = N - 1;
+103         int ret = 0;
+104         for (int x = k - 1; x >= 0; x = (x & (x + 1)) - 1) {
+105           ret += data[x];
+106         }
+107         return ret;
+108       }
+109 
+110       // [l, r)
+111       long sum(int l, int r) {
+112         return sum(r) - sum(l);
+113       }
+114 
+115       long get(int k) {
+116         assert (0 <= k && k < N);
+117         return sum(k + 1) - sum(k);
+118       }
+119 
+120       int getAsSetOf(int w) {
+121         w++;
+122         if (w <= 0) return -1;
+123         int x = 0;
+124         int k = 1;
+125         while (k * 2 <= N) k *= 2;
+126         for (; k > 0; k /= 2) {
+127           if (x + k <= N && data[x + k - 1] < w) {
+128             w -= data[x + k - 1];
+129             x += k;
+130           }
+131         }
+132         return x;
+133       }
+134     }
+135   }
+136 
+137   /**
+138    * ?????????????????????????????¬????????§??????
+139    */
+140   public static void main(String[] args) throws Exception {
+141     OutputStream outputStream = System.out;
+142     FastScanner in = new FastScanner();
+143     PrintWriter out = new PrintWriter(outputStream);
+144     Task solver = new Task();
+145     solver.solve(in, out);
+146     out.close();
+147   }
+148   private static class FastScanner {
+149     private final InputStream in = System.in;
+150     private final byte[] buffer = new byte[1024];
+151     private int ptr = 0;
+152     private int bufferLength = 0;
+153 
+154     private boolean hasNextByte() {
+155       if (ptr < bufferLength) {
+156         return true;
+157       } else {
+158         ptr = 0;
+159         try {
+160           bufferLength = in.read(buffer);
+161         } catch (IOException e) {
+162           e.printStackTrace();
+163         }
+164         if (bufferLength <= 0) {
+165           return false;
+166         }
+167       }
+168       return true;
+169     }
+170 
+171     private int readByte() {
+172       if (hasNextByte()) return buffer[ptr++];
+173       else return -1;
+174     }
+175 
+176     private static boolean isPrintableChar(int c) {
+177       return 33 <= c && c <= 126;
+178     }
+179 
+180     private void skipUnprintable() {
+181       while (hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++;
+182     }
+183 
+184     boolean hasNext() {
+185       skipUnprintable();
+186       return hasNextByte();
+187     }
+188 
+189     public String next() {
+190       if (!hasNext()) throw new NoSuchElementException();
+191       StringBuilder sb = new StringBuilder();
+192       int b = readByte();
+193       while (isPrintableChar(b)) {
+194         sb.appendCodePoint(b);
+195         b = readByte();
+196       }
+197       return sb.toString();
+198     }
+199 
+200     long nextLong() {
+201       if (!hasNext()) throw new NoSuchElementException();
+202       long n = 0;
+203       boolean minus = false;
+204       int b = readByte();
+205       if (b == '-') {
+206         minus = true;
+207         b = readByte();
+208       }
+209       if (b < '0' || '9' < b) {
+210         throw new NumberFormatException();
+211       }
+212       while (true) {
+213         if ('0' <= b && b <= '9') {
+214           n *= 10;
+215           n += b - '0';
+216         } else if (b == -1 || !isPrintableChar(b)) {
+217           return minus ? -n : n;
+218         } else {
+219           throw new NumberFormatException();
+220         }
+221         b = readByte();
+222       }
+223     }
+224 
+225     double nextDouble() {
+226       return Double.parseDouble(next());
+227     }
+228 
+229     double[] nextDoubleArray(int n) {
+230       double[] array = new double[n];
+231       for (int i = 0; i < n; i++) {
+232         array[i] = nextDouble();
+233       }
+234       return array;
+235     }
+236 
+237     double[][] nextDoubleMap(int n, int m) {
+238       double[][] map = new double[n][];
+239       for (int i = 0; i < n; i++) {
+240         map[i] = nextDoubleArray(m);
+241       }
+242       return map;
+243     }
+244 
+245     public int nextInt() {
+246       return (int) nextLong();
+247     }
+248 
+249     public int[] nextIntArray(int n) {
+250       int[] array = new int[n];
+251       for (int i = 0; i < n; i++) array[i] = nextInt();
+252       return array;
+253     }
+254 
+255     public long[] nextLongArray(int n) {
+256       long[] array = new long[n];
+257       for (int i = 0; i < n; i++) array[i] = nextLong();
+258       return array;
+259     }
+260 
+261     public String[] nextStringArray(int n) {
+262       String[] array = new String[n];
+263       for (int i = 0; i < n; i++) array[i] = next();
+264       return array;
+265     }
+266 
+267     public char[][] nextCharMap(int n) {
+268       char[][] array = new char[n][];
+269       for (int i = 0; i < n; i++) array[i] = next().toCharArray();
+270       return array;
+271     }
+272 
+273     public int[][] nextIntMap(int n, int m) {
+274       int[][] map = new int[n][];
+275       for (int i = 0; i < n; i++) {
+276         map[i] = nextIntArray(m);
+277       }
+278       return map;
+279     }
+280   }
+281 }

@@ -1,0 +1,250 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStreamReader;
+4 import java.util.ArrayDeque;
+5 import java.util.ArrayList;
+6 import java.util.Deque;
+7 import java.util.List;
+8 
+9 import static java.lang.Integer.parseInt;
+10 
+11 /**
+12  * Unordered Operators
+13  */
+14 public class Main {
+15 
+16 	static Main main;
+17 	static int[][] PRI;
+18 	static final int[][] _PRI = {
+19 			{1, 2, 3},
+20 			{1, 3, 2},
+21 			{2, 1, 3},
+22 			{2, 3, 1},
+23 			{3, 1, 2},
+24 			{3, 2, 1},
+25 			//
+26 			{1, 1, 2},
+27 			{1, 2, 1},
+28 			{2, 1, 1},
+29 			//
+30 			{2, 2, 1},
+31 			{2, 1, 2},
+32 			{1, 2, 2},
+33 			//
+34 			{2, 2, 2},
+35 	};
+36 
+37 	//priority list
+38 	{
+39 		PRI = new int[_PRI.length][128];
+40 		for (int i = 0; i < PRI.length; i++) {
+41 			PRI[i]['('] = 5;
+42 			PRI[i][127] = 4;
+43 			PRI[i]['+'] = _PRI[i][0];
+44 			PRI[i]['-'] = _PRI[i][1];
+45 			PRI[i]['*'] = _PRI[i][2];
+46 			PRI[i][')'] = 0;
+47 			PRI[i]['\0'] = -1;
+48 		}
+49 	}
+50 
+51 	public static void main(String[] args) throws IOException {
+52 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+53 		String line;
+54 		String[] words;
+55 
+56 		main = new Main();
+57 
+58 		//parse
+59 		line = br.readLine();
+60 		words = line.split("(?<!\\d)|(?!\\d)");
+61 		List<Elm> expr = new ArrayList<>();
+62 
+63 		for (String word : words) {
+64 			char c = word.charAt(0);
+65 			switch (c) {
+66 				case '(':
+67 					expr.add(main.new Lp());
+68 					break;
+69 				case ')':
+70 					expr.add(main.new Rp());
+71 					break;
+72 				case '+':
+73 					expr.add(main.new Add());
+74 					break;
+75 				case '-':
+76 					expr.add(main.new Subtract());
+77 					break;
+78 				case '*':
+79 					expr.add(main.new Multiply());
+80 					break;
+81 				default:
+82 					expr.add(main.new Num(parseInt(word)));
+83 			}
+84 		}
+85 
+86 		//solve
+87 		long max = Long.MIN_VALUE;
+88 		for (int i = 0; i < PRI.length; i++) {
+89 			//toString(expr);
+90 			max = Math.max(max, eval(postfix(expr, PRI[i])));
+91 		}
+92 		System.out.println(max);
+93 	}
+94 
+95 	static List<Elm> postfix(List<Elm> expr, int[] pri) {
+96 		Deque<Elm> stack = new ArrayDeque<>();
+97 		List<Elm> list = new ArrayList<>();
+98 
+99 		stack.push(main.new Nop());
+100 		for (Elm e : expr) {
+101 			int p1, p2;
+102 			p1 = pri[stack.peek().pri()];
+103 			p2 = pri[e.pri()];
+104 			while (p2 <= p1 && !(stack.peek() instanceof Lp)) {
+105 				list.add(stack.pop());
+106 				p1 = pri[stack.peek().pri()];
+107 			}
+108 			if (!(e instanceof Rp)) {
+109 				stack.push(e);
+110 			} else {
+111 				//remove '('
+112 				stack.pop();
+113 			}
+114 		}
+115 		while (!(stack.peek() instanceof Nop)) {
+116 			list.add(stack.pop());
+117 		}
+118 		return list;
+119 	}
+120 
+121 	static long eval(List<Elm> expr) {
+122 		Deque<Long> stack = new ArrayDeque<>();
+123 
+124 //		toString(expr);
+125 
+126 		for (Elm e : expr) {
+127 			if (e instanceof Op) {
+128 				long a, b;
+129 				b = stack.pop();
+130 				a = stack.pop();
+131 				stack.push(((Op) e).operate(a, b));
+132 			} else {
+133 				stack.push(((Num) e).value);
+134 			}
+135 		}
+136 		return stack.pop();
+137 	}
+138 
+139 //	static void toString(List<Elm> expr) {
+140 //		for (Elm e : expr) {
+141 //			if (e instanceof Op) {
+142 //				System.out.print((char) e.pri());
+143 //			} else {
+144 //				System.out.print(((Num) e).value);
+145 //			}
+146 //			System.out.print(' ');
+147 //		}
+148 //		System.out.println();
+149 //	}
+150 
+151 	//
+152 	interface Elm {
+153 		int pri();
+154 	}
+155 
+156 	interface Op extends Elm {
+157 		long operate(long a, long b);
+158 	}
+159 
+160 	class Lp implements Op {
+161 
+162 		@Override
+163 		public long operate(long a, long b) {
+164 			return 0;
+165 		}
+166 
+167 		@Override
+168 		public int pri() {
+169 			return '(';
+170 		}
+171 	}
+172 
+173 	class Rp implements Op {
+174 
+175 		@Override
+176 		public long operate(long a, long b) {
+177 			return 0;
+178 		}
+179 
+180 		@Override
+181 		public int pri() {
+182 			return ')';
+183 		}
+184 	}
+185 
+186 	class Add implements Op {
+187 
+188 		@Override
+189 		public long operate(long a, long b) {
+190 			return a + b;
+191 		}
+192 
+193 		@Override
+194 		public int pri() {
+195 			return '+';
+196 		}
+197 	}
+198 
+199 	class Subtract implements Op {
+200 
+201 		@Override
+202 		public long operate(long a, long b) {
+203 			return a - b;
+204 		}
+205 
+206 		@Override
+207 		public int pri() {
+208 			return '-';
+209 		}
+210 	}
+211 
+212 	class Multiply implements Op {
+213 
+214 		@Override
+215 		public long operate(long a, long b) {
+216 			return a * b;
+217 		}
+218 
+219 		@Override
+220 		public int pri() {
+221 			return '*';
+222 		}
+223 	}
+224 
+225 	class Nop implements Op {
+226 
+227 		@Override
+228 		public long operate(long a, long b) {
+229 			return 0;
+230 		}
+231 
+232 		@Override
+233 		public int pri() {
+234 			return 0;
+235 		}
+236 	}
+237 
+238 	class Num implements Elm {
+239 		long value;
+240 
+241 		Num(long value) {
+242 			this.value = value;
+243 		}
+244 
+245 		@Override
+246 		public int pri() {
+247 			return 127;
+248 		}
+249 	}
+250 }

@@ -1,0 +1,97 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the states of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6\t public static void main(String[] args) {\n7\t\t try {\n8\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nWhat would be the states of variables given the following input:\n20 2 5\n\nQuestion:\nPrint all the states of variable answer in line 15 and end your response with \"END-OF-STATE\":\nAnswer:\n0\nEND-OF-STATE\n\n\nQuestion:\nPrint all the states of variable i in line 17 and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nPrint all the states of variable i in line 27 and end your response with \"END-OF-STATE\":\nAnswer:\n2\n3\n4\n5\n11\n12\n13\n14\n20\nEND-OF-STATE\n\n\n\nQuestion:\nPrint all the states of variable answer in line 27 and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.IOException;\n3 import java.io.InputStreamReader;\n4 import java.util.Iterator;\n5 import java.util.Stack;\n6 \n7 public class Main {\n8 \n9 \tpublic static void main(String[] args) throws IOException {\n10 \t\t\n11 \t\tBufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\t\t\n12 \t\tString profile = reader.readLine();\n13 \t\t\n14 \t\tStack<Integer> stackDown = new Stack<Integer>();\n15 \t\tStack<Integer> stackArea = new Stack<Integer>();\n16 \t\tStack<Integer> stackEdge = new Stack<Integer>();\n17 \t\tint totalArea = 0;\n18 \t\tint pos = 0;\n19 \t\tint lv = 0;\n20 \t\t\n21 \t\tfor (char c : profile.toCharArray()) {\n22 \t\t\tif (c == '\\\\') {\n23 \t\t\t\tlv--;\n24 \t\t\t\tstackDown.push(pos);\n25 \t\t\t} else if (c == '/') {\n26 \t\t\t\tlv++;\n27 \t\t\t\tif (!stackDown.empty()) {\n28 \t\t\t\t\tint start = stackDown.pop();\n29 \t\t\t\t\tint tempArea = pos - start;\n30 \t\t\t\t\ttotalArea += tempArea;\n31 \t\t\t\t\tif (stackArea.empty()) {\n32 \t\t\t\t\t\tstackArea.push(tempArea);\n33 \t\t\t\t\t\tstackEdge.push(lv);\n34 \t\t\t\t\t} else {\n35 \t\t\t\t\t\tint lastArea = 0;\n36 \t\t\t\t\t\twhile (!stackEdge.empty() && stackEdge.peek() < lv) {\n37 \t\t\t\t\t\t\tlastArea += stackArea.pop();\n38 \t\t\t\t\t\t\tstackEdge.pop();\n39 \t\t\t\t\t\t}\n40 \t\t\t\t\t\tstackArea.push(lastArea + tempArea);\n41 \t\t\t\t\t\tstackEdge.push(lv);\n42 \t\t\t\t\t}\n43 \t\t\t\t} else {\n44 \t\t\t\t\tif (!stackArea.empty()) {\n45 \t\t\t\t\t\tstackEdge.pop();\n46 \t\t\t\t\t\tstackEdge.push(lv);\n47 \t\t\t\t\t}\n48 \t\t\t\t}\n49 \t\t\t}\n50 \t\t\tpos++;\n51 \t\t}\n52 \n53 \t\tSystem.out.println(totalArea);\n54 \t\tSystem.out.print(stackArea.size());\n55 \t\tif (stackArea.size() != 0) {\n56 \t\t\tSystem.out.print(\" \");\n57 \t\t}\n58 \t\tIterator<Integer> itr = stackArea.iterator();\n59 \t\twhile (itr.hasNext()) {\n60 \t\t\tSystem.out.print(itr.next());\n61 \t\t\tif (itr.hasNext()) {\n62 \t\t\t\tSystem.out.print(\" \");\n63 \t\t\t}\n64 \t\t}\n65 \t\tSystem.out.println(\"\");\n66 \t}\n67 }\n68 \n\nGiven the following input:\n\\\\//\n\n\nQuestion:\nWhat would be the states of variable totalArea in line 17? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "totalArea",
+        "line": 17
+    },
+    "2": {
+        "prompt": "Question:\nWhat would be the states of variable pos in line 18? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0"
+        ],
+        "variable": "pos",
+        "line": 18
+    },
+    "3": {
+        "prompt": "Question:\nWhat would be the states of variable pos in line 50? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1",
+            "2",
+            "3",
+            "4"
+        ],
+        "variable": "pos",
+        "line": 50
+    },
+    "4": {
+        "prompt": "Question:\nWhat would be the states of variable start in line 28? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1",
+            "0"
+        ],
+        "variable": "start",
+        "line": 28
+    },
+    "5": {
+        "prompt": "Question:\nWhat would be the states of variable start in line 29? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1",
+            "0"
+        ],
+        "variable": "start",
+        "line": 29
+    },
+    "6": {
+        "prompt": "Question:\nWhat would be the states of variable tempArea in line 29? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1",
+            "3"
+        ],
+        "variable": "tempArea",
+        "line": 29
+    },
+    "7": {
+        "prompt": "Question:\nWhat would be the states of variable pos in line 29? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2",
+            "3"
+        ],
+        "variable": "pos",
+        "line": 29
+    },
+    "8": {
+        "prompt": "Question:\nWhat would be the states of variable tempArea in line 30? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1",
+            "3"
+        ],
+        "variable": "tempArea",
+        "line": 30
+    },
+    "9": {
+        "prompt": "Question:\nWhat would be the states of variable totalArea in line 30? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1",
+            "4"
+        ],
+        "variable": "totalArea",
+        "line": 30
+    },
+    "10": {
+        "prompt": "Question:\nWhat would be the states of variable totalArea in line 53? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "4"
+        ],
+        "variable": "totalArea",
+        "line": 53
+    }
+}

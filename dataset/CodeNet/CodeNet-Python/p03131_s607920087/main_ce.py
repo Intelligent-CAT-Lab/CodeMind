@@ -1,0 +1,6 @@
+k,a,b=map(int,"4 2 6".split())
+kk=k
+k-=a-1
+ko=k//2
+#print(ko)
+print(max(ko*(b-a)+a+k%2,kk+1))

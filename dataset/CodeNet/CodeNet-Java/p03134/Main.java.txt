@@ -1,0 +1,108 @@
+1 //package com.company;
+2 
+3 import java.io.*;
+4 import java.util.*;
+5 
+6 
+7 public class Main {
+8     public static class Task {
+9         int mod = 998244353;
+10         public void solve(Scanner sc, PrintWriter pw) throws IOException {
+11             char[] cc = sc.next().toCharArray();
+12             int n = cc.length;
+13             int r = 0, b = 0;
+14             long[][] dp = new long[n + 1][n + 1];
+15             dp[0][0] = 1;
+16             for (int i = 0; i < n; i++) {
+17                 if (cc[i] == '0') {
+18                     r += 2;
+19                 } else if (cc[i] == '1') {
+20                     r += 1;
+21                     b += 1;
+22                 } else {
+23                     b += 2;
+24                 }
+25                 for (int prevUseRed = 0; prevUseRed <= i; prevUseRed++) {
+26                     if (prevUseRed + 1 <= r) {
+27                         dp[i + 1][prevUseRed + 1] += dp[i][prevUseRed];
+28                         dp[i + 1][prevUseRed + 1] %= mod;
+29                     }
+30                     int prevUseBlue = i - prevUseRed;
+31                     if (prevUseBlue + 1 <= b) {
+32                         dp[i + 1][prevUseRed] += dp[i][prevUseRed];
+33                         dp[i + 1][prevUseRed] %= mod;
+34                     }
+35                 }
+36             }
+37             long[][] combin = new long[n + 1][n + 1];
+38             for (int i = 0; i <= n; i++) {
+39                 combin[i][0] = combin[i][i] = 1;
+40             }
+41             for (int i = 2; i <= n; i++) {
+42                 for (int j = 1; j < i; j++) {
+43                     combin[i][j] = (combin[i - 1][j - 1] + combin[i - 1][j]) % mod;
+44                 }
+45             }
+46             long tto = 0;
+47             for (int i = 0; i <= Math.min(r, n); i++) {
+48                 long ways = dp[n][i];
+49                 int lr = r - i;
+50                 int lb = b - (n - i);
+51                 if (lb < 0) continue;
+52                 ways *= combin[n][lr];
+53                 ways %= mod;
+54                 tto = (tto + ways) % mod;
+55             }
+56             pw.println(tto);
+57 
+58         }
+59 
+60     }
+61 
+62     private static long TIME_START, TIME_END;
+63     public static void main(String[] args) throws IOException {
+64         Scanner sc = new Scanner(System.in);
+65 //        Scanner sc = new Scanner(new FileInputStream("23.in"));
+66         PrintWriter pw = new PrintWriter(new BufferedOutputStream(System.out));
+67 //        PrintWriter pw = new PrintWriter(new FileOutputStream("froggy.out"));
+68 
+69 
+70 //        PrintWriter pw = new PrintWriter(new FileOutputStream("Test.in"));
+71         Runtime runtime = Runtime.getRuntime();
+72         long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
+73         TIME_START = System.currentTimeMillis();
+74         Task t = new Task();
+75         t.solve(sc, pw);
+76         TIME_END = System.currentTimeMillis();
+77         long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
+78         pw.close();
+79         System.out.println("Memory increased:" + (usedMemoryAfter-usedMemoryBefore) / 1000000 );
+80         System.out.println("Time used: " + (TIME_END - TIME_START) + ".");
+81     }
+82 
+83     static class Scanner {
+84         StringTokenizer st;
+85         BufferedReader br;
+86 
+87         public Scanner(InputStream s){  br = new BufferedReader(new InputStreamReader(s));}
+88 
+89         public Scanner(FileReader s) throws FileNotFoundException {br = new BufferedReader(s);}
+90 
+91         public String next() throws IOException
+92         {
+93             while (st == null || !st.hasMoreTokens())
+94                 st = new StringTokenizer(br.readLine());
+95             return st.nextToken();
+96         }
+97 
+98         public int nextInt() throws IOException {return Integer.parseInt(next());}
+99 
+100         public long nextLong() throws IOException {return Long.parseLong(next());}
+101 
+102         public String nextLine() throws IOException {return br.readLine();}
+103 
+104         public double nextDouble() throws IOException { return Double.parseDouble(next()); }
+105 
+106         public boolean ready() throws IOException {return br.ready();}
+107     }
+108 }

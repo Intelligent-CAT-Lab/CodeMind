@@ -1,0 +1,104 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStreamReader;
+4 import java.io.PrintWriter;
+5 import java.util.Arrays;
+6 import java.util.StringTokenizer;
+7 
+8 public class Main {
+9 	
+10 	static final long MOD = 1000000007;
+11 	static long[][] table;
+12 	static long[][] table2;
+13 	static int N, M;
+14 	static long[] pot2, invPot2;
+15 	
+16 	static long calc(int rem, int bits) {
+17 		long ret = table[rem][bits];
+18 		if (ret != -1) return ret;
+19 		if (bits == 1) return table[rem][bits] = pot2[rem];
+20 		ret = (calc2(rem - 1, bits - 1) * pot2[rem]) % MOD;
+21 		ret += (rem + 1) * calc(rem, bits - 1);
+22 		ret %= MOD;
+23 		return table[rem][bits] = ret;
+24 	}
+25 	
+26 	static long calc2(int rem, int bits) {
+27 		long ret = table2[rem][bits];
+28 		if (ret != -1) return ret;
+29 		if (rem == 0) return table2[rem][bits] = 0;
+30 		ret = calc2(rem - 1, bits);
+31 		long tmp = (rem * calc(rem, bits)) % MOD;
+32 		tmp = (tmp * invPot2[rem + 1]) % MOD;
+33 		ret = (ret + tmp) % MOD;
+34 		return table2[rem][bits] = ret;
+35 	}
+36 	
+37 	static long eleva(long a, int e) {
+38 		if (e == 0) return 1;
+39 		long ret = eleva(a, e / 2);
+40 		ret = (ret * ret) % MOD;
+41 		if (e % 2 == 1) {
+42 			ret = (ret * a) % MOD;
+43 		}
+44 		return ret;
+45 	}
+46 	
+47 	static long inv(long a) {
+48 		return eleva(a, (int)MOD - 2);
+49 	}
+50 	
+51 	public static void main(String[] args) throws IOException {
+52 		MyScanner sc = new MyScanner();
+53 		PrintWriter out = new PrintWriter(System.out);
+54 		N = sc.nextInt();
+55 		M = sc.nextInt();
+56 		pot2 = new long[M + 1];
+57 		invPot2 = new long[M + 1];
+58 		pot2[0] = 1;
+59 		for (int i = 1; i < pot2.length; i++) {
+60 			pot2[i] = (pot2[i-1] * 2) % MOD;
+61 		}
+62 		invPot2[pot2.length - 1] = inv(pot2[pot2.length - 1]);
+63 		for (int i = pot2.length - 2; i >= 0; i--) {
+64 			invPot2[i] = (invPot2[i+1] * 2) % MOD;
+65 		}
+66 		table = new long[M+1][N+1];
+67 		table2 = new long[M+1][N+1];
+68 		for (int i = 0; i < table.length; i++) {
+69 			Arrays.fill(table[i], -1);
+70 			Arrays.fill(table2[i], -1);
+71 		}
+72 		out.println(calc(M, N));
+73 		
+74 		out.flush();
+75 	}
+76 	
+77 	static class MyScanner {
+78 		private BufferedReader br;
+79 		private StringTokenizer tokenizer;
+80 		
+81 		public MyScanner() {
+82 			br = new BufferedReader(new InputStreamReader(System.in));
+83 		}
+84 		
+85 		public String next() {
+86 			while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+87 				try {
+88 					tokenizer = new StringTokenizer(br.readLine());
+89 				} catch (IOException e) {
+90 					throw new RuntimeException(e);
+91 				}
+92 			}
+93 			return tokenizer.nextToken();
+94 		}
+95 		
+96 		public int nextInt() {
+97 			return Integer.parseInt(next());
+98 		}
+99 		
+100 		public long nextLong() {
+101 			return Long.parseLong(next());
+102 		}
+103 	}
+104 }

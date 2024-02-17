@@ -1,0 +1,38 @@
+variable N is initialized with 2 and variable M is initialized with 1000000007.
+It enters a for loop and it iterates from 0 to 2 to check each integer i in this range. The value of variable i is also passed to variable k.
+Inside the for loop, it calculates the value of variable sum by iterating from 0 to i and adding the value of variable f[i][k] to it.
+Then it calculates the value of variable ans by iterating from 0 to N and adding the value of variable comb[N][i] to it.
+After the loop finishes, it print the fianl value of variable ans as output, which is 1000000007.
+<<<Output>>>
+1000000007
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+	long[][] comb = new long[3001][3001];
+	long M;
+	int N;
+
+	void run() {
+		Scanner sc = new Scanner(System.in);
+		N = sc.nextInt();
+		M = sc.nextLong();
+		// f(K,X)=K個から非空かつdisjointな集合をx個、選ぶ方法
+		// f(K,X)=f(K-1,X)*K+f(K-1,X-1)+1
+		long[][] f = new long[N + 1][N + 1];
+		f[0][0] = 1;
+		for (int i = 1; i <= N; ++i) {
+			for (int j = 0; j <= i; ++j) {
+				f[i][j] = f[i - 1][j] * (j + 1) + (j - 1 >= 0? f[i - 1][j - 1] : 0);
+				f[i][j] %= M;
+			}
+		}
+		comb[0][0] = 1;
+		for (int i = 1; i < comb.length

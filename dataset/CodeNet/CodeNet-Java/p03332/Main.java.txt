@@ -1,0 +1,155 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 public class Main {
+5 	static final StdIn in = new StdIn();
+6 	static final PrintWriter out = new PrintWriter(System.out);
+7 	static final long M=998244353;
+8 	
+9 	public static void main(String[] args) {
+10 		long n=in.nextLong(), a=in.nextLong(), b=in.nextLong(), k=in.nextLong(), ans=0;
+11 		long[] nck = new long[(int)n+1];
+12 		nck[0]=1;
+13 		for(int i=1; i<=n; ++i)
+14 			nck[i]=nck[i-1]*(n-i+1)%M*modI(i, M)%M;
+15 		for(int i=0; i<=n&&a*i<=k; ++i) {
+16 			if((k-a*i)%b==0&&(k-a*i)/b<=n)
+17 				ans+=nck[i]*nck[(int)((k-a*i)/b)]%M;
+18 		}
+19 		out.println(ans%M);
+20 		out.close();
+21 	}
+22 	
+23 	static long modI(long a, long m) {
+24 		if((a%=m)<=1)
+25 			return 1;
+26 		return ((1-modI(m%a, a)*m)/a+m)%m;
+27 	}
+28 	
+29 	static class StdIn {
+30 		final private int BUFFER_SIZE = 1 << 16;
+31 		private DataInputStream din;
+32 		private byte[] buffer;
+33 		private int bufferPointer, bytesRead;
+34 		public StdIn() {
+35 			din = new DataInputStream(System.in);
+36 			buffer = new byte[BUFFER_SIZE];
+37 			bufferPointer = bytesRead = 0;
+38 		}
+39 		public StdIn(InputStream in) {
+40 			try{
+41 				din = new DataInputStream(in);
+42 			} catch(Exception e) {
+43 				throw new RuntimeException();
+44 			}
+45 			buffer = new byte[BUFFER_SIZE];
+46 			bufferPointer = bytesRead = 0;
+47 		}
+48 		public String next() {
+49 			int c;
+50 			while((c=read())!=-1&&(c==' '||c=='\n'||c=='\r'));
+51 			StringBuilder s = new StringBuilder();
+52 			while (c != -1)
+53 			{
+54 				if (c == ' ' || c == '\n'||c=='\r')
+55 					break;
+56 				s.append((char)c);
+57 				c=read();
+58 			}
+59 			return s.toString();
+60 		}
+61 		public String nextLine() {
+62 			int c;
+63 			while((c=read())!=-1&&(c==' '||c=='\n'||c=='\r'));
+64 			StringBuilder s = new StringBuilder();
+65 			while (c != -1)
+66 			{
+67 				if (c == '\n'||c=='\r')
+68 					break;
+69 				s.append((char)c);
+70 				c = read();
+71 			}
+72 			return s.toString();
+73 		}
+74 		public int nextInt() {
+75 			int ret = 0;
+76 			byte c = read();
+77 			while (c <= ' ')
+78 				c = read();
+79 			boolean neg = (c == '-');
+80 			if (neg)
+81 				c = read();
+82 			do
+83 				ret = ret * 10 + c - '0';
+84 			while ((c = read()) >= '0' && c <= '9');
+85 
+86 			if (neg)
+87 				return -ret;
+88 			return ret;
+89 		}
+90 		public int[] readIntArray(int n, int os) {
+91 			int[] ar = new int[n];
+92 			for(int i=0; i<n; ++i)
+93 				ar[i]=nextInt()+os;
+94 			return ar;
+95 		}
+96 		public long nextLong() {
+97 			long ret = 0;
+98 			byte c = read();
+99 			while (c <= ' ')
+100 				c = read();
+101 			boolean neg = (c == '-');
+102 			if (neg)
+103 				c = read();
+104 			do
+105 				ret = ret * 10 + c - '0';
+106 			while ((c = read()) >= '0' && c <= '9');
+107 			if (neg)
+108 				return -ret;
+109 			return ret;
+110 		}
+111 		public long[] readLongArray(int n, long os) {
+112 			long[] ar = new long[n];
+113 			for(int i=0; i<n; ++i)
+114 				ar[i]=nextLong()+os;
+115 			return ar;
+116 		}
+117 		public double nextDouble() {
+118 			double ret = 0, div = 1;
+119 			byte c = read();
+120 			while (c <= ' ')
+121 				c = read();
+122 			boolean neg = (c == '-');
+123 			if (neg)
+124 				c = read();
+125 			do
+126 				ret = ret * 10 + c - '0';
+127 			while ((c = read()) >= '0' && c <= '9');
+128 			if (c == '.')
+129 				while ((c = read()) >= '0' && c <= '9')
+130 					ret += (c - '0') / (div *= 10);
+131 			if (neg)
+132 				return -ret;
+133 			return ret;
+134 		}
+135 		private void fillBuffer() throws IOException {
+136 			bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
+137 			if (bytesRead == -1)
+138 				buffer[0] = -1;
+139 		}
+140 		private byte read() {
+141 			try{
+142 				if (bufferPointer == bytesRead)
+143 					fillBuffer();
+144 				return buffer[bufferPointer++];
+145 			} catch(IOException e) {
+146 				throw new RuntimeException();
+147 			}
+148 		}
+149 		public void close() throws IOException {
+150 			if (din == null)
+151 				return;
+152 			din.close();
+153 		}
+154 	}
+155 }

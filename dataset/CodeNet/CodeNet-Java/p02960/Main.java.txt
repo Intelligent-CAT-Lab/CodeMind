@@ -1,0 +1,39 @@
+1 import java.io.BufferedReader;
+2 import java.io.InputStreamReader;
+3 import java.util.Scanner;
+4 
+5 public class Main {
+6     public static void main(String[] args) throws Exception {
+7         Main main = new Main();
+8         main.solve();
+9     }
+10     public void solve() throws Exception {
+11         Scanner scan = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+12         String S = scan.next();
+13         char[] d = S.toCharArray();
+14         long[] dp = new long[13];
+15         dp[0] = 1;
+16         int base = 1;
+17         for (int i = d.length - 1; 0 <= i; i--) {
+18             long[] next_dp = new long[13];
+19             if (d[i] == '?') {
+20                 for (int k = 0; k < 10; k++) {
+21                     for (int j = 0; j < 13; j++) {
+22                         next_dp[(k * base + j) % 13] += dp[j];
+23                         next_dp[(k * base + j) % 13] %= 1000000007;
+24                     }
+25                 }
+26             } else {
+27                 int k = d[i] - '0';
+28                 for (int j = 0; j < 13; j++) {
+29                     next_dp[(k * base + j) % 13] += dp[j];
+30                     next_dp[(k * base + j) % 13] %= 1000000007;
+31                 }
+32             }
+33             dp = next_dp;
+34             base *= 10;
+35             base %= 13;
+36         }
+37         System.out.println(dp[5]);
+38     }
+39 }

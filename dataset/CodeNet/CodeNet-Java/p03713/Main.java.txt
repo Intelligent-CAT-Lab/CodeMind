@@ -1,0 +1,54 @@
+1 import java.util.*;
+2 
+3 public class Main {
+4     public static Long getMin(Long x, Long y){
+5         return (x < y)? x : y;
+6     }
+7 
+8     public static Long getMax(Long x, Long y){
+9         return (x > y)? x : y;
+10     }
+11 
+12     public static void main(String[] args) {
+13         Scanner sc = new Scanner(System.in);
+14         Long h = sc.nextLong();
+15         Long w = sc.nextLong();
+16         Long ans = 0L;
+17 
+18         if(h % 3 != 0 && w % 3 != 0){
+19             if(h > w){
+20                 Long tmp = h;
+21                 h = w;
+22                 w = tmp;
+23             }
+24             //System.out.println("h = " + h + ", w = " + w);
+25             Long s = h * w;
+26             Long smax, smin;
+27             Long min_h_loop = s;
+28             for(Long h_loop = 1L; h_loop < h; h_loop++){
+29                 Long s_a = h_loop * w;
+30                 Long s_b = ((h - h_loop) % 2L == 0L)? ((h - h_loop) / 2L) * w : (h - h_loop) * (w / 2L);
+31                 Long s_c = s - s_a - s_b;
+32                 smax = getMax(getMax(s_a, s_b), s_c);
+33                 smin = getMin(getMin(s_a, s_b), s_c);
+34                 min_h_loop = getMin(min_h_loop, smax - smin);
+35             }
+36             ans = min_h_loop;
+37 
+38             if(h < w){
+39                 Long min_w_loop = s;
+40                 for(Long w_loop = 1L; w_loop < w; w_loop++){
+41                     Long s_a = w_loop * h;
+42                     Long s_b = ((w - w_loop) % 2L == 0L)? ((w - w_loop) / 2L) * h : (w - w_loop) * (h / 2L);
+43                     Long s_c = s - s_a - s_b;
+44                     smax = getMax(getMax(s_a, s_b), s_c);
+45                     smin = getMin(getMin(s_a, s_b), s_c);
+46                     min_w_loop = getMin(min_w_loop, smax - smin);
+47                 }
+48                 ans = getMin(ans, min_w_loop);
+49             }
+50         }
+51 
+52         System.out.println(ans);
+53     }    
+54 }

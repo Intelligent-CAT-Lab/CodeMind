@@ -1,0 +1,164 @@
+1 import java.util.Scanner;
+2 
+3 // Java8
+4 public class Main
+5 {
+6 	static Scanner sc = new Scanner(System.in);
+7 	
+8 	public static void main(String[] args) throws Exception
+9 	{
+10 		new Main().run();
+11 	}
+12 	
+13 	void run()
+14 	{
+15 		String s = sc.nextLine();
+16 		Parser parser = new Parser(s);
+17 		Node node = parser.getFormula();
+18 		System.out.println(node.get0() + " " + node.get1());
+19 	}
+20 }
+21 abstract class Node {
+22 	private int cost0 = 0;
+23 	private int cost1 = 0;
+24 
+25 	public final int get0() {
+26 		if(cost0>0) return cost0;
+27 		return cost0 = calc0();
+28 	}
+29 
+30 	public final int get1() {
+31 		if(cost1>0) return cost1;
+32 		return cost1 = calc1();
+33 	}
+34 
+35 	abstract int calc0();
+36 
+37 	abstract int calc1();
+38 }
+39 class VarNode extends Node {
+40 
+41 	@Override
+42 	int calc0()
+43 	{
+44 		return 1;
+45 	}
+46 
+47 	@Override
+48 	int calc1()
+49 	{
+50 		return 1;
+51 	}
+52 
+53 	@Override
+54 	public String toString()
+55 	{
+56 		return "?";
+57 	}
+58 }
+59 class AndNode extends Node {
+60 	private Node left;
+61 	private Node right;
+62 
+63 	public AndNode(Node l, Node r)
+64 	{
+65 		left = l;
+66 		right = r;
+67 	}
+68 
+69 	@Override
+70 	int calc0()
+71 	{
+72 		return Math.min(left.get0(), left.get1() + right.get0());
+73 	}
+74 
+75 	@Override
+76 	int calc1()
+77 	{
+78 		return left.get1() + right.get1();
+79 	}
+80 
+81 	@Override
+82 	public String toString()
+83 	{
+84 		return "(" + left.toString() + "&" + right.toString() + ")";
+85 	}
+86 }
+87 class OrNode extends Node {
+88 	private Node left;
+89 	private Node right;
+90 
+91 	public OrNode(Node l, Node r)
+92 	{
+93 		left = l;
+94 		right = r;
+95 	}
+96 
+97 	@Override
+98 	int calc0()
+99 	{
+100 		return left.get0() + right.get0();
+101 	}
+102 
+103 	@Override
+104 	int calc1()
+105 	{
+106 		return Math.min(left.get1(), left.get0() + right.get1());
+107 	}
+108 
+109 	@Override
+110 	public String toString()
+111 	{
+112 		return "(" + left.toString() + "|" + right.toString() + ")";
+113 	}
+114 }
+115 class Parser {
+116 	private String text;
+117 	int cur;
+118 
+119 	public Parser(String s) {
+120 		text = s + "$";
+121 		cur = 0;
+122 	}
+123 
+124 	public Node getTerm() {
+125 		char c = text.charAt(cur);
+126 		if(c=='?') {
+127 			cur++;
+128 			return new VarNode();
+129 		}
+130 		if(c=='(') {
+131 			cur++;
+132 			Node node = getOrExpr();
+133 			assert(text.charAt(cur) == ')');
+134 			cur++;
+135 			return node;
+136 		}
+137 		throw new IllegalStateException();
+138 	}
+139 
+140 	public Node getAndExpr() {
+141 		Node node = getTerm();
+142 		while(text.charAt(cur)=='&') {
+143 			cur++;
+144 			Node r = getTerm();
+145 			node = new AndNode(node, r);
+146 		}
+147 		return node;
+148 	}
+149 
+150 	public Node getOrExpr() {
+151 		Node node = getAndExpr();
+152 		while(text.charAt(cur)=='|') {
+153 			cur++;
+154 			Node r = getAndExpr();
+155 			node = new OrNode(node, r);
+156 		}
+157 		return node;
+158 	}
+159 	
+160 	public Node getFormula() {
+161 		return getOrExpr();
+162 	}
+163 
+164 }

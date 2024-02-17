@@ -1,0 +1,64 @@
+1 import java.util.Arrays;
+2 import java.util.LinkedList;
+3 import java.util.Scanner;
+4  
+5  
+6 public class Main{
+7 	
+8 	public static final int MAX = 20;
+9 	
+10     public static void main(String[] args){
+11     	final Scanner sc = new Scanner(System.in);
+12     	
+13     	long[] facts = new long[MAX + 1];
+14     	facts[0] = 1; 
+15     	for(int i = 1; i <= MAX; i++){
+16     		facts[i] = facts[i - 1] * i;
+17     	}
+18     	
+19     	int[] count = new int[26];
+20     	char[] input = sc.next().toCharArray();
+21     	
+22     	for(char c : input){
+23     		count[c - 'a']++;
+24     	}
+25     	
+26     	final int allow_odd = input.length % 2 == 0 ? 0 : 1;
+27     	int odd_count = 0;
+28     	int odd_pos = -1;
+29     	for(int i = 0; i < 26; i++){
+30     		if(count[i] % 2 == 1){
+31     			odd_count++;
+32     			odd_pos = i;
+33     		}
+34     	}
+35     	
+36     	if(allow_odd < odd_count){
+37     		System.out.println(0);
+38     		return;
+39     	}
+40     	
+41     	if(odd_pos != -1){
+42     		count[odd_pos]--;
+43     	}
+44     	
+45     	for(int i = 0; i < 26; i++){
+46     		count[i] /= 2;
+47     	}
+48     	
+49     	int valid = 0;
+50     	for(int i = 0; i < 26; i++){
+51     		valid += count[i];
+52     	}
+53     	
+54     	//System.out.println(Arrays.toString(count));
+55     	
+56     	long sum = facts[valid];
+57     	for(int i = 0; i < 26; i++){
+58     		sum /= facts[count[i]];
+59     	}
+60     	
+61     	System.out.println(sum);
+62     }
+63      
+64 }

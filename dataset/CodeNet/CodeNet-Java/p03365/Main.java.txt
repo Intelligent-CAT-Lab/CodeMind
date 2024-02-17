@@ -1,0 +1,139 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.InputMismatchException;
+6 import java.io.IOException;
+7 import java.io.InputStream;
+8 
+9 /**
+10  * Built using CHelper plug-in
+11  * Actual solution is at the top
+12  */
+13 public class Main {
+14     public static void main(String[] args) {
+15         InputStream inputStream = System.in;
+16         OutputStream outputStream = System.out;
+17         MyScan in = new MyScan(inputStream);
+18         PrintWriter out = new PrintWriter(outputStream);
+19         TaskC solver = new TaskC();
+20         solver.solve(1, in, out);
+21         out.close();
+22     }
+23 
+24     static class TaskC {
+25         public void solve(int testNumber, MyScan in, PrintWriter out) {
+26             int i = in.nextInt();
+27 
+28             long[] md = new long[i];
+29 
+30             int rm = i - 2;
+31             int lx = i - 2;
+32             while (rm >= 0) {
+33                 md[lx + 1] = Util.c(rm, lx);
+34                 rm -= 2;
+35                 lx--;
+36             }
+37             long res = 0;
+38             long prev = 0;
+39             for (int m = 1; m < i; m++) {
+40                 long cur = Util.fact(m) * Util.fact(i - m - 1) % Util._m;
+41                 cur = cur * (md[m]) % Util._m;
+42 
+43 
+44                 res += (cur - prev + Util._m) * m % Util._m;
+45                 prev = cur;
+46 
+47             }
+48 
+49 
+50             out.println(res % Util._m);
+51 
+52         }
+53 
+54     }
+55 
+56     static class MyScan {
+57         private final InputStream in;
+58         private byte[] inbuf = new byte[1024];
+59         public int lenbuf = 0;
+60         public int ptrbuf = 0;
+61 
+62         public MyScan(InputStream in) {
+63             this.in = in;
+64         }
+65 
+66         private int readByte() {
+67             if (lenbuf == -1) throw new InputMismatchException();
+68             if (ptrbuf >= lenbuf) {
+69                 ptrbuf = 0;
+70                 try {
+71                     lenbuf = in.read(inbuf);
+72                 } catch (IOException e) {
+73                     throw new InputMismatchException();
+74                 }
+75                 if (lenbuf <= 0) return -1;
+76             }
+77             return inbuf[ptrbuf++];
+78         }
+79 
+80         public int nextInt() {
+81             int num = 0, b;
+82             boolean minus = false;
+83             while ((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-')) ;
+84             if (b == '-') {
+85                 minus = true;
+86                 b = readByte();
+87             }
+88 
+89             while (true) {
+90                 if (b >= '0' && b <= '9') {
+91                     num = num * 10 + (b - '0');
+92                 } else {
+93                     return minus ? -num : num;
+94                 }
+95                 b = readByte();
+96             }
+97         }
+98 
+99     }
+100 
+101     static class Util {
+102         public static final long M07 = 1000_000_007;
+103         public static long _m = M07;
+104         private static long[] fact;
+105         private static long[] inv;
+106         private static long[] ifact;
+107 
+108         public static void l() {
+109             fact = new long[1000001];
+110             inv = new long[1000001];
+111             ifact = new long[1000001];
+112             for (int s = 0; s < 2; s++) {
+113                 fact[s] = 1;
+114                 ifact[s] = 1;
+115                 inv[s] = 1;
+116             }
+117             inv[0] = 0;
+118             for (int i = 2; i < inv.length; i++) {
+119                 inv[i] = (_m - (_m / i) * inv[(int) (_m % i)] % _m) % _m;
+120             }
+121             for (int i = 2; i < fact.length; i++) {
+122                 fact[i] = i * fact[i - 1] % _m;
+123                 ifact[i] = inv[i] * ifact[i - 1] % _m;
+124             }
+125         }
+126 
+127         public static long c(int a, int b) {
+128             if (fact == null) l();
+129             return ifact[a] * ifact[b - a] % _m * fact[b] % _m;
+130         }
+131 
+132         public static long fact(int a) {
+133             if (fact == null) l();
+134             return fact[a];
+135         }
+136 
+137     }
+138 }
+139 

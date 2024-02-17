@@ -1,0 +1,165 @@
+1 import java.util.*;
+2 import java.lang.*;
+3 import java.math.*;
+4 import java.io.*;
+5 import static java.lang.Math.*;
+6 import static java.util.Arrays.*;
+7 import static java.util.Collections.*;
+8 
+9 public class Main{
+10 	Scanner sc=new Scanner(System.in);
+11 
+12 	int INF=1<<28;
+13 	double EPS=1e-12;
+14 
+15 	String s;
+16 
+17 	void run(){
+18 		s=sc.nextLine();
+19 		solve();
+20 	}
+21 
+22 	char[] cs;
+23 	int max;
+24 
+25 	void solve(){
+26 		s+="$";
+27 		cs=s.toCharArray();
+28 		max=-1;
+29 		dfs(0);
+30 		println(max+"");
+31 	}
+32 
+33 	void dfs(int i){
+34 		char[] op={'0', '1', '+', '-', '*', '(', ')'};
+35 		if(i==cs.length){
+36 			max=max(max, calc());
+37 			return;
+38 		}
+39 		if(cs[i]=='.'){
+40 			for(char c : op){
+41 				cs[i]=c;
+42 				dfs(i+1);
+43 				cs[i]='.';
+44 			}
+45 		}else{
+46 			dfs(i+1);
+47 		}
+48 	}
+49 
+50 	int calc(){
+51 		Result r=E(0);
+52 		r.good&=r.p==cs.length-1;
+53 		if(r.good){
+54 			int n=cs.length;
+55 			for(int i=0; i<n; i++){
+56 				if(cs[i]!='('){
+57 					continue;
+58 				}
+59 				int left=i, right=left+1;
+60 				int stack=0;
+61 				boolean op=false;
+62 				for(; cs[right]!=')'||stack!=0; right++){
+63 					if(cs[right]=='('){
+64 						stack++;
+65 					}else if(cs[right]==')'){
+66 						stack--;
+67 					}
+68 					if(stack==0)
+69 						op|=cs[right]=='+'||cs[right]=='-'||cs[right]=='*';
+70 				}
+71 				r.good&=op;
+72 			}
+73 		}
+74 		return r.good?r.value:-1;
+75 	}
+76 
+77 	Result E(int p){
+78 		Result r=F(p);
+79 		if(!r.good){
+80 			return r;
+81 		}
+82 		for(; cs[r.p]=='+'||cs[r.p]=='-';){
+83 			Result r2=F(r.p+1);
+84 			if(!r2.good){
+85 				return r2;
+86 			}
+87 			if(cs[r.p]=='+'){
+88 				r.value+=r2.value;
+89 			}else{
+90 				r.value-=r2.value;
+91 			}
+92 			r.update();
+93 			if(!r.good){
+94 				return r;
+95 			}
+96 			r.p=r2.p;
+97 		}
+98 		return r;
+99 	}
+100 
+101 	Result F(int p){
+102 		Result r=T(p);
+103 		if(!r.good){
+104 			return r;
+105 		}
+106 		for(; cs[r.p]=='*';){
+107 			Result r2=T(r.p+1);
+108 			if(!r2.good){
+109 				return r2;
+110 			}
+111 			r.value*=r2.value;
+112 			r.update();
+113 			if(!r.good){
+114 				return r;
+115 			}
+116 			r.p=r2.p;
+117 		}
+118 		return r;
+119 	}
+120 
+121 	Result T(int p){
+122 		if(cs[p]=='('){
+123 			Result r=E(p+1);
+124 			if(!r.good||cs[r.p]!=')'){
+125 				r.good=false;
+126 				return r;
+127 			}
+128 			r.p++;
+129 			return r;
+130 		}else if(cs[p]=='0'||cs[p]=='1'){
+131 			Result r=new Result(p, 0);
+132 			for(; Character.isDigit(cs[r.p]); r.p++){
+133 				r.value=r.value*2+cs[r.p]-'0';
+134 				r.update();
+135 			}
+136 			return r;
+137 		}else{
+138 			return new Result(0, -1);
+139 		}
+140 	}
+141 
+142 	class Result{
+143 		int p, value;
+144 		boolean good;
+145 
+146 		Result(int p, int value){
+147 			this.p=p;
+148 			this.value=value;
+149 			good=true;
+150 			update();
+151 		}
+152 
+153 		void update(){
+154 			good&=0<=value&&value<1024;
+155 		}
+156 	}
+157 
+158 	void println(String s){
+159 		System.out.println(s);
+160 	}
+161 
+162 	public static void main(String[] args){
+163 		new Main().run();
+164 	}
+165 }

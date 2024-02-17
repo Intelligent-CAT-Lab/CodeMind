@@ -1,0 +1,70 @@
+
+<<<Analysis>>>
+The variable H and variable W are initialized with 3 and 5 respectively according to the input.
+It checks if the value of H is divisible by 3 or the value of W is divisible by 3. If it is, it prints 0 as output.
+Otherwise, it calculates the value of h1 and h2 by dividing H by 2 and 3 respectively.
+It calculates the value of w1 and w2 by dividing W by 2 and 3 respectively.
+It calculates the value of a1 by dividing W by 3. If the value of a1 is 0, it adds 1 to it.
+It calculates the value of a2 and a3 by multiplying the value of a1 by H and W respectively.
+It calculates the value of cur by taking the maximum value of a2 and a3 and the minimum value of a1*H and a1*W.
+It calculates the value of a1 by dividing H by 3. If the value of a1 is 0, it adds 1 to it.
+It calculates the value of a2 and a3 by multiplying the value of a1 by W and H respectively.
+It calculates the value of cur by taking the minimum value of a2 and a3 and the maximum value of a1*W and a1*H.
+It calculates the value of cur by taking the minimum value of H and W.
+It prints the value of cur as output.
+<<<Output>>>
+1
+[END-OF-RESPONSE]
+[INST]
+Consider the following code:
+<Code>
+import java.util.*;
+ 
+public class Main{
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int H = sc.nextInt();
+		int W = sc.nextInt();
+		if(H%3==0 || W%3==0){
+			System.out.println(0);
+			return;
+		}
+		
+		int h1 = H/2;
+		int h2;
+		if( H%2==0 ){
+			h2 = h1;
+		}else{
+			h2 = h1+1;
+		}
+		int w1 = W/2;
+		int w2;
+		if( W%2==0 ){
+			w2 = w1;
+		}else{
+			w2 = w1+1;
+		}
+		
+		
+		long a1 = W/3;
+		if(a1==0)a1++;
+		long a2 = (W-a1)*h1;
+		long a3 = (W-a1)*h2;
+		long cur = Math.max(a1*H,Math.max(a2, a3)) - Math.min(a1*H, Math.min(a2,a3));
+		a1++;
+		if(a1 < W){
+			a2 = (W-a1)*h1;
+			a3 = (W-a1)*h2;
+			cur = Math.min(cur, Math.max(a1*H,Math.max(a2, a3)) - Math.min(a1*H, Math.min(a2,a3)));
+		}
+		
+		a1 = H/3;
+		if(a1==0)a1++;
+		a2 = (H-a1)*w1;
+		a3 = (H-a1)*w2;
+		cur = Math.min(cur, Math.max(a1*W,Math.max(a2, a3)) - Math.min(a1*W, Math.min(a2,a3)));
+		a1++;
+		if(a1 < H){
+			a2 = (H-a1)*w1;
+			a3 = (H-a1)*w2;
+			cur = Math.min(cur, Math.max(a1*W,Math.max(a2, a3)) - Math.min(a1*W, Math.min(a

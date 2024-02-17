@@ -1,0 +1,145 @@
+Below is an instruction that describes a task, paired with an input that
+provides further context.  Write a response that appropriately completes
+the request.
+
+### Instruction:
+Below is an example:
+[[[Example Start]]]
+I want to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the output of the code.
+Consider the following code:
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class Main {
+
+    public static void main(String[] args) {
+        try {
+            InputStreamReader isr = new InputStreamReader(System.in);
+            BufferedReader br = new BufferedReader(isr);
+            String strArr[] = br.readLine().split(" ");
+
+            int n = Integer.parseInt(strArr[0]);
+            int a = Integer.parseInt(strArr[1]);
+            int b = Integer.parseInt(strArr[2]);
+            int answer = 0;
+
+            for (int i = 1; i < n + 1; i++) {
+                int num = i;
+                int sum = 0;
+
+                while (num!= 0) {
+                        sum += num % 10;
+                        num /= 10;
+                }
+
+                if (sum >= a && sum <= b ) {
+                        answer = answer + i;
+                }
+            }
+            System.out.println(answer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+<<Question>>
+What would be the output of code executiion given the following input:
+20 2 5
+Only print the output of code execution and end your response with "END-OF-OUTPUT":
+<<Answer>>
+84
+END-OF-OUTPUT
+[[[Example End]]]
+
+
+Consider the following code: 
+
+
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		if (n==2) {
+			System.out.println("4 7");
+			System.out.println("23 10");
+			return;
+		}
+		
+		int snt[] = new int[n * 2];
+
+		int cn = 0;
+		int x = 2;
+		while (cn < n * 2) {
+			if (isSNT(x)) {
+				snt[cn] = x;
+				cn++;
+			}
+			x++;
+		}
+
+		long[][] a = new long[n][n];
+		for (int i = 0; i < n; i++) {
+			for (int j = i % 2; j < n; j += 2) {
+				int a1 = (i + j) / 2;
+				int a2 = (j - i + n - 1) / 2 + n;
+				a[i][j] = snt[a1] * snt[a2];
+			}
+		}
+
+
+
+		int dx[] = { -1, 0, 1, 0 };
+		int dy[] = { 0, 1, 0, -1 };
+		for (int i = 0; i < n; i++) {
+			for (int j = (i + 1) % 2; j < n; j += 2) {
+				long gcd = 0;
+				long tich = 1;
+				for (int k = 0; k < 4; k++) {
+					if (i + dx[k] < 0 || i + dx[k] >= n)
+						continue;
+					if (j + dy[k] < 0 || j + dy[k] >= n)
+						continue;
+					if (gcd == 0) {
+						gcd = a[i + dx[k]][j + dy[k]];
+						tich = gcd;
+					} else {
+						gcd = gcd(tich, a[i + dx[k]][j + dy[k]]);
+						tich = tich / gcd * a[i + dx[k]][j + dy[k]];
+					}
+				}
+				a[i][j] = tich+1;
+
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				System.out.print(a[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
+
+	private static boolean isSNT(int x) {
+		for (int i = 2; i * i <= x; i++)
+			if (x % i == 0)
+				return false;
+		return true;
+	}
+
+	private static long gcd(long a, long b) {
+		return (b == 0)? a : gcd(b, a % b);
+	}
+}
+
+<<Question>>
+What would be the output of code executiion given the following input:
+2
+
+Only print the output of code execution and end your response with "END-OF-OUTPUT":\<<Answer>>
+### Response:
+4 7
+23 10
+END-OF-OUTPUT

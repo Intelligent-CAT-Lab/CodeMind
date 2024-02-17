@@ -1,0 +1,98 @@
+
+<<<Analysis>>>
+The variable n, variable a and variable b are initialized with 20, 2 and 5 respectively according to the input. And variable sum is initialized with 0.
+It enters a for loop and it iterates from 1 to 20 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [2, 5]. If it does, it adds the current interger i to variable answer. The condition is met when i is 2,3,4,5,11,12,13,14 and 20.
+After the loop finishes, it print the fianl value of variable answer as output, which is 84.
+<<<Output>>>
+84
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Iterator;
+import java.io.BufferedWriter;
+import java.util.InputMismatchException;
+import java.io.IOException;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
+import java.util.NoSuchElementException;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        OutputWriter out = new OutputWriter(outputStream);
+        A solver = new A();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class A {
+        public void solve(int testNumber, InputReader in, OutputWriter out) {
+            String s = in.readString();
+
+            int n = s.length();
+            int[] a = new int[n + 1];
+            for (int i = 0; i < n; i++) {
+                if (s.charAt(i) == '<') {
+                    a[i + 1] = Math.max(a[i + 1], a[i] + 1);
+                }
+            }
+            for (int i = 0; i < n; i++) {
+                if (s.charAt(n - 1 - i) == '>') {
+                    a[n - 1 - i] = Math.max(a[n - 1 - i], a[n - i] + 1);
+                }
+            }
+            out.printLine(ArrayUtils.sumArray(a));
+        }
+
+    }
+
+    static abstract class IntAbstractStream implements IntStream {
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            boolean first = true;
+            for (IntIterator it = intIterator(); it.isValid(); it.advance()) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(' ');
+                }
+                builder.append(it.value());
+            }
+            return builder.toString();
+        }
+
+        public boolean equals(Object o) {
+            if (!(o instanceof IntStream)) {
+                return false;
+            }
+            IntStream c = (IntStream) o;
+            IntIterator it = intIterator();
+            IntIterator jt = c.intIterator();
+            while (it.isValid() && jt.isValid()) {
+                if (it.value()!= jt.value()) {
+                    return false;
+                }
+                it.advance();
+                jt.advance();
+            }
+            return!it.isValid() &&!jt.isValid();
+        }
+
+        public int hashCode() {
+            int result = 0;
+            for (IntIterator it = intIterator();

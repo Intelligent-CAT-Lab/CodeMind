@@ -1,0 +1,353 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6    public static void main(String[] args) {\n7\t\t try {\n7\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nQuestion: What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the sataes and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN",
+        "predict": "20\nEND-OF-STATE"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.util.*;\n2 import java.util.stream.Collectors;\n3 import java.io.*;\n4 import java.nio.charset.StandardCharsets;\n5 \n6 public class Main {\n7 \tpublic static void main(String[] args) throws IOException {\n8 \t\tInputStreamReader reader = new InputStreamReader(System.in, StandardCharsets.UTF_8);\n9 \t\tBufferedReader in = new BufferedReader(reader);\n10 \t\tMain ins = new Main(in);\n11 \t\tins.calc();\n12 \t\tins.showResult();\n13 \t}\n14 \n15 \tint A, B, C, D;\n16 \tlong MOD = 998244353L;\n17 \tlong[][] cell;\n18 \n19 \tMain(BufferedReader in) throws IOException {\n20 \t\tString[] tokens = in.readLine().split(\" \");\n21 \t\tA = Integer.parseInt(tokens[0]);\n22 \t\tB = Integer.parseInt(tokens[1]);\n23 \t\tC = Integer.parseInt(tokens[2]);\n24 \t\tD = Integer.parseInt(tokens[3]);\n25 \t\tcell = new long[C][D];\n26 \t\tfor (int i = 0; i < C; ++i) {\n27 \t\t\tArrays.fill(cell[i], 0L);\n28 \t\t}\n29 \t\tcell[A - 1][B - 1] = 1L;\n30 \t\tfor (int i = A; i < C; ++i) {\n31 \t\t\tcell[i][B - 1] = cell[i - 1][B - 1] * B % MOD;\n32 \t\t}\n33 \t\tfor (int i = B; i < D; ++i) {\n34 \t\t\tcell[A - 1][i] = cell[A - 1][i - 1] * A % MOD;\n35 \t\t}\n36 \t}\n37 \n38 \tvoid calc() {\n39 \t\tfor (int i = A; i < C; ++i) {\n40 \t\t\tfor (int j = B; j < D; ++j) {\n41 \t\t\t\t// \u3053\u306e\u30de\u30b9\u304c\u767d\u306e\u5834\u5408: \u4f8b\u3048\u3070\uff0c\u5de6\u306e\u30d1\u30bf\u30fc\u30f3 * \u4e0b\u4e00\u5217\u306e\u3044\u305a\u308c\u304b\u304c\u9ed2\n42 \t\t\t\tcell[i][j] = cell[i - 1][j] * (long) j;\n43 \t\t\t\tcell[i][j] %= MOD;\n44 \t\t\t\tcell[i][j] += cell[i][j - 1] * (long) i;\n45 \t\t\t\tcell[i][j] %= MOD;\n46 \t\t\t\tlong val = cell[i - 1][j - 1] * (long) i;\n47 \t\t\t\tval %= MOD;\n48 \t\t\t\tval *= (long) j;\n49 \t\t\t\tval %= MOD;\n50 \t\t\t\tcell[i][j] -= val;\n51 \t\t\t\tcell[i][j] += MOD;\n52 \t\t\t\tcell[i][j] %= MOD;\n53 \t\t\t\tcell[i][j] += cell[i - 1][j];\n54 \t\t\t\tcell[i][j] %= MOD;\n55 \t\t\t\tcell[i][j] += cell[i][j - 1];\n56 \t\t\t\tcell[i][j] %= MOD;\n57 \t\t\t}\n58 \t\t}\n59 \t}\n60 \n61 \tvoid showCell() {\n62 \t\tfor (int i = 0; i < C; ++i) {\n63 \t\t\tfor (int j = 0; j < D; ++j) {\n64 \t\t\t\tSystem.out.print(cell[i][j] + \" \");\n65 \t\t\t}\n66 \t\t\tSystem.out.println(\"\");\n67 \t\t}\n68 \t}\n69 \n70 \tvoid showResult() {\n71 \t\tSystem.out.println(cell[C - 1][D - 1]);\n72 \t\t// showCell();\n73 \t}\n74 }\nGiven the following input:\n1 1 2 2\n\n\nQuestion:\n What would be the states of variable i in line 26? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "1"
+        ],
+        "variable": "i",
+        "line": "26",
+        "predict": "1\n2\nEND-OF-STATE"
+    },
+    "2": {
+        "prompt": "Question:\n What would be the states of variable i in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "1"
+        ],
+        "variable": "i",
+        "line": "27",
+        "predict": "0\nEND-OF-STATE"
+    },
+    "3": {
+        "prompt": "Question:\n What would be the states of variable i in line 30? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "30",
+        "predict": "1\n2\nEND-OF-STATE"
+    },
+    "4": {
+        "prompt": "Question:\n What would be the states of variable i in line 31? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "31",
+        "predict": "1\n2\nEND-OF-STATE"
+    },
+    "5": {
+        "prompt": "Question:\n What would be the states of variable i in line 33? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "33",
+        "predict": "1\n2\nEND-OF-STATE"
+    },
+    "6": {
+        "prompt": "Question:\n What would be the states of variable i in line 34? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "34",
+        "predict": "1\n2\nEND-OF-STATE"
+    },
+    "7": {
+        "prompt": "Question:\n What would be the states of variable i in line 39? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "39",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "8": {
+        "prompt": "Question:\n What would be the states of variable j in line 40? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "40",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "9": {
+        "prompt": "Question:\n What would be the states of variable j in line 42? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "42",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "10": {
+        "prompt": "Question:\n What would be the states of variable i in line 42? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "42",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "11": {
+        "prompt": "Question:\n What would be the states of variable j in line 43? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "43",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "12": {
+        "prompt": "Question:\n What would be the states of variable i in line 43? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "43",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "13": {
+        "prompt": "Question:\n What would be the states of variable j in line 44? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "44",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "14": {
+        "prompt": "Question:\n What would be the states of variable i in line 44? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "44",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "15": {
+        "prompt": "Question:\n What would be the states of variable j in line 45? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "45",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "16": {
+        "prompt": "Question:\n What would be the states of variable i in line 45? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "45",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "17": {
+        "prompt": "Question:\n What would be the states of variable j in line 46? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "46",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "18": {
+        "prompt": "Question:\n What would be the states of variable i in line 46? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "46",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "19": {
+        "prompt": "Question:\n What would be the states of variable val in line 46? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "val",
+        "line": "46",
+        "predict": "2\n6\nEND-OF-STATE"
+    },
+    "20": {
+        "prompt": "Question:\n What would be the states of variable val in line 47? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "val",
+        "line": "47",
+        "predict": "2\n6\nEND-OF-STATE"
+    },
+    "21": {
+        "prompt": "Question:\n What would be the states of variable j in line 48? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "48",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "22": {
+        "prompt": "Question:\n What would be the states of variable val in line 48? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "val",
+        "line": "48",
+        "predict": "2\n6\nEND-OF-STATE"
+    },
+    "23": {
+        "prompt": "Question:\n What would be the states of variable val in line 49? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "val",
+        "line": "49",
+        "predict": "2\n6\nEND-OF-STATE"
+    },
+    "24": {
+        "prompt": "Question:\n What would be the states of variable j in line 50? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "50",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "25": {
+        "prompt": "Question:\n What would be the states of variable i in line 50? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "50",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "26": {
+        "prompt": "Question:\n What would be the states of variable val in line 50? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "val",
+        "line": "50",
+        "predict": "2\n6\nEND-OF-STATE"
+    },
+    "27": {
+        "prompt": "Question:\n What would be the states of variable j in line 51? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "51",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "28": {
+        "prompt": "Question:\n What would be the states of variable i in line 51? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "51",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "29": {
+        "prompt": "Question:\n What would be the states of variable j in line 52? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "52",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "30": {
+        "prompt": "Question:\n What would be the states of variable i in line 52? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "52",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "31": {
+        "prompt": "Question:\n What would be the states of variable j in line 53? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "53",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "32": {
+        "prompt": "Question:\n What would be the states of variable i in line 53? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "53",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "33": {
+        "prompt": "Question:\n What would be the states of variable j in line 54? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "54",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "34": {
+        "prompt": "Question:\n What would be the states of variable i in line 54? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "54",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "35": {
+        "prompt": "Question:\n What would be the states of variable j in line 55? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "55",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "36": {
+        "prompt": "Question:\n What would be the states of variable i in line 55? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "55",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "37": {
+        "prompt": "Question:\n What would be the states of variable j in line 56? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "j",
+        "line": "56",
+        "predict": "2\n3\nEND-OF-STATE"
+    },
+    "38": {
+        "prompt": "Question:\n What would be the states of variable i in line 56? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "i",
+        "line": "56",
+        "predict": "2\n3\nEND-OF-STATE"
+    }
+}

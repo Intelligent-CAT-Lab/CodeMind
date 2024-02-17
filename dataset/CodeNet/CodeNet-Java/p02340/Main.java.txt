@@ -1,0 +1,113 @@
+1 import java.util.Scanner;
+2 import java.util.regex.Matcher;
+3 import java.util.regex.Pattern;
+4 
+5 public class Main {
+6 
+7 	public static final int BIG_NUM = 2000000000;
+8 	public static final int MOD = 1000000007;
+9 	public static final long HUGE_NUM = 99999999999999999L;
+10 	public static final double EPS = 0.000000001;
+11 
+12 	public static final int SIZE = 1005;
+13 	public static long dp[][];
+14 
+15 	@SuppressWarnings("unchecked")
+16 	public static void main(String[] args) {
+17 
+18 		//BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+19 		Scanner scanner = new Scanner(System.in);
+20 
+21 		dp = new long[SIZE][SIZE];
+22 
+23 		for(int i = 0; i < SIZE; i++){
+24 			for(int k = 0; k < SIZE; k++){
+25 
+26 				dp[i][k] = -1;
+27 			}
+28 		}
+29 
+30 		int num_ball = scanner.nextInt();
+31 		int num_box = scanner.nextInt();
+32 
+33 		System.out.println(recursive(num_ball,num_box));
+34     }
+35 
+36 	public static long recursive(int num_ball,int num_box){
+37 
+38 		if(dp[num_ball][num_box] != -1){
+39 
+40 			return dp[num_ball][num_box];
+41 		}
+42 
+43 		if(num_ball == 0){
+44 
+45 			return 1;
+46 		}else if(num_box == 1){
+47 
+48 			return 1;
+49 		}
+50 
+51 		long ret = 0;
+52 
+53 		for(int next_box = 1; next_box <= num_box; next_box++){
+54 			int next_ball = num_ball-next_box;
+55 			if(next_ball < 0)break;
+56 
+57 			ret += recursive(next_ball,next_box);
+58 			ret %= MOD;
+59 		}
+60 
+61 		return dp[num_ball][num_box] = ret;
+62 	}
+63 }
+64 
+65 class UTIL{
+66 
+67 	//最大公約数
+68 	public static long gcd(long x,long y){
+69 
+70 		x = Math.abs(x);
+71 		y = Math.abs(y);
+72 
+73 		if(x < y){
+74 
+75 			long tmp = y;
+76 			y = x;
+77 			x = tmp;
+78 		}
+79 
+80 		if(y == 0){
+81 
+82 			return x;
+83 		}else{
+84 
+85 			return gcd(y,x%y);
+86 		}
+87 	}
+88 
+89 	//最小公倍数
+90 	public static long lcm(long x,long y){
+91 
+92 		return (x*y)/gcd(x,y);
+93 	}
+94 
+95 	//String→intへ変換
+96     public static int getNUM(String tmp_str){
+97 
+98         return Integer.parseInt(tmp_str);
+99     }
+100 
+101     //文字が半角数字か判定する関数
+102     public static boolean isNumber(String tmp_str){
+103 
+104         if(tmp_str == null || tmp_str.length() == 0){
+105 
+106             return false;
+107         }
+108 
+109         Pattern pattern = Pattern.compile("\\A[0-9]+\\z");
+110         Matcher matcher = pattern.matcher(tmp_str);
+111         return matcher.matches();
+112     }
+113 }

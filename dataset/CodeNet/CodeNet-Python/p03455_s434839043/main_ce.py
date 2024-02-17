@@ -1,0 +1,1 @@
+print('Odd' if eval("3 4".replace(' ','*'))%2 else 'Even')

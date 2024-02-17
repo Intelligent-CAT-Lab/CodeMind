@@ -1,0 +1,49 @@
+1 import java.util.Scanner;
+2 
+3 public class Main {
+4 
+5 	Scanner sc = new Scanner(System.in);
+6 	int INF = 1 << 28;
+7 	double EPS = 1e-10;
+8 
+9 	public static void main(String[] args) {
+10 		new Main().run();
+11 	}
+12 
+13 	void run() {
+14 		String a = sc.next();
+15 		int ans = 0;
+16 		for (int i = 0; i < a.length(); i++) {
+17 			String head = a.substring(0, i);
+18 			String tail = a.substring(i, a.length());
+19 			int h, t;
+20 			if (head.equals("")) {
+21 				h = 0;
+22 			} else if (head.equals("-")) {
+23 				continue;
+24 			} else {
+25 				h = Integer.parseInt(head);
+26 			}
+27 			if (tail.equals("")) {
+28 				t = 0;
+29 			} else if (tail.charAt(0) == '0') {
+30 				continue;
+31 			} else {
+32 				t = Integer.parseInt(tail);
+33 			}
+34 			if (t < 0) {
+35 				continue;
+36 			}
+37 			if (h > t)
+38 				continue;
+39 			if ((h + t) % 2 != 0) {
+40 				continue;
+41 			}
+42 			if ((t - h) % 2 != 0) {
+43 				continue;
+44 			}
+45 			ans++;
+46 		}
+47 		System.out.println(ans);
+48 	}
+49 }

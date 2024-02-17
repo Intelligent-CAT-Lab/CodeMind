@@ -1,0 +1,66 @@
+1 import java.util.Scanner;
+2 
+3 public class Main {
+4   public static void main(String[] args) {
+5     Scanner scanner = new Scanner(System.in);
+6 
+7     long L = scanner.nextLong();
+8     long A = scanner.nextLong();
+9     long B = scanner.nextLong();
+10     long M = scanner.nextLong();
+11 
+12     long[][] m = new long[3][3];
+13     for (int i = 0; i < 2; i++) m[1][i] = 1;
+14     for (int i = 1; i < 3; i++) m[2][i] = 1;
+15 
+16     long[] res = new long[] {0, A % M, B % M};
+17     long k = 10;
+18     long l = 0;
+19     while (A > k) k *= 10;
+20     while (l < L) {
+21       m[0][0] = k % M;
+22       long r = Math.min((k - A - 1) / B, L - 1);
+23       res = mult(res, modpow(m, r - l + 1, M), M);
+24       l = r + 1;
+25       k *= 10;
+26     }
+27 
+28     System.out.println(res[0]);
+29   }
+30 
+31   private static long[][] modpow(long[][] m, long c, long M) {
+32     if (c == 0) return new long[][] {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+33     if (c == 1) return m;
+34     if (c % 2 == 0) {
+35       long[][] m1 = modpow(m, c / 2, M);
+36       return mult(m1, m1, M);
+37     } else {
+38       long[][] m1 = modpow(m, c - 1, M);
+39       return mult(m1, m, M);
+40     }
+41   }
+42 
+43   private static long[] mult(long[] a, long[][] b, long M) {
+44     long[] r = new long[3];
+45     for (int i = 0; i < 3; i++) {
+46       for (int j = 0; j < 3; j++) {
+47         r[i] += a[j] * b[j][i] % M;
+48         if (r[i] >= M) r[i] -= M;
+49       }
+50     }
+51     return r;
+52   }
+53 
+54   private static long[][] mult(long[][] a, long[][] b, long M) {
+55     long[][] r = new long[3][3];
+56     for (int i = 0; i < 3; i++) {
+57       for (int j = 0; j < 3; j++) {
+58         for (int k = 0; k < 3; k++) {
+59           r[i][j] += a[i][k] * b[k][j] % M;
+60           if (r[i][j] >= M) r[i][j] -= M;
+61         }
+62       }
+63     }
+64     return r;
+65   }
+66 }

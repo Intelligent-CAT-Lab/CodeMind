@@ -1,0 +1,64 @@
+ variable t, variable s and variable q are initialized with 100000, 3125 and 2 respectively according to the input.
+It enters a while loop and it checks if the current value of variable s is less than variable t.
+If it is, it multiplies the current value of variable s by variable q and increments the value of variable sum by 1.
+After the loop finishes, it print the fianl value of variable sum as output, which is 10.
+<<<Output>>>
+10
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.io.*;
+import java.util.*;
+import java.math.*;
+
+public class Main {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        InputReader in = new InputReader(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        TaskA solver = new TaskA();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class TaskA {
+        public void solve(int testNumber, InputReader in, PrintWriter out) {
+            int n = in.nextInt();
+            int k = in.nextInt();
+            int[] arr = new int[n];
+            for (int i = 0; i < n; i++) {
+                arr[i] = in.nextInt();
+            }
+            int[] dp = new int[n];
+            dp[0] = 1;
+            for (int i = 1; i < n; i++) {
+                int max = 0;
+                for (int j = 0; j < i; j++) {
+                    if (arr[j] < arr[i]) {
+                        max = Math.max(max, dp[j]);
+                    }
+                }
+                dp[i] = max + 1;
+            }
+            out.println(dp[n - 1]);
+        }
+    }
+
+    static class InputReader {
+        public BufferedReader reader;
+        public StringTokenizer tokenizer;
+
+        public InputReader(InputStream stream) {
+            reader = new BufferedReader(new InputStreamReader(stream), 32768);
+            tokenizer = null;
+        }
+
+        boolean hasNext() {
+            while (tokenizer == null ||!tokenizer.hasMoreTokens()) {
+                try {
+                    tokenizer = new String

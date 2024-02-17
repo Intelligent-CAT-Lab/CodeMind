@@ -1,0 +1,115 @@
+1 import java.io.*;
+2 import java.util.*;
+3 public class Main {
+4 	public static void main(String[] args) {
+5 		FastScanner sc = new FastScanner();
+6 		int n = sc.nextInt();
+7 		int m = sc.nextInt();
+8 		if(n % 2 == 0) {
+9 			System.out.print(0);
+10 			for(int i = 1; i <= n / 2; i++) {
+11 				System.out.print(" " + 0);
+12 			}
+13 			for(int i = n / 2 + 1; i < n; i++) {
+14 				System.out.print(" " + m);
+15 			}
+16 		}
+17 		else {
+18 			System.out.print(0);
+19 			for(int i = 1; i <= n / 2; i++) {
+20 				System.out.print(" " + 0);
+21 			}
+22 			for(int i = n / 2 + 1; i < n; i++) {
+23 				System.out.print(" " + m);
+24 			}
+25 		}
+26 		System.out.println();
+27 		               
+28 	}
+29 	
+30 }
+31 
+32 class FastScanner {
+33     private final InputStream in = System.in;
+34     private final byte[] buffer = new byte[1024];
+35     private int ptr = 0;
+36     private int buflen = 0;
+37     private boolean hasNextByte() {
+38         if (ptr < buflen) {
+39             return true;
+40         }else{
+41             ptr = 0;
+42             try {
+43                 buflen = in.read(buffer);
+44             } catch (IOException e) {
+45                 e.printStackTrace();
+46             }
+47             if (buflen <= 0) {
+48                 return false;
+49             }
+50         }
+51         return true;
+52     }
+53     private int readByte() { if (hasNextByte()) return buffer[ptr++]; else return -1;}
+54     private boolean isPrintableChar(int c) { return 33 <= c && c <= 126;}
+55     private void skipUnprintable() { while(hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++;}
+56     public boolean hasNext() { skipUnprintable(); return hasNextByte();}
+57     public String next() {
+58         if (!hasNext()) throw new NoSuchElementException();
+59         StringBuilder sb = new StringBuilder();
+60         int b = readByte();
+61         while(isPrintableChar(b)) {
+62             sb.appendCodePoint(b);
+63             b = readByte();
+64         }
+65         return sb.toString();
+66     }
+67     public long nextLong() {
+68         if (!hasNext()) throw new NoSuchElementException();
+69         long n = 0;
+70         boolean minus = false;
+71         int b = readByte();
+72         if (b == '-') {
+73             minus = true;
+74             b = readByte();
+75         }
+76         if (b < '0' || '9' < b) {
+77             throw new NumberFormatException();
+78         }
+79         while(true){
+80             if ('0' <= b && b <= '9') {
+81                 n *= 10;
+82                 n += b - '0';
+83             }else if(b == -1 || !isPrintableChar(b)){
+84                 return minus ? -n : n;
+85             }else{
+86                 throw new NumberFormatException();
+87             }
+88             b = readByte();
+89         }
+90     }
+91     public int nextInt() {
+92         if (!hasNext()) throw new NoSuchElementException();
+93         int n = 0;
+94         boolean minus = false;
+95         int b = readByte();
+96         if (b == '-') {
+97             minus = true;
+98             b = readByte();
+99         }
+100         if (b < '0' || '9' < b) {
+101             throw new NumberFormatException();
+102         }
+103         while(true){
+104             if ('0' <= b && b <= '9') {
+105                 n *= 10;
+106                 n += b - '0';
+107             }else if(b == -1 || !isPrintableChar(b)){
+108                 return minus ? -n : n;
+109             }else{
+110                 throw new NumberFormatException();
+111             }
+112             b = readByte();
+113         }
+114     }
+115 }

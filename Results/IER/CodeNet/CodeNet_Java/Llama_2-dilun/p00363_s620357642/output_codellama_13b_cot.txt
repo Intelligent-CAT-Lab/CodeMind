@@ -1,0 +1,83 @@
+
+<<<Analysis>>>
+The variable yoko and variable tate are initialized with 3 and 3 respectively according to the input.
+It enters a for loop and it iterates from 0 to 2 to check each integer i in this range. The value of variable i is also passed to variable yoko.
+Inside the for loop, it calculates the sum of the digits of the current interger i by repeatedlly extracting the digits of number with a while loop and adding it to variable tate.
+Then it checks if the calculated variable tate falls within the range [3, 3]. If it does, it adds the current interger i to variable yoko. The condition is met when i is 3.
+After the loop finishes, it print the fianl value of variable yoko as output, which is 3.
+<<<Output>>>
+3
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+class Main{
+	public static void main(String[] args) {
+
+		BufferedReader bfr=new BufferedReader(new InputStreamReader(System.in));
+		String str="";
+		StringTokenizer stk;
+		String moji="";
+		int yoko,tate;
+		String[] hata;
+
+		try {
+			str=bfr.readLine();
+			if(str==null) {
+				System.exit(0);
+			}
+			else {
+				stk=new StringTokenizer(str," ");
+				yoko=Integer.parseInt(stk.nextToken());
+				tate=Integer.parseInt(stk.nextToken());
+				moji=stk.nextToken();
+				hata=new String[tate];
+
+				for(int i=0; i<tate; i++) {
+					hata[i]="";
+				}
+
+
+				for(int i=0; i<yoko; i++) {
+					if(i==0 || i==yoko-1) {		// hata no +
+						hata[0]=hata[0]+"+";
+						hata[tate-1]=hata[tate-1]+"+";
+						for(int j=1; j<tate-1; j++) {
+							hata[j]=hata[j]+"|";
+						}
+					}
+					else {
+						hata[0]=hata[0]+"-";
+						hata[tate-1]=hata[tate-1]+"-";
+
+						for(int j=1; j<tate-1; j++) {
+							if(j!=(tate-1)/2) {
+								hata[j]=hata[j]+".";
+							}
+							else {
+								if(i==(yoko-1)/2) {
+									hata[j]=hata[j]+moji;
+								}
+								else {
+									hata[j]=hata[j]+".";
+								}
+							}
+						}
+					}
+				}
+				for(int l=0; l<tate; l++) {
+					System.out.println(hata[l]);
+				}
+
+			}
+		}catch(IOException e){}
+	}
+}
+
+<Code>
+

@@ -1,0 +1,69 @@
+e variable input is initialized with the string "0ig3he12fz99".
+The variable alpha_count is initialized with an array of 26 elements, each of which is initialized with 0.
+The variable number_count is initialized with an array of 10 elements, each of which is initialized with 0.
+The variable length is initialized with the length of the string "0ig3he12fz99".
+The variable length is decreased by the value returned by the compress method when it is called with the array alpha_count as argument.
+The variable length is decreased by the value returned by the compress method when it is called with the array number_count as argument.
+The value of variable length is printed as output.
+<<<Output>>>
+10
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
+
+public class Main {
+	
+	public static int compress(int[] counts){
+		int ret = 0;
+		
+		LOOP:
+		while(true){
+			boolean updated = false;
+			
+			for(int pos = 0; pos < counts.length; pos++){
+				if(counts[pos] == 0){ continue; }
+				
+				int len = 1;
+				for(int next = pos + 1; next < counts.length; next++){
+					if(counts[next] == 0){ break; }
+					len++;
+				}
+				
+				if(len >= 3){
+					updated = true;
+					
+					ret += len - 3;
+					for(int i = pos; i < pos + len; i++){
+						counts[i]--;
+					}
+					
+					continue LOOP;
+				}	
+			}
+			
+			if(!updated){
+				break;
+			}
+		}
+		
+		return ret;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		
+		char[] input = sc.next().toCharArray();
+		
+		int[] alpha_

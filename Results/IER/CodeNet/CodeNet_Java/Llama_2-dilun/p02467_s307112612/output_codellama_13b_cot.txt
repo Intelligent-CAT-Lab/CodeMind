@@ -1,0 +1,115 @@
+
+<<<Analysis>>>
+The variable n is initialized with 12 according to the input.
+It enters a for loop and it iterates from 1 to 12 to check each integer i in this range. The value of variable i is also passed to variable x.
+Inside the for loop, it calculates the prime factorization of the current interger i by repeatedlly extracting the prime factors of number with a while loop and adding it to variable ret.
+Then it checks if the calculated variable ret contains 12. If it does, it adds the current interger i to variable set. The condition is met when i is 2,3,4,6,8,9,12.
+After the loop finishes, it print the fianl value of variable set as output, which is 2,3,4,6,8,9,12.
+<<<Output>>>
+2 3 4 6 8 9 12
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.*;
+
+public class Main {
+
+    static BufferedReader in;
+    static PrintWriter out;
+    static StringTokenizer tok;
+
+    void solve() throws IOException {
+        int n = ni();
+
+        TreeMap<Integer, Integer> map = primeFactorize(n);
+
+        out.print(n + ":");
+        Set<Integer> set = map.keySet();
+        for (int x : set) {
+            for (int i = 0; i < map.get(x); i++) {
+                out.print(" " + x);
+            }
+        }
+        out.println();
+    }
+
+    TreeMap<Integer, Integer> primeFactorize(int n) {
+        Prime p = new Prime((int) Math.sqrt(n) + 1);
+        ArrayList<Integer> primes = p.getPrimes();
+
+        TreeMap<Integer, Integer> ret = new TreeMap<>();
+        for (int i = 0; i < primes.size(); i++) {
+            int x = primes.get(i);
+            if (n % x == 0) {
+                int cnt = 0;
+                while (n % x == 0) {
+                    cnt++;
+                    n /= x;
+                }
+                ret.put(x, cnt);
+            }
+        }
+        if (n > 1) {
+            ret.put(n, 1);
+        }
+
+        return ret;
+    }
+
+    class Prime {
+        int n;
+        boolean[] isPrime;
+        ArrayList<Integer> primes;
+
+        Prime(int n) {
+            this.n = n;
+            isPrime = new boolean[n + 1];
+            primes = new ArrayList<>();
+            sieve();
+        }
+
+        void sieve() {
+            for (int i = 2; i < n; i++) {
+                if (!isPrime[i]) {
+                    primes.add(i);
+                    for (long j = (long) i * i; j < n; j += i) {
+                        isPrime[(int) j] = true;
+                    }
+                }
+            }
+        }
+
+        ArrayList<Integer> getPrimes() {
+            return primes;
+        }
+    }
+
+    String ns() throws IOException {
+        while (!tok.hasMoreTokens()) {
+            tok = new StringTokenizer(in.readLine(), " ");
+        }
+        return tok.nextToken();
+    }
+
+    int ni() throws IOException {
+        return Integer.parseInt(ns());
+    }
+
+    long nl() throws IOException {
+        return Long.parseLong(ns());
+    }
+
+    double nd() throws IOException {
+        return Double.parseDouble(ns());
+    }
+
+    String[] nsa(int n) throws IOException {
+        String[] res = new String[n];
+        for (int i = 0; i < n; i++) {
+            res[i] = ns();
+        }

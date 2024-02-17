@@ -1,0 +1,7 @@
+{
+    "0": {
+        "prompt": "Consider the following code:\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        Main main = new Main();\n        main.solve();\n    }\n    public void solve() throws Exception {\n        Scanner scan = new Scanner(new BufferedReader(new InputStreamReader(System.in)));\n        String S = scan.next();\n        char[] d = S.toCharArray();\n        long[] dp = new long[13];\n        dp[0] = 1;\n        int base = 1;\n        for (int i = d.length - 1; 0 <= i; i--) {\n            long[] next_dp = new long[13];\n            if (d[i] == '?') {\n                for (int k = 0; k < 10; k++) {\n                    for (int j = 0; j < 13; j++) {\n                        next_dp[(k * base + j) % 13] += dp[j];\n                        next_dp[(k * base + j) % 13] %= 1000000007;\n                    }\n                }\n            } else {\n                int k = d[i] - '0';\n                for (int j = 0; j < 13; j++) {\n                    next_dp[(k * base + j) % 13] += dp[j];\n                    next_dp[(k * base + j) % 13] %= 1000000007;\n                }\n            }\n            dp = next_dp;\n            base *= 10;\n            base %= 13;\n        }\n        System.out.println(dp[5]);\n    }\n}\nGicen the following input:\n??2??5\nPrint only the output of the code, ends with \"END-OF-OUTPUT\":",
+        "status": "NAN",
+        "gorund_truth": "768\n"
+    }
+}

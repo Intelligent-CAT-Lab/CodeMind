@@ -1,0 +1,111 @@
+
+<<<Analysis>>>
+The variable n, variable a and variable b are initialized with 8 and 1 respectively according to the input.
+It enters a for loop and it iterates from 1 to 8 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [1, 8]. If it does, it adds the current interger i to variable answer. The condition is met when i is 1,2,3,4,5,6,7 and 8.
+After the loop finishes, it print the fianl value of variable answer as output, which is 56.
+<<<Output>>>
+56
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.*;
+import java.util.*;
+
+class Solver {
+  final long n, a;
+  
+  Solver(long n, long a) {
+    this.n = n;
+    this.a = a;
+  }
+  
+  private long pow(long x, int y) {
+    long answer = 1;
+    for (int i = 0; i < y; i++) {
+      answer *= x;
+    }
+    return answer;
+  }
+  
+  private long calculateCookieTime(int eatCount) {
+    for (long v = 2; true; v++) {
+      if (pow(v, eatCount + 1) >= n) {
+        for (int j = 0; true; j++) {
+          if (pow(v - 1, eatCount + 1 - j) * pow(v, j) >= n) {
+            return eatCount * a + (v - 1) * (eatCount + 1 - j) + v * j;
+          }
+        }
+      }
+    }
+  }
+  
+  public long solve() {
+    long answer = n;
+    for (int eatCount = 1; eatCount <= 40; eatCount++) {
+      answer = Math.min(answer, calculateCookieTime(eatCount));
+    }
+    return answer;
+  }
+}
+
+public class Main {
+  private static void execute(ContestReader reader, PrintWriter out) {
+    long n = reader.nextLong();
+    long a = reader.nextLong();
+    out.println(new Solver(n, a).solve());
+  }
+  
+  public static void main(String[] args) {
+    ContestReader reader = new ContestReader(System.in);
+    PrintWriter out = new PrintWriter(System.out);
+    execute(reader, out);
+    out.flush();
+  }
+}
+
+class ContestReader {
+  private BufferedReader reader;
+  private StringTokenizer tokenizer;
+  
+  ContestReader(InputStream in) {
+    reader = new BufferedReader(new InputStreamReader(in));
+  }
+  
+  public String next() {
+    while (tokenizer == null ||!tokenizer.hasMoreTokens()) {
+      try {
+        tokenizer = new java.util.StringTokenizer(reader.readLine());
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return tokenizer.nextToken();
+  }
+  
+  public int nextInt() {
+    return Integer.parseInt(next());
+  }
+  
+  public long nextLong() {
+    return Long.parseLong(next());
+  }
+  
+  public double nextDouble() {
+    return Double.parseDouble(next());
+  }
+  
+  public String[] next(int n) {
+    String[] array = new String[n];
+    for (int i = 0; i < n; i++) {
+      array[i] = next();
+    }
+    return array;
+  }
+  
+  public int[] nextInt(int n) {
+    int[] array = new int[n];
+    for (int i = 0; i < n; i++) {
+      array[i] = next

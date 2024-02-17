@@ -1,0 +1,185 @@
+1 import java.util.*;
+2 import java.util.stream.*;
+3 import java.io.*;
+4 import java.math.*;
+5 
+6 public class Main {
+7 
+8 	static void solve (FastScanner in, PrintWriter out, Methods ms) {
+9 		
+10 		String s = in.next();
+11 		int length = s.length();
+12 		int ans = 0;
+13 		
+14 		for (int i=1; i<length-2; i++) {
+15 			for (int j=i+1; j<length-1; j++) {
+16 				loop : for (int k=j+1; k<length; k++) {
+17 					
+18 					String[] a = {s.substring(0,i), s.substring(i,j), s.substring(j,k), s.substring(k,length)};
+19 					
+20 					for (int x=0; x<4; x++) {
+21 						if (a[x].length() != String.valueOf(Integer.parseInt(a[x])).length()) {
+22 							continue loop;
+23 						}
+24 					}
+25 					
+26 					int[] b = {Integer.parseInt(a[0]), Integer.parseInt(a[1]), Integer.parseInt(a[2]), Integer.parseInt(a[3])};
+27 					if (b[0]<=255 && b[1]<=255 && b[2]<=255 && b[3]<=255) ans++;
+28 					
+29 				}
+30 			}
+31 		}
+32 		
+33 		out.println(ans);
+34 		
+35 	}
+36 	
+37 
+38 
+39 	public static void main(String[] args) {
+40 		FastScanner in = new FastScanner(System.in);
+41 		PrintWriter out = new PrintWriter(System.out);
+42 		Methods ms = new Methods();
+43 		solve(in, out, ms);
+44 		in.close();
+45 		out.close();
+46 	}
+47 
+48 	static class Methods {
+49 
+50 		public void print (Object... ar) {System.out.println(Arrays.deepToString(ar));}
+51 
+52 		public int max (int... ar) {Arrays.sort(ar); return ar[ar.length-1];}
+53 
+54 		public int min (int... ar) {Arrays.sort(ar); return ar[0];}
+55 
+56 		public long gcd (long a, long b) {return b>0?gcd(b,a%b):a;}
+57 
+58 		public long lcm (long a, long b) {return a/gcd(a,b)*b;}
+59 
+60 		public long factorial (int i) {
+61 			if (i==1) return 1;
+62 			else return i*factorial(i-1);
+63 		}
+64 
+65 		public int manhat (int x1, int y1, int x2, int y2) {
+66 			return Math.abs(x1-x2)+Math.abs(y1-y2);
+67 		}
+68 
+69 		public double euclid (double x1, double y1, double x2, double y2) {
+70 			return Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+71 		}
+72 
+73 		public boolean isPrime (int n) {
+74 			if (n==2) return true;
+75 			if (n<2 || n%2==0) return false;
+76 			for (int i=3; i<=Math.sqrt(n); i+=2) if(n%i==0) return false;
+77 			return true;
+78 		}
+79 
+80 	}
+81 
+82 	static class FastScanner {
+83 
+84 		private InputStream in;
+85 		private byte[] buffer = new byte[1024];
+86 		private  int length = 0, p = 0;
+87 
+88 		public FastScanner (InputStream stream) {
+89 			in = stream;
+90 		}
+91 
+92 		public boolean hasNextByte () {
+93 			if (p < length) return true;
+94 			else {
+95 				p = 0;
+96 				try {length = in.read(buffer);}
+97 				catch (Exception e) {e.printStackTrace();}
+98 				if (length <= 0) return false;
+99 			}
+100 			return true;
+101 		}
+102 
+103 		public int readByte () {
+104 			if (hasNextByte() == true) return buffer[p++];
+105 			return -1;
+106 		}
+107 
+108 		public boolean isPrintable (int n) {return 33<=n&&n<=126;}
+109 
+110 		public void skip () {
+111 			while (hasNextByte() && !isPrintable(buffer[p])) p++;
+112 		}
+113 
+114 		public boolean hasNext () {skip(); return hasNextByte();}
+115 
+116 		public String next () {
+117 			if (!hasNext()) throw new NoSuchElementException();
+118 			StringBuilder sb = new StringBuilder();
+119 			int t = readByte();
+120 			while (isPrintable(t)) {
+121 				sb.appendCodePoint(t);
+122 				t = readByte();
+123 			}
+124 			return sb.toString();
+125 		}
+126 
+127 		public String[] nextArray (int n) {
+128 			String[] ar = new String[n];
+129 			for (int i=0; i<n; i++) ar[i] = next();
+130 			return ar;
+131 		}
+132 
+133 		public int nextInt () {return Math.toIntExact(nextLong());}
+134 
+135 		public int[] nextIntArray (int n) {
+136 			int[] ar = new int[n];
+137 			for (int i=0; i<n; i++) ar[i] = nextInt();
+138 			return ar;
+139 		}
+140 
+141 		public long nextLong () {
+142 			if (!hasNext()) throw new NoSuchElementException();
+143 			boolean minus = false;
+144 			int temp = readByte();
+145 			if (temp == '-') {
+146 				minus = true;
+147 				temp = readByte();
+148 			}
+149 			if (temp<'0' || '9'<temp) throw new NumberFormatException();
+150 			long n = 0;
+151 			while (isPrintable(temp)) {
+152 				if ('0'<=temp && temp<='9') {
+153 					n *= 10;
+154 					n += temp - '0';
+155 				}
+156 				else throw new NumberFormatException();
+157 				temp = readByte();
+158 			}
+159 			return minus? -n : n;
+160 		}
+161 
+162 		public long[] nextLongArray (int n) {
+163 			long[] ar = new long[n];
+164 			for (int i=0; i<n; i++) ar[i] = nextLong();
+165 			return ar;
+166 		}
+167 
+168 		public double nextDouble () {
+169 			return Double.parseDouble(next());
+170 		}
+171 
+172 		public double[] nextDoubleArray (int n) {
+173 			double[] ar = new double[n];
+174 			for (int i=0; i<n; i++) ar[i] = nextDouble();
+175 			return ar;
+176 		}
+177 
+178 		public void close () {
+179 			try {in.close();}
+180 			catch(Exception e){}
+181 		}
+182 
+183 	}
+184 
+185 }

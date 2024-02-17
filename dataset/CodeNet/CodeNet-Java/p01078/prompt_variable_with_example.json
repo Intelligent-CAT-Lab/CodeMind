@@ -1,0 +1,229 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6    public static void main(String[] args) {\n7\t\t try {\n7\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nQuestion: What would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the sataes and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.io.IOException;\n2 import java.io.InputStream;\n3 import java.io.OutputStream;\n4 import java.io.PrintWriter;\n5 import java.util.NoSuchElementException;\n6 \n7 /*\n8                    _ooOoo_\n9                   o8888888o\n10                   88\" . \"88\n11                   (| -_- |)\n12                   O\\  =  /O\n13                ____/`---'\\____\n14              .'  \\\\|     |//  `.\n15             /  \\\\|||  :  |||//  \\\n16            /  _||||| -:- |||||-  \\\n17            |   | \\\\\\  -  /// |   |\n18            | \\_|  ''\\---/''  |   |\n19            \\  .-\\__  `-`  ___/-. /\n20          ___`. .'  /--.--\\  `. . __\n21       .\"\" '<  `.___\\_<|>_/___.'  >'\"\".\n22      | | :  `- \\`.;`\\ _ /`;.`/ - ` : | |\n23      \\  \\ `-.   \\_ __\\ /__ _/   .-` /  /\n24 ======`-.____`-.___\\_____/___.-`____.-'======\n25                    `=---='\n26 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n27             pass System Test!\n28 */\n29 \n30 public class Main {\n31   private static class Task {\n32     void solve(FastScanner in, PrintWriter out) throws Exception {\n33       int N = in.nextInt();\n34       int K = in.nextInt();\n35       Point a = new Point(1.0, 0.0);\n36       Point b = new Point(Math.cos(Math.PI * 2 / N), Math.sin(Math.PI * 2 / N));\n37       Point pa = new Point(Math.cos(Math.PI * 2 / N * K), Math.sin(Math.PI * 2 / N * K));\n38       Point pb = new Point(Math.cos(Math.PI * 2 / N * (1 - K)), Math.sin(Math.PI * 2 / N * (1 - K)));\n39 \n40       Point intersection = lineIntersection(a, pa, b, pb);\n41       Point ai = a.sub(intersection);\n42       Point bi = b.sub(intersection);\n43       double S = Math.abs(ai.det(bi)) / 2;\n44       double convex = Math.abs(a.det(b)) / 2 * N;\n45       out.print(convex - S * N);\n46 \n47     }\n48 \n49     private static double EPS = 2e-8;\n50     /**\n51      * Return the point which is intersection of line p1-p2 and q1-q2\n52      *\n53      * @param p1\n54      * @param p2\n55      * @param q1\n56      * @param q2\n57      * @return\n58      */\n59     public static Point lineIntersection(Point p1, Point p2, Point q1, Point q2) {\n60       double a = (q2.sub(q1)).det(q1.sub(p1));\n61       double b = (q2.sub(q1)).det(p2.sub(p1));\n62       return p1.add((p2.sub(p1)).multiply(a / b));\n63     }\n64 \n65     /**\n66      * Return point p is on segment a-b\n67      *\n68      * @param a\n69      * @param b\n70      * @param p\n71      * @return\n72      */\n73     public static boolean onSegment(Point a, Point b, Point p) {\n74       if (Math.abs(a.x - b.x) < EPS)\n75         return Math.min(a.y, b.y) <= p.y && p.y <= Math.max(a.y, b.y);\n76       double alpha = (b.y - a.y) / (b.x - a.x);\n77       double beta = a.y - alpha * a.x;\n78       return Math.abs(p.y - (alpha * p.x + beta)) < EPS && Math.min(a.x, b.x) <= p.x && p.x <= Math.max(a.x, b.x);\n79     }\n80 \n81     class Point implements Comparable<Point> {\n82       double x, y;\n83       Point(double x, double y) {\n84         this.x = x;\n85         this.y = y;\n86       }\n87 \n88       @Override\n89       public int compareTo(Point o) {\n90         if (this.x == o.x) return Double.compare(this.y, o.y);\n91         return Double.compare(this.x, o.x);\n92       }\n93 \n94       /**\n95        * ??????????\u00a8????????????????\n96        *\n97        * @param p\n98        * @return\n99        */\n100       public double det(Point p) {\n101         return x * p.y - y * p.x;\n102       }\n103 \n104       /**\n105        * ??????\n106        *\n107        * @param p\n108        * @return\n109        */\n110       public double dot(Point p) {\n111         return x * p.x + y * p.y;\n112       }\n113 \n114       public Point sub(Point p) {\n115         return new Point(x - p.x, y - p.y);\n116       }\n117 \n118       public Point add(Point p) {\n119         return new Point(x + p.x, y + p.y);\n120       }\n121 \n122       public Point multiply(double d) {\n123         return new Point(x * d, y * d);\n124       }\n125 \n126     }\n127   }\n128 \n129   /**\n130    * ?????????????????????????????\u00ac????????\u00a7??????\n131    */\n132   public static void main(String[] args) throws Exception {\n133     OutputStream outputStream = System.out;\n134     FastScanner in = new FastScanner();\n135     PrintWriter out = new PrintWriter(outputStream);\n136     Task solver = new Task();\n137     solver.solve(in, out);\n138     out.close();\n139   }\n140   private static class FastScanner {\n141     private final InputStream in = System.in;\n142     private final byte[] buffer = new byte[1024];\n143     private int ptr = 0;\n144     private int bufferLength = 0;\n145 \n146     private boolean hasNextByte() {\n147       if (ptr < bufferLength) {\n148         return true;\n149       } else {\n150         ptr = 0;\n151         try {\n152           bufferLength = in.read(buffer);\n153         } catch (IOException e) {\n154           e.printStackTrace();\n155         }\n156         if (bufferLength <= 0) {\n157           return false;\n158         }\n159       }\n160       return true;\n161     }\n162 \n163     private int readByte() {\n164       if (hasNextByte()) return buffer[ptr++];\n165       else return -1;\n166     }\n167 \n168     private static boolean isPrintableChar(int c) {\n169       return 33 <= c && c <= 126;\n170     }\n171 \n172     private void skipUnprintable() {\n173       while (hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++;\n174     }\n175 \n176     boolean hasNext() {\n177       skipUnprintable();\n178       return hasNextByte();\n179     }\n180 \n181     public String next() {\n182       if (!hasNext()) throw new NoSuchElementException();\n183       StringBuilder sb = new StringBuilder();\n184       int b = readByte();\n185       while (isPrintableChar(b)) {\n186         sb.appendCodePoint(b);\n187         b = readByte();\n188       }\n189       return sb.toString();\n190     }\n191 \n192     long nextLong() {\n193       if (!hasNext()) throw new NoSuchElementException();\n194       long n = 0;\n195       boolean minus = false;\n196       int b = readByte();\n197       if (b == '-') {\n198         minus = true;\n199         b = readByte();\n200       }\n201       if (b < '0' || '9' < b) {\n202         throw new NumberFormatException();\n203       }\n204       while (true) {\n205         if ('0' <= b && b <= '9') {\n206           n *= 10;\n207           n += b - '0';\n208         } else if (b == -1 || !isPrintableChar(b)) {\n209           return minus ? -n : n;\n210         } else {\n211           throw new NumberFormatException();\n212         }\n213         b = readByte();\n214       }\n215     }\n216 \n217     double nextDouble() {\n218       return Double.parseDouble(next());\n219     }\n220 \n221     double[] nextDoubleArray(int n) {\n222       double[] array = new double[n];\n223       for (int i = 0; i < n; i++) {\n224         array[i] = nextDouble();\n225       }\n226       return array;\n227     }\n228 \n229     double[][] nextDoubleMap(int n, int m) {\n230       double[][] map = new double[n][];\n231       for (int i = 0; i < n; i++) {\n232         map[i] = nextDoubleArray(m);\n233       }\n234       return map;\n235     }\n236 \n237     public int nextInt() {\n238       return (int) nextLong();\n239     }\n240 \n241     public int[] nextIntArray(int n) {\n242       int[] array = new int[n];\n243       for (int i = 0; i < n; i++) array[i] = nextInt();\n244       return array;\n245     }\n246 \n247     public long[] nextLongArray(int n) {\n248       long[] array = new long[n];\n249       for (int i = 0; i < n; i++) array[i] = nextLong();\n250       return array;\n251     }\n252 \n253     public String[] nextStringArray(int n) {\n254       String[] array = new String[n];\n255       for (int i = 0; i < n; i++) array[i] = next();\n256       return array;\n257     }\n258 \n259     public char[][] nextCharMap(int n) {\n260       char[][] array = new char[n][];\n261       for (int i = 0; i < n; i++) array[i] = next().toCharArray();\n262       return array;\n263     }\n264 \n265     public int[][] nextIntMap(int n, int m) {\n266       int[][] map = new int[n][];\n267       for (int i = 0; i < n; i++) {\n268         map[i] = nextIntArray(m);\n269       }\n270       return map;\n271     }\n272   }\n273 }\nGiven the following input:\n5 2\n\n\nQuestion:\n What would be the states of variable n in line 194? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "0"
+        ],
+        "variable": "n",
+        "line": "194"
+    },
+    "2": {
+        "prompt": "Question:\n What would be the states of variable minus in line 195? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "false",
+            "false"
+        ],
+        "variable": "minus",
+        "line": "195"
+    },
+    "3": {
+        "prompt": "Question:\n What would be the states of variable b in line 196? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "53",
+            "50"
+        ],
+        "variable": "b",
+        "line": "196"
+    },
+    "4": {
+        "prompt": "Question:\n What would be the states of variable b in line 197? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "53",
+            "50"
+        ],
+        "variable": "b",
+        "line": "197"
+    },
+    "5": {
+        "prompt": "Question:\n What would be the states of variable b in line 201? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "53",
+            "50"
+        ],
+        "variable": "b",
+        "line": "201"
+    },
+    "6": {
+        "prompt": "Question:\n What would be the states of variable b in line 205? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "53",
+            "32",
+            "50",
+            "10"
+        ],
+        "variable": "b",
+        "line": "205"
+    },
+    "7": {
+        "prompt": "Question:\n What would be the states of variable n in line 206? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "0"
+        ],
+        "variable": "n",
+        "line": "206"
+    },
+    "8": {
+        "prompt": "Question:\n What would be the states of variable n in line 207? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "5",
+            "2"
+        ],
+        "variable": "n",
+        "line": "207"
+    },
+    "9": {
+        "prompt": "Question:\n What would be the states of variable b in line 207? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "53",
+            "50"
+        ],
+        "variable": "b",
+        "line": "207"
+    },
+    "10": {
+        "prompt": "Question:\n What would be the states of variable b in line 213? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "32",
+            "10"
+        ],
+        "variable": "b",
+        "line": "213"
+    },
+    "11": {
+        "prompt": "Question:\n What would be the states of variable b in line 208? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "32",
+            "10"
+        ],
+        "variable": "b",
+        "line": "208"
+    },
+    "12": {
+        "prompt": "Question:\n What would be the states of variable N in line 33? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "5"
+        ],
+        "variable": "N",
+        "line": "33"
+    },
+    "13": {
+        "prompt": "Question:\n What would be the states of variable K in line 34? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "K",
+        "line": "34"
+    },
+    "14": {
+        "prompt": "Question:\n What would be the states of variable N in line 36? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "5"
+        ],
+        "variable": "N",
+        "line": "36"
+    },
+    "15": {
+        "prompt": "Question:\n What would be the states of variable N in line 37? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "5"
+        ],
+        "variable": "N",
+        "line": "37"
+    },
+    "16": {
+        "prompt": "Question:\n What would be the states of variable K in line 37? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "K",
+        "line": "37"
+    },
+    "17": {
+        "prompt": "Question:\n What would be the states of variable N in line 38? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "5"
+        ],
+        "variable": "N",
+        "line": "38"
+    },
+    "18": {
+        "prompt": "Question:\n What would be the states of variable K in line 38? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2"
+        ],
+        "variable": "K",
+        "line": "38"
+    },
+    "19": {
+        "prompt": "Question:\n What would be the states of variable a in line 60? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "-1.314327780297834"
+        ],
+        "variable": "a",
+        "line": "60"
+    },
+    "20": {
+        "prompt": "Question:\n What would be the states of variable b in line 61? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "-3.440954801177934"
+        ],
+        "variable": "b",
+        "line": "61"
+    },
+    "21": {
+        "prompt": "Question:\n What would be the states of variable S in line 43? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0.2510142698577841"
+        ],
+        "variable": "S",
+        "line": "43"
+    },
+    "22": {
+        "prompt": "Question:\n What would be the states of variable N in line 44? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "5"
+        ],
+        "variable": "N",
+        "line": "44"
+    },
+    "23": {
+        "prompt": "Question:\n What would be the states of variable convex in line 44? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2.3776412907378837"
+        ],
+        "variable": "convex",
+        "line": "44"
+    },
+    "24": {
+        "prompt": "Question:\n What would be the states of variable convex in line 45? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "2.3776412907378837"
+        ],
+        "variable": "convex",
+        "line": "45"
+    },
+    "25": {
+        "prompt": "Question:\n What would be the states of variable N in line 45? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "5"
+        ],
+        "variable": "N",
+        "line": "45"
+    },
+    "26": {
+        "prompt": "Question:\n What would be the states of variable S in line 45? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0.2510142698577841"
+        ],
+        "variable": "S",
+        "line": "45"
+    }
+}

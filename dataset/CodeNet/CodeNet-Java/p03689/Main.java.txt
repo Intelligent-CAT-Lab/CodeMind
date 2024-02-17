@@ -1,0 +1,197 @@
+1 // package atcoder.agc.agc016;
+2 
+3 import java.io.IOException;
+4 import java.io.InputStream;
+5 import java.io.PrintWriter;
+6 import java.util.Arrays;
+7 import java.util.InputMismatchException;
+8 
+9 public class Main {
+10     public static void main(String[] args) {
+11         InputReader in = new InputReader(System.in);
+12         PrintWriter out = new PrintWriter(System.out);
+13 
+14         int r = in.nextInt();
+15         int c = in.nextInt();
+16         int h = in.nextInt();
+17         int w = in.nextInt();
+18 
+19         if (r % h == 0 && c % w == 0) {
+20             out.println("No");
+21             out.flush();
+22             return;
+23         }
+24 
+25         int mcnt = (r / h) * (c / w);
+26         int space = r * c - ((r / h) * h) * ((c / w) * w);
+27 
+28         long plusNumber = ((mcnt + space) / space) + 1;
+29         long minusNumber = -(plusNumber * (h * w - 1) + 1);
+30 
+31 
+32         out.println("Yes");
+33         for (int i = 0; i < r; i++) {
+34             for (int j = 0; j < c; j++) {
+35                 long num = ((i+1) % h == 0 && (j+1) % w == 0) ? minusNumber : plusNumber;
+36                 if (j >= 1) {
+37                     out.print(' ');
+38                 }
+39                 out.print(num);
+40             }
+41             out.println();
+42         }
+43         out.flush();
+44     }
+45 
+46     static class InputReader {
+47         private InputStream stream;
+48         private byte[] buf = new byte[1024];
+49         private int curChar;
+50         private int numChars;
+51 
+52         public InputReader(InputStream stream) {
+53             this.stream = stream;
+54         }
+55 
+56         private int[] nextInts(int n) {
+57             int[] ret = new int[n];
+58             for (int i = 0; i < n; i++) {
+59                 ret[i] = nextInt();
+60             }
+61             return ret;
+62         }
+63 
+64         private int[][] nextIntTable(int n, int m) {
+65             int[][] ret = new int[n][m];
+66             for (int i = 0; i < n; i++) {
+67                 for (int j = 0; j < m; j++) {
+68                     ret[i][j] = nextInt();
+69                 }
+70             }
+71             return ret;
+72         }
+73 
+74         private long[] nextLongs(int n) {
+75             long[] ret = new long[n];
+76             for (int i = 0; i < n; i++) {
+77                 ret[i] = nextLong();
+78             }
+79             return ret;
+80         }
+81 
+82         private long[][] nextLongTable(int n, int m) {
+83             long[][] ret = new long[n][m];
+84             for (int i = 0; i < n; i++) {
+85                 for (int j = 0; j < m; j++) {
+86                     ret[i][j] = nextLong();
+87                 }
+88             }
+89             return ret;
+90         }
+91 
+92         private double[] nextDoubles(int n) {
+93             double[] ret = new double[n];
+94             for (int i = 0; i < n; i++) {
+95                 ret[i] = nextDouble();
+96             }
+97             return ret;
+98         }
+99 
+100         private int next() {
+101             if (numChars == -1)
+102                 throw new InputMismatchException();
+103             if (curChar >= numChars) {
+104                 curChar = 0;
+105                 try {
+106                     numChars = stream.read(buf);
+107                 } catch (IOException e) {
+108                     throw new InputMismatchException();
+109                 }
+110                 if (numChars <= 0)
+111                     return -1;
+112             }
+113             return buf[curChar++];
+114         }
+115 
+116         public char nextChar() {
+117             int c = next();
+118             while (isSpaceChar(c))
+119                 c = next();
+120             if ('a' <= c && c <= 'z') {
+121                 return (char) c;
+122             }
+123             if ('A' <= c && c <= 'Z') {
+124                 return (char) c;
+125             }
+126             throw new InputMismatchException();
+127         }
+128 
+129         public String nextToken() {
+130             int c = next();
+131             while (isSpaceChar(c))
+132                 c = next();
+133             StringBuilder res = new StringBuilder();
+134             do {
+135                 res.append((char) c);
+136                 c = next();
+137             } while (!isSpaceChar(c));
+138             return res.toString();
+139         }
+140 
+141         public int nextInt() {
+142             int c = next();
+143             while (isSpaceChar(c))
+144                 c = next();
+145             int sgn = 1;
+146             if (c == '-') {
+147                 sgn = -1;
+148                 c = next();
+149             }
+150             int res = 0;
+151             do {
+152                 if (c < '0' || c > '9')
+153                     throw new InputMismatchException();
+154                 res *= 10;
+155                 res += c-'0';
+156                 c = next();
+157             } while (!isSpaceChar(c));
+158             return res*sgn;
+159         }
+160 
+161         public long nextLong() {
+162             int c = next();
+163             while (isSpaceChar(c))
+164                 c = next();
+165             long sgn = 1;
+166             if (c == '-') {
+167                 sgn = -1;
+168                 c = next();
+169             }
+170             long res = 0;
+171             do {
+172                 if (c < '0' || c > '9')
+173                     throw new InputMismatchException();
+174                 res *= 10;
+175                 res += c-'0';
+176                 c = next();
+177             } while (!isSpaceChar(c));
+178             return res*sgn;
+179         }
+180 
+181         public double nextDouble() {
+182             return Double.valueOf(nextToken());
+183         }
+184 
+185         public boolean isSpaceChar(int c) {
+186             return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+187         }
+188 
+189         public interface SpaceCharFilter {
+190             public boolean isSpaceChar(int ch);
+191         }
+192     }
+193 
+194     static void debug(Object... o) {
+195         System.err.println(Arrays.deepToString(o));
+196     }
+197 }

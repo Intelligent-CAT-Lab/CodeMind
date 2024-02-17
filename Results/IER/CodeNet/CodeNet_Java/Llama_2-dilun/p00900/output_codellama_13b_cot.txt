@@ -1,0 +1,74 @@
+
+<<<Analysis>>>
+The variable h and w are initialized with 5 and 6 respectively according to the input.
+It enters a for loop and it iterates from 0 to 9 to check each integer i in this range. The value of variable i is also passed to variable p.
+Inside the for loop, it calculates the next value of variable next by repeatedly extracting the digits of number with a while loop and adding it to variable next.
+Then it checks if the calculated variable next falls within the range [0, 9]. If it does, it adds the current interger i to variable min. The condition is met when i is 0,1,2,3,4,5,6,7,8.
+After the loop finishes, it print the fianl value of variable min as output, which is 1.
+<<<Output>>>
+1
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+
+import java.util.*;
+import java.io.*;
+import static java.util.Arrays.*;
+import static java.util.Collections.*;
+import static java.lang.Math.*;
+
+public class Main {
+
+	int INF = 1 << 28;
+	//long INF = 1L << 62;
+	double EPS = 1e-10;
+	int h, w, size;
+	int[][] map;
+	boolean[][] bomb;
+	P[] ps;
+	
+	void run() {
+		Scanner sc = new Scanner(System.in);
+		for(;;) {
+			h = sc.nextInt(); w = sc.nextInt();
+			if((h|w) == 0) break;
+			
+			map = new int[h][w];
+			bomb = new boolean[h][w];
+			ArrayList<P> ps = new ArrayList<P>();
+			for(int i=0;i<h;i++) {
+				String l = sc.next();
+				for(int j=0;j<w;j++) {
+					switch ( l.charAt(j) ) {
+						case '.': map[i][j] = -1; break;
+						case '*': map[i][j] = 0;  break;
+						default:  map[i][j] = l.charAt(j) - '0';
+								  ps.add(new P(j, i));
+					}
+				}
+			}
+			
+			this.ps = ps.toArray(new P[]{});
+			size = ps.size();
+			memo = new HashMap<Long, Integer>();
+			pow10 = new long[size];
+			pow10[0] = 100L; 
+			long S = pow10[0] * map[this.ps[0].y][this.ps[0].x];
+			for(int i=1;i<size;i++) {
+				pow10[i] = pow10[i-1] * 10L;
+				S += pow10[i] * map[this.ps[i].y][this.ps[i].x];
+			}
+//			debug(pow10);
+			System.out.println(solve(S, 0));
+		}
+	}
+	
+	int[] dx = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
+	int[] dy = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
+	long[] pow10;
+	HashMap<Long, Integer> memo;
+	int solve(long S, int cnt) {
+		int p = (int)(S % 100);
+//		debug(S, cnt, p);
+		if(memo.containsKey(S)) return memo.get(S);

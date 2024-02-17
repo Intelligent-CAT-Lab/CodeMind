@@ -1,0 +1,83 @@
+1 import java.util.HashMap;
+2 import java.util.Map;
+3 import java.util.PriorityQueue;
+4 import java.util.Scanner;
+5 
+6 class Pair implements Comparable<Pair> {
+7     Node node;
+8     int frequency;
+9 
+10     Pair(Node node, int frequency) {
+11         this.node = node;
+12         this.frequency = frequency;
+13     }
+14 
+15     public int compareTo(Pair p) {
+16         return frequency - p.frequency;
+17     }
+18 }
+19 
+20 class Node {
+21     char c;
+22     Node parent;
+23 
+24     Node(char c) {
+25         this.c = c;
+26     }
+27 
+28     int depth() {
+29         if(parent == null) return 0;
+30         return parent.depth() + 1;
+31     }
+32 }
+33 
+34 public class Main {
+35     public static void main(String[] args) {
+36         Scanner sc = new Scanner(System.in);
+37  
+38         String s = sc.next();
+39         int[] frequency = new int[26];
+40         for(int i = 0; i < s.length(); i++) {
+41             frequency[s.charAt(i) - 'a']++;
+42         }
+43 
+44         PriorityQueue<Pair> que = new PriorityQueue<>();
+45         Map<Character, Node> map = new HashMap<>();
+46         for(int i = 0; i < 26; i++) {
+47             int tmp = frequency[i];
+48             if(tmp > 0) {
+49                 char c = (char)('a' + i);
+50                 Node node = new Node(c);
+51                 que.add(new Pair(node, tmp));
+52                 map.put(c, node);
+53             }
+54         }
+55 
+56         while(que.size() > 1) {
+57             Pair p1 = que.poll();
+58             Pair p2 = que.poll();
+59             Node n1 = p1.node;
+60             Node n2 = p2.node;
+61 
+62             Node parent = new Node('.');
+63             n1.parent = parent;
+64             n2.parent = parent;
+65             int newFreq = p1.frequency + p2.frequency;
+66             que.add(new Pair(parent, newFreq));
+67         }
+68 
+69         int res = 0;
+70         for(int i = 0; i < 26; i++) {
+71             int tmp = frequency[i];
+72             if(tmp > 0) {
+73                 char c = (char)('a' + i);
+74                 res += tmp * (map.get(c).depth());
+75             }
+76         }
+77 
+78         System.out.println(map.size() > 1? res : s.length());
+79         
+80         sc.close();
+81     }
+82 }
+83 

@@ -1,0 +1,52 @@
+1 import java.util.Arrays;
+2 import java.util.Scanner;
+3 
+4 public class Main
+5 {
+6 	public static void main(String atg[])
+7 	{		
+8 		Scanner sc = new Scanner(System.in);
+9 		String s[] = new String[2002];
+10 		int index = 0;
+11 		while(sc.hasNext())
+12 		{
+13 			String str = sc.next();
+14 			s[index] = str;
+15 			index++;
+16 		}
+17 
+18 		int r[] = new int [index];
+19 		boolean flag[] = new boolean[2002];
+20 		Arrays.fill(flag, true);
+21 		int fre=0;
+22 		for(int i=0; i<index; i++)
+23 		{
+24 			for(int j=i+1; j<index; j++)
+25 			{
+26 				if(s[i].equals(s[j])&&flag[j]==true)
+27 				{
+28 					r[i]++;
+29 					flag[j]=false;
+30 				}
+31 			}
+32 		}
+33 		int max=0;
+34 		int maxin=0;
+35 		for(int i=0; i<index; i++)
+36 		{
+37 			if(max < r[i])
+38 			{
+39 				max=r[i];
+40 				maxin = i;
+41 			}
+42 		}
+43 		System.out.print(s[maxin]+" ");
+44 		max =0;
+45 		for(int i=0; i<index; i++)
+46 			if(s[max].length()<s[i].length())
+47 			{
+48 				max =i;
+49 			}
+50 		System.out.println(s[max]);
+51 	}
+52 }

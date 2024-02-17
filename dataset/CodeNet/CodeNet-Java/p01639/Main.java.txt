@@ -1,0 +1,86 @@
+1 import java.util.*;
+2 import java.lang.*;
+3 import java.math.*;
+4 import java.io.*;
+5 import static java.lang.Math.*;
+6 import static java.util.Arrays.*;
+7 import static java.util.Collections.*;
+8 
+9 // MLE
+10 public class Main{
+11 	Scanner sc=new Scanner(System.in);
+12 
+13 	int n, k;
+14 	long x0;
+15 
+16 	void run(){
+17 		n=sc.nextInt();
+18 		k=sc.nextInt()-1;
+19 		x0=sc.nextLong();
+20 		solve();
+21 	}
+22 
+23 	void solve(){
+24 		if(x0==0){
+25 			println("0");
+26 			return;
+27 		}
+28 
+29 		long x=x0;
+30 		int s=(int)1e4;
+31 		int[] count=new int[s];
+32 		double offset=pow(2, 63), M=s/pow(2, 64);
+33 		for(int i=0; i<n; i++){
+34 			int at=(int)((x+offset)*M);
+35 			if(at<0){
+36 				at=0;
+37 			}
+38 			if(at>=s){
+39 				at=s-1;
+40 			}
+41 			count[at]++;
+42 			x^=x<<13;
+43 			x^=x>>>7;
+44 			x^=x<<17;
+45 		}
+46 
+47 		int sum=0, length=-1, target=-1;
+48 		for(int i=0; i<s; i++){
+49 			if(sum<=k&&k<sum+count[i]){
+50 				target=i;
+51 				length=count[i];
+52 				break;
+53 			}
+54 			sum+=count[i];
+55 		}
+56 
+57 		int now=0;
+58 		long[] is=new long[length];
+59 		x=x0;
+60 		for(int i=0; i<n; i++){
+61 			int at=(int)((x+offset)*M);
+62 			if(at<0){
+63 				at=0;
+64 			}
+65 			if(at>=s){
+66 				at=s-1;
+67 			}
+68 			if(at==target){
+69 				is[now++]=x;
+70 			}
+71 			x^=x<<13;
+72 			x^=x>>>7;
+73 			x^=x<<17;
+74 		}
+75 		sort(is);
+76 		println(is[k-sum]+"");
+77 	}
+78 
+79 	void println(String s){
+80 		System.out.println(s);
+81 	}
+82 
+83 	public static void main(String[] args){
+84 		new Main().run();
+85 	}
+86 }

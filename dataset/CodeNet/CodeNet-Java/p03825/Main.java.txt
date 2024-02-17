@@ -1,0 +1,90 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.PrintWriter;
+5 import java.util.Arrays;
+6 import java.util.StringTokenizer;
+7 import java.io.IOException;
+8 import java.io.BufferedReader;
+9 import java.io.InputStreamReader;
+10 import java.io.InputStream;
+11 
+12 /**
+13  * Built using CHelper plug-in
+14  * Actual solution is at the top
+15  */
+16 public class Main {
+17     public static void main(String[] args) {
+18         InputStream inputStream = System.in;
+19         OutputStream outputStream = System.out;
+20         InputReader in = new InputReader(inputStream);
+21         PrintWriter out = new PrintWriter(outputStream);
+22         TaskE solver = new TaskE();
+23         solver.solve(1, in, out);
+24         out.close();
+25     }
+26 
+27     static class TaskE {
+28         static final int MODULO = (int) (1e9 + 7);
+29 
+30         public void solve(int testNumber, InputReader in, PrintWriter out) {
+31             int zeroes = in.nextInt();
+32             int ones = in.nextInt();
+33             int k = in.nextInt();
+34             int depth = (zeroes + ones - 1) / (k - 1);
+35             int[] ways = new int[ones + 1];
+36             ways[0] = 1;
+37             long res = 0;
+38             boolean[] nice = new boolean[ones + 1];
+39             for (int i = 1; i <= depth; ++i) {
+40                 Arrays.fill(nice, false);
+41                 for (int extra = 0; i + extra <= depth; ++extra) {
+42                     int now = ones - extra * (k - 1);
+43                     if (now >= 0) {
+44                         nice[now] = true;
+45                     }
+46                 }
+47                 for (int old = ones; old >= 0; --old)
+48                     if (ways[old] != 0) {
+49                         for (int cur = 1; cur < k && old + cur <= ones; ++cur) {
+50                             if (nice[old + cur]) {
+51                                 res += ways[old];
+52                                 if (res >= MODULO) res -= MODULO;
+53                             }
+54                             ways[old + cur] += ways[old];
+55                             if (ways[old + cur] >= MODULO) ways[old + cur] -= MODULO;
+56                         }
+57                     }
+58             }
+59             out.println(res);
+60         }
+61 
+62     }
+63 
+64     static class InputReader {
+65         public BufferedReader reader;
+66         public StringTokenizer tokenizer;
+67 
+68         public InputReader(InputStream stream) {
+69             reader = new BufferedReader(new InputStreamReader(stream), 32768);
+70             tokenizer = null;
+71         }
+72 
+73         public String next() {
+74             while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+75                 try {
+76                     tokenizer = new StringTokenizer(reader.readLine());
+77                 } catch (IOException e) {
+78                     throw new RuntimeException(e);
+79                 }
+80             }
+81             return tokenizer.nextToken();
+82         }
+83 
+84         public int nextInt() {
+85             return Integer.parseInt(next());
+86         }
+87 
+88     }
+89 }
+90 

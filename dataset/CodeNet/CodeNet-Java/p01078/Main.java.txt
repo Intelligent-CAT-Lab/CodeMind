@@ -1,0 +1,273 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.OutputStream;
+4 import java.io.PrintWriter;
+5 import java.util.NoSuchElementException;
+6 
+7 /*
+8                    _ooOoo_
+9                   o8888888o
+10                   88" . "88
+11                   (| -_- |)
+12                   O\  =  /O
+13                ____/`---'\____
+14              .'  \\|     |//  `.
+15             /  \\|||  :  |||//  \
+16            /  _||||| -:- |||||-  \
+17            |   | \\\  -  /// |   |
+18            | \_|  ''\---/''  |   |
+19            \  .-\__  `-`  ___/-. /
+20          ___`. .'  /--.--\  `. . __
+21       ."" '<  `.___\_<|>_/___.'  >'"".
+22      | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+23      \  \ `-.   \_ __\ /__ _/   .-` /  /
+24 ======`-.____`-.___\_____/___.-`____.-'======
+25                    `=---='
+26 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+27             pass System Test!
+28 */
+29 
+30 public class Main {
+31   private static class Task {
+32     void solve(FastScanner in, PrintWriter out) throws Exception {
+33       int N = in.nextInt();
+34       int K = in.nextInt();
+35       Point a = new Point(1.0, 0.0);
+36       Point b = new Point(Math.cos(Math.PI * 2 / N), Math.sin(Math.PI * 2 / N));
+37       Point pa = new Point(Math.cos(Math.PI * 2 / N * K), Math.sin(Math.PI * 2 / N * K));
+38       Point pb = new Point(Math.cos(Math.PI * 2 / N * (1 - K)), Math.sin(Math.PI * 2 / N * (1 - K)));
+39 
+40       Point intersection = lineIntersection(a, pa, b, pb);
+41       Point ai = a.sub(intersection);
+42       Point bi = b.sub(intersection);
+43       double S = Math.abs(ai.det(bi)) / 2;
+44       double convex = Math.abs(a.det(b)) / 2 * N;
+45       out.print(convex - S * N);
+46 
+47     }
+48 
+49     private static double EPS = 2e-8;
+50     /**
+51      * Return the point which is intersection of line p1-p2 and q1-q2
+52      *
+53      * @param p1
+54      * @param p2
+55      * @param q1
+56      * @param q2
+57      * @return
+58      */
+59     public static Point lineIntersection(Point p1, Point p2, Point q1, Point q2) {
+60       double a = (q2.sub(q1)).det(q1.sub(p1));
+61       double b = (q2.sub(q1)).det(p2.sub(p1));
+62       return p1.add((p2.sub(p1)).multiply(a / b));
+63     }
+64 
+65     /**
+66      * Return point p is on segment a-b
+67      *
+68      * @param a
+69      * @param b
+70      * @param p
+71      * @return
+72      */
+73     public static boolean onSegment(Point a, Point b, Point p) {
+74       if (Math.abs(a.x - b.x) < EPS)
+75         return Math.min(a.y, b.y) <= p.y && p.y <= Math.max(a.y, b.y);
+76       double alpha = (b.y - a.y) / (b.x - a.x);
+77       double beta = a.y - alpha * a.x;
+78       return Math.abs(p.y - (alpha * p.x + beta)) < EPS && Math.min(a.x, b.x) <= p.x && p.x <= Math.max(a.x, b.x);
+79     }
+80 
+81     class Point implements Comparable<Point> {
+82       double x, y;
+83       Point(double x, double y) {
+84         this.x = x;
+85         this.y = y;
+86       }
+87 
+88       @Override
+89       public int compareTo(Point o) {
+90         if (this.x == o.x) return Double.compare(this.y, o.y);
+91         return Double.compare(this.x, o.x);
+92       }
+93 
+94       /**
+95        * ??????????¨????????????????
+96        *
+97        * @param p
+98        * @return
+99        */
+100       public double det(Point p) {
+101         return x * p.y - y * p.x;
+102       }
+103 
+104       /**
+105        * ??????
+106        *
+107        * @param p
+108        * @return
+109        */
+110       public double dot(Point p) {
+111         return x * p.x + y * p.y;
+112       }
+113 
+114       public Point sub(Point p) {
+115         return new Point(x - p.x, y - p.y);
+116       }
+117 
+118       public Point add(Point p) {
+119         return new Point(x + p.x, y + p.y);
+120       }
+121 
+122       public Point multiply(double d) {
+123         return new Point(x * d, y * d);
+124       }
+125 
+126     }
+127   }
+128 
+129   /**
+130    * ?????????????????????????????¬????????§??????
+131    */
+132   public static void main(String[] args) throws Exception {
+133     OutputStream outputStream = System.out;
+134     FastScanner in = new FastScanner();
+135     PrintWriter out = new PrintWriter(outputStream);
+136     Task solver = new Task();
+137     solver.solve(in, out);
+138     out.close();
+139   }
+140   private static class FastScanner {
+141     private final InputStream in = System.in;
+142     private final byte[] buffer = new byte[1024];
+143     private int ptr = 0;
+144     private int bufferLength = 0;
+145 
+146     private boolean hasNextByte() {
+147       if (ptr < bufferLength) {
+148         return true;
+149       } else {
+150         ptr = 0;
+151         try {
+152           bufferLength = in.read(buffer);
+153         } catch (IOException e) {
+154           e.printStackTrace();
+155         }
+156         if (bufferLength <= 0) {
+157           return false;
+158         }
+159       }
+160       return true;
+161     }
+162 
+163     private int readByte() {
+164       if (hasNextByte()) return buffer[ptr++];
+165       else return -1;
+166     }
+167 
+168     private static boolean isPrintableChar(int c) {
+169       return 33 <= c && c <= 126;
+170     }
+171 
+172     private void skipUnprintable() {
+173       while (hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++;
+174     }
+175 
+176     boolean hasNext() {
+177       skipUnprintable();
+178       return hasNextByte();
+179     }
+180 
+181     public String next() {
+182       if (!hasNext()) throw new NoSuchElementException();
+183       StringBuilder sb = new StringBuilder();
+184       int b = readByte();
+185       while (isPrintableChar(b)) {
+186         sb.appendCodePoint(b);
+187         b = readByte();
+188       }
+189       return sb.toString();
+190     }
+191 
+192     long nextLong() {
+193       if (!hasNext()) throw new NoSuchElementException();
+194       long n = 0;
+195       boolean minus = false;
+196       int b = readByte();
+197       if (b == '-') {
+198         minus = true;
+199         b = readByte();
+200       }
+201       if (b < '0' || '9' < b) {
+202         throw new NumberFormatException();
+203       }
+204       while (true) {
+205         if ('0' <= b && b <= '9') {
+206           n *= 10;
+207           n += b - '0';
+208         } else if (b == -1 || !isPrintableChar(b)) {
+209           return minus ? -n : n;
+210         } else {
+211           throw new NumberFormatException();
+212         }
+213         b = readByte();
+214       }
+215     }
+216 
+217     double nextDouble() {
+218       return Double.parseDouble(next());
+219     }
+220 
+221     double[] nextDoubleArray(int n) {
+222       double[] array = new double[n];
+223       for (int i = 0; i < n; i++) {
+224         array[i] = nextDouble();
+225       }
+226       return array;
+227     }
+228 
+229     double[][] nextDoubleMap(int n, int m) {
+230       double[][] map = new double[n][];
+231       for (int i = 0; i < n; i++) {
+232         map[i] = nextDoubleArray(m);
+233       }
+234       return map;
+235     }
+236 
+237     public int nextInt() {
+238       return (int) nextLong();
+239     }
+240 
+241     public int[] nextIntArray(int n) {
+242       int[] array = new int[n];
+243       for (int i = 0; i < n; i++) array[i] = nextInt();
+244       return array;
+245     }
+246 
+247     public long[] nextLongArray(int n) {
+248       long[] array = new long[n];
+249       for (int i = 0; i < n; i++) array[i] = nextLong();
+250       return array;
+251     }
+252 
+253     public String[] nextStringArray(int n) {
+254       String[] array = new String[n];
+255       for (int i = 0; i < n; i++) array[i] = next();
+256       return array;
+257     }
+258 
+259     public char[][] nextCharMap(int n) {
+260       char[][] array = new char[n][];
+261       for (int i = 0; i < n; i++) array[i] = next().toCharArray();
+262       return array;
+263     }
+264 
+265     public int[][] nextIntMap(int n, int m) {
+266       int[][] map = new int[n][];
+267       for (int i = 0; i < n; i++) {
+268         map[i] = nextIntArray(m);
+269       }
+270       return map;
+271     }
+272   }
+273 }

@@ -1,0 +1,59 @@
+1 public class Main
+2 {
+3     
+4     public static long low = 1, high = (long)Math.pow(3, 32), n;
+5     
+6     public static void main(String[] args)
+7     {
+8         n = new java.util.Scanner(System.in).nextLong();
+9         long ans = (n == 0) ? -1 : dfs(1, 1);
+10         System.out.println(ans + 1);
+11     }
+12     
+13     public static long dfs(long pos, long pace)
+14     {
+15         if(pos > n) return 0;
+16         // 3.0X
+17         if(pace < high)
+18         {
+19             long npace = 3 * pace;
+20             long npos = pos + npace;
+21             if(npos == n & (npace == 1 | npace == 3)) return 1;
+22             else
+23             {
+24 //                if(npos > n) return 0;
+25                 long temp = dfs(npos, npace);
+26                 if (temp != 0) return 1 + temp;
+27             }
+28         }
+29         
+30         // 1.0X
+31         {
+32             long npace = pace;
+33             long npos = npace + pos;
+34             if(npos == n & (npace == 1 | npace == 3)) return 1;
+35             else
+36             {
+37 //                if(npos > n) return 0;
+38                 long temp = dfs(npos, npace);
+39                 if (temp != 0) return 1 + temp;
+40             }
+41         }
+42         
+43         // 0.3X
+44         if(pace > low)
+45         {
+46             long npace = pace / 3;
+47             long npos = pos + npace;
+48             if(npos == n & (npace == 3 | npace == 1)) return 1;
+49             else
+50             {
+51 //                if(npos > n) return 0;
+52                 long temp = dfs(npos, npace);
+53                 if(temp != 0) return 1 + temp;
+54             }
+55         }
+56         return 0;
+57     }
+58     
+59 }

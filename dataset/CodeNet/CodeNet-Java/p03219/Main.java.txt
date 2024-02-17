@@ -1,0 +1,352 @@
+1 import java.awt.*;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.math.BigDecimal;
+5 import java.util.*;
+6 import java.util.List;
+7 import java.util.concurrent.DelayQueue;
+8 import java.util.function.IntFunction;
+9 import java.util.function.Supplier;
+10 import java.util.stream.Collectors;
+11 import java.util.stream.IntStream;
+12 import java.util.stream.Stream;
+13 
+14 
+15 public class Main {
+16     public static void main(String[] args) {
+17         Scanner scanner = new Scanner();
+18         int x= scanner.nextInt();
+19         int y= scanner.nextInt();
+20         put(x+y/2);
+21 
+22 
+23     }
+24 
+25 
+26     public static int upper_bound(int[] a,int val){
+27         return upper_bound(a,0,a.length,val);
+28     }
+29     public static int upper_bound(int[] a,int l,int r,int val){
+30         if(r-l==1){
+31             if(a[l]>val) return l;
+32             return r;
+33         }
+34         int mid=(l+r)/2;
+35         if(a[mid]>val){
+36             return upper_bound(a,l,mid,val);
+37         }else{
+38             return upper_bound(a,mid,r,val);
+39         }
+40     }
+41     public static int lower_bound(int[] a,int val){
+42         return lower_bound(a,0,a.length,val);
+43     }
+44     public static int lower_bound(int[] a,int l,int r,int val){
+45         if(r-l==1){
+46             if(a[l]<val) return r;
+47             return l;
+48         }
+49         int mid=(l+r)/2;
+50         if(a[mid]<val){
+51             return lower_bound(a,mid,r,val);
+52         }else{
+53             return lower_bound(a,l,mid,val);
+54         }
+55 
+56     }
+57 
+58 
+59     public static int max(int a,int b){
+60         return Math.max(a,b);
+61     }
+62     public static long max(long a,long b){
+63         return Math.max(a,b);
+64     }
+65     public static int min(int a,int b){
+66         return Math.min(a,b);
+67     }
+68     public static long min(long a,long b){
+69         return Math.min(a,b);
+70     }
+71     public static int abs(int a){
+72         return Math.abs(a);
+73     }
+74     public static long abs(long a){
+75         return Math.abs(a);
+76     }
+77     public static void print(Object object){
+78         System.out.print(object);
+79     }
+80     public static void put(Object object) {
+81         System.out.println(object);
+82     }
+83     public static void put(){
+84         System.out.println();
+85     }
+86     public static String format(String string, Object... args) {
+87         return String.format(string, args);
+88     }
+89 }
+90 
+91 final class Scanner {
+92     private final InputStream in = System.in;
+93     private final byte[] buffer = new byte[1024];
+94     private int ptr = 0;
+95     private int buflen = 0;
+96 
+97     private boolean hasNextByte() {
+98         if (ptr < buflen) {
+99             return true;
+100         } else {
+101             ptr = 0;
+102             try {
+103                 buflen = in.read(buffer);
+104             } catch (IOException e) {
+105                 e.printStackTrace();
+106             }
+107             if (buflen <= 0) {
+108                 return false;
+109             }
+110         }
+111         return true;
+112     }
+113 
+114     private int readByte() {
+115         if (hasNextByte())
+116             return buffer[ptr++];
+117         else
+118             return -1;
+119     }
+120 
+121     private boolean isPrintableChar(int c) {
+122         return 33 <= c && c <= 126;
+123     }
+124 
+125     public boolean hasNext() {
+126         while (hasNextByte() && !isPrintableChar(buffer[ptr]))
+127             ptr++;
+128         return hasNextByte();
+129     }
+130 
+131     public String next() {
+132         if (!hasNext())
+133             throw new NoSuchElementException();
+134         StringBuilder sb = new StringBuilder();
+135         int b = readByte();
+136         while (isPrintableChar(b)) {
+137             sb.appendCodePoint(b);
+138             b = readByte();
+139         }
+140         return sb.toString();
+141     }
+142 
+143     public long nextLong() {
+144         if (!hasNext())
+145             throw new NoSuchElementException();
+146         long n = 0;
+147         boolean minus = false;
+148         int b = readByte();
+149         if (b == '-') {
+150             minus = true;
+151             b = readByte();
+152         }
+153         if (b < '0' || '9' < b) {
+154             throw new NumberFormatException();
+155         }
+156         while (true) {
+157             if ('0' <= b && b <= '9') {
+158                 n *= 10;
+159                 n += b - '0';
+160             } else if (b == -1 || !isPrintableChar(b)) {
+161                 return minus ? -n : n;
+162             } else {
+163                 throw new NumberFormatException();
+164             }
+165             b = readByte();
+166         }
+167     }
+168 
+169     public int nextInt() {
+170         long nl = nextLong();
+171         if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE)
+172             throw new NumberFormatException();
+173         return (int) nl;
+174     }
+175 
+176     public double nextDouble() {
+177         return Double.parseDouble(next());
+178     }
+179 }
+180 final class FixedPair {
+181     final private int x, y;
+182     final static public FixedPair ZEROS=new FixedPair(0,0);
+183     FixedPair(int x, int y) {
+184         this.x = x;
+185         this.y = y;
+186     }
+187 
+188     public int getX() {
+189         return x;
+190     }
+191 
+192     public int getY() {
+193         return y;
+194     }
+195 
+196     @Override
+197     public int hashCode() {
+198         return x+y;
+199     }
+200 
+201     @Override
+202     public boolean equals(Object obj) {
+203         boolean result=super.equals(obj);
+204         if(obj.getClass()!=this.getClass()){
+205             return false;
+206         }
+207         FixedPair pair=(FixedPair)obj;
+208         if(this.x==pair.x&&this.y==pair.y) return true;
+209         return false;
+210     }
+211 
+212     @Override
+213     public String toString() {
+214         return String.format("(%d,%d)", x, y);
+215     }
+216 }
+217 final class Tuple<T,V>{
+218     //immutabl1でないことに注意(T,Vがmutableの場合変更可能)
+219     final private T t;
+220     final private V v;
+221     Tuple(T t,V v){
+222         this.t=t;
+223         this.v=v;
+224     }
+225 
+226     public T getT() {
+227         return t;
+228     }
+229 
+230     public V getV() {
+231         return v;
+232     }
+233 
+234     @Override
+235     public int hashCode() {
+236         return (t.hashCode()+v.hashCode());
+237     }
+238 
+239     @Override
+240     @SuppressWarnings("unchecked")
+241     public boolean equals(Object obj) {
+242         if(obj.getClass()!=this.getClass()){
+243             return false;
+244         }
+245         Tuple<T,V> tuple=(Tuple<T, V>) obj;
+246         return tuple.t.equals(this.t)&&tuple.v.equals(this.v);
+247     }
+248 
+249     @Override
+250     public String toString() {
+251         return String.format("<Tuple>=<%s,%s>",t,v);
+252     }
+253 }
+254 final class LowerBoundComparator<T extends Comparable<? super T>>
+255         implements Comparator<T>
+256 {
+257     public int compare(T x, T y)
+258     {
+259         return (x.compareTo(y) >= 0) ? 1 : -1;
+260     }
+261 }
+262 
+263 final class UpperBoundComparator<T extends Comparable<? super T>>
+264         implements Comparator<T>
+265 {
+266     public int compare(T x, T y)
+267     {
+268         return (x.compareTo(y) > 0) ? 1 : -1;
+269     }
+270 }
+271 final class Util {
+272     static long gcd(long a,long b){
+273         if(a%b==0)return b;
+274         return gcd(b,a%b);
+275     }
+276     static long lcm(long a,long b){
+277         long gcd=gcd(a,b);
+278         long result=b/gcd;
+279         return a*result;
+280     }
+281     static long kaijoMod(int n,int mod){
+282         if(n<1) return -1;
+283         long result=1;
+284         for(int i=n;i>1;i--){
+285             result*=i;
+286             result%=mod;
+287         }
+288         return result;
+289     }
+290     static <T extends Comparable<T>> Map<T,Integer> count(List<T> list){
+291         //副作用
+292         Collections.sort(list);
+293         Map<T,Integer> result=new HashMap<>();
+294         int l=0,r=0;
+295         while(l<list.size()){
+296             while(r<list.size()-1&&list.get(r).equals(r+1)){
+297                 r++;
+298             }
+299             result.put(list.get(r),r-l+1);
+300             r++;
+301             l=r;
+302         }
+303         return result;
+304 
+305     }
+306     static Map<Integer,Integer> count(int[] array){
+307         //副作用
+308         Arrays.sort(array);
+309         Map<Integer,Integer> result=new HashMap<>();
+310         int l=0,r=0;
+311         while(l<array.length){
+312             while(r<array.length-1&&array[r]==array[r+1]){
+313                 r++;
+314             }
+315             result.put(array[l],r-l+1);
+316             r++;
+317             l=r;
+318         }
+319         return result;
+320     }
+321     static <T> String toStringBWS(Iterable<T> iterable){
+322         Iterator<T> ite=iterable.iterator();
+323         return toStringBWS(ite);
+324     }
+325     static <T> String toStringBWS(Iterator<T> ite){
+326         StringBuilder sb=new StringBuilder();
+327         sb.append(ite.next());
+328         while(ite.hasNext()){
+329             sb.append(" ");
+330             sb.append(ite.next());
+331         }
+332         return sb.toString();
+333     }
+334     static String toStringBWS(int[] array){
+335         StringBuilder sb=new StringBuilder();
+336         for(int i=0;i<array.length-1;i++){
+337             sb.append(array[i]);
+338             sb.append(" ");
+339         }
+340         sb.append(array[array.length-1]);
+341         return sb.toString();
+342     }
+343     static String toStringBWS(long[] array){
+344         StringBuilder sb=new StringBuilder();
+345         for(int i=0;i<array.length-1;i++){
+346             sb.append(array[i]);
+347             sb.append(" ");
+348         }
+349         sb.append(array[array.length-1]);
+350         return sb.toString();
+351     }
+352 }

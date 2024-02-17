@@ -1,0 +1,109 @@
+
+<<<Analysis>>>
+The code first checks if a is less than b. If it is, it will use the first branch of the if statement. Otherwise, it will use the second branch.
+The code then calls the function rec() with a and b as parameters.
+The function rec() will recursively call itself until it reaches the base case.
+The base case is when r is 0.
+The function will return the values of x, y and gcd.
+The code then prints the values of x and y.
+<<<Output>>>
+-1 11
+[END-OF-RESPONSE]
+
+[INST]
+    Consider the following code:
+<Code>
+# -*- coding: utf-8 -*-
+from __future__ import print_function
+
+
+def rec(a, b):
+    """a * x + b * y = gcd(a, b)??¨??????????????? (x, y, gcd)?????????"""
+    assert a >= b
+    q, r = divmod(a, b)
+    if r == 0:
+        return 0, 1, b
+    x, y, gcd = rec(b, r)
+    # a = b * q + r
+    # b * x + r * y = gcd
+    # a * y + b * (x - q * y) = gcd
+    return y, x - q * y, gcd
+
+
+a, b = [int(_) for _ in raw_input().split()]
+
+if a < b:
+    y0, x0, gcd = rec(b, a)
+else:
+    x0, y0, gcd = rec(a, b)
+
+# -a/gcd * (x - x0) = b/gcd * (y - y0)
+# x = x0 + (b/gcd) * k, y = y0 + (-a/gcd) * k
+dx = b // gcd
+dy = -a // gcd
+if dx < 0:
+    dx = -dx
+    dy = -dy
+x = x0
+y = y0
+mag = abs(x) + abs(y)
+
+while True:
+    x1 = x + dx
+    y1 = y + dy
+    mag1 = abs(x1) + abs(y1)
+    if mag1 >= mag:
+        break
+    mag = mag1
+    x = x1
+    y = y1
+
+while True:
+    x1 = x - dx
+    y1 = y - dy
+    mag1 = abs(x1) + abs(y1)
+    if mag1 > mag:
+        break
+    mag = mag1
+    x = x1
+    y = y1
+
+print(x, y)
+<Code>
+
+What would be the output of code executiion given the following input:
+```4 12
+```
+
+First analyze step by step about how the code processes the input. 
+Then print the output of the code based on your analysis.
+
+Follow the following format:
+<<<Analysis>>>
+{YOUR ANALYSIS}
+<<<Output>>>
+{OUTPUT}
+[END-OF-RESPONSE]
+[/INST]
+<<<Analysis>>>
+The code first checks if a is less than b. If it is, it will use the first branch of the if statement. Otherwise, it will use the second branch.
+The code then calls the function rec() with a and b as parameters.
+The function rec() will recursively call itself until it reaches the base case.
+The base case is when r is 0.
+The function will return the values of x, y and gcd.
+The code then prints the values of x and y.
+<<<Output>>>
+-1 11
+[END-OF-RESPONSE]
+
+[INST]
+    Consider the following code:
+<Code>
+# -*- coding: utf-8 -*-
+from __future__ import print_function
+
+
+def rec(a, b):
+    """a * x + b * y = gcd(a, b)??¨??????????????? (x, y, gcd)?????????"""
+    assert a >= b
+    q, r = div

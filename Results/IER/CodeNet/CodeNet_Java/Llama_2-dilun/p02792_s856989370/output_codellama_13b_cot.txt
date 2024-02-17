@@ -1,0 +1,95 @@
+
+<<<Analysis>>>
+The variable n is initialized with 25 according to the input.
+It enters a for loop and it iterates from 1 to 25 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [2, 5]. If it does, it adds the current interger i to variable answer. The condition is met when i is 2,3,4,5,11,12,13,14 and 20.
+After the loop finishes, it print the fianl value of variable answer as output, which is 84.
+<<<Output>>>
+84
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.NoSuchElementException;
+
+public class Main {
+
+	public static void main(String[] args) {
+		FastScanner sc = new FastScanner();
+		int n = sc.nextInt();
+
+		long ans = 0;
+
+		long[][] count = new long[10][10];
+
+		for (int i = 1; i <= n; i++) {
+			int j = i;
+			while (j >= 10) {
+				j /= 10;
+			}
+			count[j][i % 10]++;
+		}
+
+		for (int i = 1; i <= 9; i++) {
+			for (int j = 1; j <= 9; j++)
+				ans += (count[i][j] * count[j][i]);
+		}
+
+		System.out.println(ans);
+	}
+
+	//以下、自作ライブラリ
+
+	/*
+		int N = sc.nextInt();
+	
+		int[] a = new int[N];
+		for (int i = 0; i < N; i++)
+			a[i] = sc.nextInt();
+	
+		String s = sc.next();
+	
+		String[] a = new String[N];
+		for (int i = 0; i < N; i++)
+			a[i] = sc.next();
+	
+		int[][] a = new int[N][2];
+		for (int i = 0; i < N; i++) {
+			a[i][0] = sc.nextInt();
+			a[i][1] = sc.nextInt();
+		}
+		Arrays.sort(a, (x, y) -> Integer.compare(x[0], y[0]));
+	
+		List<Integer> list = new ArrayList<>();
+	
+		Set<Integer> set = new HashSet<>();
+	 */
+
+	//階乗
+	public static int fact(int n) {
+		if (n == 1 || n == 0)
+			return 1;
+		else
+			return n * fact(n - 1);
+	}
+
+	//指定した値以上の要素が最初に現れる位置
+	//要素の数は+1（配列のズレ)
+	public static long lowerBound(int n, long[] x, long y) {
+		int left = 0;
+		int right = n;
+		while (left < right) {
+			int mid = (left + right) / 2;
+			if (x[mid] < y) {
+				left = mid + 1;
+			} else {
+				right = mid;
+			}
+		}
+		return left;
+	}
+
+	//指定した値より大きい要素が最初に現れ

@@ -1,0 +1,57 @@
+1 
+2 import java.io.IOException;
+3 import java.util.Scanner;
+4 
+5 public class Main {
+6 
+7 	public static void main(String[] args) throws IOException {
+8 
+9 		new Main().run();
+10 	}
+11 
+12 	private void run() throws IOException {
+13 		Scanner scanner = new Scanner(System.in);
+14 		int n = scanner.nextInt();
+15 		int c = scanner.nextInt();
+16 		int[] num = new int[n];
+17 		if (c < 0) {
+18 			if (n == 1)
+19 				System.out.println(11);
+20 			else {
+21 				for (int i = 0; i < n * 2; i++)
+22 					System.out.print(9);
+23 				System.out.println();
+24 			}
+25 		} else {
+26 			int a = 1;
+27 			for (int i = 0; i < n; i++)
+28 				a *= 10;
+29 			int b = a / 10;
+30 			a--;
+31 			for (int i = a; i >= b; i--) {
+32 				if (check(i, c))
+33 					return;
+34 
+35 			}
+36 		}
+37 	}
+38 
+39 	private boolean check(int i, int c) {
+40 		StringBuilder builder = new StringBuilder(String.valueOf(i));
+41 		StringBuilder builder2 = new StringBuilder(String.valueOf(i)).reverse();
+42 		builder.append(c).append(builder2);
+43 		if (prime(Integer.valueOf(builder.toString()))) {
+44 			System.out.println(builder);
+45 			return true;
+46 		} else
+47 			return false;
+48 
+49 	}
+50 
+51 	private boolean prime(int b) {
+52 		for (int i = 2; i * i <= b; i++)
+53 			if (b % i == 0)
+54 				return false;
+55 		return true;
+56 	}
+57 }

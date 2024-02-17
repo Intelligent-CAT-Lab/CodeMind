@@ -1,0 +1,7 @@
+{
+    "0": {
+        "prompt": "Consider the following code:\nimport java.util.*;\nclass Main{\n  static int[][][] dp;\n  static int mod = (int)1e9+7;\n  public static void main(String[] args){\n    Scanner scan = new Scanner(System.in);\n    int n = scan.nextInt();\n    int m = scan.nextInt();\n    dp = new int[2][n+1][2];\n    dp[0][0][1]=1;\n    for(int i=1;i<=n;++i)dp[0][i][0]=1;\n    for(int i=0;i<m;++i){\n      for(int j=0;j<=n;++j){\n\t\tfor(int k=0;k<2;++k){\n          if(j==0){\n            if(k==0)dp[(i+1)%2][0][0]=0;\n            else dp[(i+1)%2][0][1] = (dp[i%2][0][1] + (dp[i%2][1][0] + dp[i%2][1][1])%mod)%mod;\n          }else if(j==1){\n            if(k==0){\n              if(n<2)dp[(i+1)%2][j][k]=0;\n              else dp[(i+1)%2][1][0] = (dp[i%2][1][0]+dp[i%2][2][0])%mod;\n            }else{\n              if(n<2)dp[(i+1)%2][1][1] = (dp[i%2][1][0] + (dp[i%2][1][1]+dp[i%2][0][1])%mod)%mod;\n              else dp[(i+1)%2][1][1] = (((dp[i%2][1][0]+dp[i%2][0][1])%mod + dp[i%2][1][1]*2%mod)%mod + dp[i%2][2][1])%mod;\n            }\n          }else{\n            dp[(i+1)%2][j][k] = (dp[i%2][j][k]+dp[i%2][j-1][k])%mod;\n            if(j+1<=n)dp[(i+1)%2][j][k] = (dp[(i+1)%2][j][k] + (dp[i%2][j][k]+dp[i%2][j+1][k])%mod)%mod;\n          }\n        }\n      }\n    }\n    long ans = 0;\n    for(int i=0;i<=n;++i)ans = (ans + dp[m%2][i][1])%mod;\n    System.out.println(ans);\n  }\n}Gicen the following input:\n2 3\nPrint only the output of the code, ends with \"END-OF-OUTPUT\":",
+        "status": "NAN",
+        "gorund_truth": "56\n"
+    }
+}

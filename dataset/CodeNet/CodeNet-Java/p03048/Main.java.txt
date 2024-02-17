@@ -1,0 +1,236 @@
+1 /*
+2 String[]の初期化、整数の型がlongになっているか
+3 関数（splitとかcontainsとか）内では"+"とかは正規表現となされるので"\\+"とする
+4 配列のコピーはarr1=arr.clone()
+5 HashSet<>[]はおのおの初期化した？？？？？
+6 負の数の割り算は絶対値が小さいほうに切り捨てられるex.-1/2=0ので、ある値>kみたいな式だとバグらせやすいので注意
+7 ある値>=kとして、切り上げた値をとるべき
+8 toLowerCase()はアルファベット以外に対して行ってもエラーにはならない
+9 ArrayDequeではpopとpushはStackと同じ操作になる
+10 //import static java.lang.System.*; はしばらく使わなそう(使うとしてもexit(0)のためだけ)←return;でよさそう
+11 最後にout.flush()またはout.close()をするのを忘れずに！
+12 Point2D p2d=new Point2D.Double(d1,d2);
+13 //import static java.lang.System.*;
+14 */
+15 //入力終了→Ctrl+D
+16 import java.lang.reflect.Array;
+17 import java.net.Inet4Address;
+18 import java.util.*;
+19 import java.io.*;
+20 import java.awt.*;
+21 import java.awt.geom.Point2D;
+22 import static java.lang.Math.*;
+23 public class Main {
+24     public static void main(String[] $) {
+25         int R=sc.nextInt(),G=sc.nextInt(),B=sc.nextInt(),N=sc.nextInt();
+26         int f=0;
+27         for (int r = 0; r < N / R + 1; r++) {
+28             for (int g = 0; g < (N - r * R) / G + 1; g++) {
+29                 if((N-r*R-g*G)%B==0){
+30                     f++;
+31                 }
+32             }
+33         }
+34         out.println(f);
+35         out.close();
+36     }
+37 
+38 
+39     static boolean nextPermutation(int[] a) {
+40         int t = a.length - 1;
+41         int tt = t + 1;
+42         for (int i = t; i > 0; --i) {
+43             if (a[i - 1] < a[i]) {
+44                 int swapIndex = Find(a[i - 1], a, i, t);
+45                 int temp = a[swapIndex];
+46                 a[swapIndex] = a[i - 1];
+47                 a[i - 1] = temp;
+48                 Arrays.sort(a, i, tt);
+49                 return true;
+50             }
+51         }
+52         return false;
+53     }
+54 
+55     static int Find(int dest, int[] a, int s, int e) {
+56         if (s == e) {
+57             return s;
+58         }
+59         int m = (s + e + 1) / 2;
+60         return a[m] <= dest ? Find(dest, a, s, m - 1) : Find(dest, a, m, e);
+61     }
+62 
+63     static class pair {
+64         long x, y;
+65 
+66         pair(long a, long b) {
+67             a = x;
+68             b = y;
+69         }
+70     }
+71 
+72     static class Point3D {
+73         Point3D(int a, int b, int c) {
+74             a = x;
+75             b = y;
+76             c = z;
+77         }
+78 
+79         int x, y, z;
+80     }
+81 
+82     static long mod = 1000000007;
+83 
+84     static long power(long x, long n) {
+85         if (n == 0) return 1;
+86         if (n % 2 == 0) {
+87             long e = power(x, n / 2) % mod;
+88             return (e * e) % mod;
+89         }
+90         return (x * power(x, n - 1)) % mod;
+91     }
+92 
+93     static long gcd(long a, long b) {
+94         return b == 0 ? a : gcd(b, a % b);
+95     }
+96 
+97     static class COM {
+98         static long[] fact;
+99         static long[] inv;
+100 
+101         static void Init(int n) {
+102             fact = new long[n];
+103             inv = new long[n];
+104             fact[0] = inv[0] = 1;
+105             for (int i = 1; i < n; i++) {
+106                 fact[i] = (fact[i - 1] * i) % mod;
+107                 inv[i] = power(fact[i], mod - 2);
+108             }
+109         }
+110 
+111         static long C(int n, int k) {
+112             if (k > n) return 0;
+113             return ((fact[n] * inv[n - k]) % mod * inv[k]) % mod;
+114         }
+115     }
+116 
+117     static class UF {
+118         static int[] d;
+119 
+120         static void Init(int size) {
+121             d = new int[size];
+122             for (int i = 0; i < size; i++) {
+123                 d[i] = -1;
+124             }
+125         }
+126 
+127         static boolean unite(int x, int y) {
+128             x = find(x);
+129             y = find(y);
+130             if (x == y) return false;
+131             if (d[x] > d[y]) {
+132                 int t = d[y];
+133                 d[y] = d[x];
+134                 d[x] = t;
+135             }
+136             d[x] += d[y];
+137             d[y] = x;
+138             return true;
+139         }
+140 
+141         static boolean same(int x, int y) {
+142             return find(x) == find(y);
+143         }
+144 
+145         static int find(int k) {
+146             return d[k] < 0 ? k : (d[k] = find(d[k]));
+147         }
+148 
+149         static int size(int k) {
+150             return -d[find(k)];
+151         }
+152     }
+153 
+154     static class ST {
+155         //0-indexed
+156         //親:(n-1)/2,子:2*n+1,2*n+2
+157         //i番目のindex→n+i-1
+158         static long INF = 0;
+159         static int n = 131072;
+160         static long[] d = new long[n * 2 - 1];
+161 
+162         static void Init() {
+163             for (int i = 0; i < n * 2 - 1; i++) d[i] = INF;
+164         }
+165 
+166         //i番目の要素をxに変更（この関数はnが2の累乗でないと機能しない）
+167         static void update(int i, long x) {
+168             i += n - 1;
+169             d[i] = x;
+170             while (i > 0) {
+171                 i = (i - 1) / 2;
+172                 d[i] = gcd(d[i * 2 + 1], d[i * 2 + 2]);
+173             }
+174         }
+175 
+176         //[a,b)の最小値,l,rにはノードkに対応付く区間を与える
+177         static long query(int a, int b, int k, int l, int r) {
+178             if (r <= a || b <= l) return INF;
+179             if (a <= l && r <= b) return d[k];
+180             long vl = query(a, b, k * 2 + 1, l, (l + r) / 2);
+181             long vr = query(a, b, k * 2 + 2, (l + r) / 2, r);
+182             return gcd(vl, vr);
+183         }
+184         //ex.[a,b)のmin→query(a,b,0,0,ST.n)
+185     }
+186 
+187     static void WF(long[][] d, int[] a, int[] b, long[] c) {
+188         int n = a.length;
+189         long INF = 100000000000l;
+190         for (int i = 0; i < n; i++) {
+191             for (int j = i; j < n; j++) {
+192                 d[i][j] = d[j][i] = INF;
+193             }
+194         }
+195         for (int i = 0; i < n; i++) {
+196             d[a[i]][b[i]] = d[b[i]][a[i]] = c[i];
+197         }
+198         for (int k = 0; k < n; k++) {
+199             for (int i = 0; i < n; i++) {
+200                 for (int j = 0; j < n; j++) {
+201                     d[i][j] = d[i][j] > d[i][k] + d[k][j] ? d[i][k] + d[k][j] : d[i][j];
+202                 }
+203             }
+204         }
+205     }
+206 
+207     static PrintWriter out = new PrintWriter(System.out);
+208 
+209     static class sc {
+210         static Scanner s = new Scanner(System.in);
+211 
+212         static String next() {
+213             return s.next();
+214         }
+215 
+216         static String nextLine() {
+217             return s.nextLine();
+218         }
+219 
+220         static int nextInt() {
+221             return Integer.parseInt(s.next());
+222         }
+223 
+224         static long nextLong() {
+225             return Long.parseLong(s.next());
+226         }
+227 
+228         static double nextDouble() {
+229             return Double.parseDouble(s.next());
+230         }
+231 
+232         static boolean hasNext() {
+233             return s.hasNext();
+234         }
+235     }
+236 }

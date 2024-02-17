@@ -1,0 +1,108 @@
+1 import java.util.ArrayDeque;
+2 import java.util.Arrays;
+3 import java.util.List;
+4 import java.util.Scanner;
+5 
+6 class Main {
+7 	public static void main(String[] args) {
+8 		new Main().run();
+9 	}
+10 
+11 	void run() {
+12 		Scanner sc = new Scanner(System.in);
+13 		long n = sc.nextLong();
+14 		long a = sc.nextLong();
+15 		System.out.println(solver(n, a));
+16 	}
+17 
+18 	long solver(long n, long a) {
+19 		long ans = n;
+20 		if (n == 1) {
+21 			return 1;
+22 		}
+23 		for (int i = 1; i <= 40; ++i) {
+24 			// min ( k1 + k2 + ... ki + a*(i-1) )
+25 			// k1*k2*k3*...*ki>=n
+26 			long t = a * (i - 1);
+27 			long maxK = f(i, n);
+28 			long curK = 1;
+29 			for (int j = 0; j < i; ++j) {
+30 				if (curK * pow(maxK - 1, i - j) / pow(maxK - 1, i - j) == curK && curK * pow(maxK - 1, i - j) < n) {
+31 					t += maxK;
+32 					if (curK != curK * maxK / maxK) {
+33 						curK = n;
+34 					} else {
+35 						curK *= maxK;
+36 					}
+37 				} else {
+38 					t += maxK - 1;
+39 					if (curK != curK * (maxK - 1) / (maxK - 1)) {
+40 						curK = n;
+41 					} else {
+42 						curK *= maxK - 1;
+43 					}
+44 				}
+45 			}
+46 			ans = Math.min(ans, t);
+47 		}
+48 		return ans;
+49 	}
+50 
+51 	long f(long i, long n) {
+52 		long ok = n;
+53 		long ng = 0;
+54 		out: while (ok - ng > 1) {
+55 			long middle = (ok + ng) / 2;
+56 			long v = 1;
+57 			for (int k = 0; k < i; ++k) {
+58 				if (v != v * middle / middle) {
+59 					ok = middle;
+60 					continue out;
+61 				}
+62 				v *= middle;
+63 			}
+64 			if (v >= n) {
+65 				ok = middle;
+66 			} else {
+67 				ng = middle;
+68 			}
+69 		}
+70 		return ok;
+71 	}
+72 
+73 	long pow(long a, long n) {
+74 		long ret = 1;
+75 		for (; n > 0; n >>= 1, a *= a) {
+76 			if (n % 2 == 1) {
+77 				ret *= a;
+78 			}
+79 		}
+80 		return ret;
+81 	}
+82 
+83 	int solver2(int n, int a) {
+84 		int[] dp = new int[2 * n];
+85 		Arrays.fill(dp, Integer.MAX_VALUE >> 3);
+86 		dp[0] = 0;
+87 		for (int i = 0; i < n; ++i) {
+88 			if (i != 0)
+89 				for (int j = i; j < 2 * n; j += i) {
+90 					dp[j] = Math.min(dp[j], dp[i] + a + j / i);
+91 				}
+92 			else {
+93 				for (int j = 1; j < 2 * n; ++j) {
+94 					dp[j] = j;
+95 				}
+96 			}
+97 		}
+98 		int ans = Integer.MAX_VALUE >> 3;
+99 		for (int i = n; i < 2 * n; ++i) {
+100 			ans = Math.min(ans, dp[i]);
+101 		}
+102 		return ans;
+103 	}
+104 
+105 	void tr(Object... objects) {
+106 		System.out.println(Arrays.deepToString(objects));
+107 	}
+108 }

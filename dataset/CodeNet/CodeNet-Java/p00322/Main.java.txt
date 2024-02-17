@@ -1,0 +1,84 @@
+1 import java.io.BufferedReader;
+2 import java.io.IOException;
+3 import java.io.InputStreamReader;
+4 
+5 import static java.lang.Integer.parseInt;
+6 
+7 /**
+8  * Alphametic
+9  */
+10 public class Main {
+11 
+12 	static int[][] nums;
+13 	static boolean[] used;
+14 
+15 	static int[][] layout = {
+16 			{0, 2},
+17 			{1, 1}, {1, 2},
+18 			{2, 0}, {2, 1}, {2, 2},
+19 			{3, 0}, {3, 1}, {3, 2},
+20 	};
+21 
+22 	public static void main(String[] args) throws IOException {
+23 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+24 		String line;
+25 		String[] words;
+26 
+27 		words = br.readLine().split(" ");
+28 
+29 		nums = new int[4][3];
+30 		used = new boolean[10];
+31 		int count = 0;
+32 
+33 		for (int i = 0; i < words.length; i++) {
+34 			int n = parseInt(words[i]);
+35 			if (n != -1) used[n] = true;
+36 			else count++;
+37 			nums[layout[i][0]][layout[i][1]] = n;
+38 		}
+39 
+40 		System.out.println(solve(count));
+41 	}
+42 
+43 	static int solve(int c) {
+44 
+45 		if (c == 0) {
+46 			if (check()) return 1;
+47 			else return 0;
+48 		}
+49 
+50 		//
+51 		int ret = 0;
+52 
+53 		outer:
+54 		for (int i = 0; i < 4; i++) {
+55 			for (int j = 0; j < 3; j++) {
+56 				if (nums[i][j] == -1) {
+57 					for (int k = 1; k <= 9; k++) {
+58 						if (!used[k]) {
+59 							nums[i][j] = k;
+60 							used[k] = true;
+61 							ret += solve(c - 1);
+62 							nums[i][j] = -1;
+63 							used[k] = false;
+64 						}
+65 					}
+66 					break outer;
+67 				}
+68 			}
+69 		}
+70 
+71 		return ret;
+72 	}
+73 
+74 	static boolean check() {
+75 		
+76 		int[] a = new int[4];
+77 		
+78 		for (int i = 0; i < 4; i++) {
+79 			a[i] = nums[i][0] * 100 + nums[i][1] * 10 + nums[i][2];
+80 		}
+81 		
+82 		return a[0] + a[1] + a[2] == a[3];
+83 	}
+84 }

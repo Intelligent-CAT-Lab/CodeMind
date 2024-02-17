@@ -1,0 +1,74 @@
+1 import java.util.*;
+2 import java.io.*;
+3 
+4 public class Main {
+5 	public static void main(String[] args) throws IOException {
+6 		setIO();
+7 
+8 		int N = ni();
+9 		
+10 		int l = Integer.toString(N).length();
+11 		int m = 0;
+12 		for (int i = 0; i < l; i++) {
+13 			m = (10 * m + 7) % N;
+14 		}
+15 		
+16 		int i = l;
+17 		boolean[] vis = new boolean[N];
+18 		
+19 		while (true) {
+20 			if (vis[m]) {
+21 				out.println(-1);
+22 				break;
+23 			}
+24 			
+25 			vis[m] = true;
+26 			
+27 			if (m == 0) {
+28 				out.println(i);
+29 				break;
+30 			}
+31 			
+32 			m = (10 * m + 7) % N;
+33 			i++;
+34 		}
+35 		
+36 		f.close();
+37 		out.close();
+38 	}
+39 
+40 	static final int MOD = 1000000007;
+41 
+42 	static BufferedReader f;
+43 	static PrintWriter out;
+44 
+45 	static int ni(StringTokenizer st) {
+46 		return Integer.parseInt(st.nextToken());
+47 	}
+48 
+49 	static int ni() throws IOException {
+50 		return Integer.parseInt(f.readLine());
+51 	}
+52 
+53 	static StringTokenizer nl() throws IOException {
+54 		return new StringTokenizer(f.readLine());
+55 	}
+56 
+57 	static int[] nia(int N) throws IOException {
+58 		StringTokenizer st = nl();
+59 		int[] A = new int[N];
+60 		for (int i = 0; i < N; i++)
+61 			A[i] = ni(st);
+62 		return A;
+63 	}
+64 
+65 	static void setIO(String s) throws IOException {
+66 		f = new BufferedReader(new FileReader(s + ".in"));
+67 		out = new PrintWriter(new FileWriter(s + ".out"));
+68 	}
+69 
+70 	static void setIO() {
+71 		f = (new BufferedReader(new InputStreamReader(System.in)));
+72 		out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+73 	}
+74 }

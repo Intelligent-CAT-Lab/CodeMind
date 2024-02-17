@@ -1,0 +1,163 @@
+1 import java.util.*;
+2 import java.util.stream.*;
+3 import java.io.*;
+4 import java.math.*;
+5 
+6 public class Main {
+7 
+8 	static void solve (FastScanner in, PrintWriter out, Methods ms) {
+9 		
+10 		double a = in.nextDouble(), b = in.nextDouble();
+11 		out.println(4.0/3.0*Math.PI*b*b*b);
+12 		
+13 	}
+14 	
+15 
+16 
+17 	public static void main(String[] args) {
+18 		FastScanner in = new FastScanner(System.in);
+19 		PrintWriter out = new PrintWriter(System.out);
+20 		Methods ms = new Methods();
+21 		solve(in, out, ms);
+22 		in.close();
+23 		out.close();
+24 	}
+25 
+26 	static class Methods {
+27 
+28 		public void print (Object... ar) {System.out.println(Arrays.deepToString(ar));}
+29 
+30 		public int max (int... ar) {Arrays.sort(ar); return ar[ar.length-1];}
+31 
+32 		public int min (int... ar) {Arrays.sort(ar); return ar[0];}
+33 
+34 		public long gcd (long a, long b) {return b>0?gcd(b,a%b):a;}
+35 
+36 		public long lcm (long a, long b) {return a/gcd(a,b)*b;}
+37 
+38 		public long factorial (int i) {
+39 			if (i==1) return 1;
+40 			else return i*factorial(i-1);
+41 		}
+42 
+43 		public int manhat (int x1, int y1, int x2, int y2) {
+44 			return Math.abs(x1-x2)+Math.abs(y1-y2);
+45 		}
+46 
+47 		public double euclid (double x1, double y1, double x2, double y2) {
+48 			return Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+49 		}
+50 
+51 		public boolean isPrime (int n) {
+52 			if (n==2) return true;
+53 			if (n<2 || n%2==0) return false;
+54 			for (int i=3; i<=Math.sqrt(n); i+=2) if(n%i==0) return false;
+55 			return true;
+56 		}
+57 
+58 	}
+59 
+60 	static class FastScanner {
+61 
+62 		private InputStream in;
+63 		private byte[] buffer = new byte[1024];
+64 		private  int length = 0, p = 0;
+65 
+66 		public FastScanner (InputStream stream) {
+67 			in = stream;
+68 		}
+69 
+70 		public boolean hasNextByte () {
+71 			if (p < length) return true;
+72 			else {
+73 				p = 0;
+74 				try {length = in.read(buffer);}
+75 				catch (Exception e) {e.printStackTrace();}
+76 				if (length <= 0) return false;
+77 			}
+78 			return true;
+79 		}
+80 
+81 		public int readByte () {
+82 			if (hasNextByte() == true) return buffer[p++];
+83 			return -1;
+84 		}
+85 
+86 		public boolean isPrintable (int n) {return 33<=n&&n<=126;}
+87 
+88 		public void skip () {
+89 			while (hasNextByte() && !isPrintable(buffer[p])) p++;
+90 		}
+91 
+92 		public boolean hasNext () {skip(); return hasNextByte();}
+93 
+94 		public String next () {
+95 			if (!hasNext()) throw new NoSuchElementException();
+96 			StringBuilder sb = new StringBuilder();
+97 			int t = readByte();
+98 			while (isPrintable(t)) {
+99 				sb.appendCodePoint(t);
+100 				t = readByte();
+101 			}
+102 			return sb.toString();
+103 		}
+104 
+105 		public String[] nextArray (int n) {
+106 			String[] ar = new String[n];
+107 			for (int i=0; i<n; i++) ar[i] = next();
+108 			return ar;
+109 		}
+110 
+111 		public int nextInt () {return Math.toIntExact(nextLong());}
+112 
+113 		public int[] nextIntArray (int n) {
+114 			int[] ar = new int[n];
+115 			for (int i=0; i<n; i++) ar[i] = nextInt();
+116 			return ar;
+117 		}
+118 
+119 		public long nextLong () {
+120 			if (!hasNext()) throw new NoSuchElementException();
+121 			boolean minus = false;
+122 			int temp = readByte();
+123 			if (temp == '-') {
+124 				minus = true;
+125 				temp = readByte();
+126 			}
+127 			if (temp<'0' || '9'<temp) throw new NumberFormatException();
+128 			long n = 0;
+129 			while (isPrintable(temp)) {
+130 				if ('0'<=temp && temp<='9') {
+131 					n *= 10;
+132 					n += temp - '0';
+133 				}
+134 				else throw new NumberFormatException();
+135 				temp = readByte();
+136 			}
+137 			return minus? -n : n;
+138 		}
+139 
+140 		public long[] nextLongArray (int n) {
+141 			long[] ar = new long[n];
+142 			for (int i=0; i<n; i++) ar[i] = nextLong();
+143 			return ar;
+144 		}
+145 
+146 		public double nextDouble () {
+147 			return Double.parseDouble(next());
+148 		}
+149 
+150 		public double[] nextDoubleArray (int n) {
+151 			double[] ar = new double[n];
+152 			for (int i=0; i<n; i++) ar[i] = nextDouble();
+153 			return ar;
+154 		}
+155 
+156 		public void close () {
+157 			try {in.close();}
+158 			catch(Exception e){}
+159 		}
+160 
+161 	}
+162 
+163 }

@@ -1,0 +1,55 @@
+1 
+2 import java.util.Scanner;
+3 
+4 public class Main {
+5 	
+6 	static int mod = 1000000007;
+7 
+8 	public static void main(String[] args) {
+9 		Scanner sc = new Scanner(System.in);
+10 		
+11 		int n = Integer.parseInt(sc.next());
+12 		
+13 		long [][][][]dp = new long [n+1][5][5][5];
+14 		
+15 		//左から現在の桁数、n-2,n-1,n,番目の文字がいくつか
+16 		//0 -> null,1 -> A, 2 -> G,3 -> C, 4 -> T のようにした
+17 		
+18 		// 
+19 		dp[0][0][0][0] = 1L;
+20 		
+21 		for(int i = 1 ; i <= n ;i++) {
+22 			for(int j = 0 ; j < 5 ; j++) {
+23 				for(int k = 0 ; k < 5 ; k++) {
+24 					for(int l = 0 ; l < 5 ; l++) {
+25 						for(int m = 1 ; m < 5 ; m++) {
+26 							if(j == 1 && l == 2 && m == 3) {continue;}
+27 							if(j == 1 && k == 2 && m == 3) {continue;}
+28 							if(k == 1 && l == 2 && m == 3) {continue;}
+29 							if(k == 1 && l == 3 && m == 2) {continue;}
+30 							if(k == 2 && l == 1 && m == 3) {continue;}
+31 							
+32 							dp[i][k][l][m] = (dp[i][k][l][m] + dp[i-1][j][k][l])% mod;
+33 						
+34 						}
+35 					}
+36 				}
+37 			}
+38 		}
+39 		
+40 		
+41 		long ans = 0;
+42 		
+43 		for(int i = 1 ; i < 5 ;i++) {
+44 			for(int j = 1 ; j < 5 ; j++) {
+45 				for(int k = 1 ; k < 5 ; k++) {
+46 					ans = (ans + dp[n][i][j][k])%mod;
+47 				}
+48 			}
+49 		}
+50 	
+51 		System.out.println(ans);
+52 		
+53 	}	
+54 		
+55 }

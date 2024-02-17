@@ -1,0 +1,72 @@
+variable S is initialized with 010.
+The code enters a for loop and it iterates from 1 to the length of variable S. The value of variable border is also passed to variable mid.
+Inside the for loop, it checks if the previous character of the current interger border-1 is not equal to the current character of the current interger border.
+If it is not, it calls the method mid(border) to calculate the mid point of the current string S.
+If the method mid(border) returns a value, it stores it in variable mid.
+After the loop finishes, it checks if variable mid is equal to -1. If it is, it returns the length of variable S as output.
+If it is not, it returns the difference between the length of variable S and variable mid as output.
+<<<Output>>>
+2
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    static String S;
+
+    public static void main(String[] args) {
+        FastScanner sc = new FastScanner(System.in);
+        S = sc.next();
+
+        System.out.println( solve() );
+    }
+
+    static int solve() {
+        int[] count = new int[26];
+        for (int i = 0; i < S.length(); i++) {
+            count[S.charAt(i) - 'a']++;
+        }
+
+        int max = 0;
+        for (int i = 0; i < 26; i++) {
+            if (count[i] > max) {
+                max = count[i];
+            }
+        }
+
+        return max;
+    }
+
+    @SuppressWarnings("unused")
+    static class FastScanner {
+
+        private BufferedReader reader;
+        private StringTokenizer tokenizer;
+
+        FastScanner(InputStream in) {
+            reader = new BufferedReader(new InputStreamReader(in));
+            tokenizer = null;
+        }
+
+        String next() {
+            if (tokenizer == null ||!tokenizer.hasMoreTokens()) {
+                try {
+                    tokenizer = new StringTokenizer(reader.readLine());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return tokenizer.nextToken();
+        }
+
+        String nextLine() {
+            if (tokenizer == null ||!tokenizer.hasMoreTokens()) {
+                try {
+                    return reader.readLine();

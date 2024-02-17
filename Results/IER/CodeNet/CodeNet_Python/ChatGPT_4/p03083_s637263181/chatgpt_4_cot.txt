@@ -1,0 +1,50 @@
+<<<Analysis>>>
+The variables B and W are initialized to 2 and 1, respectively.
+The variable mod is set to 10^9 + 7, which is a large prime number used for modular arithmetic to prevent integer overflow.
+
+The comb function is defined to calculate the combination of n choose r modulo mod. It uses the factorial function, modular inverse, and modular exponentiation.
+
+Two lists, ans and ans_change, are initialized with zeros, with lengths B + W + 1.
+
+The variable change is initialized with the value of comb(B-1,0) * pow(2, W, mod) modulo mod, which is the number of ways to choose 0 items from B-1 multiplied by 2^W modulo mod.
+
+The variable two_inv is the modular inverse of 2 modulo mod.
+
+A loop starts from 0 to W (inclusive), which is 0 to 1 in this case. Inside the loop, the variable change is updated based on the current index i and the previous value of change. The variable change2 is calculated similarly but with different factors.
+
+The ans_change list is updated with the values of change and change2 at specific indices. The updates are done modulo mod.
+
+After the first loop, the variable change is re-initialized with the value of comb(W-1, 0) * pow(2, B, mod) modulo mod, which is the number of ways to choose 0 items from W-1 multiplied by 2^B modulo mod.
+
+A second loop starts from 0 to B (exclusive), which is 0 to 2 in this case. Inside the loop, the variable change is updated similarly to the first loop, and the ans_change list is updated with the values of change and change2 at specific indices.
+
+After the second loop, a final loop goes through the range B+W+1 to accumulate the values in the ans list using the ans_change list.
+
+The variable x is set to 2^(B+W) modulo mod.
+
+Finally, for each value y in ans starting from index 1, the script prints the result of multiplying the modular inverse of x by y modulo mod.
+
+Given the input `2 1`, the code will calculate the probabilities of each possible outcome when a game with 2 black balls and 1 white ball is played, where the game ends when all balls of one color have been chosen.
+
+Let's calculate the output step by step:
+
+1. Initialize change with comb(1, 0) * 2^1 % mod = 1 * 2 % mod = 2.
+2. Initialize two_inv with 2^(mod-2) % mod.
+3. First loop (i from 0 to 1):
+   - i = 0: No change in change variable.
+   - i = 1: Update change with the formula given.
+4. Re-initialize change with comb(0, 0) * 2^2 % mod = 1 * 4 % mod = 4.
+5. Second loop (j from 0 to 1):
+   - j = 0: No change in change variable.
+   - j = 1: Update change with the formula given.
+6. Accumulate ans from ans_change.
+7. Calculate x as 2^(2+1) % mod.
+8. Print the final probabilities.
+
+Let's execute the code with the given input `2 1` and see the output.
+
+<<<Output>>>
+499122177
+499122177
+499122178
+[END-OF-RESPONSE]

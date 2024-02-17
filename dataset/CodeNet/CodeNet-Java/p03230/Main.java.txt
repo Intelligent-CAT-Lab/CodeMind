@@ -1,0 +1,83 @@
+1 import java.io.BufferedReader;
+2 import java.io.InputStreamReader;
+3 import java.util.ArrayList;
+4 import java.util.List;
+5 
+6 public class Main {
+7 	static int v = 0;
+8 	static List<List<Integer>> ansList = null;
+9 
+10 	public static void main(String[] args) throws Exception {
+11 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+12 		int n = Integer.parseInt(br.readLine());
+13 		br.close();
+14 
+15 		if (n == 1) {
+16 			System.out.println("Yes");
+17 			System.out.println(2);
+18 			System.out.println("1 1");
+19 			System.out.println("1 1");
+20 			return;
+21 		}
+22 		if (n == 2) {
+23 			System.out.println("No");
+24 			return;
+25 		}
+26 
+27 		int k = 0;
+28 		for (int i = 3; i <= n; i++) {
+29 			int ic2 = i * (i - 1) / 2;
+30 			if (ic2 == n) {
+31 				k = i;
+32 				break;
+33 			} else if (ic2 > n) {
+34 				System.out.println("No");
+35 				return;
+36 			}
+37 		}
+38 		System.out.println("Yes");
+39 
+40 		ansList = new ArrayList<List<Integer>>(k);
+41 		int[] target = new int[k];
+42 		for (int i = 0; i < k; i++) {
+43 			ansList.add(new ArrayList<Integer>(k - 1));
+44 			target[i] = i;
+45 		}
+46 		combination(target, 2, new ArrayList<Integer>());
+47 
+48 		System.out.println(k);
+49 		for (int i = 0; i < k; i++) {
+50 			StringBuilder sb = new StringBuilder();
+51 			sb.append(k - 1).append(' ');
+52 			List<Integer> list = ansList.get(i);
+53 			for (int j : list) {
+54 				sb.append(j).append(' ');
+55 			}
+56 			sb.deleteCharAt(sb.length() - 1);
+57 			System.out.println(sb.toString());
+58 		}
+59 	}
+60 
+61 	static void combination(int[] target, int k, List<Integer> list) {
+62 		if (list.size() == k) {
+63 			v++;
+64 			for (int i : list) {
+65 				ansList.get(i).add(v);
+66 			}
+67 			return;
+68 		}
+69 
+70 		int i = 0;
+71 		if (!list.isEmpty()) {
+72 			i = list.get(list.size() - 1) + 1;
+73 			if (list.size() + target.length - i < k) {
+74 				return;
+75 			}
+76 		}
+77 		for ( ; i < target.length; i++) {
+78 			list.add(i);
+79 			combination(target, k, list);
+80 			list.remove(list.size() - 1);
+81 		}
+82 	}
+83 }

@@ -1,0 +1,82 @@
+
+<<<Analysis>>>
+The variable n, variable a and variable b are initialized with 0, 0 and 0 respectively according to the input. And variable sum is initialized with 0.
+It enters a for loop and it iterates from 1 to 0 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.
+Then it checks if the calculated variable sum falls within the range [0, 0]. If it does, it adds the current interger i to variable answer. The condition is met when i is 0.
+After the loop finishes, it print the fianl value of variable answer as output, which is 0.
+<<<Output>>>
+0
+[END-OF-RESPONSE]
+[INST]
+    Consider the following code:
+<Code>
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.io.Closeable;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
+import java.io.InputStream;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ */
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Thread thread = new Thread(null, new TaskAdapter(), "", 1 << 27);
+        thread.start();
+        thread.join();
+    }
+
+    static class TaskAdapter implements Runnable {
+        @Override
+        public void run() {
+            InputStream inputStream = System.in;
+            OutputStream outputStream = System.out;
+            FastInput in = new FastInput(inputStream);
+            FastOutput out = new FastOutput(outputStream);
+            B01Unbalanced solver = new B01Unbalanced();
+            solver.solve(1, in, out);
+            out.close();
+        }
+    }
+
+    static class B01Unbalanced {
+        public void solve(int testNumber, FastInput in, FastOutput out) {
+            char[] s = new char[(int) 1e6];
+            int n = in.readString(s, 0);
+
+            int[][] l2r = new int[2][n];
+            int[][] r2l = new int[2][n];
+            int ans1 = solve(s, n, '0', l2r[0], r2l[0]);
+            int ans2 = solve(s, n, '1', l2r[1], r2l[1]);
+            int ans3 = 1;
+
+
+            int[][] suffix = new int[2][2];
+            for (int i = n - 1; i >= 0; i--) {
+                if (s[i]!= '?') {
+                    if (ans1 == ans2 && l2r[0][i] == ans1 &&
+                            suffix[1][(i & 1)] > 0) {
+                        ans3 = Math.max(ans1 + 1, ans3);
+                    }
+                    if (l2r[0][i] == ans1 &&
+                            suffix[0][(ans1 & 1) ^ (i & 1)] > 0) {
+                        ans3 = Math.max(ans1 + 1, ans3);
+                    }
+                    if (l2r[1][i] == ans2 &&
+                            suffix[1][(ans2 & 1) ^ (i & 1)] > 0) {
+                        ans3 = Math.max(ans2 + 1, ans3);
+                    }
+                    if (ans1 == ans2 && l2r[1][i] == ans2 &&
+                            suffix[0][(i & 1)] > 0) {
+                        ans3 = Math.max(ans2 + 1, ans3);
+                    }
+
+                    if (r2l[0][i] == ans1) {
+                        suffix[0][i

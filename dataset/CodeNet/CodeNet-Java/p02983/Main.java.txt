@@ -1,0 +1,101 @@
+1 import java.io.*;
+2 import java.util.*;
+3 
+4 class FastReader 
+5 { 
+6     BufferedReader br; 
+7     StringTokenizer st; 
+8     
+9     public FastReader() 
+10     { 
+11         br = new BufferedReader(new InputStreamReader(System.in)); 
+12     } 
+13     
+14     String next() 
+15     { 
+16         while (st == null || !st.hasMoreElements()) 
+17         { 
+18             try
+19             { 
+20                 st = new StringTokenizer(br.readLine()); 
+21             } 
+22             catch (IOException  e) 
+23             { 
+24                 e.printStackTrace(); 
+25             } 
+26         } 
+27         return st.nextToken(); 
+28     } 
+29     
+30     int nextInt() 
+31     { 
+32         return Integer.parseInt(next()); 
+33     } 
+34     
+35     long nextLong() 
+36     { 
+37         return Long.parseLong(next()); 
+38     } 
+39     
+40     double nextDouble() 
+41     { 
+42         return Double.parseDouble(next()); 
+43     } 
+44     
+45     String nextLine() 
+46     { 
+47           String str = ""; 
+48         try
+49         { 
+50             str = br.readLine(); 
+51         } 
+52         catch (IOException e) 
+53         { 
+54             e.printStackTrace(); 
+55         } 
+56         return str; 
+57     } 
+58 } 
+59 
+60 class Solution
+61 {
+62     void solve()
+63     {
+64         FastReader sc = new FastReader();
+65         
+66         int L = sc.nextInt();
+67         int R = sc.nextInt();
+68 
+69         R -= L;
+70         L %= 2019;
+71         R += L;
+72 
+73         int res = 2019; //max value
+74 
+75         if(R - L > 2019)
+76         {
+77             System.out.println(0);
+78             return;
+79         }
+80 
+81         for(int i = L; i <= R; i++)
+82         {
+83             for(int j = L; j < i ; j++)
+84             {
+85                 res = Math.min(res, (i*j) % 2019);
+86             }
+87         }
+88 
+89         System.out.println(res);
+90     }
+91 }
+92   
+93 public class Main 
+94 { 
+95     public static void main(String[] args) 
+96     { 
+97         Solution ob = new Solution();
+98 
+99         ob.solve();
+100     } 
+101 } 

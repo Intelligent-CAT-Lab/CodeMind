@@ -1,0 +1,137 @@
+1 import java.io.OutputStream;
+2 import java.io.IOException;
+3 import java.io.InputStream;
+4 import java.io.OutputStream;
+5 import java.io.IOException;
+6 import java.io.UncheckedIOException;
+7 import java.io.Closeable;
+8 import java.io.Writer;
+9 import java.io.OutputStreamWriter;
+10 import java.io.InputStream;
+11 
+12 /**
+13  * Built using CHelper plug-in Actual solution is at the top
+14  * 
+15  * @author daltao
+16  */
+17 public class Main {
+18     public static void main(String[] args) throws Exception {
+19         Thread thread = new Thread(null, new TaskAdapter(), "daltao", 1 << 27);
+20         thread.start();
+21         thread.join();
+22     }
+23 
+24     static class TaskAdapter implements Runnable {
+25         @Override
+26         public void run() {
+27             InputStream inputStream = System.in;
+28             OutputStream outputStream = System.out;
+29             FastInput in = new FastInput(inputStream);
+30             FastOutput out = new FastOutput(outputStream);
+31             TaskA solver = new TaskA();
+32             solver.solve(1, in, out);
+33             out.close();
+34         }
+35     }
+36     static class TaskA {
+37         public void solve(int testNumber, FastInput in, FastOutput out) {
+38             String s = in.readString();
+39             int cIndex = s.indexOf('C');
+40             int fIndex = s.lastIndexOf('F');
+41             if (cIndex < 0 || fIndex < 0 || fIndex < cIndex) {
+42                 out.println("No");
+43             } else {
+44                 out.println("Yes");
+45             }
+46         }
+47 
+48     }
+49     static class FastInput {
+50         private final InputStream is;
+51         private StringBuilder defaultStringBuf = new StringBuilder(1 << 13);
+52         private byte[] buf = new byte[1 << 13];
+53         private int bufLen;
+54         private int bufOffset;
+55         private int next;
+56 
+57         public FastInput(InputStream is) {
+58             this.is = is;
+59         }
+60 
+61         private int read() {
+62             while (bufLen == bufOffset) {
+63                 bufOffset = 0;
+64                 try {
+65                     bufLen = is.read(buf);
+66                 } catch (IOException e) {
+67                     throw new RuntimeException(e);
+68                 }
+69                 if (bufLen == -1) {
+70                     return -1;
+71                 }
+72             }
+73             return buf[bufOffset++];
+74         }
+75 
+76         public void skipBlank() {
+77             while (next >= 0 && next <= 32) {
+78                 next = read();
+79             }
+80         }
+81 
+82         public String readString(StringBuilder builder) {
+83             skipBlank();
+84 
+85             while (next > 32) {
+86                 builder.append((char) next);
+87                 next = read();
+88             }
+89 
+90             return builder.toString();
+91         }
+92 
+93         public String readString() {
+94             defaultStringBuf.setLength(0);
+95             return readString(defaultStringBuf);
+96         }
+97 
+98     }
+99     static class FastOutput implements AutoCloseable, Closeable {
+100         private StringBuilder cache = new StringBuilder(1 << 20);
+101         private final Writer os;
+102 
+103         public FastOutput(Writer os) {
+104             this.os = os;
+105         }
+106 
+107         public FastOutput(OutputStream os) {
+108             this(new OutputStreamWriter(os));
+109         }
+110 
+111         public FastOutput println(String c) {
+112             cache.append(c).append('\n');
+113             return this;
+114         }
+115 
+116         public FastOutput flush() {
+117             try {
+118                 os.append(cache);
+119                 cache.setLength(0);
+120             } catch (IOException e) {
+121                 throw new UncheckedIOException(e);
+122             }
+123             return this;
+124         }
+125 
+126         public void close() {
+127             flush();
+128             try {
+129                 os.close();
+130             } catch (IOException e) {
+131                 throw new UncheckedIOException(e);
+132             }
+133         }
+134 
+135     }
+136 }
+137 

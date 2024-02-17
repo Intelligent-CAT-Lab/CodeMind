@@ -1,0 +1,48 @@
+he variable n is initialized with 6 and variable k is initialized with 3.
+It enters a for loop and it iterates from 1 to 6 to check each integer i in this range. The value of variable i is also passed to variable num.
+Inside the for loop, it calls the method search(i, k - 1, n) to calculate the number of ways to arrange the digits of the current interger num.
+The method search(i, k - 1, n) calls itself recursively to calculate the number of ways to arrange the digits of the current interger num.
+The method search(i, k - 1, n) returns the number of ways to arrange the digits of the current interger num.
+After the loop finishes, it print the fianl value of variable total as output, which is 10.
+<<<Output>>>
+10
+[END-OF-RESPONSE]
+
+
+
+TASK:
+Consider the following code:
+<Code>
+import java.util.*;
+
+public class Main {
+    static HashMap<Integer, HashMap<Integer, Long>> dp = new HashMap<>();
+     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int k = sc.nextInt();
+        long total = 0;
+        for (int i = 1; i * Math.pow(2, k - 1) <= n; i++) {
+            total += search(i, k - 1, n);
+        } 
+        System.out.println(total);
+    }
+    
+    static long search(int num, int count, int max) {
+        if (count == 0) {
+            return 1;
+        }
+        if (dp.containsKey(num)) {
+            if (dp.get(num).containsKey(count)) {
+                return dp.get(num).get(count);
+            }
+        }
+        long total = 0;
+        for (int i = 2; num * i * Math.pow(2, count - 1) <= max; i++) {
+            total += search(num * i, count - 1, max);
+        }
+        if (dp.containsKey(num)) {
+            dp.get(num).put(count, total);
+        } else {
+            HashMap<Integer, Long> map = new HashMap<>();
+            map.put(count,

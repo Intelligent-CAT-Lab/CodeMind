@@ -1,0 +1,201 @@
+1 // package agc.agc011;
+2 
+3 import java.io.IOException;
+4 import java.io.InputStream;
+5 import java.io.PrintWriter;
+6 import java.math.BigInteger;
+7 import java.util.Arrays;
+8 import java.util.InputMismatchException;
+9 
+10 public class Main {
+11     static int solve(char[] N) {
+12         int n = N.length;
+13         BigInt bigint = new BigInt(N);
+14         bigint.multiply(9);
+15 
+16         int ok = n * 10;
+17         int ng = 0;
+18         while (Math.abs(ok - ng) > 1) {
+19             int med = (ok + ng) / 2;
+20             if (canMake(med, bigint.clone())) {
+21                 ok = med;
+22             } else {
+23                 ng = med;
+24             }
+25         }
+26         return (ok + 8) / 9;
+27     }
+28 
+29     private static boolean canMake(int n, BigInt bigint) {
+30         bigint.add(n);
+31         return bigint.digitSum() <= n;
+32     }
+33 
+34     public static void main(String[] args) {
+35         InputReader in = new InputReader(System.in);
+36         PrintWriter out = new PrintWriter(System.out);
+37 
+38         char[] s = in.nextToken().toCharArray();
+39         out.println(solve(s));
+40         out.flush();
+41     }
+42 
+43     public static class BigInt {
+44         int[] w;
+45         int MOD = 100000000;
+46 
+47         public BigInt clone() {
+48             BigInt big = new BigInt(w.clone());
+49             return big;
+50         }
+51 
+52         public int digitSum() {
+53             int sum = 0;
+54             for (int wi : w) {
+55                 sum += digitSum(wi);
+56             }
+57             return sum;
+58         }
+59 
+60         public int digitSum(int wi) {
+61             int w = 0;
+62             while (wi >= 1) {
+63                 w += wi % 10;
+64                 wi /= 10;
+65             }
+66             return w;
+67         }
+68 
+69         public BigInt(int[] w) {
+70             this.w = w;
+71         }
+72 
+73         public BigInt(char[] str) {
+74             int sn = str.length;
+75             int[] revint = new int[sn+64];
+76             for (int i = 0; i < str.length ; i++) {
+77                 revint[i] = (str[str.length-1-i]-'0');
+78             }
+79 
+80             int n = (str.length + 7) / 8 + 4;
+81             w = new int[n];
+82             for (int i = 0 ; i < n ; i++) {
+83                 int fr = (i+1)*8-1;
+84                 int to = i*8;
+85                 for (int l = fr ; l >= to ; l--) {
+86                     w[i] *= 10;
+87                     w[i] += revint[l];
+88                 }
+89             }
+90         }
+91 
+92 
+93         public void multiply(int n) {
+94             int c = 0;
+95             for (int i = 0; i < w.length ; i++) {
+96                 w[i] *= n;
+97                 w[i] += c;
+98                 c = w[i] / MOD;
+99                 w[i] %= MOD;
+100             }
+101         }
+102 
+103         public void add(int n) {
+104             w[0] += n;
+105             for (int i = 0; i+1 < w.length ; i++) {
+106                 if (w[i] < MOD) {
+107                     break;
+108                 }
+109                 int up = w[i] / MOD;
+110                 w[i] %= MOD;
+111                 w[i+1] += up;
+112             }
+113         }
+114     }
+115 
+116     public static void debug(Object... o) {
+117         System.err.println(Arrays.deepToString(o));
+118     }
+119 
+120     public static class InputReader {
+121         private static final int BUFFER_LENGTH = 1 << 12;
+122         private InputStream stream;
+123         private byte[] buf = new byte[BUFFER_LENGTH];
+124         private int curChar;
+125         private int numChars;
+126 
+127         public InputReader(InputStream stream) {
+128             this.stream = stream;
+129         }
+130 
+131         private int next() {
+132             if (numChars == -1) {
+133                 throw new InputMismatchException();
+134             }
+135             if (curChar >= numChars) {
+136                 curChar = 0;
+137                 try {
+138                     numChars = stream.read(buf);
+139                 } catch (IOException e) {
+140                     throw new InputMismatchException();
+141                 }
+142                 if (numChars <= 0)
+143                     return -1;
+144             }
+145             return buf[curChar++];
+146         }
+147 
+148         public char nextChar() {
+149             return (char) skipWhileSpace();
+150         }
+151 
+152         public String nextToken() {
+153             int c = skipWhileSpace();
+154             StringBuilder res = new StringBuilder();
+155             do {
+156                 res.append((char) c);
+157                 c = next();
+158             } while (!isSpaceChar(c));
+159             return res.toString();
+160         }
+161 
+162         public int nextInt() {
+163             return (int) nextLong();
+164         }
+165 
+166         public long nextLong() {
+167             int c = skipWhileSpace();
+168             long sgn = 1;
+169             if (c == '-') {
+170                 sgn = -1;
+171                 c = next();
+172             }
+173             long res = 0;
+174             do {
+175                 if (c < '0' || c > '9') {
+176                     throw new InputMismatchException();
+177                 }
+178                 res *= 10;
+179                 res += c - '0';
+180                 c = next();
+181             } while (!isSpaceChar(c));
+182             return res * sgn;
+183         }
+184 
+185         public double nextDouble() {
+186             return Double.valueOf(nextToken());
+187         }
+188 
+189         int skipWhileSpace() {
+190             int c = next();
+191             while (isSpaceChar(c)) {
+192                 c = next();
+193             }
+194             return c;
+195         }
+196 
+197         boolean isSpaceChar(int c) {
+198             return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+199         }
+200     }
+201 }

@@ -3,30 +3,34 @@ import os
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 import sys
+from tqdm import tqdm
+import argparse
+
 from utils import Dataset, Model
-sys.path.append("/home/changshu/LLM_REASONING/clean_up/IER/prompts")
+sys.path.append("./prompts")
 ## import generators
 from generator import chatgpt_generator, huggingface_generator
 ## import prompts
-from GPT import GPT_Java_CodeNet, GPT_Python_CodeNet, GPT_Python_MBPP
+from GPT import GPT_Java_CodeNet, GPT_Python_CodeNet, GPT_Python_MBPP, GPT_Python_CruxEval
 from MagicCoder import MagicCoder_Java_CodeNet, MagicCoder_Python_CodeNet, MagicCoder_Python_MBPP, MagicCoder_Python_CruxEval
 from WizardCoder import WizardCoder_Java_CodeNet, WizardCoder_Python_CodeNet, WizardCoder_Python_MBPP, WizardCoder_Python_CruxEval
 from CodeLlama import CodeLlama_Java_CodeNet, CodeLlama_Python_CodeNet, CodeLlama_Python_MBPP, CodeLlama_Python_CruxEval
 from StarCoder import StarCoder_Java_CodeNet, StarCoder_Python_CodeNet, StarCoder_Python_MBPP, StarCoder_Python_CruxEval
 from Mistral import Mistral_Java_CodeNet, Mistral_Python_CodeNet, Mistral_Python_MBPP, Mistral_Python_CruxEval
 from DeepSeekCoder import DeepSeek_Java_CodeNet, DeepSeek_Python_CodeNet, DeepSeek_Python_MBPP, DeepSeek_Python_CruxEval
-from tqdm import tqdm
 
-
+# print(Mistral_Java_CodeNet)
 
 class CodeReasoningGenerator:
-    def __init__(self, configFile):
-        with open(configFile, 'r') as file:
+    def __init__(self, model, dataset, file_name, data_dir, write_dir):
+        config_path = f"./config/{model}.json"
+        with open(config_path, 'r') as file:
             self.config = json.load(file)
-        self.root_dir = self.config["root_dir"]
-        self.file_name = self.config["file_name"]
-        self.model = self.config["model"]
-        self.dataset = self.config["dataset"]
+        self.root_dir = data_dir
+        self.file_name = file_name
+        self.model = model
+        self.dataset = dataset
+        self.output_dir=write_dir
     
     def read_code_input(self, folder):
         path_code = os.path.join(folder, self.file_name)
@@ -38,7 +42,7 @@ class CodeReasoningGenerator:
         return code, code_input
     
     def save_output(self, p_id, output):
-        save_folder = os.path.join(self.config.output_dir, self.config.model, p_id)
+        save_folder = os.path.join(self.output_dir, self.model, p_id)
         if not os.path.exists(save_folder):
             os.makedirs(save_folder)
         output_path = os.path.join(save_folder, "raw_output.txt")
@@ -57,7 +61,7 @@ class CodeReasoningGenerator:
             tokenizer = AutoTokenizer.from_pretrained(model_id, use_auth_token=use_token, cache_dir=cache_dir)
             return (model, tokenizer)
         else:
-            return None      
+            return None, None      
     
     def load_data(self):
         data_dict = {}
@@ -72,16 +76,17 @@ class CodeReasoningGenerator:
         return data_dict
     
     def prompt_selector(self):
-        prompts = [GPT_Java_CodeNet, GPT_Python_CodeNet, GPT_Python_MBPP, MagicCoder_Python_CruxEval,
+        prompts = [GPT_Java_CodeNet, GPT_Python_CodeNet, GPT_Python_MBPP, GPT_Python_CruxEval, MagicCoder_Python_CruxEval,
                 MagicCoder_Java_CodeNet, MagicCoder_Python_CodeNet, MagicCoder_Python_MBPP, MagicCoder_Python_CruxEval,
                 WizardCoder_Java_CodeNet, WizardCoder_Python_CodeNet, WizardCoder_Python_MBPP, WizardCoder_Python_CruxEval,
                 CodeLlama_Java_CodeNet, CodeLlama_Python_CodeNet, CodeLlama_Python_MBPP, CodeLlama_Python_CruxEval,
-                StarCoder_Java_CodeNet, StarCoder_Python_CodeNet, StarCoder_Python_MBPP, StarCoder_Python_CruxEval.
+                StarCoder_Java_CodeNet, StarCoder_Python_CodeNet, StarCoder_Python_MBPP, StarCoder_Python_CruxEval,
                 Mistral_Java_CodeNet, Mistral_Python_CodeNet, Mistral_Python_MBPP, Mistral_Python_CruxEval,
                 DeepSeek_Java_CodeNet, DeepSeek_Python_CodeNet, DeepSeek_Python_MBPP, DeepSeek_Python_CruxEval
                 ]
         
-        
+        # print(Model(self.model))
+        # print(Dataset(self.dataset))
         for p in prompts:
             if Model(self.model) in p.models and Dataset(self.dataset) in p.datasets:
                 return p.prompt_text
@@ -110,6 +115,20 @@ class CodeReasoningGenerator:
 
 
 if __name__ == "__main__":
-    path = sys.argv[1]
-    reasoning_generator = CodeReasoningGenerator(path)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model", type=str, default='none')
+    parser.add_argument("--fileName", type=str, default="none")
+    parser.add_argument("--dataDir", type=str, default='none')
+    parser.add_argument("--dataset", type=str, default='none')
+    parser.add_argument("--writeDir", type=str, default='none')
+    args = parser.parse_args()
+    
+    model = args.model
+    dataset = args.dataset
+    file_name = args.fileName
+    data_dir = args.dataDir
+    write_dir = args.writeDir
+    
+    
+    reasoning_generator = CodeReasoningGenerator(model=model, dataset=dataset, file_name=file_name, data_dir=data_dir, write_dir=write_dir)
     reasoning_generator.run()

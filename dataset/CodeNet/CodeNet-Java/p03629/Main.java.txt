@@ -1,0 +1,193 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.PrintWriter;
+4 import java.util.Arrays;
+5 import java.util.InputMismatchException;
+6 import java.util.NoSuchElementException;
+7 
+8 public class Main {
+9 
+10 	static PrintWriter out;
+11 	static InputReader ir;
+12 	static boolean debug = false;
+13 
+14 	static void solve() {
+15 		char[] a = ir.next().toCharArray();
+16 		int n = a.length;
+17 		int[][][] dp = new int[n + 1][26][2];
+18 		for (int i = 0; i < 26; i++)
+19 			dp[n][i] = new int[] { i, 1 };
+20 		for (int i = n - 1; i >= 0; i--) {
+21 			for (int j = 0; j < 26; j++)
+22 				for (int k = 0; k < 2; k++)
+23 					dp[i][j][k] = dp[i + 1][j][k];
+24 			int cur = a[i] - 'a';
+25 			int mi = 2 * n;
+26 			for (int j = 0; j < 26; j++)
+27 				mi = Math.min(mi, dp[i + 1][j][1]);
+28 			for (int j = 0; j < 26; j++) {
+29 				if (dp[i + 1][j][1] == mi) {
+30 					dp[i][cur][0] = j;
+31 					dp[i][cur][1] = dp[i + 1][j][1] + 1;
+32 					break;
+33 				}
+34 			}
+35 		}
+36 		int mi = 2 * n, cur = -1;
+37 		;
+38 		for (int i = 0; i < 26; i++)
+39 			mi = Math.min(mi, dp[0][i][1]);
+40 		for (int i = 0; i < 26; i++)
+41 			if (dp[0][i][1] == mi) {
+42 				cur = i;
+43 				break;
+44 			}
+45 		StringBuilder ret = new StringBuilder(Character.toString((char) ('a' + cur)));
+46 		for (int i = 0; i < n; i++) {
+47 			if (dp[i][cur][0] == dp[i + 1][cur][0] && dp[i][cur][1] == dp[i + 1][cur][1])
+48 				continue;
+49 			ret.append(Character.toString((char) ('a' + dp[i][cur][0])));
+50 			cur = dp[i][cur][0];
+51 		}
+52 		out.println(ret);
+53 	}
+54 
+55 	public static void main(String[] args) {
+56 		ir = new InputReader(System.in);
+57 		out = new PrintWriter(System.out);
+58 		solve();
+59 		out.flush();
+60 	}
+61 
+62 	static class InputReader {
+63 
+64 		private InputStream in;
+65 		private byte[] buffer = new byte[1024];
+66 		private int curbuf;
+67 		private int lenbuf;
+68 
+69 		public InputReader(InputStream in) {
+70 			this.in = in;
+71 			this.curbuf = this.lenbuf = 0;
+72 		}
+73 
+74 		public boolean hasNextByte() {
+75 			if (curbuf >= lenbuf) {
+76 				curbuf = 0;
+77 				try {
+78 					lenbuf = in.read(buffer);
+79 				} catch (IOException e) {
+80 					throw new InputMismatchException();
+81 				}
+82 				if (lenbuf <= 0)
+83 					return false;
+84 			}
+85 			return true;
+86 		}
+87 
+88 		private int readByte() {
+89 			if (hasNextByte())
+90 				return buffer[curbuf++];
+91 			else
+92 				return -1;
+93 		}
+94 
+95 		private boolean isSpaceChar(int c) {
+96 			return !(c >= 33 && c <= 126);
+97 		}
+98 
+99 		private void skip() {
+100 			while (hasNextByte() && isSpaceChar(buffer[curbuf]))
+101 				curbuf++;
+102 		}
+103 
+104 		public boolean hasNext() {
+105 			skip();
+106 			return hasNextByte();
+107 		}
+108 
+109 		public String next() {
+110 			if (!hasNext())
+111 				throw new NoSuchElementException();
+112 			StringBuilder sb = new StringBuilder();
+113 			int b = readByte();
+114 			while (!isSpaceChar(b)) {
+115 				sb.appendCodePoint(b);
+116 				b = readByte();
+117 			}
+118 			return sb.toString();
+119 		}
+120 
+121 		public int nextInt() {
+122 			if (!hasNext())
+123 				throw new NoSuchElementException();
+124 			int c = readByte();
+125 			while (isSpaceChar(c))
+126 				c = readByte();
+127 			boolean minus = false;
+128 			if (c == '-') {
+129 				minus = true;
+130 				c = readByte();
+131 			}
+132 			int res = 0;
+133 			do {
+134 				if (c < '0' || c > '9')
+135 					throw new InputMismatchException();
+136 				res = res * 10 + c - '0';
+137 				c = readByte();
+138 			} while (!isSpaceChar(c));
+139 			return (minus) ? -res : res;
+140 		}
+141 
+142 		public long nextLong() {
+143 			if (!hasNext())
+144 				throw new NoSuchElementException();
+145 			int c = readByte();
+146 			while (isSpaceChar(c))
+147 				c = readByte();
+148 			boolean minus = false;
+149 			if (c == '-') {
+150 				minus = true;
+151 				c = readByte();
+152 			}
+153 			long res = 0;
+154 			do {
+155 				if (c < '0' || c > '9')
+156 					throw new InputMismatchException();
+157 				res = res * 10 + c - '0';
+158 				c = readByte();
+159 			} while (!isSpaceChar(c));
+160 			return (minus) ? -res : res;
+161 		}
+162 
+163 		public double nextDouble() {
+164 			return Double.parseDouble(next());
+165 		}
+166 
+167 		public int[] nextIntArray(int n) {
+168 			int[] a = new int[n];
+169 			for (int i = 0; i < n; i++)
+170 				a[i] = nextInt();
+171 			return a;
+172 		}
+173 
+174 		public long[] nextLongArray(int n) {
+175 			long[] a = new long[n];
+176 			for (int i = 0; i < n; i++)
+177 				a[i] = nextLong();
+178 			return a;
+179 		}
+180 
+181 		public char[][] nextCharMap(int n, int m) {
+182 			char[][] map = new char[n][m];
+183 			for (int i = 0; i < n; i++)
+184 				map[i] = next().toCharArray();
+185 			return map;
+186 		}
+187 	}
+188 
+189 	static void tr(Object... o) {
+190 		if (debug)
+191 			out.println(Arrays.deepToString(o));
+192 	}
+193 }

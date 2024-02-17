@@ -1,0 +1,259 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.io.PrintWriter;
+4 import java.util.Arrays;
+5 import java.util.Comparator;
+6 import java.util.InputMismatchException;
+7 import java.util.NoSuchElementException;
+8 public class Main {
+9 	static int[] D = {1,0,-1,0};
+10 	public static void main(String[] args) {
+11 		IO io = new IO();
+12 		int n = io.nextInt();
+13 		int[] sqi = new int[n];
+14 		int[] sqj = new int[n];
+15 		for(int i=1;i<n;i++) {
+16 			int x = io.nextInt();
+17 			int d = io.nextInt();
+18 			sqi[i] = sqi[x] + D[d];
+19 			sqj[i] = sqj[x] + D[d^1];
+20 		}
+21 		Vector2[] pp = new Vector2[n*4];
+22 		for(int i=0;i<n;i++) {
+23 			pp[i*4+0] = new Vector2(sqi[i], sqj[i]);
+24 			pp[i*4+1] = new Vector2(sqi[i], sqj[i]+1);
+25 			pp[i*4+2] = new Vector2(sqi[i]+1, sqj[i]);
+26 			pp[i*4+3] = new Vector2(sqi[i]+1, sqj[i]+1);
+27 		}
+28 		Vector2[] v = Vector2.convexHull(pp);
+29 		int m = v.length;
+30 		double[] theta = new double[m];
+31 		for(int i=0;i<m;i++) {
+32 			Vector2 v1 = v[i];
+33 			Vector2 v2 = v[(i+1)%m];
+34 			theta[i] = Math.atan2(v2.y - v1.y, v2.x - v1.x);
+35 		}
+36 		Arrays.sort(theta);
+37 		double min = Double.POSITIVE_INFINITY;
+38 		for(int i=0;i<m;i++) {
+39 			double l = theta[i];
+40 			double r = i < m - 1 ? theta[i+1] : (theta[0] + Math.PI * 2);
+41 			for(int j=0;j<90;j++) {
+42 				double x1 = (l * 2 + r) / 3;
+43 				double x2 = (l + r * 2) / 3;
+44 				if (area(v,x1) < area(v,x2)) {
+45 					r = x2;
+46 				}else{
+47 					l = x1;
+48 				}
+49 			}
+50 			min = Math.min(min, area(v, (r + l) / 2));
+51 		}
+52 		System.out.println(String.format("%.6f", min));
+53 	}
+54 	
+55 	static double area(Vector2[] v, double theta) {
+56 		double amax = Double.NEGATIVE_INFINITY;
+57 		double amin = Double.POSITIVE_INFINITY;
+58 		double bmax = Double.NEGATIVE_INFINITY;
+59 		double bmin = Double.POSITIVE_INFINITY;
+60 		for(int i=0;i<v.length;i++) {
+61 			double cos = Math.cos(theta);
+62 			double sin = Math.sin(theta);
+63 			double a = v[i].x * cos + v[i].y * sin;
+64 			double b = v[i].x * -sin + v[i].y * cos;
+65 			amax = Math.max(amax, a);
+66 			amin = Math.min(amin, a);
+67 			bmax = Math.max(bmax, b);
+68 			bmin = Math.min(bmin, b);
+69 		}
+70 		return (amax - amin) * (bmax - bmin);
+71 	}
+72 
+73 }
+74 
+75 class Vector2 {
+76 	long x = 0;
+77 	long y = 0;
+78 
+79 	public Vector2(long x, long y) {
+80 		this.x = x;
+81 		this.y = y;
+82 	}
+83 
+84 	public long dot(Vector2 v) {
+85 		return this.x * v.x + this.y * v.y;
+86 	}
+87 
+88 	public long cross(Vector2 v) {
+89 		return this.x * v.y - this.y * v.x;
+90 	}
+91 
+92 	public Vector2 add(Vector2 v) {
+93 		return new Vector2(this.x + v.x, this.y + v.y);
+94 	}
+95 
+96 	public Vector2 subtract(Vector2 v) {
+97 		return new Vector2(this.x - v.x, this.y - v.y);
+98 	}
+99 
+100 	public Vector2 multiply(long k) {
+101 		return new Vector2(k * this.x, k * this.y);
+102 	}
+103 
+104 	public String toString() {
+105 		return this.x + " " + this.y;
+106 	}
+107 
+108 	public boolean equals(Object o) {
+109 		if (o instanceof Vector2) {
+110 			Vector2 v = (Vector2) o;
+111 			return x == v.x && y == v.y;
+112 		}
+113 		return super.equals(o);
+114 	}
+115 
+116 	public static Vector2[] convexHull(Vector2[] p) {
+117 		int n = p.length;
+118 		int k = 0;
+119 		Arrays.sort(p, new LexicographicalComp());
+120 		Vector2[] q = new Vector2[n * 2];
+121 		for (int i = 0; i < n; q[k++] = p[i++]) {
+122 			while (k >= 2 && q[k - 2].subtract(q[k - 1]).cross(q[k - 1].subtract(p[i])) <= 0) {
+123 				k--;
+124 			}
+125 		}
+126 		for (int i = n - 2, t = k + 1; i >= 0; q[k++] = p[i--]) {
+127 			while (k >= t && q[k - 2].subtract(q[k - 1]).cross(q[k - 1].subtract(p[i])) <= 0) {
+128 				k--;
+129 			}
+130 		}
+131 		return Arrays.copyOf(q, k - 1);
+132 	}
+133 
+134 	public static class LexicographicalComp implements Comparator<Vector2> {
+135 		public int compare(Vector2 o1, Vector2 o2) {
+136 			if (o1.x != o2.x) {
+137 				return Long.compare(o1.x, o2.x);
+138 			}
+139 			return Long.compare(o1.y, o2.y);
+140 		}
+141 	}
+142 }
+143 class IO extends PrintWriter {
+144 	private final InputStream in;
+145 	private final byte[] buffer = new byte[1024];
+146 	private int ptr = 0;
+147 	private int buflen = 0;
+148 	
+149 	public IO() { this(System.in);}
+150 	public IO(InputStream source) { super(System.out); this.in = source;}
+151 	private boolean hasNextByte() {
+152 		if (ptr < buflen) {
+153 			return true;
+154 		}else{
+155 			ptr = 0;
+156 			try {
+157 				buflen = in.read(buffer);
+158 			} catch (IOException e) {
+159 				e.printStackTrace();
+160 			}
+161 			if (buflen <= 0) {
+162 				return false;
+163 			}
+164 		}
+165 		return true;
+166 	}
+167 	private int readByte() { if (hasNextByte()) return buffer[ptr++]; else return -1;}
+168 	private static boolean isPrintableChar(int c) { return 33 <= c && c <= 126;}
+169 	private static boolean isNewLine(int c) { return c == '\n' || c == '\r';}
+170 	public boolean hasNext() { while(hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++; return hasNextByte();}
+171 	public boolean hasNextLine() { while(hasNextByte() && isNewLine(buffer[ptr])) ptr++; return hasNextByte();}
+172 	public String next() {
+173 		if (!hasNext()) {
+174 			throw new NoSuchElementException();
+175 		}
+176 		StringBuilder sb = new StringBuilder();
+177 		int b = readByte();
+178 		while(isPrintableChar(b)) {
+179 			sb.appendCodePoint(b);
+180 			b = readByte();
+181 		}
+182 		return sb.toString();
+183 	}
+184 	public char[] nextCharArray(int len) {
+185 		if (!hasNext()) {
+186 			throw new NoSuchElementException();
+187 		}
+188 		char[] s = new char[len];
+189 		int i = 0;
+190 		int b = readByte();
+191 		while(isPrintableChar(b)) {
+192 			if (i == len) {
+193 				throw new InputMismatchException();
+194 			}
+195 			s[i++] = (char) b;
+196 			b = readByte();
+197 		}
+198 		return s;
+199 	}
+200 	public String nextLine() {
+201 		if (!hasNextLine()) {
+202 			throw new NoSuchElementException();
+203 		}
+204 		StringBuilder sb = new StringBuilder();
+205 		int b = readByte();
+206 		while(!isNewLine(b)) {
+207 			sb.appendCodePoint(b);
+208 			b = readByte();
+209 		}
+210 		return sb.toString();
+211 	}
+212 	public long nextLong() {
+213 		if (!hasNext()) {
+214 			throw new NoSuchElementException();
+215 		}
+216 		long n = 0;
+217 		boolean minus = false;
+218 		int b = readByte();
+219 		if (b == '-') {
+220 			minus = true;
+221 			b = readByte();
+222 		}
+223 		if (b < '0' || '9' < b) {
+224 			throw new NumberFormatException();
+225 		}
+226 		while(true){
+227 			if ('0' <= b && b <= '9') {
+228 				n *= 10;
+229 				n += b - '0';
+230 			}else if(b == -1 || !isPrintableChar(b)){
+231 				return minus ? -n : n;
+232 			}else{
+233 				throw new NumberFormatException();
+234 			}
+235 			b = readByte();
+236 		}
+237 	}
+238 	public int nextInt() {
+239 		long nl = nextLong();
+240 		if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE) {
+241 			throw new NumberFormatException();
+242 		}
+243 		return (int) nl;
+244 	}
+245 	public char nextChar() {
+246 		if (!hasNext()) {
+247 			throw new NoSuchElementException();
+248 		}
+249 		return (char) readByte();
+250 	}
+251 	public double nextDouble() { return Double.parseDouble(next());}
+252 	public int[] nextIntArray(int n) { int[] a = new int[n]; for(int i=0;i<n;i++) a[i] = nextInt(); return a;}
+253 	public long[] nextLongArray(int n) { long[] a = new long[n]; for(int i=0;i<n;i++) a[i] = nextLong(); return a;}
+254 	public double[] nextDoubleArray(int n) { double[] a = new double[n]; for(int i=0;i<n;i++) a[i] = nextDouble(); return a;}
+255 	public void nextIntArrays(int[]... a) { for(int i=0;i<a[0].length;i++) for(int j=0;j<a.length;j++) a[j][i] = nextInt();}
+256 	public int[][] nextIntMatrix(int n,int m) { int[][] a = new int[n][]; for(int i=0;i<n;i++) a[i] = nextIntArray(m); return a;}
+257 	public char[][] nextCharMap(int n,int m) { char[][] a = new char[n][]; for(int i=0;i<n;i++) a[i] = nextCharArray(m); return a;}
+258 	public void close() { super.close(); try {in.close();} catch (IOException e) {}}
+259 }

@@ -1,0 +1,156 @@
+{
+    "0": {
+        "prompt": "Instruction: I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to print the state of some variables.\nFor example:\n\nConsider the following code:\n1 import java.io.BufferedReader;\n2 import java.io.InputStreamReader;\n3 \n4 public class Main {\n5 \n6\t public static void main(String[] args) {\n7\t\t try {\n8\t\t\t InputStreamReader isr = new InputStreamReader(System.in);\n9\t\t\t BufferedReader br = new BufferedReader(isr);\n10\t\t\t String strArr[] = br.readLine().split(\" \");\n11 \n12\t\t\t int n = Integer.parseInt(strArr[0]);\n13\t\t\t int a = Integer.parseInt(strArr[1]);\n14\t\t\t int b = Integer.parseInt(strArr[2]);\n15\t\t\t int answer = 0;\n16 \n17\t\t\t for (int i = 1; i < n + 1; i++) {\n18\t\t\t\t int num = i;\n19\t\t\t\t int sum = 0;\n20 \n21\t\t\t\t while (num != 0) {\n22\t\t\t\t\t sum += num % 10;\n23\t\t\t\t\t num /= 10;\n24\t\t\t\t }\n25 \n26\t\t\t\t if (sum >= a && sum <= b ) {\n27\t\t\t\t\t answer = answer + i;\n28\t\t\t\t }\n29\t\t\t }\n30\t\t\t System.out.println(answer);\n31\t\t } catch (Exception e) {\n32\t\t\t e.printStackTrace();\n33\t\t }\n34\t }\n35 \n36 }\n\nGiven the following input:\n20 2 5\n\nPlease first analyze the program. Now think step by step and end your response with \"END-OF-REASONING\":\n\nThe variable n, variable a and variable b are initialized with 20, 2 and 5 respectively according to the input. And variable sum is initialized with 0.\nIt enters a for loop and it iterates from 1 to 20 to check each integer i in this range. The value of variable i is also passed to variable num.\nInside the for loop, it calculates the sum of the digits of the current interger num by repeatedlly extracting the digits of number with a while loop and adding it to variable sum.\nThen it checks if the calculated variable sum falls within the range [2, 5]. If it does, it adds the current interger i to variable answer. The condition is met when i is 2,3,4,5,11,12,13,14 and 20.\nAfter the loop finishes, it print the fianl value of variable answer as output, which is 84.\nEND-OF-REASONING\n\n\nQuestion:\nWhat would be the states of variable n in line 12? Print all the states and end your response with \"END-OF-STATE\":\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable i in line 17? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nEND-OF-STATE\n\nQuestion:\nWhat would be the states of variable answer in line 27? Print all the states and end your response with \"END-OF-STATE\":\nAnswer:\n2\n5\n9\n14\n25\n37\n50\n64\n84\nEND-OF-STATE",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN"
+    },
+    "1": {
+        "prompt": "Consider the following code:\n1 import java.util.*;\n2 import java.io.*;\n3 public class Main {\n4 \tpublic static void main(String[] args) {\n5 \t\tSolver solver = new Solver();\n6 \t\tsolver.solve();\n7 \t\tsolver.exit();\n8 \t}\n9 \n10 \tstatic class FastScanner {\n11 \t\tprivate final InputStream in = System.in;\n12 \t\tprivate final byte[] buffer = new byte[1024];\n13 \t\tprivate int ptr = 0;\n14 \t\tprivate int buflen = 0;\n15 \t\tprivate boolean hasNextByte() {\n16 \t\t\tif (ptr < buflen) {\n17 \t\t\t\treturn true;\n18 \t\t\t}else{\n19 \t\t\t\tptr = 0;\n20 \t\t\t\ttry {\n21 \t\t\t\t\tbuflen = in.read(buffer);\n22 \t\t\t\t} catch (IOException e) {\n23 \t\t\t\t\te.printStackTrace();\n24 \t\t\t\t}\n25 \t\t\t\tif (buflen <= 0) {\n26 \t\t\t\t\treturn false;\n27 \t\t\t\t}\n28 \t\t\t}\n29 \t\t\treturn true;\n30 \t\t}\n31 \t\tprivate int readByte() { if (hasNextByte()) return buffer[ptr++]; else return -1;}\n32 \t\tprivate boolean isPrintableChar(int c) { return 33 <= c && c <= 126;}\n33 \t\tprivate void skipUnprintable() { while(hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++;}\n34 \t\tpublic boolean hasNext() { skipUnprintable(); return hasNextByte();}\n35 \t\tpublic String next() {\n36 \t\t\tif (!hasNext()) throw new NoSuchElementException();\n37 \t\t\tStringBuilder sb = new StringBuilder();\n38 \t\t\tint b = readByte();\n39 \t\t\twhile(isPrintableChar(b)) {\n40 \t\t\t\tsb.appendCodePoint(b);\n41 \t\t\t\tb = readByte();\n42 \t\t\t}\n43 \t\t\treturn sb.toString();\n44 \t\t}\n45 \t\tpublic long nextLong() {\n46 \t\t\tif (!hasNext()) throw new NoSuchElementException();\n47 \t\t\tlong n = 0;\n48 \t\t\tboolean minus = false;\n49 \t\t\tint b = readByte();\n50 \t\t\tif (b == '-') {\n51 \t\t\t\tminus = true;\n52 \t\t\t\tb = readByte();\n53 \t\t\t}\n54 \t\t\tif (b < '0' || '9' < b) {\n55 \t\t\t\tthrow new NumberFormatException();\n56 \t\t\t}\n57 \t\t\twhile(true){\n58 \t\t\t\tif ('0' <= b && b <= '9') {\n59 \t\t\t\t\tn *= 10;\n60 \t\t\t\t\tn += b - '0';\n61 \t\t\t\t}else if(b == -1 || !isPrintableChar(b)){\n62 \t\t\t\t\treturn minus ? -n : n;\n63 \t\t\t\t}else{\n64 \t\t\t\t\tthrow new NumberFormatException();\n65 \t\t\t\t}\n66 \t\t\t\tb = readByte();\n67 \t\t\t}\n68 \t\t}\n69 \t}\n70 \n71 \tstatic class Solver {\n72 \t\tFastScanner sc = new FastScanner();\n73 \t\tpublic Solver() { }\n74 \n75 \t\tString ns() { return sc.next(); }\n76 \t\tString[] ns(int n) {\n77 \t\t\tString a[] = new String[n];\n78 \t\t\tfor(int i = 0; i < n; i ++) { a[i] = ns(); }\n79 \t\t\treturn a;\n80 \t\t}\n81 \t\tString[][] ns(int n, int m) {\n82 \t\t\tString a[][] = new String[n][m];\n83 \t\t\tfor(int i = 0; i < n; i ++) { a[i] = ns(m); }\n84 \t\t\treturn a;\n85 \t\t}\n86 \t\tchar[] nc(int n) {\n87 \t\t\tString str = ns();\n88 \t\t\tchar a[] = new char[str.length()];\n89 \t\t\tfor(int i = 0; i < str.length(); i ++) { a[i] = str.charAt(i); }\n90 \t\t\treturn a;\n91 \t\t}\n92 \t\tchar[][] nc(int n, int m) {\n93 \t\t\tchar a[][] = new char[n][m];\n94 \t\t\tfor(int i = 0; i < n; i ++) { a[i] = nc(m); }\n95 \t\t\treturn a;\n96 \t\t}\n97 \t\tboolean[] nb(int n, char t) {\n98 \t\t\tboolean a[] = new boolean[n];\n99 \t\t\tchar c[] = nc(n);\n100 \t\t\tfor(int i = 0; i < n; i ++) { a[i] = c[i] == t; }\n101 \t\t\treturn a;\n102 \t\t}\n103 \t\tboolean[][] nb(int n, int m, char t) {\n104 \t\t\tboolean a[][] = new boolean[n][m];\n105 \t\t\tfor(int i = 0; i < n; i ++) { a[i] = nb(m, t); }\n106 \t\t\treturn a;\n107 \t\t}\n108 \t\tint ni() { return (int)sc.nextLong(); }\n109 \t\tint[] ni(int n) {\n110 \t\t\tint a[] = new int[n];\n111 \t\t\tfor(int i = 0; i < n; i ++) { a[i] = ni(); }\n112 \t\t\treturn a;\n113 \t\t}\n114 \t\tint[][] ni(int n, int m) {\n115 \t\t\tint a[][] = new int[n][m];\n116 \t\t\tfor(int i = 0; i < n; i ++) { a[i] = ni(m); }\n117 \t\t\treturn a;\n118 \t\t}\n119 \t\tlong nl() { return sc.nextLong(); }\n120 \t\tlong[] nl(int n) {\n121 \t\t\tlong a[] = new long[n];\n122 \t\t\tfor(int i = 0; i < n; i ++) { a[i] = nl(); }\n123 \t\t\treturn a;\n124 \t\t}\n125 \t\tlong[][] nl(int n, int m) {\n126 \t\t\tlong a[][] = new long[n][m];\n127 \t\t\tfor(int i = 0; i < n; i ++) { a[i] = nl(m); }\n128 \t\t\treturn a;\n129 \t\t}\n130 \n131 \t\tPrintWriter out = new PrintWriter(System.out);\n132 \t\tPrintWriter err = new PrintWriter(System.err);\n133 \t\tvoid prt() { out.print(\"\"); }\n134 \t\tvoid prt(int a) { out.print(a); }\n135 \t\tvoid prt(long a) { out.print(a); }\n136 \t\tvoid prt(double a) { out.print(a); }\n137 \t\tvoid prt(String a) { out.print(a); }\n138 \t\tvoid prtln() { out.println(\"\"); }\n139 \t\tvoid prtln(int a) { out.println(a); }\n140 \t\tvoid prtln(long a) { out.println(a); }\n141 \t\tvoid prtln(double a) { out.println(a); }\n142 \t\tvoid prtln(String a) { out.println(a); }\n143 \t\tvoid prtln(int... a) {\n144 \t\t\tStringBuilder sb = new StringBuilder();\n145 \t\t\tfor(int element : a){ sb.append(element+\" \"); }\n146 \t\t\tprtln(sb.toString().trim());\n147 \t\t}\n148 \t\tvoid prtln(long... a) {\n149 \t\t\tStringBuilder sb = new StringBuilder();\n150 \t\t\tfor(long element : a){ sb.append(element+\" \"); }\n151 \t\t\tprtln(sb.toString().trim());\n152 \t\t}\n153 \t\tvoid prtln(double... a) {\n154 \t\t\tStringBuilder sb = new StringBuilder();\n155 \t\t\tfor(double element : a){ sb.append(element+\" \"); }\n156 \t\t\tprtln(sb.toString().trim());\n157 \t\t}\n158 \t\tvoid prtln(String... a) {\n159 \t\t\tStringBuilder sb = new StringBuilder();\n160 \t\t\tfor(String element : a){ sb.append(element+\" \"); }\n161 \t\t\tprtln(sb.toString().trim());\n162 \t\t}\n163 \t\tvoid prtln(int[][] a) { for(int[] element : a){ prtln(element); } }\n164 \t\tvoid prtln(long[][] a) { for(long[] element : a){ prtln(element); } }\n165 \t\tvoid prtln(double[][] a) { for(double[] element : a){ prtln(element); } }\n166 \t\tvoid prtln(String[][] a) { for(String[] element : a){ prtln(element); } }\n167 \t\tvoid errprt() { err.print(\"\"); }\n168 \t\tvoid errprt(int a) { err.print(a); }\n169 \t\tvoid errprt(long a) { err.print(a); }\n170 \t\tvoid errprt(double a) { err.print(a); }\n171 \t\tvoid errprt(String a) { err.print(a); }\n172 \t\tvoid errprt(boolean a) { errprt(a ? \"#\" : \".\"); }\n173 \t\tvoid errprtln() { err.println(\"\"); }\n174 \t\tvoid errprtln(int a) { err.println(a); }\n175 \t\tvoid errprtln(long a) { err.println(a); }\n176 \t\tvoid errprtln(double a) { err.println(a); }\n177 \t\tvoid errprtln(String a) { err.println(a); }\n178 \t\tvoid errprtln(boolean a) { errprtln(a ? \"#\" : \".\"); }\n179 \t\tvoid errprtln(int... a) {\n180 \t\t\tStringBuilder sb = new StringBuilder();\n181 \t\t\tfor(int element : a){ sb.append(element+\" \"); }\n182 \t\t\terrprtln(sb.toString().trim());\n183 \t\t}\n184 \t\tvoid errprtln(long... a) {\n185 \t\t\tStringBuilder sb = new StringBuilder();\n186 \t\t\tfor(long element : a){ sb.append(element+\" \"); }\n187 \t\t\terrprtln(sb.toString().trim());\n188 \t\t}\n189 \t\tvoid errprtln(double... a) {\n190 \t\t\tStringBuilder sb = new StringBuilder();\n191 \t\t\tfor(double element : a){ sb.append(element+\" \"); }\n192 \t\t\terrprtln(sb.toString().trim());\n193 \t\t}\n194 \t\tvoid errprtln(String... a) {\n195 \t\t\tStringBuilder sb = new StringBuilder();\n196 \t\t\tfor(String element : a){ sb.append(element+\" \"); }\n197 \t\t\terrprtln(sb.toString().trim());\n198 \t\t}\n199 \t\tvoid errprtln(boolean... a) {\n200 \t\t\tStringBuilder sb = new StringBuilder();\n201 \t\t\tfor(boolean element : a){ sb.append(element+\" \"); }\n202 \t\t\terrprtln(sb.toString().trim());\n203 \t\t}\n204 \t\tvoid errprtln(int[][] a) { for(int[] element : a){ errprtln(element); } }\n205 \t\tvoid errprtln(long[][] a) { for(long[] element : a){ errprtln(element); } }\n206 \t\tvoid errprtln(double[][] a) { for(double[] element : a){ errprtln(element); } }\n207 \t\tvoid errprtln(String[][] a) { for(String[] element : a){ errprtln(element); } }\n208 \t\tvoid errprtln(boolean[][] a) { for(boolean[] element : a){ errprtln(element); } }\n209 \n210 \t\tvoid reply(boolean b) { prtln(b ? \"Yes\" : \"No\"); }\n211 \t\tvoid REPLY(boolean b) { prtln(b ? \"YES\" : \"NO\"); }\n212 \n213 \t\tvoid exit() { out.flush(); err.flush(); System.exit(0); }\n214 \n215 \t\tint min(int a, int b) { return Math.min(a, b); }\n216 \t\tlong min(long a, long b) { return Math.min(a, b); }\n217 \t\tdouble min(double a, double b) { return Math.min(a, b); }\n218 \t\tint min(int... x) {\n219 \t\t\tint min = x[0];\n220 \t\t\tfor(int val : x) { min = min(min, val); }\n221 \t\t\treturn min;\n222 \t\t}\n223 \t\tlong min(long... x) {\n224 \t\t\tlong min = x[0];\n225 \t\t\tfor(long val : x) { min = min(min, val); }\n226 \t\t\treturn min;\n227 \t\t}\n228 \t\tdouble min(double... x) {\n229 \t\t\tdouble min = x[0];\n230 \t\t\tfor(double val : x) { min = min(min, val); }\n231 \t\t\treturn min;\n232 \t\t}\n233 \t\tint max(int a, int b) { return Math.max(a, b); }\n234 \t\tlong max(long a, long b) { return Math.max(a, b); }\n235 \t\tdouble max(double a, double b) { return Math.max(a, b); }\n236 \t\tint max(int... x) {\n237 \t\t\tint max = x[0];\n238 \t\t\tfor(int val : x) { max = max(max, val); }\n239 \t\t\treturn max;\n240 \t\t}\n241 \t\tlong max(long... x) {\n242 \t\t\tlong max = x[0];\n243 \t\t\tfor(long val : x) { max = max(max, val); }\n244 \t\t\treturn max;\n245 \t\t}\n246 \t\tdouble max(double... x) {\n247 \t\t\tdouble max = x[0];\n248 \t\t\tfor(double val : x) { max = max(max, val); }\n249 \t\t\treturn max;\n250 \t\t}\n251 \t\tlong sum(int... a) {\n252 \t\t\tlong sum = 0;\n253 \t\t\tfor(int element : a) { sum += element; }\n254 \t\t\treturn sum;\n255 \t\t}\n256 \t\tlong sum(long... a) {\n257 \t\t\tlong sum = 0;\n258 \t\t\tfor(long element : a) { sum += element; }\n259 \t\t\treturn sum;\n260 \t\t}\n261 \t\tdouble sum(double... a) {\n262 \t\t\tdouble sum = 0;\n263 \t\t\tfor(double element : a) { sum += element; }\n264 \t\t\treturn sum;\n265 \t\t}\n266 \n267 \t\tlong abs(double x) { return (long)Math.abs(x); }\n268 \t\tlong round(double x) { return Math.round(x); }\n269 \t\tlong floor(double x) { return (long)Math.floor(x); }\n270 \t\tlong ceil(double x) { return (long)Math.ceil(x); }\n271 \t\tdouble sqrt(double x) { return Math.sqrt(x); }\n272 \t\tdouble pow(double x, double y) { return Math.pow(x, y); }\n273 \t\tlong pow(long x, long y) { return (long)Math.pow(x, y); }\n274 \t\tint gcd(int a, int b) { return b == 0 ? a : gcd(b, a % b); }\n275 \t\tlong gcd(long a, long b) { return b == 0 ? a : gcd(b, a % b); }\n276 \t\tlong lcm(long a, long b) { return a * b / gcd(a, b); }\n277 \n278 \t\tlong[] div(long a) {\n279 \t\t\tList<Long> divList = new ArrayList<Long>();\n280 \t\t\tfor(long i = 1; i * i <= a; i ++) {\n281 \t\t\t\tif(a % i == 0) {\n282 \t\t\t\t\tdivList.add(i);\n283 \t\t\t\t\tif(i * i != a) { divList.add(a / i); };\n284 \t\t\t\t}\n285 \t\t\t}\n286 \n287 \t\t\tlong div[] = new long[divList.size()];\n288 \t\t\tfor(int i = 0; i < divList.size(); i ++) { div[i] = divList.get(i); }\n289 \t\t\treturn div;\n290 \t\t}\n291 \n292 \t\tint numDigits(long a) { return Long.toString(a).length(); }\n293 \t\tlong bitFlag(int a) { return 1L << (long)a; }\n294 \t\tboolean isFlagged(long x, int a) { return (x & bitFlag(a)) != 0; }\n295 \n296 \t\tlong countString(String str, String a) { return (str.length() - str.replace(a, \"\").length()) / a.length(); }\n297 \t\tlong countStringAll(String str, String a) { return str.length() - str.replaceAll(a, \"\").length(); }\n298 \n299 \t\tvoid reverse(String array[]) {\n300 \t\t\tString reversed[] = new String[array.length];\n301 \t\t\tfor(int i = 0; i < array.length; i ++) { reversed[array.length - i - 1] = array[i]; }\n302 \t\t\tfor(int i = 0; i < array.length; i ++) { array[i] = reversed[i]; }\n303 \t\t}\n304 \t\tvoid reverse(int array[]) {\n305 \t\t\tint reversed[] = new int[array.length];\n306 \t\t\tfor(int i = 0; i < array.length; i ++) { reversed[array.length - i - 1] = array[i]; }\n307 \t\t\tfor(int i = 0; i < array.length; i ++) { array[i] = reversed[i]; }\n308 \t\t}\n309 \t\tvoid reverse(long array[]) {\n310 \t\t\tlong reversed[] = new long[array.length];\n311 \t\t\tfor(int i = 0; i < array.length; i ++) { reversed[array.length - i - 1] = array[i]; }\n312 \t\t\tfor(int i = 0; i < array.length; i ++) { array[i] = reversed[i]; }\n313 \t\t}\n314 \t\tvoid reverse(double array[]) {\n315 \t\t\tdouble reversed[] = new double[array.length];\n316 \t\t\tfor(int i = 0; i < array.length; i ++) { reversed[array.length - i - 1] = array[i]; }\n317 \t\t\tfor(int i = 0; i < array.length; i ++) { array[i] = reversed[i]; }\n318 \t\t}\n319 \t\tvoid reverse(boolean array[]) {\n320 \t\t\tboolean reversed[] = new boolean[array.length];\n321 \t\t\tfor(int i = 0; i < array.length; i ++) { reversed[array.length - i - 1] = array[i]; }\n322 \t\t\tfor(int i = 0; i < array.length; i ++) { array[i] = reversed[i]; }\n323 \t\t}\n324 \t\tvoid fill(int array[], int x) { Arrays.fill(array, x); }\n325 \t\tvoid fill(long array[], long x) { Arrays.fill(array, x); }\n326 \t\tvoid fill(double array[], double x) { Arrays.fill(array, x); }\n327 \t\tvoid fill(boolean array[], boolean x) { Arrays.fill(array, x); }\n328 \t\tvoid fill(int array[][], int x) { for(int a[] : array) { fill(a, x); } }\n329 \t\tvoid fill(long array[][], long x) { for(long a[] : array) { fill(a, x); } }\n330 \t\tvoid fill(double array[][], double x) { for(double a[] : array) { fill(a, x); } }\n331 \t\tvoid fill(boolean array[][], boolean x) { for(boolean a[] : array) { fill(a, x); } }\n332 \n333 \t\tlong INF = (long)1e+15;\n334 \t\tboolean isINF(long a) { return abs(a) > INF / 1000; }\n335 \t\tboolean isPlusINF(long a) { return a > 0 && isINF(a); }\n336 \t\tboolean isMinusINF(long a) { return isPlusINF(- a); }\n337 \n338 \n339 \t\t// mods\n340 \t\tlong MOD = (long)1e+9 + 7; // 998244353\n341 \t\tpublic long mod(long i) { return i % MOD + ((i % MOD) < 0 ? MOD : 0); }\n342 \n343 \t\tlong pow_m(long x, long y) {\n344 \t\t\tif (y == 0) { return 1;\n345 \t\t\t}else {\n346 \t\t\t\tlong tmp = pow_m(x, y / 2);\n347 \t\t\t\treturn mod(mod(tmp * tmp) * (y % 2 == 0 ? 1 : x));\n348 \t\t\t}\n349 \t\t}\n350 \n351 \t\tlong inv(long x) { return pow_m(x, MOD - 2); }\n352 \n353 \t\tint MAX_FACT = 5_000_100;\n354 \t\tlong fact[];\n355 \t\tlong invFact[];\n356 \t\tvoid prepareFact() {\n357 \t\t\tfact = new long[MAX_FACT];\n358 \t\t\tArrays.fill(fact, 0);\n359 \t\t\tinvFact = new long[MAX_FACT];\n360 \t\t\tArrays.fill(invFact, 0);\n361 \t\t\tfact[0] = 1;\n362 \t\t\tint maxIndex = min(MAX_FACT, (int)MOD);\n363 \t\t\tfor(int i = 1; i < maxIndex; i ++) { fact[i] = mod(fact[i - 1] * i); }\n364 \t\t\tinvFact[maxIndex - 1] = inv(fact[maxIndex - 1]);\n365 \t\t\tfor(int i = maxIndex - 1; i > 0; i --) { invFact[i - 1] = mod(invFact[i] * i); }\n366 \t\t}\n367 \n368 \t\tlong P(int n, int r) {\n369 \t\t\tif(n < 0 || r < 0 || n < r) { return 0; }\n370 \t\t\treturn mod(fact[n] * invFact[n - r]);\n371 \t\t}\n372 \t\tlong C(int n, int r) {\n373 \t\t\tif(n < 0 || r < 0 || n < r) { return 0; }\n374 \t\t\treturn mod(P(n, r) * invFact[r]);\n375 \t\t}\n376 \t\tlong H(int n, int r) { return C((n - 1) + r, r); }\n377 \n378 \n379 \t\t// grid\n380 \t\tclass Grid implements Comparable<Grid> {\n381 \t\t\tint h;\n382 \t\t\tint w;\n383 \t\t\tlong val;\n384 \n385 \t\t\tGrid() {  }\n386 \t\t\tGrid(int h, int w) {\n387 \t\t\t\tthis.h = h;\n388 \t\t\t\tthis.w = w;\n389 \t\t\t}\n390 \t\t\tGrid(int h, int w, long val) {\n391 \t\t\t\tthis.h = h;\n392 \t\t\t\tthis.w = w;\n393 \t\t\t\tthis.val = val;\n394 \t\t\t}\n395 \n396 \t\t\t@Override\n397 \t\t\tpublic int compareTo(Grid g) {\n398 \t\t\t\treturn Long.compare(this.val, g.val);\n399 \t\t\t}\n400 \t\t}\n401 \n402 \n403 \t\t// graph\n404 \t\tclass Graph {\n405 \t\t\tint numNode;\n406 \t\t\tint numEdge;\n407 \t\t\tEdge edges[];\n408 \t\t\tNode nodes[];\n409 \t\t\tNode reversedNodes[];\n410 \n411 \t\t\tGraph(int numNode, int numEdge, Edge edges[], boolean directed) {\n412 \t\t\t\tthis.numNode = numNode;\n413 \t\t\t\tthis.numEdge = numEdge;\n414 \t\t\t\tthis.edges = edges;\n415 \t\t\t\tnodes = new Node[numNode];\n416 \t\t\t\treversedNodes = new Node[numNode];\n417 \t\t\t\tfor(int i = 0; i < numNode; i ++) {\n418 \t\t\t\t\tnodes[i] = new Node(i);\n419 \t\t\t\t\treversedNodes[i] = new Node(i);\n420 \t\t\t\t}\n421 \n422 \t\t\t\tfor(Edge edge : edges) {\n423 \t\t\t\t\tnodes[edge.source].add(edge.target, edge.cost);\n424 \t\t\t\t\tif(directed) {\n425 \t\t\t\t\t\treversedNodes[edge.target].add(edge.source, edge.cost);\n426 \t\t\t\t\t}else {\n427 \t\t\t\t\t\tnodes[edge.target].add(edge.source, edge.cost);\n428 \t\t\t\t\t}\n429 \t\t\t\t}\n430 \t\t\t}\n431 \n432 \t\t\tvoid clearNodes() {\n433 \t\t\t\tfor(Node n : nodes) { n.clear(); }\n434 \t\t\t\tfor(Node n : reversedNodes) { n.clear(); }\n435 \t\t\t}\n436 \t\t}\n437 \n438 \t\tclass Node {\n439 \t\t\tint id;\n440 \t\t\tArrayList<Edge> edges = new ArrayList<Edge>();\n441 \n442 \t\t\tNode(int id) {\n443 \t\t\t\tthis.id = id;\n444 \t\t\t}\n445 \t\t\tvoid add(int target, long cost) {\n446 \t\t\t\tedges.add(new Edge(id, target, cost));\n447 \t\t\t}\n448 \t\t\tvoid clear() {\n449 \t\t\t\tedges.clear();\n450 \t\t\t}\n451 \t\t}\n452 \n453 \t\tclass Edge implements Comparable<Edge> {\n454 \t\t\tint source;\n455 \t\t\tint target;\n456 \t\t\tlong cost;\n457 \t\t\tEdge(int source, int target, long cost) {\n458 \t\t\t\tthis.source = source;\n459 \t\t\t\tthis.target = target;\n460 \t\t\t\tthis.cost = cost;\n461 \t\t\t}\n462 \n463 \t\t\t@Override\n464 \t\t\tpublic int compareTo(Edge e) {\n465 \t\t\t\treturn Long.compare(this.cost, e.cost);\n466 \t\t\t}\n467 \t\t}\n468 \n469 public void solve() {\n470 \tint x = ni();\n471 \tint y = ni();\n472 \tint z = ni();\n473 \tprtln((x - z) / (y + z));\n474 }\n475 \n476 \t}\n477 }\nGiven the following input:\n13 3 1\n\n\nPlease first analyze the program. Now think step by step and end your reponse with \"END-OF-REASONING\":\n",
+        "status": "NAN",
+        "variable": "NAN",
+        "line": "NAN"
+    },
+    "2": {
+        "prompt": "Question:\nWhat would be the states of variable n in line 47? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "0",
+            "0"
+        ],
+        "variable": "n",
+        "line": "47"
+    },
+    "3": {
+        "prompt": "Question:\nWhat would be the states of variable minus in line 48? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "false",
+            "false",
+            "false"
+        ],
+        "variable": "minus",
+        "line": "48"
+    },
+    "4": {
+        "prompt": "Question:\nWhat would be the states of variable b in line 49? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "49",
+            "51",
+            "49"
+        ],
+        "variable": "b",
+        "line": "49"
+    },
+    "5": {
+        "prompt": "Question:\nWhat would be the states of variable b in line 50? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "49",
+            "51",
+            "49"
+        ],
+        "variable": "b",
+        "line": "50"
+    },
+    "6": {
+        "prompt": "Question:\nWhat would be the states of variable b in line 54? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "49",
+            "51",
+            "49"
+        ],
+        "variable": "b",
+        "line": "54"
+    },
+    "7": {
+        "prompt": "Question:\nWhat would be the states of variable b in line 58? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "49",
+            "51",
+            "32",
+            "51",
+            "32",
+            "49",
+            "10"
+        ],
+        "variable": "b",
+        "line": "58"
+    },
+    "8": {
+        "prompt": "Question:\nWhat would be the states of variable n in line 59? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "0",
+            "10",
+            "0",
+            "0"
+        ],
+        "variable": "n",
+        "line": "59"
+    },
+    "9": {
+        "prompt": "Question:\nWhat would be the states of variable b in line 60? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "49",
+            "51",
+            "51",
+            "49"
+        ],
+        "variable": "b",
+        "line": "60"
+    },
+    "10": {
+        "prompt": "Question:\nWhat would be the states of variable n in line 60? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1",
+            "13",
+            "3",
+            "1"
+        ],
+        "variable": "n",
+        "line": "60"
+    },
+    "11": {
+        "prompt": "Question:\nWhat would be the states of variable b in line 66? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "51",
+            "32",
+            "32",
+            "10"
+        ],
+        "variable": "b",
+        "line": "66"
+    },
+    "12": {
+        "prompt": "Question:\nWhat would be the states of variable b in line 61? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "32",
+            "32",
+            "10"
+        ],
+        "variable": "b",
+        "line": "61"
+    },
+    "13": {
+        "prompt": "Question:\nWhat would be the states of variable x in line 470? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "13"
+        ],
+        "variable": "x",
+        "line": "470"
+    },
+    "14": {
+        "prompt": "Question:\nWhat would be the states of variable y in line 471? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "3"
+        ],
+        "variable": "y",
+        "line": "471"
+    },
+    "15": {
+        "prompt": "Question:\nWhat would be the states of variable z in line 472? Print all the states and end your response with \"END-OF-STATE\":\nAnswer\n",
+        "status": [
+            "1"
+        ],
+        "variable": "z",
+        "line": "472"
+    }
+}

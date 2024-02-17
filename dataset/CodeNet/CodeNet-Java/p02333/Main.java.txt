@@ -1,0 +1,223 @@
+1 import java.io.IOException;
+2 import java.io.InputStream;
+3 import java.util.*;
+4  
+5 public class Main implements Runnable {
+6 	
+7     public static void main(String[] args) {
+8     	new Thread(null, new Main(), "", 16 * 1024 * 1024).start();
+9     }
+10     
+11     public void run() {
+12         FastScanner sc = new FastScanner();
+13         
+14         int n = sc.nextInt();
+15         int k = sc.nextInt();
+16         
+17         Combinatrics c = new Combinatrics(k);
+18 
+19     	System.out.println(c.surjection(n,k));
+20 
+21     }
+22 }
+23 
+24 
+25 
+26 class Combinatrics {
+27 	
+28 	static long mod = 1000000007; //逆元を取るので素数前提
+29 	static long[] fact; //階乗のテーブル
+30 	static long[] inv;	//逆元のテーブル
+31 	static long[] finv; //階乗の逆元のテーブル
+32 	
+33 	public Combinatrics(int n){
+34 		int N = Math.max(2,n+1);
+35 		fact = new long[N];
+36 		inv = new long[N];
+37 		finv = new long[N];
+38 	    fact[0] = fact[1] = 1;
+39 	    finv[0] = finv[1] = 1;
+40 	    inv[1] = 1;
+41 	    for(int i=2;i<n+1; i++){
+42 	        fact[i] = fact[i-1] * i % mod;
+43 	        inv[i] = mod - inv[(int)mod%i] * (mod / i) % mod;
+44 	        finv[i] = finv[i-1] * inv[i] % mod;
+45 	    }
+46 	}
+47 	
+48 	//逆元
+49 	int inv(int n){
+50 		return (int)inv[n];
+51 	}
+52 	
+53 	//n!
+54 	int factorial(int n){
+55 		return (int)fact[n];
+56 	}
+57 	
+58 	//n!の逆元
+59 	int factInv(int n){
+60 		return (int)finv[n];
+61 	}
+62 	
+63 	//nCr（n個からr個選ぶ）
+64     int combination(int n, int r) {
+65         if(n<r|| r<0){
+66         	return 0;
+67         }
+68         return (int)(fact[n]*finv[r]%mod*finv[n-r]%mod);
+69     }
+70 
+71     //nPr (=n*(n-1)*...*(n-r+1))（n個からr個選んで並べる）
+72     int permutation(int n, int r) {
+73         if(n<r || r<0){
+74         	return 0;
+75         }
+76         return (int)(fact[n]*finv[n-r]%mod);
+77     }
+78 
+79     //nHr (=n+r-1Cr)（n個から重複を許してk個とる）
+80     //（テーブルがn+r-1まで必要な事に注意！）
+81     int homogeneous(int n, int r) {
+82         if(n==0 && r==0){
+83         	return 1;
+84         }
+85         return combination(n+r-1,r);
+86     }
+87     
+88     int surjection(int n, int k){
+89     	long ans = 0;
+90     	int sign = 1; //符号
+91     	if(k%2 == 0){
+92     		sign = -1;
+93     	}
+94     	for(int i=1;i<=k;i++){
+95     		if(sign==1){
+96     			ans += (long)combination(k,i)*iterationPow(i,n);
+97     			ans %= mod;
+98     		}
+99     		else{
+100     			ans -= (long)combination(k,i)*iterationPow(i,n);
+101     			ans %= mod;
+102     		}
+103     		sign *= -1;
+104     	}
+105     	ans = mod(ans);
+106     	return (int)ans;
+107     }
+108 	//x^nをmodのもとで繰り返し2乗法で求める。
+109 	static long iterationPow(long x, long n){
+110 	    long sum = 1;
+111 	    while(n>0){
+112 	        if((n&1)== 1){  //ビットが立っていたら
+113 	            sum *= x;        //x^2^k1 * x^2^k2 * x^2^k3 * ・・・
+114 	            sum %= mod;
+115 	        }
+116 	        x *= x;              //((x^2)^2)^2・・・
+117 	        x %= mod;
+118 	        n >>= 1;
+119 	    }
+120 	    return sum;
+121 	}
+122 	//負の数に対応したmod
+123 	static long mod(long a) {
+124 		return (a % mod + mod) % mod;
+125 	}
+126 
+127 }
+128 
+129 class FastScanner {
+130 	private final InputStream in = System.in;
+131 	private final byte[] buffer = new byte[1024];
+132 	private int ptr = 0;
+133 	private int buflen = 0;
+134 	private boolean hasNextByte() {
+135 		if (ptr < buflen) {
+136 			return true;
+137 		} else {
+138 			ptr = 0;
+139 			try {
+140 				buflen = in.read(buffer);
+141 			} catch (IOException e) {
+142 				e.printStackTrace();
+143 			}
+144 			if (buflen <= 0) {
+145 				return false;
+146 			}
+147 		}
+148 		return true;
+149 	}
+150 	private int readByte() {
+151 		if (hasNextByte())
+152 			return buffer[ptr++];
+153 		else
+154 			return -1;
+155 	}
+156 	private static boolean isPrintableChar(int c) {
+157 		return 33 <= c && c <= 126;
+158 	}
+159 	public boolean hasNext() {
+160 		while (hasNextByte() && !isPrintableChar(buffer[ptr]))
+161 			ptr++;
+162 		return hasNextByte();
+163 	}
+164 	public String next() {
+165 		if (!hasNext())
+166 			throw new NoSuchElementException();
+167 		StringBuilder sb = new StringBuilder();
+168 		int b = readByte();
+169 		while (isPrintableChar(b)) {
+170 			sb.appendCodePoint(b);
+171 			b = readByte();
+172 		}
+173 		return sb.toString();
+174 	}
+175 	public long nextLong() {
+176 		if (!hasNext())
+177 			throw new NoSuchElementException();
+178 		long n = 0;
+179 		boolean minus = false;
+180 		int b = readByte();
+181 		if (b == '-') {
+182 			minus = true;
+183 			b = readByte();
+184 		}
+185 		if (b < '0' || '9' < b) {
+186 			throw new NumberFormatException();
+187 		}
+188 		while (true) {
+189 			if ('0' <= b && b <= '9') {
+190 				n *= 10;
+191 				n += b - '0';
+192 			} else if (b == -1 || !isPrintableChar(b)) {
+193 				return minus ? -n : n;
+194 			} else {
+195 				throw new NumberFormatException();
+196 			}
+197 			b = readByte();
+198 		}
+199 	}
+200 	public int nextInt() {
+201 		long nl = nextLong();
+202 		if (nl < Integer.MIN_VALUE || nl > Integer.MAX_VALUE)
+203 			throw new NumberFormatException();
+204 		return (int) nl;
+205 	}
+206 	public int[] nextIntArray(int n){
+207 		int[] a = new int[n];
+208 		for(int i=0;i<n;i++){
+209 			a[i] = nextInt();
+210 		}
+211 		return a;
+212 	}
+213 	public Integer[] nextIntegerArray(int n){
+214 		Integer[] a = new Integer[n];
+215 		for(int i=0;i<n;i++){
+216 			a[i] = nextInt();
+217 		}
+218 		return a;
+219 	}
+220 	public double nextDouble() {
+221 		return Double.parseDouble(next());
+222 	}
+223 }

@@ -1,0 +1,65 @@
+1 import java.util.*;
+2 import java.lang.*;
+3 import java.math.*;
+4 import java.io.*;
+5 import static java.lang.Math.*;
+6 import static java.util.Arrays.*;
+7 import static java.util.Collections.*;
+8 
+9 public class Main {
+10 	Scanner sc = new Scanner(System.in);
+11 
+12 	int INF = 1 << 28;
+13 	double EPS = 1e-9;
+14 
+15 	String s;
+16 
+17 	void run() {
+18 		s = sc.nextLine();
+19 		solve();
+20 	}
+21 
+22 	void solve() {
+23 		int n = s.length();
+24 		int[] count = new int[2 * n + 1];
+25 		int now = 0;
+26 		for (int i = 0; i < n; i++) {
+27 			if (s.charAt(i) == '(') {
+28 				now++;
+29 			} else {
+30 				now--;
+31 			}
+32 			count[now + n]++;
+33 		}
+34 		// debug(count);
+35 		now = 0;
+36 		long ans = 0;
+37 		for (int i = 0; i < n; i++) {
+38 			if (s.charAt(i) == '(') {
+39 				now++;
+40 			} else {
+41 				now--;
+42 			}
+43 			count[now + n]--;
+44 			// debug(now, count[now + n]);
+45 			ans += count[now + n];
+46 		}
+47 		println(ans + "");
+48 	}
+49 
+50 	void println(String s) {
+51 		System.out.println(s);
+52 	}
+53 
+54 	void print(String s) {
+55 		System.out.print(s);
+56 	}
+57 
+58 	void debug(Object... os) {
+59 		System.err.println(deepToString(os));
+60 	}
+61 
+62 	public static void main(String[] args) {
+63 		new Main().run();
+64 	}
+65 }
