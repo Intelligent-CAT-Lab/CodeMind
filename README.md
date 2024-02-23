@@ -8,6 +8,8 @@ Solely relying on test passing to evaluate Large Language Models (LLMs) for code
 ### Paper
 Interested to read more about CodeMind, the code reasoning tasks, and a grounded-theory study evaluating LLMs for code reasoning across five benchmarks and two programming languages? Please read the pre-print on Arxiv: https://arxiv.org/pdf/2402.09664.pdf
 
+We also upload our artifact to [Zenodo](https://zenodo.org/records/10699284) (DOI: 10.5281/zenodo.10699284)
+
 ### Contributing to CodeMind
 CodeMind is an open-source project to promote the proper evaluation of LLMs for code-related tasks. If you are interested in building on top of CodeMind and adding more code reasoning tasks, please send an email to {cl144,reyhaneh}@illinois.edu.
 
