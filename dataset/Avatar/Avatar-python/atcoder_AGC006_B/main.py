@@ -1,8 +1,8 @@
 N , x = map ( int , input ( ) . split ( ) )
 if x == 1 or x == 2 * N - 1 :
-    print ( " No " )
+    print ( "No" )
 else :
-    print ( " Yes " )
+    print ( "Yes" )
     l = [ i for i in range ( 1 , 2 * N ) ]
     l . remove ( x - 1 )
     l . remove ( x )

@@ -5,8 +5,8 @@ while True :
         letter = sentence [ start ]
         break
     start -= 1
-if letter . lower ( ) in [ ' a ' , ' e ' , ' i ' , ' o ' , ' u ' , ' y ' ] :
-    print ( ' YES ' )
+if letter . lower ( ) in [ 'a' , 'e' , 'i' , 'o' , 'u' , 'y' ] :
+    print ( 'YES' )
 else :
-    print ( ' NO ' )
+    print ( 'NO' )
 

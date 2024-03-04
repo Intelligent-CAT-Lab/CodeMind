@@ -8,8 +8,8 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         if (System.getProperty("ONLINE_JUDGE") == null) {
-            File inputFile = new File("/Users/vipinjain/self/cp/input.txt");
-            File outputFile = new File("/Users/vipinjain/self/cp/output.txt");
+            File inputFile = new File("/home/changshu/CodeMind/dataset/Avatar/Avatar-java/codeforces_99_A/input.txt");
+            File outputFile = new File("/home/changshu/CodeMind/dataset/Avatar/Avatar-java/codeforces_99_A/output.txt");
             br = new BufferedReader(new FileReader(inputFile));
             bw = new BufferedWriter(new FileWriter(outputFile));
         }

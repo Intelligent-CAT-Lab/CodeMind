@@ -29,6 +29,6 @@ def solve ( ) :
         ans += i * ( 1 + x ) * x // 2
     print ( ans )
     return
-if __name__ == ' _ _ main _ _ ' :
+if __name__ == '__main__' :
     solve ( )
 

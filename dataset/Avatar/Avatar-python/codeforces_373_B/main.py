@@ -1,6 +1,6 @@
 import sys
 def main ( lines ) :
-    w , m , k = list ( map ( int , lines [ 0 ] . split ( ) ) )
+    w , m , k = list ( map ( int , lines.split(" ") ) )
     max_length = 0
     available_digits = int ( w / k )
     while available_digits > 0 :
@@ -16,6 +16,6 @@ def main ( lines ) :
             max_length += int ( available_digits / current_cost_per_n )
             available_digits = 0
     print ( max_length )
-if __name__ == " _ _ main _ _ " :
-    main ( sys . stdin . readlines ( ) )
+if __name__ == "__main__" :
+    main(input())
 

@@ -5,15 +5,9 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         ArrayList<String> scList = new ArrayList<>();
 
-        for (int i = 0; i >= 0; i++) {
-            try {
-                scList.add(scan.nextLine());
-            } catch (Exception e) {
-                break;
-            }
-        }
+        scList.add(scan.nextLine());
 
-        String[] numlist = scList.get(0).split(" ▁ ");
+        String[] numlist = scList.get(0).split(" ");
         int Sheep = Integer.parseInt(numlist[0]);
         int Wolve = Integer.parseInt(numlist[1]);
 

@@ -15,6 +15,6 @@ public class VasyaTheHipster {
             } else break;
         }
         int ans = a / 2 + b / 2;
-        System.out.println(count + " ▁ " + ans);
+        System.out.println(count + " " + ans);
     }
 }

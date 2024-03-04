@@ -11,7 +11,7 @@ public class Solution {
             if (m != 0)
                 System.out.println("Impossible");
             else
-                System.out.println(0 + " ▁ " + 0);
+                System.out.println(0 + " " + 0);
             return;
         }
 
@@ -19,10 +19,10 @@ public class Solution {
             if (m == 0) {
                 m = 1;
             }
-            System.out.print(n + " ▁ " + (m + n - 1));
+            System.out.print(n + " " + (m + n - 1));
             return;
         }
 
-        System.out.print(m + " ▁ " + (m + n - 1));
+        System.out.print(m + " " + (m + n - 1));
     }
 }

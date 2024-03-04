@@ -15,9 +15,9 @@ for key , value in dt . items ( ) :
         x = False
         break
 if x :
-    print ( " First " )
+    print ( "First" )
 elif not x and len ( s ) % 2 == 0 :
-    print ( " Second " )
+    print ( "Second" )
 elif not x and len ( s ) % 2 != 0 :
-    print ( " First " )
+    print ( "First" )
 

@@ -14,7 +14,7 @@ def solve ( H : int , W : int , A : int , B : int ) :
                 else :
                     answer [ i ] [ j ] = "0"
     for i in range ( H ) :
-        print ( ' ' . join ( answer [ i ] ) )
+        print ( '' . join ( answer [ i ] ) )
     return
 def main ( ) :
     def iterate_tokens ( ) :
@@ -27,6 +27,6 @@ def main ( ) :
     A = int ( next ( tokens ) )
     B = int ( next ( tokens ) )
     solve ( H , W , A , B )
-if __name__ == ' _ _ main _ _ ' :
+if __name__ == '__main__' :
     main ( )
 

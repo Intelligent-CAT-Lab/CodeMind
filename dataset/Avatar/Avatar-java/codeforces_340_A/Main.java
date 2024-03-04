@@ -6,7 +6,7 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         PrintWriter pw = new PrintWriter(new BufferedOutputStream(System.out));
 
-        String[] z = br.readLine().split(" ▁ ");
+        String[] z = br.readLine().split(" ");
         int x = Integer.parseInt(z[0]);
         int y = Integer.parseInt(z[1]);
         int a = Integer.parseInt(z[2]);

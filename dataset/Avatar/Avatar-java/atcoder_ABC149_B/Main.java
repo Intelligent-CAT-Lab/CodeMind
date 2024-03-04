@@ -9,11 +9,11 @@ class Main {
         long n = A - K;
         
         if (A + B <= K) {
-            System.out.println("0 ▁ 0");
+            System.out.println("0 0");
         } else if (n < 0) {
-            System.out.println("0 ▁ " + (A + B - K));
+            System.out.println("0 " + (A + B - K));
         } else {
-            System.out.println(n + " ▁ " + B);
+            System.out.println(n + " " + B);
         }
     }
 }

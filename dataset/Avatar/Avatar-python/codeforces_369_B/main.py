@@ -13,5 +13,5 @@ if not arr [ 0 ] == arr [ 1 ] :
         string . append ( math . floor ( rem / ( arr [ 0 ] - arr [ 1 ] ) + ( ones > 0 ) ) )
         ones -= 1
 for i in string :
-    print ( f " { i } ▁ " , end = ' ' )
+    print (f"{ i } " , end = ' ')
 

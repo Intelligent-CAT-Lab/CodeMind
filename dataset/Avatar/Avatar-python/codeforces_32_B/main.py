@@ -1,12 +1,12 @@
 s = input ( )
-result = " "
+result = ""
 i = 0
 while i < len ( s ) :
-    if s [ i ] == " . " :
+    if s [ i ] == "." :
         result += '0'
     else :
         i += 1
-        if s [ i ] == " . " :
+        if s [ i ] == "." :
             result += '1'
         else :
             result += '2'

@@ -10,7 +10,7 @@ public class Main {
         for (int i = a; i <= x; i++) {
             for (int j = b; j <= y; j++) {
                 if (i <= j) continue;
-                res.add(i + " ▁ " + j);
+                res.add(i + " " + j);
             }
         }
         pw.println(res.size());

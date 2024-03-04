@@ -11,5 +11,5 @@ while ( y > 1 and x * 10 + y > 21 ) :
     t = min ( 2 , y // 10 )
     y -= 10 * t
     x -= 2 - t
-print ( ' Ciel ' if CielWon else ' Hanako ' )
+print ( 'Ciel' if CielWon else 'Hanako' )
 

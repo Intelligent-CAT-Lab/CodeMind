@@ -8,20 +8,20 @@ for i in range ( 0 , numbers [ 0 ] ) :
     for j in range ( 0 , numbers [ 0 ] ) :
         if count < numbers [ 1 ] :
             if j == next :
-                string += ' L '
+                string += 'L'
                 count += 1
                 next += 2
                 if next >= numbers [ 0 ] :
                     start = 1 if start == 0 else 0
             else :
-                string += " S "
+                string += "S"
         else :
-            string += " S "
+            string += "S"
     arr . append ( string )
 if count < numbers [ 1 ] :
-    print ( " NO " )
+    print ( "NO" )
 else :
-    print ( " YES " )
+    print ( "YES" )
     for i in arr :
         print ( i )
 

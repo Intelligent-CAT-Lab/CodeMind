@@ -10,12 +10,12 @@ public class Main {
         
         if (x1 == x2) {
             int dif = Math.abs(y1 - y2);
-            pw.println((x1 + dif) + " ▁ " + y1 + " ▁ " + (x1 + dif) + " ▁ " + y2);
+            pw.println((x1 + dif) + " " + y1 + " " + (x1 + dif) + " " + y2);
         } else if (y1 == y2) {
             int dif = Math.abs(x1 - x2);
-            pw.println((x1) + " ▁ " + (y1 + dif) + " ▁ " + (x2) + " ▁ " + (y2 + dif));
+            pw.println((x1) + " " + (y1 + dif) + " " + (x2) + " " + (y2 + dif));
         } else if (Math.abs(x1 - x2) == Math.abs(y1 - y2)) {
-            pw.println(x1 + " ▁ " + y2 + " ▁ " + x2 + " ▁ " + y1);
+            pw.println(x1 + " " + y2 + " " + x2 + " " + y1);
         } else {
             pw.println(-1);
         }

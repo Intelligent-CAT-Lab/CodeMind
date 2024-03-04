@@ -9,6 +9,6 @@ public class Main {
         String b = scanner.next();
         String c = scanner.next();
         
-        System.out.println(a + " ▁ " + b + " ▁ " + c);
+        System.out.println(a + " " + b + " " + c);
     }
 }

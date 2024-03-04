@@ -1,5 +1,5 @@
 s = str ( "0000000000")
-my_str = ' '
+my_str = ''
 for c in s :
     if c == '0' or c == '1' :
         my_str += c

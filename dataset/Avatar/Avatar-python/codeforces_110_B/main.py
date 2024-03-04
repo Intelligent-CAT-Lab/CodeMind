@@ -8,7 +8,7 @@ hpush = heappush
 MOD = 10 ** 9 + 7
 def solution ( ) :
     n = int ( input ( ) )
-    print ( " abcd " * ( n // 4 ) + " abc " [ : n % 4 ] )
+    print ( "abcd" * ( n // 4 ) + "abc" [ : n % 4 ] )
 def main ( ) :
     t = 1
     for _ in range ( t ) :

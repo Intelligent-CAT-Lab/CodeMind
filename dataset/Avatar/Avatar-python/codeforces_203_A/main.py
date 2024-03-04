@@ -9,8 +9,8 @@ def solve ( ) :
     for i in range ( t ) :
         for j in range ( t ) :
             if a - da * i + b - db * j == d or a - da * i == d or b - db * j == d or d == 0 :
-                print ( ' YES ' )
+                print ( 'YES' )
                 return
-    print ( ' NO ' )
+    print ( 'NO' )
 solve ( )
 

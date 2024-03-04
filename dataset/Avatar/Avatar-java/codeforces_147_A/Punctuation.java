@@ -27,7 +27,7 @@ public class Punctuation {
             char c = s.charAt(i);
             if (isLatinLetter(c)) {
                 if (!isLatinLetter(s.charAt(i - 1))) {
-                    sb.append('▁');
+                    sb.append(' ');
                 }
                 sb.append(c);
             } else if (isPunctuation(c)) {

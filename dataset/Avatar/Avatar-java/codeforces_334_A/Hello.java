@@ -20,14 +20,14 @@ public class Hello {
         
         int loop = square / n;
         int div = loop / 2;
-        debug(div);
+        // debug(div);
         
         for (int i = 1; i <= loop; i++) {
             for (int j = 0; j < div; j++) {
                 if (i % 2 == 1) {
-                    pw.print(odd.remove(0) + " ▁ " + (even.remove(even.size() - 1)) + " ▁ ");
+                    pw.print(odd.remove(0) + " " + (even.remove(even.size() - 1)) + " ");
                 } else {
-                    pw.print(even.remove(0) + " ▁ " + (odd.remove(odd.size() - 1)) + " ▁ ");
+                    pw.print(even.remove(0) + " " + (odd.remove(odd.size() - 1)) + " ");
                 }
             }
             pw.println();

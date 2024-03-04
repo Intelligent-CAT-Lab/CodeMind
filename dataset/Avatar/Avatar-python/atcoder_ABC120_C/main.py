@@ -1,4 +1,4 @@
-s = input ( )
+s = input()
 num_0 = 0
 num_1 = 0
 for i in range ( len ( s ) ) :

@@ -20,7 +20,7 @@ def main_b ( ) :
             pp += 10 - cc
     print ( pp )
 def main ( ) :
-    s = input ( )
+    s = input()
     pmin = 1000
     mmin = 0
     s = '0' + s
@@ -41,18 +41,8 @@ def input_clipboard ( ) :
     input_l = input_text . splitlines ( )
     for l in input_l :
         yield l
-if __name__ == " _ _ main _ _ " :
-    if sys . platform == ' ios ' :
-        if input_method == input_methods [ 0 ] :
-            ic = input_clipboard ( )
-            input = lambda : ic . __next__ ( )
-        elif input_method == input_methods [ 1 ] :
-            sys . stdin = open ( ' inputFile . txt ' )
-        else :
-            pass
-        isTest = True
-    else :
-        pass
+
+if __name__ == "__main__" :
     ret = main ( )
     if ret is not None :
         print ( ret )

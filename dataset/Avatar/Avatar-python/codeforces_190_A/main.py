@@ -3,7 +3,7 @@ if n < 1 :
     if m < 1 :
         print ( n , m )
         quit ( )
-    print ( " Impossible " )
+    print ( "Impossible" )
     quit ( )
 if m > n :
     min = m

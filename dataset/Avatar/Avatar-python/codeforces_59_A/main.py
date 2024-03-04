@@ -1,5 +1,5 @@
 txt = input ( )
-out = " "
+out = ""
 cap = 0
 small = 0
 for t in txt :

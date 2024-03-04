@@ -6,5 +6,5 @@ for i in range ( 2 ) :
         a -= 1
     else :
         b -= 1
-print ( c )
+print(c)
 
