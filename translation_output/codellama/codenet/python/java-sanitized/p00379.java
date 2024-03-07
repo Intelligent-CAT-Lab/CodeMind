@@ -1,0 +1,26 @@
+import java.util.Scanner;
+
+public class p00379 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int a = scanner.nextInt();
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+        int ans = 0;
+        for (int y = 1; y <= 50; y++) {
+            int x = (int) Math.pow(y + a, n);
+            if (1 <= x && x <= m && y == sum(String.valueOf(x))) {
+                ans++;
+            }
+        }
+        System.out.println(ans);
+    }
+
+    private static int sum(String str) {
+        int sum = 0;
+        for (int i = 0; i < str.length(); i++) {
+            sum += str.charAt(i) - '0';
+        }
+        return sum;
+    }
+}
