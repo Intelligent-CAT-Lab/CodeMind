@@ -1,0 +1,96 @@
+import os
+import logging
+from dotenv import load_dotenv
+import argparse
+from tqdm import tqdm
+from transformers import CodeLlamaTokenizer, LlamaForCausalLM
+
+
+os.makedirs(f'logs', exist_ok=True)
+logging.basicConfig(filename=f"logs/translation.log", level=logging.INFO, format='%(asctime)s %(levelname)s %(module)s - %(funcName)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+
+def main(args):
+
+    extensions = {'python': 'py', 'java': 'java'}
+
+    in_folder = f'translation_dataset/{args.dataset}/{args.source_lang}/code'
+    out_folder = f'translation_output/{args.model}/{args.dataset}/{args.source_lang}/{args.target_lang}'
+
+    in_files = os.listdir(in_folder)
+    print(f'found {len(in_files)} inputs')
+
+    # check for files alraedy extracted
+    already_extracted_files = []
+    if os.path.exists(out_folder):
+        already_extracted_files = os.listdir(out_folder)
+        if len(already_extracted_files) > 0:
+            already_extracted_files = [x.split('.')[0] for x in already_extracted_files if os.stat(f'{out_folder}/{x}').st_size != 0]
+
+    if len(already_extracted_files) > 0:
+        in_files = [x for x in in_files if x.split('.')[0] not in already_extracted_files]
+
+    ext = extensions[args.target_lang]
+    device = f'cuda:{args.gpu_id}'
+
+    tokenizer, model = None, None
+    if args.model == 'codellama':
+        kwargs = {}
+        tokenizer = CodeLlamaTokenizer.from_pretrained("codellama/CodeLlama-13b-Instruct-hf", cache_dir='/home/shared/huggingface')
+        model = LlamaForCausalLM.from_pretrained("codellama/CodeLlama-13b-Instruct-hf", cache_dir='/home/shared/huggingface', device_map='auto', **kwargs)
+    
+    # loop over input files
+    os.makedirs(out_folder, exist_ok=True)
+    for f in tqdm(in_files):
+        prompt_file = f'{in_folder}/{f}'
+
+        with open(prompt_file, "r", encoding="ISO-8859-1", errors='ignore') as fin:
+            prompt = fin.readlines()
+
+            if args.model == 'codellama':
+                prompt = f"{args.source_lang} code:\n\n" + "".join(prompt) + f'\n\nTranslate the above {args.source_lang} code to {args.target_lang}.\n\n{args.target_lang} code:\n\n'
+                prompt = f"[INST] <<SYS>>\nYou are an expert {args.target_lang} programmer and assistant\n<</SYS>>\n\n{prompt}[/INST]\n"
+            try:
+                inputs = tokenizer.encode(prompt, return_tensors="pt").to(device)
+
+                total_input_tokens = inputs.shape[1]
+                model_max_length = 2048
+                if total_input_tokens >= model_max_length:
+                    out_file = f'{out_folder}/{f.split(".")[0]}.{ext}'
+                    with open(out_file, 'w') as fot:
+                        print("# Token size exceeded.", file=fot)
+                    continue
+                max_new_tokens = model_max_length - total_input_tokens
+
+                raw_outputs = ''
+                raw_outputs = model.generate(
+                    inputs,
+                    max_new_tokens=max_new_tokens,
+                    do_sample=False,
+                    pad_token_id=tokenizer.eos_token_id,
+                )
+
+                out_file = f'{out_folder}/{f.split(".")[0]}.{ext}'
+                with open(out_file, 'w') as fot:
+                    print(tokenizer.decode(raw_outputs[0]), file=fot)
+
+            except (ValueError, FileNotFoundError) as e:
+                print(e)
+                continue
+
+
+if __name__ == "__main__":
+    load_dotenv()
+    parser = argparse.ArgumentParser(description='run translation with open-source models given dataset and languages')
+    parser.add_argument('--model', help='model to use for code translation', required=True, type=str)
+    parser.add_argument('--dataset', help='dataset to use for code translation', required=True, type=str)
+    parser.add_argument('--source_lang', help='source language to use for code translation', required=True, type=str)
+    parser.add_argument('--target_lang', help='target language to use for code translation', required=True, type=str)
+    parser.add_argument('--gpu_id', help='gpu id to use', required=True, type=int)
+    args = parser.parse_args()
+
+    # Initialize configurations
+    source = args.source_lang
+    target = args.target_lang
+    logging.info(f"translating examples from {source} to {target} using {args.model} and {args.dataset} dataset")
+    main(args)
