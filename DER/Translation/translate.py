@@ -40,10 +40,14 @@ def main(args):
         model = AutoModelForCausalLM.from_pretrained("codellama/CodeLlama-13b-Instruct-hf", cache_dir=args.cache_dir, device_map='auto', **kwargs)
     
     elif args.model == 'magicoder':
-        # 
         kwargs = {}
         tokenizer = AutoTokenizer.from_pretrained("ise-uiuc/Magicoder-S-DS-6.7B", cache_dir=args.cache_dir)
         model = AutoModelForCausalLM.from_pretrained("ise-uiuc/Magicoder-S-DS-6.7B", cache_dir=args.cache_dir, device_map='auto', **kwargs)
+
+    elif args.model == 'wizardcoder':
+        kwargs = {}
+        tokenizer = AutoTokenizer.from_pretrained("WizardLM/WizardCoder-15B-V1.0", cache_dir=args.cache_dir)
+        model = AutoModelForCausalLM.from_pretrained("WizardLM/WizardCoder-15B-V1.0", cache_dir=args.cache_dir, device_map='auto', **kwargs)
 
     # loop over input files
     os.makedirs(out_folder, exist_ok=True)
@@ -59,6 +63,9 @@ def main(args):
 
             elif args.model == 'magicoder':
                 prompt = f"You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.\n\n@@ Instruction\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n@@ Response\n"
+
+            elif args.model == 'wizardcoder':
+                prompt = f"Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
 
             try:
                 inputs = tokenizer.encode(prompt, return_tensors="pt").to(device)
