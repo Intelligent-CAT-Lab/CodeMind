@@ -1,4 +1,5 @@
 
+model=$1
 
 for dataset in avatar codenet; do
     for src_lang in java python; do
@@ -7,12 +8,12 @@ for dataset in avatar codenet; do
                 continue
             fi
             echo "Cleaning $dataset from $src_lang to $tgt_lang"
-            python3 DER/Translation/clean_generations.py --samples=translation_output/codellama/$dataset/${src_lang}/${tgt_lang} \
+            python3 DER/Translation/clean_generations.py --samples=translation_output/$model/$dataset/${src_lang}/${tgt_lang} \
                                                         --source_lang=${src_lang} \
                                                         --target_lang=${tgt_lang} \
                                                         --remove_prompt \
-                                                        --rm-prefix-lines "I" "Note" "This" "Also" "Here" "Finally" \
-                                                        --eofs "Explanation" "1." "* Python" "The"
+                                                        --rm-prefix-lines "I" "Note" "This" "Also" "Here" "Finally" "Please" \
+                                                        --eofs "Explanation" "1." "* Python" "The" "<｜end▁of▁sentence｜>"
         done
     done
 done
