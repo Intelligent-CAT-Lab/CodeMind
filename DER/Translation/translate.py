@@ -3,7 +3,7 @@ import logging
 from dotenv import load_dotenv
 import argparse
 from tqdm import tqdm
-from transformers import CodeLlamaTokenizer, LlamaForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 
 os.makedirs(f'logs', exist_ok=True)
@@ -36,9 +36,15 @@ def main(args):
     tokenizer, model = None, None
     if args.model == 'codellama':
         kwargs = {}
-        tokenizer = CodeLlamaTokenizer.from_pretrained("codellama/CodeLlama-13b-Instruct-hf", cache_dir='/home/shared/huggingface')
-        model = LlamaForCausalLM.from_pretrained("codellama/CodeLlama-13b-Instruct-hf", cache_dir='/home/shared/huggingface', device_map='auto', **kwargs)
+        tokenizer = AutoTokenizer.from_pretrained("codellama/CodeLlama-13b-Instruct-hf", cache_dir=args.cache_dir)
+        model = AutoModelForCausalLM.from_pretrained("codellama/CodeLlama-13b-Instruct-hf", cache_dir=args.cache_dir, device_map='auto', **kwargs)
     
+    elif args.model == 'magicoder':
+        # 
+        kwargs = {}
+        tokenizer = AutoTokenizer.from_pretrained("ise-uiuc/Magicoder-S-DS-6.7B", cache_dir=args.cache_dir)
+        model = AutoModelForCausalLM.from_pretrained("ise-uiuc/Magicoder-S-DS-6.7B", cache_dir=args.cache_dir, device_map='auto', **kwargs)
+
     # loop over input files
     os.makedirs(out_folder, exist_ok=True)
     for f in tqdm(in_files):
@@ -50,6 +56,10 @@ def main(args):
             if args.model == 'codellama':
                 prompt = f"{args.source_lang} code:\n\n" + "".join(prompt) + f'\n\nTranslate the above {args.source_lang} code to {args.target_lang}.\n\n{args.target_lang} code:\n\n'
                 prompt = f"[INST] <<SYS>>\nYou are an expert {args.target_lang} programmer and assistant\n<</SYS>>\n\n{prompt}[/INST]\n"
+
+            elif args.model == 'magicoder':
+                prompt = f"You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.\n\n@@ Instruction\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n@@ Response\n"
+
             try:
                 inputs = tokenizer.encode(prompt, return_tensors="pt").to(device)
 
@@ -87,6 +97,7 @@ if __name__ == "__main__":
     parser.add_argument('--source_lang', help='source language to use for code translation', required=True, type=str)
     parser.add_argument('--target_lang', help='target language to use for code translation', required=True, type=str)
     parser.add_argument('--gpu_id', help='gpu id to use', required=True, type=int)
+    parser.add_argument('--cache_dir', help='cache directory for huggingface models', required=True, type=str)
     args = parser.parse_args()
 
     # Initialize configurations
