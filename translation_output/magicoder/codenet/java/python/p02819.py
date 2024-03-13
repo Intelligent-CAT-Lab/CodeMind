@@ -1,0 +1,50 @@
+<｜begin▁of▁sentence｜>You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.
+
+@@ Instruction
+Translate the following java code to python and enclose your solution inside ```python```:
+```
+import java.util.Scanner;
+
+	public class p02819 {
+
+		public static void main(String[] args) {
+
+			Scanner sc = new Scanner(System.in);
+
+			int x = sc.nextInt();
+			
+			while(!prime(x)) {
+				x++;
+			}
+			System.out.println(x);
+			
+			
+		}
+		
+		static boolean prime(int x) {
+			for(int i=2;i<x;i++) {
+				if(x%i==0) {
+					return false;
+				}
+			}
+			return true;
+		}
+		
+	}
+```
+
+@@ Response
+```python
+def prime(x):
+    for i in range(2, x):
+        if x % i == 0:
+            return False
+    return True
+
+x = int(input())
+
+while not prime(x):
+    x += 1
+
+print(x)
+```<｜end▁of▁sentence｜>

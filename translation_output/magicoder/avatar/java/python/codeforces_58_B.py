@@ -1,0 +1,43 @@
+<｜begin▁of▁sentence｜>You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.
+
+@@ Instruction
+Translate the following java code to python and enclose your solution inside ```python```:
+```
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+public class codeforces_58_B {
+    public static void main(String[] args) throws java.lang.Exception {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        System.out.println(n + " ");
+        int m = n;
+        for (int i = n - 1; i > 0; i--) {
+            if (m % i == 0) {
+                System.out.println(i + " ");
+                m = i;
+            }
+        }
+    }
+}
+```
+
+@@ Response
+```python
+import sys
+
+def main():
+    n = int(input())
+    print(n)
+    m = n
+    for i in range(n - 1, 0, -1):
+        if m % i == 0:
+            print(i)
+            m = i
+
+if __name__ == "__main__":
+    main()
+```
+
+This Python code does the same thing as the Java code. It reads an integer from the standard input, prints it, and then iterates from `n - 1` down to `1`. If `m` is divisible by `i`, it prints `i` and updates `m` to `i`.<｜end▁of▁sentence｜>

@@ -1,0 +1,54 @@
+import sys
+import math
+import array
+import collections
+
+class P:
+    def __init__(self, x, d):
+        self.x = x
+        self.d = d
+
+    def __lt__(self, other):
+        return self.d > other.d
+
+def validpos(x, y, r, c):
+    return x < r and 0 <= x and y < c and 0 <= y
+
+def bit(x, k):
+    return (x >> k) & 1
+
+def main():
+    n = int(sys.stdin.readline())
+    d = [0] * 1000
+    lis = []
+    a = 9
+    b = 10
+    for i in range(1, 10):
+        lis.append(P(i, -11 + i))
+    lis.append(P(19, -1))
+    for i in range(1, 15):
+        for w in range(1, 1000):
+            x = w * b + a
+            y = x
+            e = 0
+            while x > 0:
+                e += x % 10
+                x //= 10
+            lis.append(P(y, y / e))
+        b *= 10
+        a *= 10
+        a += 9
+    lis.sort()
+    max = 0
+    for w in range(len(lis)):
+        if max < lis[w].x:
+            max = lis[w].x
+            print(max)
+            n -= 1
+            if n == 0:
+                break
+    for w in range(n):
+        print(d[w])
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,64 @@
+<｜begin▁of▁sentence｜>You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.
+
+@@ Instruction
+Translate the following python code to java and enclose your solution inside ```java```:
+```
+import sys
+S = str(input())
+i = 0
+j = len(S) - 1
+c = 0
+while(True):
+    if i >= j:
+        break
+    if (S[i] == S[j]):
+        i += 1
+        j -= 1
+    else:
+        if (S[i] == 'x'):
+            i += 1
+            c += 1
+        elif (S[j] == 'x'):
+            j -= 1
+            c += 1
+        else:
+            print('-1')
+            sys.exit()
+print(c)
+```
+
+@@ Response
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String S = scanner.nextLine();
+        int i = 0;
+        int j = S.length() - 1;
+        int c = 0;
+        while (true) {
+            if (i >= j) {
+                break;
+            }
+            if (S.charAt(i) == S.charAt(j)) {
+                i++;
+                j--;
+            } else {
+                if (S.charAt(i) == 'x') {
+                    i++;
+                    c++;
+                } else if (S.charAt(j) == 'x') {
+                    j--;
+                    c++;
+                } else {
+                    System.out.println("-1");
+                    System.exit(0);
+                }
+            }
+        }
+        System.out.println(c);
+    }
+}
+```<｜end▁of▁sentence｜>

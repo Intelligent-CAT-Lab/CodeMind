@@ -1,0 +1,28 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        int K = scanner.nextInt();
+        int S = scanner.nextInt();
+
+        int[] A = new int[N];
+        Arrays.fill(A, S);
+        if (S == 1000000000) {
+            for (int i = 0; i < N - K; i++) {
+                A[i] = S - 1;
+            }
+        } else {
+            for (int i = 0; i < N - K; i++) {
+                A[i] = 1000000000;
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            System.out.print(A[i] + " ");
+        }
+    }
+}
