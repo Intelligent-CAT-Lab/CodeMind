@@ -49,6 +49,9 @@ if __name__ == "__main__":
 
         if args.remove_prompt and 'codellama' in solution_path:
             new_code = new_code[new_code.find("[/INST]") + len("[/INST]"):]
+        
+        if args.remove_prompt and 'magicoder' in solution_path:
+            new_code = new_code[new_code.find("@@ Response") + len("@@ Response"):]
 
         # basic handling of chat output
         new_code = new_code.replace(f"```{args.target_lang.lower()}", "").replace("```", "").strip()
