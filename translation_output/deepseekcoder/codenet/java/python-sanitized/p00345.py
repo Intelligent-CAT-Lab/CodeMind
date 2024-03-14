@@ -1,0 +1,40 @@
+import sys
+import re
+
+def gcd(a, b):
+    if b == 0:
+        return a
+    return gcd(b, a % b)
+
+def lcm(a, b):
+    return a * (b // gcd(a, b))
+
+def main():
+    line = sys.stdin.readline().strip()
+
+    units = re.split("[()]", line)
+
+    an, ad, bn, bd = 0, 1, 0, 1
+
+    if len(units) == 2:
+        bn = int(units[1])
+        bd = (10 ** len(units[1])) - 1
+
+    units = re.split("\\.", units[0])
+
+    if len(units) == 2:
+        ad *= (10 ** len(units[1]))
+        an = int(units[0] + units[1])
+    else:
+        an = int(units[0])
+
+    d = lcm(ad, bd)
+    n = an * (d // ad) + bn * (d // bd)
+    g = gcd(n, d)
+    n //= g
+    d //= g
+
+    print(f"{n}/{d}")
+
+if __name__ == "__main__":
+    main()

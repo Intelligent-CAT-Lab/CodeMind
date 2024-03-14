@@ -1,0 +1,10 @@
+def p00252():
+    a = [int(input()) for _ in range(3)]
+    if a[0] == 1 and a[1] == 1:
+        print("Open")
+    elif a[2] == 1:
+        print("Open")
+    else:
+        print("Close")
+
+p00252()
