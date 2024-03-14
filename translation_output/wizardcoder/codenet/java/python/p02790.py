@@ -1,0 +1,47 @@
+Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+### Instruction:
+Translate the following java code to python and enclose your solution inside ```python```:
+```
+import java.util.Scanner;
+
+public class p02790 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+
+        if (a >= b)
+            for (int i = 0; i < a; i++)
+                System.out.print(b);
+        else
+            for (int i = 0; i < b; i++)
+                System.out.print(a);
+
+    }
+}
+
+```
+
+### Response:
+```python
+import java.util.Scanner;
+
+public class p02790 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+
+        if (a >= b):
+            for (int i = 0; i < a; i++)
+                System.out.print(b);
+        else:
+            for (int i = 0; i < b; i++)
+                System.out.print(a);
+
+    }
+}
+```<|endoftext|>
