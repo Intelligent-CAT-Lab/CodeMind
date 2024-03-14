@@ -53,4 +53,4 @@ def main(model, dataset, src, tgt):
     
 
 if __name__ == "__main__":
-    main('codellama', 'avatar', 'java', 'python')
+    main('deepseekcoder', 'avatar', 'java', 'python')

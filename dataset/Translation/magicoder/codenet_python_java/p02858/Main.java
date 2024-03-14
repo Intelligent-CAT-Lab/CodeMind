@@ -1,0 +1,34 @@
+import java.util.Scanner;
+
+public class p02858 {
+    static final long MOD = 1000000007;
+
+    static long gcd(long a, long b) {
+        if (b == 0)
+            return a;
+        return gcd(b, a % b);
+    }
+
+    static long pow(long a, long b) {
+        long res = 1;
+        while (b > 0) {
+            if ((b & 1) != 0)
+                res = (res * a) % MOD;
+            a = (a * a) % MOD;
+            b >>= 1;
+        }
+        return res;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        long H = scanner.nextLong();
+        long W = scanner.nextLong();
+        long T = scanner.nextLong();
+        long gh = gcd(H, T);
+        long gw = gcd(W, T);
+        long h = H / gh;
+        long w = W / gw;
+        System.out.println((pow(pow(2, h) + pow(2, w) + pow(2, gcd(h, w)) - 3, gh * gw) + MOD) % MOD);
+    }
+}
