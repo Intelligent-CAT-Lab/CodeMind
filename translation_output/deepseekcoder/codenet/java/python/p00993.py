@@ -1,0 +1,64 @@
+<｜begin▁of▁sentence｜>You are an expert Python programmer.Your task is to write a Python function to solve a programming problem.
+
+### Instruction:
+Translate the following java code to python and enclose your solution inside ```python```:
+```
+//[2, 1510] ã®ç´æ°å¨ã¦ããã¤æ´æ°factãæ¢ã
+//[fact + 2, fact + 1510] ã¯å¨ã¦ç´æ°ãæã¤ãã¨ãããã
+//ã©ããªå¤ãå¥åããããã¨, fact + 2ãåºåãã¦ããã°ãã
+
+import java.util.*;
+import java.math.BigInteger;
+
+public class p00993{
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        BigInteger fact = BigInteger.ONE;
+        BigInteger mul = BigInteger.ONE;
+
+        for(int i = 1; i <= 1510; i++){
+            fact = fact.multiply(mul);
+            mul = mul.add(BigInteger.ONE);
+        }
+        fact = fact.add(new BigInteger("2"));
+
+        while(sc.hasNextInt()){
+            int n = sc.nextInt();
+            System.out.println(fact);
+
+            for(int i = 2; i < 2 + n; i++){
+                System.out.println(i);
+            }
+        }
+    }
+}
+```
+
+### Response:
+```python
+import sys
+from math import factorial
+
+def main():
+    fact = 1
+    mul = 1
+
+    for i in range(1, 1511):
+        fact *= mul
+        mul += 1
+
+    fact += 2
+
+    for line in sys.stdin:
+        n = int(line)
+        print(fact)
+
+        for i in range(2, 2 + n):
+            print(i)
+
+if __name__ == "__main__":
+    main()
+```
+
+Please note that Python's `factorial` function is available in the `math` module, which calculates the factorial of a number. However, it's not suitable for calculating factorials of large numbers as it uses a lot of memory and time. The above code uses a loop to calculate the factorial, which is more memory-efficient.
+<|EOT|>
