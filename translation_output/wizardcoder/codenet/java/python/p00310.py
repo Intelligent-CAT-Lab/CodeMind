@@ -1,0 +1,36 @@
+Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+### Instruction:
+Translate the following java code to python and enclose your solution inside ```python```:
+```
+import java.util.*;
+
+public class p00310 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int p = Integer.parseInt(sc.next());
+        int m = Integer.parseInt(sc.next());
+        int c = Integer.parseInt(sc.next());
+
+        System.out.println(p + m + c);
+    }
+}
+
+
+```
+
+### Response:
+```python
+import java.util.*;
+
+public class p00310 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int p = Integer.parseInt(sc.next());
+        int m = Integer.parseInt(sc.next());
+        int c = Integer.parseInt(sc.next());
+
+        System.out.println(p + m + c);
+    }
+}
+```<|endoftext|>

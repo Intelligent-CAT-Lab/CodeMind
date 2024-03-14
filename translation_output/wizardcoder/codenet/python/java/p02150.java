@@ -1,0 +1,35 @@
+Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+### Instruction:
+Translate the following python code to java and enclose your solution inside ```java```:
+```
+
+
+a,b,x = [int(i) for i in input().split()]
+
+d = a - b
+n = max(0,(x - b)) // d
+ans = x + n * b
+print(ans % 1000000007)
+
+
+```
+
+### Response:
+```java
+import java.util.*;
+import java.math.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+        int x = sc.nextInt();
+        int d = a - b;
+        int n = Math.max(0, (x - b)) / d;
+        int ans = x + n * b;
+        System.out.println(ans % 1000000007);
+    }
+}
+```<|endoftext|>

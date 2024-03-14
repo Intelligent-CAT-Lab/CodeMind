@@ -1,0 +1,41 @@
+Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+### Instruction:
+Translate the following python code to java and enclose your solution inside ```java```:
+```
+R, G, B, n = map(int, input().split())
+cnt = 0
+for r in range(n//R+1):
+    for g in range((n-r*R)//G+1):
+        b = (n-r*R-g*G)//B
+        if r * R + g * G + b * B == n:
+            cnt += 1
+
+print(cnt)
+```
+
+### Response:
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int R, G, B, n;
+        R = sc.nextInt();
+        G = sc.nextInt();
+        B = sc.nextInt();
+        n = sc.nextInt();
+        int cnt = 0;
+        for (int r = 0; r <= n / R; r++) {
+            for (int g = 0; g <= (n - r * R) / G; g++) {
+                int b = (n - r * R - g * G) / B;
+                if (r * R + g * G + b * B == n) {
+                    cnt++;
+                }
+            }
+        }
+        System.out.println(cnt);
+    }
+}
+```<|endoftext|>
