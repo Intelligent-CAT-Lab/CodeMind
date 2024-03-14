@@ -1,0 +1,22 @@
+<fim_prefix>Translate the following python code to java and enclose your solution inside ```java```:
+```
+M = int(input())
+print(48-M)
+```
+
+java code:<fim_suffix><fim_middle>
+```java
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int M = sc.nextInt();
+        System.out.println(48-M);
+    }
+}
+```
+"""
+
+M = int(input())
+print(48-M)
+<|endoftext|>

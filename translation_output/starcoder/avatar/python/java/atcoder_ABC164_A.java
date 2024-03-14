@@ -1,0 +1,28 @@
+<fim_prefix>Translate the following python code to java and enclose your solution inside ```java```:
+```
+import sys
+def main ( ) :
+    S, W = map ( int, input ( ). split ( ) )
+    print ( " unsafe " ) if ( S <= W ) else print ( " safe " )
+if __name__ =='_ _ main _ _':
+    main ( )
+
+
+```
+
+java code:<fim_suffix><fim_middle>
+```
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int S = sc.nextInt();
+        int W = sc.nextInt();
+        System.out.println("unsafe");
+        if (S <= W) {
+            System.out.println("safe");
+        }
+    }
+}
+```
+<|endoftext|>

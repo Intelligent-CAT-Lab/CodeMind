@@ -1,0 +1,36 @@
+<fim_prefix>Translate the following java code to python and enclose your solution inside ```python```:
+```
+import java.util.Scanner;
+
+public class p02124{
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		String ans = "ai1333";
+		int x = sc.nextInt();
+		for(int i=0;i<x/100;i++) {
+			ans += "3";
+		}
+		System.out.println(ans);
+	}
+}
+
+```
+
+python code:<fim_suffix><fim_middle>
+```python
+import java.util.Scanner;
+
+public class p02124{
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		String ans = "ai1333";
+		int x = sc.nextInt();
+		for(int i=0;i<x/100;i++) {
+			ans += "3";
+		}
+		System.out.println(ans);
+	}
+}
+
+```
+<|endoftext|>

@@ -1,0 +1,100 @@
+<fim_prefix>Translate the following java code to python and enclose your solution inside ```python```:
+```
+import java.util.Scanner;
+
+public class atcoder_ABC149_C {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int X = sc.nextInt();
+        int prime = X;
+        int mid = prime / 2;
+        boolean flag = false;
+        
+        while (true) {
+            for (int i = 2; i <= mid; ++i) {
+                if (prime % i == 0) {
+                    flag = true;
+                    break;
+                }
+            }
+            
+            if (!flag) {
+                break;
+            } else {
+                flag = false;
+            }
+            
+            prime++;
+        }
+        
+        System.out.println(prime);
+    }
+}
+```
+
+python code:<fim_suffix><fim_middle>
+```python
+import java.util.Scanner;
+
+public class atcoder_ABC149_C {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int X = sc.nextInt();
+        int prime = X;
+        int mid = prime / 2;
+        boolean flag = false;
+        
+        while (true) {
+            for (int i = 2; i <= mid; ++i) {
+                if (prime % i == 0) {
+                    flag = true;
+                    break;
+                }
+            }
+            
+            if (!flag) {
+                break;
+            } else {
+                flag = false;
+            }
+            
+            prime++;
+        }
+        
+        System.out.println(prime);
+    }
+}
+```
+"""
+
+import java.util.Scanner;
+
+public class atcoder_ABC149_C {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int X = sc.nextInt();
+        int prime = X;
+        int mid = prime / 2;
+        boolean flag = false;
+        
+        while (true) {
+            for (int i = 2; i <= mid; ++i) {
+                if (prime % i == 0) {
+                    flag = true;
+                    break;
+                }
+            }
+            
+            if (!flag) {
+                break;
+            } else {
+                flag = false;
+            }
+            
+            prime++;
+        }
+        
+        System.out.println(prime);
+    }
+}
+<|endoftext|>
