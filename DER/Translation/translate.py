@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import argparse
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from vllm import LLM, SamplingParams
+import openai
 
 
 os.makedirs(f'logs', exist_ok=True)
@@ -49,6 +51,36 @@ def main(args):
         tokenizer = AutoTokenizer.from_pretrained("WizardLM/WizardCoder-15B-V1.0", cache_dir=args.cache_dir)
         model = AutoModelForCausalLM.from_pretrained("WizardLM/WizardCoder-15B-V1.0", cache_dir=args.cache_dir, device_map='auto', **kwargs)
 
+    elif args.model == 'deepseekcoder':
+        kwargs = {}
+        tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/deepseek-coder-6.7b-instruct", cache_dir=args.cache_dir)
+        model = AutoModelForCausalLM.from_pretrained("deepseek-ai/deepseek-coder-6.7b-instruct", cache_dir=args.cache_dir, device_map='auto', **kwargs)
+
+    elif args.model == 'starcoder':
+        kwargs = {}
+        tokenizer = AutoTokenizer.from_pretrained("bigcode/starcoder", token=os.environ['STARCODER_AUTH_TOKEN'], cache_dir=args.cache_dir)
+        model = AutoModelForCausalLM.from_pretrained("bigcode/starcoder", token=os.environ['STARCODER_AUTH_TOKEN'], cache_dir=args.cache_dir, device_map='auto', **kwargs)
+
+    elif args.model == 'mistral':
+        kwargs = {}
+        tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.1", cache_dir=args.cache_dir)
+        model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.1", cache_dir=args.cache_dir, device_map='auto', **kwargs)
+
+    elif args.model == 'llama2':
+        kwargs = {}
+        tokenizer = AutoTokenizer.from_pretrained('meta-llama/Llama-2-13b-hf', token=os.environ['LLAMA2_AUTH_TOKEN'], cache_dir=args.cache_dir)
+        model = AutoModelForCausalLM.from_pretrained('meta-llama/Llama-2-13b-hf', token=os.environ['LLAMA2_AUTH_TOKEN'], cache_dir=args.cache_dir, device_map='auto', **kwargs)
+    
+    elif args.model == 'starcoder2':
+        kwargs = {}
+        model = LLM(model="bigcode/starcoder2-15b", tokenizer="bigcode/starcoder2-15b", **kwargs)
+
+    elif args.model in ['gpt-4', 'gpt-3.5']:
+        model = openai.OpenAI(
+                    # This is the default and can be omitted
+                    api_key=os.environ['OPENAI_API_KEY'],
+                )
+
     # loop over input files
     os.makedirs(out_folder, exist_ok=True)
     for f in tqdm(in_files):
@@ -67,29 +99,93 @@ def main(args):
             elif args.model == 'wizardcoder':
                 prompt = f"Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
 
+            elif args.model == 'deepseekcoder':
+                prompt = f"You are an expert Python programmer.Your task is to write a Python function to solve a programming problem.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
+
+            elif args.model == 'mistral':
+                prompt = f"[INST] Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n[/INST]\n"
+
+            elif args.model == 'llama2':
+                prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n"
+
+            elif args.model in ['starcoder', 'starcoder2']:
+                prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + f"\n```\n\n{args.target_lang} code:"
+                prefix_token = "<fim_prefix>"
+                suffix_token = "<fim_suffix><fim_middle>"
+                prompt = prefix_token + prompt + suffix_token
+
+            elif args.model in ['gpt-4', 'gpt-3.5']:
+                prompt = "Translate the following code from " + args.source_lang + " to " + args.target_lang + " and enclose your solution inside ```" + args.target_lang.lower() + "```:\n```\n" + "".join(prompt) + "\n```\n"
+
             try:
-                inputs = tokenizer.encode(prompt, return_tensors="pt").to(device)
 
-                total_input_tokens = inputs.shape[1]
-                model_max_length = 2048
-                if total_input_tokens >= model_max_length:
-                    out_file = f'{out_folder}/{f.split(".")[0]}.{ext}'
-                    with open(out_file, 'w') as fot:
-                        print("# Token size exceeded.", file=fot)
-                    continue
-                max_new_tokens = model_max_length - total_input_tokens
+                if args.model in ['starcoder2']:
+                    total_input_tokens = len(model.get_tokenizer().encode(prompt))
+                    model_max_length = 2048
+                    if total_input_tokens >= model_max_length:
+                        out_file = f'{out_folder}/{f.split(".")[0]}.{ext}'
+                        with open(out_file, 'w') as fot:
+                            print("# Token size exceeded.", file=fot)
+                        continue
+                    max_new_tokens = model_max_length - total_input_tokens
+                    vllm_outputs = model.generate(
+                        prompt,
+                        SamplingParams(
+                            temperature=0.0,
+                            max_tokens=max_new_tokens,
+                            stop=['<|endoftext|>'],
+                            top_p=1.0,
+                        ),
+                        use_tqdm=False,
+                    )
 
-                raw_outputs = ''
-                raw_outputs = model.generate(
-                    inputs,
-                    max_new_tokens=max_new_tokens,
-                    do_sample=False,
-                    pad_token_id=tokenizer.eos_token_id,
-                )
+                    gen_strs = [x.outputs[0].text.replace("\t", "    ") for x in vllm_outputs]
+                    generated_output = gen_strs[0]
+
+                elif args.model in ['gpt-4', 'gpt-3.5']:
+                    try:
+                        response = model.chat.completions.create(
+                            model="gpt-4-1106-preview" if args.model == 'gpt-4' else "gpt-3.5-turbo",
+                            messages=[
+                                {
+                                    "role": "system",
+                                    "content": "You are an expert " + args.target_lang + " programmer and assistant"
+                                },
+                                {
+                                    "role": "user",
+                                    "content": prompt
+                                }
+                            ]
+                        )
+                        generated_output = response.choices[0].message.content
+                    except openai.BadRequestError as e:
+                        generated_output = f'token size exceeded. {e}'
+
+                else:
+
+                    inputs = tokenizer.encode(prompt, return_tensors="pt").to(device)
+                    total_input_tokens = inputs.shape[1]
+                    model_max_length = 2048
+                    if total_input_tokens >= model_max_length:
+                        out_file = f'{out_folder}/{f.split(".")[0]}.{ext}'
+                        with open(out_file, 'w') as fot:
+                            print("# Token size exceeded.", file=fot)
+                        continue
+                    max_new_tokens = model_max_length - total_input_tokens
+
+                    raw_outputs = ''
+                    raw_outputs = model.generate(
+                        inputs,
+                        max_new_tokens=max_new_tokens,
+                        do_sample=False,
+                        pad_token_id=tokenizer.eos_token_id,
+                    )
+
+                    generated_output = tokenizer.decode(raw_outputs[0])
 
                 out_file = f'{out_folder}/{f.split(".")[0]}.{ext}'
                 with open(out_file, 'w') as fot:
-                    print(tokenizer.decode(raw_outputs[0]), file=fot)
+                    print(generated_output, file=fot)
 
             except (ValueError, FileNotFoundError) as e:
                 print(e)
