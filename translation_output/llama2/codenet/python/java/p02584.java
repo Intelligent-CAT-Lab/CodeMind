@@ -1,0 +1,20 @@
+<s> Translate the following python code to java and enclose your solution inside ```java```:
+```
+X,K,D = map(int,input().split())
+# åç¹ã«è¿ãä½ç½®ã¾ã§ã®ç§»ååæ°ãæ±ãã
+count = abs(X) // D
+ans = 0
+# Kã®æ¹ãå°ãããã°å¯è½ãªéãåç¹ã«è¿ãä½ç½®ãæ±ãã
+if count>K:
+    ans = abs(X) - D * K
+else:
+	# æ®ãã®ç§»ååæ°ãå¶æ°
+    if (K-count)%2==0:
+        ans = abs(X) % D
+    # æ®ãã®ç§»ååæ°ãå¥æ°
+    else:
+        ans = abs(abs(X) % D - D)
+print(ans)
+
+```
+</s>

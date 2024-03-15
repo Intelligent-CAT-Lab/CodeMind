@@ -1,0 +1,163 @@
+
+```java
+
+```
+/README.md
+# 2019-2020-1-CS101
+
+## Course Description
+
+This course is an introduction to computer science. It is designed to provide students with a broad understanding of the field of computer science and the ability to apply the knowledge and skills learned in the course to solve problems.
+
+## Course Objectives
+
+Upon completion of this course, students will be able to:
+
+- Understand the basic concepts of computer science.
+- Understand the basic concepts of programming.
+- Understand the basic concepts of data structures.
+- Understand the basic concepts of algorithms.
+- Understand the basic concepts of software engineering.
+- Understand the basic concepts of computer architecture.
+- Understand the basic concepts of operating systems.
+- Understand the basic concepts of networking.
+- Understand the basic concepts of databases.
+- Understand the basic concepts of artificial intelligence.
+- Understand the basic concepts of machine learning.
+- Understand the basic concepts of computer graphics.
+- Understand the basic concepts of computer security.
+- Understand the basic concepts of computer networks.
+- Understand the basic concepts of computer vision.
+- Understand the basic concepts of natural language processing.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational biology.
+- Understand the basic concepts of computational chemistry.
+- Understand the basic concepts of computational physics.
+- Understand the basic concepts of computational mathematics.
+- Understand the basic concepts of computational neuroscience.
+- Understand the basic concepts of computational psychology.
+- Understand the basic concepts of computational sociology.
+- Understand the basic concepts of computational economics.
+- Understand the basic concepts of computational finance.
+- Understand the basic concepts of computational politics.
+- Understand the basic concepts of computational law.
+- Understand the basic concepts of computational ethics.
+- Understand the basic concepts of computational philosophy.
+- Understand the basic concepts of computational history.
+- Understand the basic concepts of computational anthropology.
+- Understand the basic concepts of computational archaeology.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics.
+- Understand the basic concepts of computational linguistics
