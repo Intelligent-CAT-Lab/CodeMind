@@ -1,0 +1,64 @@
+Below is the Java code translated to Python:
+
+```python
+# Removed package declaration and imports since they are not needed in Python
+
+MOD = 1000000007
+
+def cnt(a, n, k, sum):
+    if a == n:
+        return sum
+    f = 0
+    for i in range(k + 1):
+        f += cnt(a+1, n, k, sum+i)
+    return f
+
+def main():
+    n = int(input().strip())
+    k = int(input().strip())
+
+    pownk1 = 1
+    for i in range(1, n):
+        pownk1 *= (k + 1)
+        pownk1 %= MOD
+    total = 0
+    for i in range(k + 1):
+        total += i * pownk1 % MOD
+        total %= MOD
+    total *= n
+    total %= MOD
+
+    maxha = 100000
+    dp = [[0 for _ in range(maxha + 1)] for _ in range(n + 1)]
+    dp[n][0] = 1
+
+    for head in range(n, 0, -1):
+        for ha in range(maxha + 1):
+            base = dp[head][ha]
+            if base == 0:
+                continue
+            for l in range(k + 1):
+                if l <= head:
+                    canha = (ha + l) // head
+                    dp[head - 1][ha + canha] += base
+                    dp[head - 1][ha + canha] %= MOD
+                else:
+                    dp[head - 1][ha] += base
+                    dp[head - 1][ha] %= MOD
+
+    for i in range(maxha + 1):
+        dec = dp[0][i] * i % MOD
+        total += MOD - dec
+        total %= MOD
+    print(total % MOD)
+
+if __name__ == "__main__":
+    main()
+
+# Deleting InputReader class as it is not needed in Python due to simple input handling
+
+# Deleting debug method as well print debugging can be done without a separate function
+
+```
+
+The `InputReader` class from the Java code is not translated to Python since Python has built-in input handling through the `input` function. Java's `PrintWriter` and `System.out` functionality is replaced by Python's `print` function. The `main` function is introduced to simulate the `public static void main` method in Java, and `if __name__ == "__main__":` is used to ensure that `main` runs when the script is directly executed. Additionally, any Python equivalent of the `debug` method is omitted as print debugging can be done directly with `print` statements.

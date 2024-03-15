@@ -1,0 +1,52 @@
+Here is the equivalent Python code for the Java code you provided:
+
+```python
+def invl(a, mod):
+    b = mod
+    p, q = 1, 0
+    while b > 0:
+        c = a // b
+        a, b = b, a % b
+        p, q = q, p - c * q
+    return p + mod if p < 0 else p
+
+def C(n, r, mod, fif):
+    if n < 0 or r < 0 or r > n:
+        return 0
+    return fif[0][n] * fif[1][r] % mod * fif[1][n - r] % mod
+
+def enumFIF(n, mod):
+    f = [0] * (n + 1)
+    invf = [0] * (n + 1)
+    f[0] = 1
+    for i in range(1, n + 1):
+        f[i] = f[i - 1] * i % mod
+    a = f[n]
+    invf[n] = invl(a, mod)
+    for i in range(n - 1, -1, -1):
+        invf[i] = invf[i + 1] * (i + 1) % mod
+    return f, invf
+
+def solve(n, K):
+    mod = 1000000007
+    fif = enumFIF(4000005, mod)
+    if K == 1:
+        return 1
+    dp = [0] * (n+1)
+    dp[0] = 1
+    for j in range(n + 1):
+        for i in range(j, n + 1):
+            if i + 1 <= n:
+                dp[i + 1] += dp[i]
+                if dp[i + 1] >= mod:
+                    dp[i + 1] -= mod
+            if i >= j + 1:
+                dp[i] = dp[i] * C(n*K - i - j*(K-1) - 1, K - 2, mod, fif) % mod
+    return dp[n] * fif[0][n] % mod
+
+# Example usage:
+n, K = 4, 2  # Replace with actual values or input methods
+print(solve(n, K))
+```
+
+Please note, Java code has a lot of input and output handling which have been excluded from this Python translation. In Python, you would typically use input functions such as `input()` to handle user input. If there are specific requirements for input/output handling that you'd like to have in Python, please let me know, and I can include them in the code.

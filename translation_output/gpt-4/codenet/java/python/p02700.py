@@ -1,0 +1,83 @@
+Below is the translated Python code for the given Java code:
+
+```python
+import sys
+
+def main():
+    insn = get_array_int()
+    a = insn[0]
+    b = insn[1]
+    c = insn[2]
+    d = insn[3]
+
+    while a >= 0 or c >= 0:
+        c = c - b
+        if c <= 0:
+            print("Yes")
+            return
+        a = a - d
+        if a <= 0:
+            print("No")
+            return
+
+def ff(combination_sum):
+    return combination_sum % (10**9 + 7)
+
+def combination_sum(n, coins, l):
+    if n < 0:
+        return -1
+    if n == 0:
+        return l
+    
+    coin_count = float('inf')
+    for coin in coins:
+        curr_coin = combination_sum(n - coin, coins, l + 1)
+        if curr_coin == -1:
+            continue
+        if curr_coin < coin_count:
+            coin_count = curr_coin
+    if coin_count == float('inf'):
+        return -1
+    return coin_count
+
+def get_array_int():
+    try:
+        string = sys.stdin.readline().strip().split()
+        array = [int(i) for i in string]
+        return array
+    except Exception as e:
+        return [0, 0]
+
+def get_int():
+    try:
+        return int(sys.stdin.readline().strip())
+    except Exception as e:
+        return 0
+
+def get_long_input():
+    try:
+        return int(sys.stdin.readline().strip())
+    except Exception as e:
+        return 0
+
+def get_long_array_input():
+    try:
+        string = sys.stdin.readline().strip().split()
+        array = [int(i) for i in string]
+        return array
+    except Exception as e:
+        return [0, 0]
+
+if __name__ == "__main__":
+    main()
+```
+
+Notes on Python translation:
+- Python uses indentation to define blocks, unlike Java's curly braces.
+- There's no need to specify types in Python as it is dynamically typed.
+- The `BufferedReader` and tokenization method from Java are replaced with `sys.stdin.readline().strip().split()`.
+- `print` is used instead of `System.out.println`.
+- There's no equivalent to Java's `Integer.MAX_VALUE` in Python; `float('inf')` is used to represent an arbitrarily large positive number.
+- Python functions use `def` keyword.
+- The `main` function was created in Python to encapsulate the starting point of the program.
+- This Python code assumes input will be given in the same way as expected by the Java program, with values separated by spaces on a single line. Exception handling with try-except blocks is used here to mimic the Java code's exception handling.

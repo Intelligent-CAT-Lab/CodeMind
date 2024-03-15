@@ -1,0 +1,19 @@
+Here's the translated Python code for the Java snippet you provided:
+
+```python
+def main():
+    s = input()
+
+    if len(s) < 4:
+        print("No")
+        return
+    
+    s2 = s[:4]
+    if s2 == "YAKI":
+        print("Yes")
+    else:
+        print("No")
+
+if __name__ == "__main__":
+    main()
+```

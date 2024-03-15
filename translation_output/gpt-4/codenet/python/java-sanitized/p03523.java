@@ -1,0 +1,29 @@
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class p03523 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String S = scanner.nextLine();
+
+        boolean b = S.replace("A", "").equals("KIHBR");
+        if (b) {
+            String[] splitPattern = S.split("(?!A)"); // Negative look-ahead to prevent consuming "A"s in split
+            int[] L = new int[splitPattern.length];
+            for (int i = 0; i < splitPattern.length; i++) {
+                L[i] = splitPattern[i].length();
+            }
+            
+            int[] X = {1, 0, 0, 1, 1, 1, 1};
+            for (int i = 0; i < L.length; i++) {
+                if (L[i] > X[i]) {
+                    b = false;
+                    break;
+                }
+            }
+        }
+
+        System.out.println(b ? "YES" : "NO");
+    }
+}

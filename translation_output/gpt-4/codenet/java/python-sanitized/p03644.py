@@ -1,0 +1,20 @@
+import math
+import sys
+
+
+def run():
+    pnum = int(input())
+    print(count(pnum))
+
+
+def count(pnum):
+    result = 0
+    i = 0
+    while (2 ** i) <= pnum:
+        result = 2 ** i
+        i += 1
+    return result
+
+
+if __name__ == "__main__":
+    run()
