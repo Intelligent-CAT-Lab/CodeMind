@@ -1,0 +1,36 @@
+<s> [INST] Translate the following java code to python and enclose your solution inside ```python```:
+```
+import java.util.*;
+public class p03844 {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System. in);
+		int c = 0;
+		int a = sc.nextInt();
+		String s = sc.next();
+		int b = sc.nextInt();
+		if(s.equals("+")) {
+			c = a + b;
+		}else if(s.equals("-")) {
+			c = a - b;
+		}
+		System.out.print(c);
+	}
+}
+```
+[/INST]
+```python
+import sys
+
+a = int(input())
+s = input()
+b = int(input())
+
+if s == "+":
+    c = a + b
+elif s == "-":
+    c = a - b
+else:
+    c = 0
+
+print(c)
+```</s>

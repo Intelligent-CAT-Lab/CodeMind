@@ -1,0 +1,21 @@
+<s> [INST] Translate the following python code to java and enclose your solution inside ```java```:
+```
+a , b = input ( ) . split ( ) ; b = int ( b [ : : - 1 ] ) ; print ( int ( a ) + b )
+
+
+```
+[/INST]
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        String[] split = input.split(" ");
+        int b = Integer.parseInt(split[1].substring(0, split[1].length() - 1));
+        int a = Integer.parseInt(split[0]);
+        System.out.println(a + b);
+    }
+}
+```</s>

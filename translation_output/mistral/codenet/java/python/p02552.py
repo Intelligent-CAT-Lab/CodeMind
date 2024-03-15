@@ -1,0 +1,29 @@
+<s> [INST] Translate the following java code to python and enclose your solution inside ```python```:
+```
+import java.util.Scanner;
+
+/**
+ * @author yadavd5
+ *
+ */
+public class p02552 {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		if(n==0)
+			System.out.println("1");
+		else
+			System.out.println("0");
+	}
+}
+```
+[/INST]
+```python
+import sys
+
+n = int(input())
+if n == 0:
+    print("1")
+else:
+    print("0")
+```</s>
