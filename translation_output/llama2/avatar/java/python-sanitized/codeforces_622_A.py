@@ -1,0 +1,6 @@
+import sys
+
+n1 = int(sys.stdin.readline())
+n = (int)((math.sqrt(1 + (8 * n1)) - 1) / 2)
+ans = n1 - ((n + 1) * n) / 2
+print(ans)

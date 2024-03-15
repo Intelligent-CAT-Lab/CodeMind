@@ -1,0 +1,103 @@
+Hint
+
+- Use Integer.parseInt() to convert the input to integer
+- Use Math.abs() to get the absolute value of a number
+- Use Math.gcd() to find the greatest common divisor of two numbers
+- Use Math.min() to find the minimum of two numbers
+- Use Math.max() to find the maximum of two numbers
+- Use Math.pow() to find the power of a number
+- Use Math.sqrt() to find the square root of a number
+- Use Math.round() to round a number to the nearest integer
+- Use Math.ceil() to round a number to the nearest integer, but round up
+- Use Math.floor() to round a number to the nearest integer, but round down
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+- Use Math.random() to generate a random number between 0 and 1
+-

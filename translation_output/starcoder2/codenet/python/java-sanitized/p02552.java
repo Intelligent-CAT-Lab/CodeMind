@@ -1,0 +1,1 @@
+System.out.println(1 - Integer.parseInt(System.console().readLine()));

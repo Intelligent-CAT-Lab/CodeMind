@@ -1,0 +1,14 @@
+import sys
+
+def nextInt(scanner):
+    return int(scanner.next())
+
+def main():
+    h1, m1, h2, m2, k = map(nextInt, sys.stdin.readline().split())
+    h = h2 - h1
+    m = m2 - m1
+    day = (h * 60) + m
+    print(day - k)
+
+if __name__ == '__main__':
+    main()

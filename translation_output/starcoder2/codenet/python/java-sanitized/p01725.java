@@ -1,0 +1,68 @@
+import java.util.*;
+
+public class p01725 {
+    static String S;
+    static int cur;
+    static int[] pri;
+    static int ans;
+
+    static int parse() {
+        String code = "+-*";
+
+        int number() {
+            int c = S.charAt(cur);
+            if (c == '(') {
+                cur++; // '('
+                int v = expr(0);
+                cur++; // ')'
+                return v;
+            }
+            int num = 0;
+            while (Character.isDigit(S.charAt(cur))) {
+                num = 10 * num + (S.charAt(cur) - '0');
+                cur++;
+            }
+            return num;
+        }
+
+        int expr(int level) {
+            int op = '+';
+            int result = 0;
+            while (true) {
+                int v;
+                if (level == 2) {
+                    v = number();
+                } else {
+                    v = expr(level + 1);
+                }
+                if (op == '+') {
+                    result += v;
+                } else if (op == '-') {
+                    result -= v;
+                } else {
+                    result *= v;
+                }
+                int c = S.charAt(cur);
+                if (code.indexOf(c) == -1 || pri[code.indexOf(c)] != level) {
+                    break;
+                }
+                op = c;
+                cur++;
+            }
+            return result;
+        }
+        return expr(0);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        S = sc.next() + "$";
+        cur = 0;
+        ans = -1000000000;
+        for (int i = 0; i < 6; i++) {
+            pri = new int[]{i / 2, i % 2, 2};
+            ans = Math.max(ans, parse());
+        }
+        System.out.println(ans);
+    }
+}
