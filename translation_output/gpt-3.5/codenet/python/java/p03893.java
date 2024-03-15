@@ -1,0 +1,27 @@
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        int[] g = new int[50];
+        int[] h = new int[50];
+        for (int i = 0; i < 50; i++) {
+            g[i] = h[i] = -1;
+        }
+
+        h[1] = 3;
+        g[1] = 6;
+
+        int X = scanner.nextInt();
+        
+        for (int i = 2; i <= X; i++) {
+            h[i] = g[i - 1] + 1;
+            g[i] = 2 * h[i];
+        }
+
+        System.out.println(g[X]);
+    }
+}
+```

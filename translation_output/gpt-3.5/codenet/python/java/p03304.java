@@ -1,0 +1,18 @@
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+        int d = scanner.nextInt();
+        
+        if (d > 0) {
+            System.out.println(2.0 * (n - d) * (m - 1) / (n * n));
+        } else {
+            System.out.println((double) (m - 1) / n);
+        }
+    }
+}
+```
