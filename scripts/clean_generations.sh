@@ -12,8 +12,8 @@ for dataset in avatar codenet; do
                                                         --source_lang=${src_lang} \
                                                         --target_lang=${tgt_lang} \
                                                         --remove_prompt \
-                                                        --rm-prefix-lines "I" "Note" "This" "Also" "Here" "Finally" "Please" \
-                                                        --eofs "Explanation" "1." "* Python" "The" "<｜end▁of▁sentence｜>"
+                                                        --rm-prefix-lines "I" "Note" "This" "Also" "Here" "Finally" "Please" "解答" "解题思路" \
+                                                        --eofs "Explanation" "1." "* Python" "The" "<｜end▁of▁sentence｜>" "<|EOT|>" '"""' "'''" "<|endoftext|>" "</s>" "###" "##" "java code:" "python code:"
         done
     done
 done

@@ -47,11 +47,24 @@ if __name__ == "__main__":
 
         new_code = old_code
 
-        if args.remove_prompt and 'codellama' in solution_path:
+        if args.remove_prompt and ('codellama' in solution_path or 'mistral' in solution_path):
             new_code = new_code[new_code.find("[/INST]") + len("[/INST]"):]
         
         if args.remove_prompt and 'magicoder' in solution_path:
             new_code = new_code[new_code.find("@@ Response") + len("@@ Response"):]
+        
+        if args.remove_prompt and ('deepseekcoder' in solution_path or 'wizardcoder' in solution_path):
+            new_code = new_code[new_code.find("### Response:") + len("### Response:"):]
+
+        if args.remove_prompt and 'starcoder' in solution_path and 'starcoder2' not in solution_path:
+            new_code = new_code[new_code.find("<fim_suffix><fim_middle>") + len("<fim_suffix><fim_middle>"):]
+        
+        if args.remove_prompt and 'llama2' in solution_path:
+            new_code = new_code[new_code.find("###") + len("###"):]
+
+        if 'gpt-4' in solution_path or 'gpt-3.5' in solution_path:
+            new_code = new_code[new_code.find(f"```{args.target_lang.lower()}") + len(f"```{args.target_lang.lower()}"):
+                                new_code.find("```", new_code.find(f"```{args.target_lang.lower()}") + len(f"```{args.target_lang.lower()}"))]
 
         # basic handling of chat output
         new_code = new_code.replace(f"```{args.target_lang.lower()}", "").replace("```", "").strip()
