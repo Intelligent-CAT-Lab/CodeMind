@@ -2,8 +2,8 @@ import ast
 import random
 import json
 from typing import Dict, List, Tuple, Union, Set
-
-
+from cast_type import MultiLineOutput, cast_to_type
+from typing import cast
 
 class EmptyList:
     def __init__(self):
@@ -361,6 +361,30 @@ def gen_mutated_assertion(assertion_str: str) -> str:
     else:
         return f"{assertion_str.split('==')[0]} == {mutated_val}"
 
+def get_mutated_assertion_from_input_output_strs(
+    input_str: str, output_str: str, function_name: str
+) -> (str, str):
+    """
+    Get a mutated assertion from input and output strings
+    """
+    input_val = cast_to_type(input_str)
+    output_val = cast_to_type(output_str)
+    if isinstance(output_val, MultiLineOutput):
+        output_type = parse_type(output_val.get_values())
+        mutated_val = mutate(output_val.get_values(), output_type)
+        assert isinstance(mutated_val, list, "Output should be a list")
+        mutated_val = '\n'.join([str(x) for x in mutated_val])
+        
+    else:
+        output_type = parse_type(output_val)
+        mutated_val = mutate(output_val, output_type)
+    
+    return str(input_val), str(mutated_val)
+    
+    
+    
+    
+    
 
 if __name__ == "__main__":
     with open('/home/changshu/LLM_REASONING/pipeline/result/CodeLlama/MBPP/output.jsonl', 'r') as f:
