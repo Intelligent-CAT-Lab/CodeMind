@@ -16,8 +16,19 @@ def main(args):
 
     extensions = {'python': 'py', 'java': 'java'}
 
+    experiment_type = 'no_test'
+    if args.use_misleading_test:
+        experiment_type = 'misleading_test'
+    elif args.use_test:
+        experiment_type = 'w_test'
+    
+    test_type = 'tests'
+    if args.use_misleading_test:
+        test_type = 'misleading_tests'
+
     in_folder = f'translation_dataset/{args.dataset}/{args.source_lang}/code'
-    out_folder = f'translation_output/{args.model}/{args.dataset}/{args.source_lang}/{args.target_lang}'
+    test_folder = f'translation_dataset/{args.dataset}/{args.source_lang}/{test_type}'
+    out_folder = f'translation_output/{experiment_type}/{args.model}/{args.dataset}/{args.source_lang}/{args.target_lang}'
 
     in_files = os.listdir(in_folder)
     print(f'found {len(in_files)} inputs')
@@ -84,38 +95,65 @@ def main(args):
     # loop over input files
     os.makedirs(out_folder, exist_ok=True)
     for f in tqdm(in_files):
+
+        base_name = f.split('.')[0]
+
+        test_input = open(f'{test_folder}/{base_name}_in.txt', 'r').read()
+        test_output = open(f'{test_folder}/{base_name}_out.txt', 'r').read()
+
+        if len(test_input) > 500 or len(test_output) > 500:
+            continue
+
         prompt_file = f'{in_folder}/{f}'
 
         with open(prompt_file, "r", encoding="ISO-8859-1", errors='ignore') as fin:
             prompt = fin.readlines()
 
             if args.model == 'codellama':
-                prompt = f"{args.source_lang} code:\n\n" + "".join(prompt) + f'\n\nTranslate the above {args.source_lang} code to {args.target_lang}.\n\n{args.target_lang} code:\n\n'
+                if args.use_test:
+                    prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n"
+                else:
+                    prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n"
                 prompt = f"[INST] <<SYS>>\nYou are an expert {args.target_lang} programmer and assistant\n<</SYS>>\n\n{prompt}[/INST]\n"
 
             elif args.model == 'magicoder':
-                prompt = f"You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.\n\n@@ Instruction\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n@@ Response\n"
+                if args.use_test:
+                    prompt = f"You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.\n\n@@ Instruction\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n\n@@ Response\n"
+                else:
+                    prompt = f"You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.\n\n@@ Instruction\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n@@ Response\n"
 
             elif args.model == 'wizardcoder':
-                prompt = f"Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
+                if args.use_test:
+                    prompt = f"Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
+                else:
+                    prompt = f"Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
 
             elif args.model == 'deepseekcoder':
-                prompt = f"You are an expert Python programmer.Your task is to write a Python function to solve a programming problem.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
+                if args.use_test:
+                    prompt = f"You are an expert Python programmer.Your task is to write a Python function to solve a programming problem.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
+                else:
+                    prompt = f"You are an expert Python programmer.Your task is to write a Python function to solve a programming problem.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
 
             elif args.model == 'mistral':
-                prompt = f"[INST] Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n[/INST]\n"
-
-            elif args.model == 'llama2':
-                prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n"
+                if args.use_test:
+                    prompt = f"[INST] Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n[/INST]\n"
+                else:
+                    prompt = f"[INST] Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n[/INST]\n"
 
             elif args.model in ['starcoder', 'starcoder2']:
-                prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + f"\n```\n\n{args.target_lang} code:"
+                if args.use_test:
+                    prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + f"\n```\n\n{args.target_lang} code:"
+                else:
+                    prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + f"\n```\n\n{args.target_lang} code:"
                 prefix_token = "<fim_prefix>"
                 suffix_token = "<fim_suffix><fim_middle>"
                 prompt = prefix_token + prompt + suffix_token
 
             elif args.model in ['gpt-4', 'gpt-3.5']:
-                prompt = "Translate the following code from " + args.source_lang + " to " + args.target_lang + " and enclose your solution inside ```" + args.target_lang.lower() + "```:\n```\n" + "".join(prompt) + "\n```\n"
+                if args.use_test:
+                    prompt = "Translate the following code from " + args.source_lang + " to " + args.target_lang + " and enclose your solution inside ```" + args.target_lang.lower() + "```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n"
+                else:
+                    prompt = "Translate the following code from " + args.source_lang + " to " + args.target_lang + " and enclose your solution inside ```" + args.target_lang.lower() + "```:\n```\n" + "".join(prompt) + "\n```\n"
 
             try:
 
@@ -201,6 +239,8 @@ if __name__ == "__main__":
     parser.add_argument('--target_lang', help='target language to use for code translation', required=True, type=str)
     parser.add_argument('--gpu_id', help='gpu id to use', required=True, type=int)
     parser.add_argument('--cache_dir', help='cache directory for huggingface models', required=True, type=str)
+    parser.add_argument('--use_test', help='use test dataset', action='store_true')
+    parser.add_argument('--use_misleading_test', help='use test dataset', action='store_true')
     args = parser.parse_args()
 
     # Initialize configurations
