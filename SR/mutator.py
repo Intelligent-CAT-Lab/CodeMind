@@ -381,6 +381,9 @@ def get_mutated_assertion_from_input_output_strs(
         print("output_type",output_type)
         mutated_val = mutate(output_val, output_type)
     
+    if isinstance(mutated_val, list):
+        mutated_val = ' '.join([str(x) for x in mutated_val])
+    
     return str(input_val), str(mutated_val)
     
     
@@ -389,12 +392,14 @@ def get_mutated_assertion_from_input_output_strs(
     
 
 if __name__ == "__main__":
-    input_files, output_files = get_input_output_files('/home/changshu/CodeMind/dataset/Avatar/Avatar-python')
+    input_files, output_files = get_input_output_files('/home/changshu/CodeMind/dataset/CodeNet/CodeNet-Python')
     for input_file, output_file in zip(input_files, output_files):
         code_input = open(input_file).read().strip()
         code_output = open(output_file).read().strip()
-        print(input_file)
+        
         input_val, output_val = get_mutated_assertion_from_input_output_strs(code_input, code_output, "")
         print(output_val)
-        print("-------")
+        wr_file= output_file.replace("output.txt", "misleading_output.txt")
+        with open(wr_file, 'w') as wr:
+            wr.write(output_val)
         # print(output_val)

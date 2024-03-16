@@ -1,0 +1,5 @@
+s = input()
+leng = len(s)
+print(s[0], end='')
+print(leng-2, end='')
+print(s[leng-1])
