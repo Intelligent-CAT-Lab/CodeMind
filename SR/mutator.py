@@ -2,7 +2,7 @@ import ast
 import random
 import json
 from typing import Dict, List, Tuple, Union, Set
-from cast_type import MultiLineOutput, cast_to_type
+from cast_type import MultiLineOutput, cast_to_type, get_input_output_files
 from typing import cast
 
 class EmptyList:
@@ -313,7 +313,7 @@ def mutate(
         None,
     ],
 ) -> Union[int, float, str, bool, List, Dict, Tuple, Function]:
-    if not value:
+    if value is None:
         print("None")
         return False
     if isinstance(value_type, ListOfType) or isinstance(value_type, MixedList):
@@ -369,14 +369,16 @@ def get_mutated_assertion_from_input_output_strs(
     """
     input_val = cast_to_type(input_str)
     output_val = cast_to_type(output_str)
+    print("output_value",output_val)
     if isinstance(output_val, MultiLineOutput):
         output_type = parse_type(output_val.get_values())
         mutated_val = mutate(output_val.get_values(), output_type)
-        assert isinstance(mutated_val, list, "Output should be a list")
+        assert isinstance(mutated_val, list), "Output should be a list"
         mutated_val = '\n'.join([str(x) for x in mutated_val])
         
     else:
         output_type = parse_type(output_val)
+        print("output_type",output_type)
         mutated_val = mutate(output_val, output_type)
     
     return str(input_val), str(mutated_val)
@@ -387,15 +389,12 @@ def get_mutated_assertion_from_input_output_strs(
     
 
 if __name__ == "__main__":
-    with open('/home/changshu/LLM_REASONING/pipeline/result/CodeLlama/MBPP/output.jsonl', 'r') as f:
-        data = [json.loads(line) for line in f]
-    for item in data:
-        if item['assertion']:
-            print("Original",item['assertion'])
-            print("Mutated",gen_mutated_assertion(item['assertion']))
-            print()
-        else:
-            print("no assertion")
-    # #         print(item)
-    # test = "assert good('changshu')"
-    # print(gen_mutated_assertion(test))
+    input_files, output_files = get_input_output_files('/home/changshu/CodeMind/dataset/Avatar/Avatar-python')
+    for input_file, output_file in zip(input_files, output_files):
+        code_input = open(input_file).read().strip()
+        code_output = open(output_file).read().strip()
+        print(input_file)
+        input_val, output_val = get_mutated_assertion_from_input_output_strs(code_input, code_output, "")
+        print(output_val)
+        print("-------")
+        # print(output_val)
