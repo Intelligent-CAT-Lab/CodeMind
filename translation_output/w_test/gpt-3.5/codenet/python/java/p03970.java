@@ -1,0 +1,20 @@
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String S = scanner.nextLine();
+        String A = "CODEFESTIVAL2016";
+        int cnt = 0;
+
+        for (int i = 0; i < A.length(); i++) {
+            if (A.charAt(i) != S.charAt(i)) {
+                cnt++;
+            }
+        }
+        
+        System.out.println(cnt);
+    }
+}
+```

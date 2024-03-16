@@ -1,0 +1,41 @@
+def calcComb(n, k):
+    if k > n - k:
+        return calcComb(n, n - k)
+    ansMul = 1
+    ansDiv = 1
+    for i in range(k):
+        ansMul *= (n - i)
+        ansDiv *= (i + 1)
+        ansMul %= MOD
+        ansDiv %= MOD
+    ans = ansMul * pow(ansDiv, MOD - 2, MOD)
+    ans %= MOD
+    return ans
+
+def pow(x, n, MOD):
+    ans = 1
+    while n > 0:
+        if (n & 1):
+            ans = ans * x % MOD
+        x = x * x % MOD
+        n >>= 1
+    return ans
+
+MOD = 1000000007
+
+# Sample test case:
+n, m = map(int, input().split())  # Replace with function parameters as needed
+res = m
+ans = 1
+for i in range(2, int(res**0.5) + 1):
+    cnt = 0
+    while res % i == 0:
+        cnt += 1
+        res //= i
+    ans *= calcComb(cnt + n - 1, n - 1)
+    ans %= MOD
+if res != 1:
+    ans *= calcComb(n, 1)
+    ans %= MOD
+
+print(ans)

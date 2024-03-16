@@ -1,0 +1,28 @@
+```java
+import java.util.Scanner;
+
+public class KeyenceSubstring {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String S = scanner.next();
+
+        for (int i = 0; i < S.length(); i++) {
+            for (int j = i; j < S.length() + 1; j++) {
+                if ((S.substring(0, i) + S.substring(j)).equals("keyence")) {
+                    System.out.println("YES");
+                    System.exit(0);
+                }
+            }
+        }
+
+        for (int k = 0; k < S.length(); k++) {
+            if ((S.substring(k) + S.substring(k + 8)).equals("keyence")) {
+                System.out.println("YES");
+                System.exit(0);
+            }
+        }
+
+        System.out.println("NO");
+    }
+}
+```
