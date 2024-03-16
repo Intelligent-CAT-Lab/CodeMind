@@ -63,21 +63,21 @@ def get_input_output_files(root_dir):
     return input_files, output_files
 
 
-input_files, output_files = get_input_output_files('/home/changshu/CodeMind/dataset/Avatar/Avatar-python')
-print(input_files)
-print(output_files)
+# input_files, output_files = get_input_output_files('/home/changshu/CodeMind/dataset/Avatar/Avatar-python')
+# print(input_files)
+# print(output_files)
 
-for file in input_files:
-    data = open(file).read().strip()
-    try:
-        print(cast_to_type(data))
-    except Exception as e:
-        print(f'Error in {file}: {e}\ndata: {data}')
+# for file in input_files:
+#     data = open(file).read().strip()
+#     try:
+#         print(cast_to_type(data))
+#     except Exception as e:
+#         print(f'Error in {file}: {e}\ndata: {data}')
 
-for file in output_files:
-    data = open(file).read().strip()
-    try:
-        print(cast_to_type(data))
-    except Exception as e:
-        print(f'Error in {file}: {e}\ndata: {data}')
+# for file in output_files:
+#     data = open(file).read().strip()
+#     try:
+#         print(cast_to_type(data))
+#     except Exception as e:
+#         print(f'Error in {file}: {e}\ndata: {data}')
     
