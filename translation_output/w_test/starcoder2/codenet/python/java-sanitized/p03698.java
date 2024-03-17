@@ -1,0 +1,49 @@
+import java.util.Scanner;
+
+public class p03698 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length(); i++) {
+            count = 0;
+            for (int j = 0; j < s.length(); j++) {
+                if (s.charAt(j) == s.charAt(i)) {
+                    count++;
+                }
+            }
+            if (count >= 2) {
+                System.out.println("no");
+                break;
+            }
+        }
+        if (count == 1) {
+            System.out.println("yes");
+        }
+    }
+}
+
+
+
+
+import java.util.Scanner;
+
+public class p03698 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+        int max = arr[0];
+        for (int i = 0; i < n; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            }
+        }
+        System.out.println(max);
+    }
+}
+
+/01-01-2021/01-01-202

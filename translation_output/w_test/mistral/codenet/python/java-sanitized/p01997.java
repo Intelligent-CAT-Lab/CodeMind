@@ -1,0 +1,12 @@
+import java.util.Scanner;
+
+public class p01997 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        double A, B;
+        A = scanner.nextDouble();
+        B = scanner.nextDouble();
+        double result = (4.0 / 3.0) * Math.PI * Math.pow(B, 3);
+        System.out.printf("%.10f", result);
+    }
+}

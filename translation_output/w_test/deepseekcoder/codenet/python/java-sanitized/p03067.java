@@ -1,0 +1,16 @@
+import java.util.Scanner;
+
+public class p03067 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int a = scanner.nextInt();
+        int b = scanner.nextInt();
+        int c = scanner.nextInt();
+
+        if (a < c && c < b || a > c && c > b) {
+            System.out.println("Yes");
+        } else {
+            System.out.println("No");
+        }
+    }
+}

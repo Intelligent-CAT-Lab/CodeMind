@@ -1,0 +1,23 @@
+import java.util.*;
+
+public class atcoder_ABC174_C {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int K = scanner.nextInt();
+        int cnt = 0;
+        int now = 0;
+        if (K % 2 == 0) {
+            System.out.println(-1);
+            System.exit(0);
+        }
+        for (int i = 0; i < Math.pow(10, 6); i++) {
+            cnt += 1;
+            now = (now * 10 + 7) % K;
+            if (now == 0) {
+                System.out.println(cnt);
+                System.exit(0);
+            }
+        }
+        System.out.println(-1);
+    }
+}

@@ -1,0 +1,15 @@
+import java.util.Scanner;
+
+public class p03609 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int x = scanner.nextInt();
+        int t = scanner.nextInt();
+        int result = x - t;
+        if (result > 0) {
+            System.out.println(result);
+        } else {
+            System.out.println(0);
+        }
+    }
+}
