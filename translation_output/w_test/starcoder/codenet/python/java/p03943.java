@@ -1,0 +1,49 @@
+<fim_prefix>Translate the following python code to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+10 30 20
+
+Expected output:
+Yes
+
+
+```
+a, b, c = map(int, input().split())
+
+ans = "No"
+if a + b == c:
+  ans = "Yes"
+if a + c == b:
+  ans = "Yes"
+if b + c == a:
+  ans = "Yes"
+
+print(ans)
+```
+
+java code:<fim_suffix><fim_middle>
+```java
+import java.util.*;
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+        int c = sc.nextInt();
+        String ans = "No";
+        if (a + b == c) {
+            ans = "Yes";
+        }
+        if (a + c == b) {
+            ans = "Yes";
+        }
+        if (b + c == a) {
+            ans = "Yes";
+        }
+        System.out.println(ans);
+    }
+}
+```
+<|endoftext|>

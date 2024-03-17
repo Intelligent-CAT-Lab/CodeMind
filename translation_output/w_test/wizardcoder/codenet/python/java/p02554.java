@@ -1,0 +1,56 @@
+Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+### Instruction:
+Translate the following python code to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+2
+
+Expected output:
+2
+
+
+```
+n=int(input())
+ant,bnt,cnt=1,1,1
+
+for i in range(n) :
+    ant=10*ant%1000000007
+    bnt=9*bnt%1000000007
+    cnt=8*cnt%1000000007
+
+ans=(ant-(bnt*2-cnt))%1000000007
+
+if ans>=0 :
+    print(ans)
+else :
+    print(1000000007+ans) 
+```
+
+### Response:
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int ant = 1, bnt = 1, cnt = 1;
+
+        for (int i = 0; i < n; i++) {
+            ant = (10 * ant) % 1000000007;
+            bnt = (9 * bnt) % 1000000007;
+            cnt = (8 * cnt) % 1000000007;
+        }
+
+        int ans = (ant - (bnt * 2 - cnt)) % 1000000007;
+
+        if (ans >= 0) {
+            System.out.println(ans);
+        } else {
+            System.out.println(1000000007 + ans);
+        }
+    }
+}
+```<|endoftext|>

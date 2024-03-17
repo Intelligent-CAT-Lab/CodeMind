@@ -1,0 +1,41 @@
+Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+### Instruction:
+Translate the following python code to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+1 2 1 1
+
+Expected output:
+2
+
+
+```
+a, b, c, d = map(int, input().split())
+ans = -1000000000000000000
+ans = max(ans, a * c, a * d, b * c, b * d)
+print(ans)
+
+```
+
+### Response:
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+        int c = sc.nextInt();
+        int d = sc.nextInt();
+        int ans = -1000000000000000000;
+        ans = Math.max(ans, a * c);
+        ans = Math.max(ans, a * d);
+        ans = Math.max(ans, b * c);
+        ans = Math.max(ans, b * d);
+        System.out.println(ans);
+    }
+}
+```<|endoftext|>

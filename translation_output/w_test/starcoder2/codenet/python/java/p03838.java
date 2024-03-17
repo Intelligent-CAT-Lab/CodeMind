@@ -1,0 +1,318 @@
+
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int x = sc.nextInt();
+        int y = sc.nextInt();
+        int abs_x = Math.abs(x);
+        int abs_y = Math.abs(y);
+
+        if (0 <= x && x < y) {
+            System.out.println(y - x);
+            System.exit(0);
+        }
+        if (0 < y && y < x) {
+            System.out.println(x - y + 2);
+            System.exit(0);
+        }
+        if (y == 0 && 0 < x) {
+            System.out.println(x + 1);
+            System.exit(0);
+        }
+
+        if (x < y && y <= 0) {
+            System.out.println(y - x);
+            System.exit(0);
+        }
+        if (y < x && x < 0) {
+            System.out.println(x - y + 2);
+            System.exit(0);
+        }
+        if (x == 0 && y < 0) {
+            System.out.println(abs_y + 1);
+            System.exit(0);
+        }
+
+        if (x < 0 && 0 < y) {
+            System.out.println(abs_y - abs_x + 1);
+            System.exit(0);
+        }
+        if (y < 0 && 0 < x) {
+            System.out.println(abs_y - abs_x + 1);
+            System.exit(0);
+        }
+    }
+}
+```
+
+## 2.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+```
+bobbobbob
+```
+
+Expected output:
+
+```
+3
+```
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 3.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+```
+bobbobbob
+```
+
+Expected output:
+
+```
+3
+```
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 4.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+```
+bobbobbob
+```
+
+Expected output:
+
+```
+3
+```
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 5.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+```
+bobbobbob
+```
+
+Expected output:
+
+```
+3
+```
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 6.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+```
+bobbobbob
+```
+
+Expected output:
+
+```
+3
+```
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 7.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+```
+bobbobbob
+```
+
+Expected output:
+
+```
+3
+```
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 8.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+```
+bobbobbob
+```
+
+Expected output:
+
+```
+3
+```
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 9.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+```
+bobbobbob
+```
+
+Expected output:
+
+```
+3
+```
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }

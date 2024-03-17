@@ -1,0 +1,27 @@
+<fim_prefix>Translate the following python code to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+1
+
+Expected output:
+6.28318530717958623200
+
+
+```
+print(int(input())*6.28)
+```
+
+java code:<fim_suffix><fim_middle>
+```java
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        System.out.println(n*6.28);
+    }
+}
+```
+'''
+<|endoftext|>

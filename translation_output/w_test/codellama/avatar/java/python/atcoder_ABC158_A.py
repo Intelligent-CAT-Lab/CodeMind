@@ -1,0 +1,48 @@
+<s> [INST] <<SYS>>
+You are an expert python programmer and assistant
+<</SYS>>
+
+Translate the following java code to python and enclose your solution inside ```python```.
+A sample test case is provided below:
+
+Test input:
+BBA
+
+Expected output:
+Yes
+
+
+```
+import java.util.Scanner;
+
+public class atcoder_ABC158_A {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String str = sc.next();
+        
+        if (str.equals("AAA") || str.equals("BBB")) {
+            System.out.println("No");
+        } else {
+            System.out.println("Yes");
+        }
+    }
+}
+```
+[/INST]
+```
+import sys
+
+str = sys.stdin.readline().strip()
+
+if str == "AAA" or str == "BBB":
+    print("No")
+else:
+    print("Yes")
+```
+Explanation:
+
+* `sys.stdin.readline()` reads a line from the standard input and returns it as a string.
+* `strip()` is used to remove any leading or trailing whitespace from the string.
+* The `if` statement checks if the string is equal to "AAA" or "BBB", and if it is, it prints "No". Otherwise, it prints "Yes".
+
+Note: The `strip()` method is not necessary in this case, but it is a good practice to use it to avoid any unexpected whitespace issues.</s>

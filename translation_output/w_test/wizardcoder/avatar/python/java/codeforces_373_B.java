@@ -1,0 +1,69 @@
+Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+### Instruction:
+Translate the following python code to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+6289344232651169 4170875805886064 618522710
+
+Expected output:
+635520
+
+
+```
+import sys
+def main ( lines ) :
+    w, m, k = list ( map ( int, lines [ 0 ]. split ( ) ) )
+    max_length = 0
+    available_digits = int ( w / k )
+    while available_digits > 0 :
+        current_cost_per_n = len ( str ( m ) )
+        same_cost_until = 10 ** ( current_cost_per_n )
+        usable_numbers = same_cost_until - m
+        use_digits = usable_numbers * current_cost_per_n
+        m = same_cost_until
+        if available_digits >= use_digits :
+            max_length += usable_numbers
+            available_digits -= use_digits
+        else :
+            max_length += int ( available_digits / current_cost_per_n )
+            available_digits = 0
+    print ( max_length )
+if __name__ == " _ _ main _ _ " :
+    main ( sys. stdin. readlines ( ) )
+
+
+```
+
+### Response:
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String[] input = sc.nextLine().split(" ");
+        int w = Integer.parseInt(input[0]);
+        int m = Integer.parseInt(input[1]);
+        int k = Integer.parseInt(input[2]);
+        int max_length = 0;
+        int available_digits = w / k;
+        while (available_digits > 0) {
+            int current_cost_per_n = (int) Math.log10(m) + 1;
+            int same_cost_until = (int) Math.pow(10, current_cost_per_n);
+            int usable_numbers = same_cost_until - m;
+            int use_digits = usable_numbers * current_cost_per_n;
+            m = same_cost_until;
+            if (available_digits >= use_digits) {
+                max_length += usable_numbers;
+                available_digits -= use_digits;
+            } else {
+                max_length += available_digits / current_cost_per_n;
+                available_digits = 0;
+            }
+        }
+        System.out.println(max_length);
+    }
+}
+```<|endoftext|>

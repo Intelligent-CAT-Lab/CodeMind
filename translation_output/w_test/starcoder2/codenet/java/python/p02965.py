@@ -1,0 +1,85 @@
+
+
+```python
+import math
+
+MOD = 998244353
+
+def add(a, b):
+    res = a + b
+    return res >= MOD and res - MOD or res
+
+def sub(a, b):
+    res = a - b
+    return res < 0 and res + MOD or res
+
+def mul(a, b):
+    res = (a * b) % MOD
+    return res < 0 and res + MOD or res
+
+def pow(a, e):
+    if e == 0:
+        return 1
+    r = a
+    for i in range(30 - int(math.log(e, 2)), -1, -1):
+        r = mul(r, r)
+        if (e & (1 << i)) != 0:
+            r = mul(r, a)
+    return r
+
+def inv(a):
+    return pow(a, MOD - 2)
+
+def c(x, y):
+    return mul(mul(facts[x + y], factsInv[x]), factsInv[y])
+
+def solve():
+    n, m = map(int, input().split())
+    facts = [1] * (n + 3 * m // 2 + 1)
+    factsInv = [1] * len(facts)
+    for i in range(1, len(facts)):
+        facts[i] = mul(facts[i - 1], i)
+    factsInv[len(facts) - 1] = inv(facts[len(facts) - 1])
+    for i in range(len(facts) - 1, 0, -1):
+        factsInv[i - 1] = mul(factsInv[i], i)
+    ans = 0
+    for nOdd in range(m % 2, m + 1, 2):
+        if nOdd > n:
+            break
+        cans = c(nOdd, n - nOdd)
+        cans1 = c((3 * m - nOdd) // 2, n - 1)
+        cans2 = mul(nOdd, c((m - nOdd) // 2, n - 1))
+        if nOdd < m:
+            cans2 = add(cans2, mul(n - nOdd, c((m - nOdd) // 2 - 1, n - 1)))
+        ans = add(ans, mul(cans, sub(cans1, cans2)))
+    print(ans)
+
+solve()
+```
+
+## 2966 - 
+### 题目大意
+给定一个长度为$n$的字符串$s$，求有多少个不同的子串$t$满足$t$的长度为$k$，且$t$的字典序小于$s$。
+
+### 解题思路
+首先，我们可以用$dp[i][j]$表示以$s[i]$结尾的长度为$j$的子串的个数。
+
+然后，我们可以用$dp[i][j]$表示以$s[i]$结尾的长度为$j$的子串的个数。
+
+然后，我们可以用$dp[i][j]$表示以$s[i]$结尾的长度为$j$的子串的个数。
+
+然后，我们可以用$dp[i][j]$表示以$s[i]$结尾的长度为$j$的子串的个数。
+
+然后，我们可以用$dp[i][j]$表示以$s[i]$结尾的长度为$j$的子串的个数。
+
+然后，我们可以用$dp[i][j]$表示以$s[i]$结尾的长度为$j$的子串的个数。
+
+然后，我们可以用$dp[i][j]$表示以$s[i]$结尾的长度为$j$的子串的个数。
+
+然后，我们可以用$dp[i][j]$表示以$s[i]$结尾的长度为$j$的子串的个数。
+
+然后，我们可以用$dp[i][j]$表示以$s[i]$结尾的长度为$j$的子串的个数。
+
+然后，我们可以用$dp[i][j]$表示以$s[i]$结尾的长度为$j$的子串的个数。
+
+然后，我们可以用$dp[i][j]$表示以

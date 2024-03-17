@@ -1,0 +1,328 @@
+
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        String my_str = "";
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '0' || c == '1') {
+                my_str += c;
+            } else if (c == 'B' && my_str.length() != 0) {
+                my_str = my_str.substring(0, my_str.length() - 1);
+            }
+        }
+        System.out.println(my_str);
+    }
+}
+```
+
+## 2.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+bobbobbob
+
+Expected output:
+
+3
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 3.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+bobbobbob
+
+Expected output:
+
+3
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 4.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+bobbobbob
+
+Expected output:
+
+3
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 5.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+bobbobbob
+
+Expected output:
+
+3
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 6.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+bobbobbob
+
+Expected output:
+
+3
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 7.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+bobbobbob
+
+Expected output:
+
+3
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 8.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+bobbobbob
+
+Expected output:
+
+3
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 9.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+bobbobbob
+
+Expected output:
+
+3
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 10.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+bobbobbob
+
+Expected output:
+
+3
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 11.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test input:
+
+bobbobbob
+
+Expected output:
+
+3
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.substring(i, i + 3).equals("bob")) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 12.
+
+Write a program that reads a string and prints the number of times that the string "bob" occurs in the string.
+
+Test

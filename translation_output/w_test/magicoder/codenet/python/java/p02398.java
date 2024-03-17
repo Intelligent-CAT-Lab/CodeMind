@@ -1,0 +1,45 @@
+<｜begin▁of▁sentence｜>You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.
+
+@@ Instruction
+Translate the following python code to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+5 14 80
+
+Expected output:
+3
+
+
+```
+a,b,c=map(int,input().split())
+ans=0
+for i in range(a,b+1):
+    if c%i==0:
+        ans+=1
+print(ans)
+
+```
+
+@@ Response
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int a = scanner.nextInt();
+        int b = scanner.nextInt();
+        int c = scanner.nextInt();
+        int ans = 0;
+        for (int i = a; i <= b; i++) {
+            if (c % i == 0) {
+                ans++;
+            }
+        }
+        System.out.println(ans);
+    }
+}
+```
+
+This Java code does the same thing as the Python code. It reads three integers from the standard input, then it iterates over the range from `a` to `b` (inclusive), and for each number `i`, it checks if `c` is divisible by `i`. If it is, it increments the counter `ans`. Finally, it prints the value of `ans`.<｜end▁of▁sentence｜>

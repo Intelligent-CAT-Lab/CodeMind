@@ -1,0 +1,64 @@
+<fim_prefix>Translate the following java code to python and enclose your solution inside ```python```.
+A sample test case is provided below:
+
+Test input:
+keyofscience
+
+Expected output:
+YES
+
+
+```
+import java.util.*;
+public class p03150 {
+	public static void main(String[] args){
+       Scanner sc = new Scanner(System.in);
+      // åå¾
+	  String s = sc.next();
+      if(check(s)){
+        System.out.println("YES");
+      }else{
+        System.out.println("NO");
+      }
+    }
+    //ã­ã¼ã¨ã³ã¹ããª
+    static boolean check(String s){
+        if(s.equals("keyence")){
+          return true;
+        }else{
+          for(int i=0;i<s.length();i++){
+          	for(int j=i+1;j<=s.length();j++){
+            	 String str = s.substring(0,i)+s.substring(j);
+                 if(str.equals("keyence")){
+                   return true;
+                 }
+          	}
+          }
+        }
+      return false;
+    } 
+}
+```
+
+python code:<fim_suffix><fim_middle>
+
+```python
+import sys
+
+def check(s):
+    if s == 'keyence':
+        return True
+    for i in range(len(s)):
+        for j in range(i+1, len(s)+1):
+            if s[:i]+s[j:] == 'keyence':
+                return True
+    return False
+
+if __name__ == '__main__':
+    s = sys.stdin.readline().strip()
+    if check(s):
+        print('YES')
+    else:
+        print('NO')
+```
+<|endoftext|>

@@ -1,0 +1,51 @@
+<fim_prefix>Translate the following java code to python and enclose your solution inside ```python```.
+A sample test case is provided below:
+
+Test input:
+oxoxoxoxoxoxox
+
+Expected output:
+YES
+
+
+```
+import java.util.*;
+class p03024{
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        String res = sc.next();
+        int day = res.length();
+        int nday = 15-day;
+        int cnt = 0;
+        for(int i = 0;i < day;i++){
+            char r = res.charAt(i);
+            if(r == 'o')
+            cnt++;
+        }
+        if((day <= 7)||((day >= 8)&&((cnt+nday) >= 8))){
+            System.out.println("YES");
+        }else{
+            System.out.println("NO");
+        }
+    }
+}
+```
+
+python code:<fim_suffix><fim_middle>
+
+```python
+import sys
+
+res = sys.stdin.readline().strip()
+day = len(res)
+nday = 15-day
+cnt = 0
+for i in range(day):
+    if res[i] == 'o':
+        cnt += 1
+if day <= 7 or (day >= 8 and (cnt+nday) >= 8):
+    print('YES')
+else:
+    print('NO')
+```
+<|endoftext|>

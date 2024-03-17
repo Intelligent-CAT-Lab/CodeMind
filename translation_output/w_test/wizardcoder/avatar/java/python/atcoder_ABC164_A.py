@@ -1,0 +1,58 @@
+Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+### Instruction:
+Translate the following java code to python and enclose your solution inside ```python```.
+A sample test case is provided below:
+
+Test input:
+1 100
+
+Expected output:
+unsafe
+
+```
+import java.util.*;
+
+public class atcoder_ABC164_A {
+    public static void main(String[] args) throws Exception {
+        Scanner scan = new Scanner(System.in);
+        ArrayList<String> scList = new ArrayList<>();
+
+        scList.add(scan.nextLine());
+
+        String[] numlist = scList.get(0).split(" ");
+        int Sheep = Integer.parseInt(numlist[0]);
+        int Wolve = Integer.parseInt(numlist[1]);
+
+        if (Wolve >= Sheep) {
+            System.out.println("unsafe");
+        } else {
+            System.out.println("safe");
+        }
+    }
+}
+```
+
+### Response:
+```python
+import java.util.*;
+
+public class atcoder_ABC164_A {
+    public static void main(String[] args) throws Exception {
+        Scanner scan = new Scanner(System.in);
+        ArrayList<String> scList = new ArrayList<>();
+
+        scList.add(scan.nextLine());
+
+        String[] numlist = scList.get(0).split(" ");
+        int Sheep = Integer.parseInt(numlist[0]);
+        int Wolve = Integer.parseInt(numlist[1]);
+
+        if (Wolve >= Sheep) {
+            System.out.println("unsafe");
+        } else {
+            System.out.println("safe");
+        }
+    }
+}
+```<|endoftext|>
