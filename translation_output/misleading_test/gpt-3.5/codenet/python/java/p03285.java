@@ -1,0 +1,21 @@
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        
+        for (int i = 0; i < 25; i++) {
+            for (int j = 0; j < 20; j++) {
+                if (4*i + 7*j == N) {
+                    System.out.println("Yes");
+                    System.exit(0);
+                }
+            }
+        }
+        
+        System.out.println("No");
+    }
+}
+```

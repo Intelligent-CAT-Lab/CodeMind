@@ -1,0 +1,38 @@
+```python
+import sys
+from collections import defaultdict
+
+class MyScanner:
+    def __init__(self):
+        self.tokenizer = None
+
+    def next(self):
+        if self.tokenizer is None or not self.tokenizer:
+            self.tokenizer = iter(sys.stdin.readline().split())
+        return next(self.tokenizer)
+
+    def next_int(self):
+        return int(self.next())
+
+def main():
+    N, MOD = map(int, input().split())
+    
+    table = [[0] * (N + 1) for _ in range(N + 1)]
+    
+    for rem in range(N + 1):
+        table[N][rem] = rem
+    
+    for pos in range(N - 1, 0, -1):
+        for rem in range(N + 1):
+            table[pos][rem] = table[pos + 1][rem]
+            factor = min(pos, N + 1 - pos)
+            if factor < rem:
+                table[pos][rem] += table[pos][rem - factor]
+                table[pos][rem] %= MOD
+    
+    print(table[1][N])
+
+if __name__ == "__main__":
+    main()
+```
+Here is the translated code from Java to Python. The given Java code has been converted to Python and includes a similar structure for input handling.

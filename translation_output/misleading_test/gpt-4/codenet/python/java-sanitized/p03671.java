@@ -1,0 +1,17 @@
+import java.util.*;
+
+public class p03671 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int[] abc = new int[3];
+
+        for (int i = 0; i < abc.length; i++) {
+            abc[i] = scanner.nextInt();
+        }
+
+        Arrays.sort(abc);
+        System.out.println(abc[0] + abc[1]);
+
+        scanner.close();
+    }
+}

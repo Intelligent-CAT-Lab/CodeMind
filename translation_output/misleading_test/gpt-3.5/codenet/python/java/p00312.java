@@ -1,0 +1,15 @@
+```java
+import java.util.Scanner;
+
+public class DivisionSum {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int D = scanner.nextInt();
+        int L = scanner.nextInt();
+
+        int ans = D/L + (D - L*(D/L));
+        System.out.println(ans);
+    }
+}
+```

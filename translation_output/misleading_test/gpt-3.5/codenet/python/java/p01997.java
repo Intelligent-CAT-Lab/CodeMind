@@ -1,0 +1,20 @@
+```java
+import java.util.Scanner;
+
+public class SphereVolume {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        double pi = Math.PI;
+        
+        double A = scanner.nextDouble();
+        double B = scanner.nextDouble();
+        
+        double volume = (4.0/3.0) * pi * Math.pow(B, 3);
+        
+        System.out.printf("%.10f", volume);
+        
+        scanner.close();
+    }
+}
+```

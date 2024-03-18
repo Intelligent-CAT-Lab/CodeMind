@@ -1,0 +1,20 @@
+```python
+def main():
+    s = input()
+    ans = 0
+
+    def helper(n):
+        if n == 0:
+            return 1
+        return 1 << (n-1)
+
+    for dx in range(len(s)):
+        for start in range(len(s)-dx):
+            cur = int(s[start:start+dx+1])
+            ans += cur*(helper(start)*helper(len(s)-1-dx-start)
+
+    print(ans)
+
+if __name__ == "__main__":
+    main()
+```

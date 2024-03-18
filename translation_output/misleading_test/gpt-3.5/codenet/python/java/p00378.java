@@ -1,0 +1,24 @@
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int A = scanner.nextInt();
+        int B = scanner.nextInt();
+        int X = scanner.nextInt();
+        
+        int k = X / 1000;
+        int ans = k * Math.min(A, 2*B);
+        int r = X - 1000*k;
+        
+        if (0 < r && r <= 500) {
+            ans += Math.min(A, B);
+        } else if (r > 500) {
+            ans += Math.min(A, 2*B);
+        }
+        
+        System.out.println(ans);
+    }
+}
+```
