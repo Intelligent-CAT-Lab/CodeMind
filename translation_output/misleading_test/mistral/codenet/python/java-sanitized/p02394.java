@@ -1,0 +1,27 @@
+import java.util.*;
+
+public class p02394 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int[] i = new int[5];
+        Arrays.fill(i, sc.nextInt());
+
+        if (i[2] + i[4] <= i[0]) {
+            if (i[2] - i[4] >= 0) {
+                if (i[3] + i[4] <= i[1]) {
+                    if (i[3] - i[4] >= 0) {
+                        System.out.println("Yes");
+                    } else {
+                        System.out.println("No");
+                    }
+                } else {
+                    System.out.println("No");
+                }
+            } else {
+                System.out.println("No");
+            }
+        } else {
+            System.out.println("No");
+        }
+    }
+}

@@ -1,0 +1,80 @@
+<｜begin▁of▁sentence｜>You are an expert Python programmer.Your task is to write a Python function to solve a programming problem.
+
+### Instruction:
+Translate the following python code to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+5 3
+
+Expected output:
+5
+4 3
+1 2
+3 1
+4 5
+2 3
+-55
+
+```
+import sys
+def MI(): return map(int,sys.stdin.readline().rstrip().split())
+
+N,K = MI()
+
+if K > ((N-1)*(N-2))//2:
+    print(-1)
+    exit()
+
+print(N-1+((N-1)*(N-2))//2-K)
+
+for i in range(2,N+1):
+    print(1,i)
+
+a = 0
+for i in range(2,N):
+    for j in range(i+1,N+1):
+        if a < ((N-1)*(N-2))//2-K:
+            print(i,j)
+            a += 1
+
+```
+
+### Response:
+Here is the Java version of the provided Python code:
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        int K = scanner.nextInt();
+
+        if (K > ((N-1)*(N-2))/2) {
+            System.out.println(-1);
+            System.exit(0);
+        }
+
+        System.out.println(N-1+((N-1)*(N-2))/2-K);
+
+        for (int i = 2; i <= N; i++) {
+            System.out.println(1 + " " + i);
+        }
+
+        int a = 0;
+        for (int i = 2; i < N; i++) {
+            for (int j = i+1; j <= N; j++) {
+                if (a < ((N-1)*(N-2))/2-K) {
+                    System.out.println(i + " " + j);
+                    a += 1;
+                }
+            }
+        }
+    }
+}
+```
+
+This Java code does the same thing as the Python code. It reads two integers from the standard input, checks if K is greater than the maximum possible number of edges in a complete graph on N vertices, and if it is, it prints -1 and exits. Otherwise, it prints the number of edges in the graph, followed by the edges.
+<|EOT|>

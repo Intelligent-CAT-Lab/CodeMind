@@ -1,0 +1,65 @@
+<｜begin▁of▁sentence｜>You are an expert Python programmer.Your task is to write a Python function to solve a programming problem.
+
+### Instruction:
+Translate the following java code to python and enclose your solution inside ```python```.
+A sample test case is provided below:
+
+Test input:
+5 5 3 2
+
+Expected output:
+73
+3 2
+4j 2
+43
+UH2
+Yz(
+45 4
+
+```
+import java.io.*;
+import java.util.*;
+
+public class codeforces_242_A {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        PrintWriter pw = new PrintWriter(System.out);
+        int x = in.nextInt(), y = in.nextInt(), a = in.nextInt(), b = in.nextInt();
+        ArrayList<String> res = new ArrayList<>();
+        for (int i = a; i <= x; i++) {
+            for (int j = b; j <= y; j++) {
+                if (i <= j) continue;
+                res.add(i + " " + j);
+            }
+        }
+        pw.println(res.size());
+        for (String str : res) pw.println(str);
+        pw.close();
+    }
+
+    static void debug(Object... obj) {
+        System.err.println(Arrays.deepToString(obj));
+    }
+}
+```
+
+### Response:
+```python
+import sys
+
+def main():
+    x, y, a, b = map(int, sys.stdin.readline().split())
+    res = []
+    for i in range(a, x + 1):
+        for j in range(b, y + 1):
+            if i <= j: continue
+            res.append(str(i) + " " + str(j))
+    print(len(res))
+    for r in res: print(r)
+
+if __name__ == "__main__":
+    main()
+```
+
+This Python code reads the input from the standard input, and then it iterates over the range of `a` to `x` and `b` to `y` to find all pairs `(i, j)` where `i` is not less than or equal to `j`. It then prints the size of the result list and all elements of the result list.
+<|EOT|>

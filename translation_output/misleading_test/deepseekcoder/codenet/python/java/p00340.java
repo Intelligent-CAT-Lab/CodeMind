@@ -1,0 +1,48 @@
+<｜begin▁of▁sentence｜>You are an expert Python programmer.Your task is to write a Python function to solve a programming problem.
+
+### Instruction:
+Translate the following python code to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+1 1 3 4
+
+Expected output:
+n
+
+```
+num = list(map(int,input().split()))
+num.sort()
+if num[0] == num[1] and num[2] ==num[3]:
+    print("yes")
+else :
+    print("no")
+
+```
+
+### Response:
+Here is the Java version of the provided Python code:
+
+```java
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int[] num = new int[4];
+        for (int i = 0; i < 4; i++) {
+            num[i] = scanner.nextInt();
+        }
+        Arrays.sort(num);
+        if (num[0] == num[1] && num[2] == num[3]) {
+            System.out.println("yes");
+        } else {
+            System.out.println("no");
+        }
+    }
+}
+```
+
+This Java code does the same thing as the Python code. It reads four integers from the input, sorts them, and then checks if the first two are equal and the last two are equal. If they are, it prints "yes"; otherwise, it prints "no".
+<|EOT|>
