@@ -99,7 +99,11 @@ def main(args):
         base_name = f.split('.')[0]
 
         test_input = open(f'{test_folder}/{base_name}_in.txt', 'r').read()
-        test_output = open(f'{test_folder}/{base_name}_out.txt', 'r').read()
+        test_output = ''
+        if args.use_test:
+            test_output = open(f'{test_folder}/{base_name}_out.txt', 'r').read()
+        elif args.use_misleading_test:
+            test_output = open(f'{test_folder}/{base_name}_misleading_out.txt', 'r').read()
 
         if len(test_input) > 500 or len(test_output) > 500:
             continue
@@ -110,38 +114,38 @@ def main(args):
             prompt = fin.readlines()
 
             if args.model == 'codellama':
-                if args.use_test:
+                if args.use_test or args.use_misleading_test:
                     prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n"
                 else:
                     prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n"
                 prompt = f"[INST] <<SYS>>\nYou are an expert {args.target_lang} programmer and assistant\n<</SYS>>\n\n{prompt}[/INST]\n"
 
             elif args.model == 'magicoder':
-                if args.use_test:
+                if args.use_test or args.use_misleading_test:
                     prompt = f"You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.\n\n@@ Instruction\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n\n@@ Response\n"
                 else:
                     prompt = f"You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.\n\n@@ Instruction\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n@@ Response\n"
 
             elif args.model == 'wizardcoder':
-                if args.use_test:
+                if args.use_test or args.use_misleading_test:
                     prompt = f"Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
                 else:
                     prompt = f"Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
 
             elif args.model == 'deepseekcoder':
-                if args.use_test:
+                if args.use_test or args.use_misleading_test:
                     prompt = f"You are an expert Python programmer.Your task is to write a Python function to solve a programming problem.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
                 else:
                     prompt = f"You are an expert Python programmer.Your task is to write a Python function to solve a programming problem.\n\n### Instruction:\nTranslate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n\n### Response:\n"
 
             elif args.model == 'mistral':
-                if args.use_test:
+                if args.use_test or args.use_misleading_test:
                     prompt = f"[INST] Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n[/INST]\n"
                 else:
                     prompt = f"[INST] Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n[/INST]\n"
 
             elif args.model in ['starcoder', 'starcoder2']:
-                if args.use_test:
+                if args.use_test or args.use_misleading_test:
                     prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + f"\n```\n\n{args.target_lang} code:"
                 else:
                     prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + f"\n```\n\n{args.target_lang} code:"
@@ -150,7 +154,7 @@ def main(args):
                 prompt = prefix_token + prompt + suffix_token
 
             elif args.model in ['gpt-4', 'gpt-3.5']:
-                if args.use_test:
+                if args.use_test or args.use_misleading_test:
                     prompt = "Translate the following code from " + args.source_lang + " to " + args.target_lang + " and enclose your solution inside ```" + args.target_lang.lower() + "```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n"
                 else:
                     prompt = "Translate the following code from " + args.source_lang + " to " + args.target_lang + " and enclose your solution inside ```" + args.target_lang.lower() + "```:\n```\n" + "".join(prompt) + "\n```\n"
