@@ -1,0 +1,62 @@
+import java.util.*;
+import java.io.*;
+
+public class p01542 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            String s = sc.next();
+            if (s.equals("000")) break;
+            int[] dp = new int[1024];
+            dp[0] = 0;
+            dp[1] = 1;
+            dp[2] = 2;
+            dp[3] = 3;
+            dp[4] = 4;
+            dp[5] = 5;
+            dp[6] = 6;
+            dp[7] = 7;
+            dp[8] = 8;
+            dp[9] = 9;
+            dp[10] = 10;
+            dp[11] = 11;
+            dp[12] = 12;
+            dp[13] = 13;
+            dp[14] = 14;
+            dp[15] = 15;
+            dp[16] = 16;
+            dp[17] = 17;
+            dp[18] = 18;
+            dp[19] = 19;
+            dp[20] = 20;
+            dp[21] = 21;
+            dp[22] = 22;
+            dp[23] = 23;
+            dp[24] = 24;
+            dp[25] = 25;
+            dp[26] = 26;
+            dp[27] = 27;
+            dp[28] = 28;
+            dp[29] = 29;
+            dp[30] = 30;
+            dp[31] = 31;
+            dp[32] = 32;
+            dp[33] = 33;
+            dp[34] = 34;
+            dp[35] = 35;
+            dp[36] = 36;
+            dp[37] = 37;
+            dp[38] = 38;
+            dp[39] = 39;
+            dp[40] = 40;
+            dp[41] = 41;
+            dp[42] = 42;
+            dp[43] = 43;
+            dp[44] = 44;
+            dp[45] = 45;
+            dp[46] = 46;
+            dp[47] = 47;
+            dp[48] = 48;
+            dp[49] = 49;
+            dp[50] = 50;
+            dp[5

@@ -1,0 +1,32 @@
+import java.util.*;
+
+public class p02467 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        System.out.print(n + ": ");
+        System.out.println(Arrays.toString(prime_factorization(n)));
+    }
+
+    public static int[] prime_factorization(int n) {
+        if (n < 2) {
+            return new int[]{n};
+        }
+
+        List<Integer> res = new ArrayList<>();
+        int lim = (int) Math.sqrt(n);
+
+        for (int p = 2; p <= lim; p++) {
+            while (n % p == 0) {
+                res.add(p);
+                n /= p;
+            }
+        }
+
+        if (n > 1) {
+            res.add(n);
+        }
+
+        return res.stream().mapToInt(i -> i).toArray();
+    }
+}

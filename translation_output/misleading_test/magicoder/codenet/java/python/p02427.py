@@ -1,0 +1,66 @@
+<｜begin▁of▁sentence｜>You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.
+
+@@ Instruction
+Translate the following java code to python and enclose your solution inside ```python```.
+A sample test case is provided below:
+
+Test input:
+4
+
+Expected output:
+0:
+1: 0
+2: 1
+3: 0 1
+4: 2
+5: 0 2
+6: 1 2
+7: 0 1 2
+8: 3
+9: 0 3
+10: 1 3
+11: 0 1 3
+12: 2 3
+14: 1 2 3
+15: 0 1 2 3
+
+```
+import java.util.Scanner;
+
+public class p02427 {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+
+		for(int i = 0; i < Math.pow(2, n); i++) {
+			int temp = i;
+			System.out.print(i + ":");
+			for(int j = 0; temp > 0; j++) {
+				if(temp % 2 == 1) System.out.print(" " + j);
+				temp /= 2;
+			}
+			System.out.println();
+		}
+	}
+}
+
+```
+
+@@ Response
+Here is the equivalent Python code:
+
+```python
+n = int(input())
+
+for i in range(2**n):
+    temp = i
+    print(i, end=":")
+    for j in range(n):
+        if temp % 2 == 1:
+            print(" " + str(j), end="")
+        temp //= 2
+    print()
+```
+
+This Python code does the same thing as the Java code. It reads an integer from the user, then iterates over all numbers from 0 to 2^n (inclusive). For each number, it prints the number itself, then iterates over all bits in the number (from 0 to n-1). If the bit is set (i.e., the number is odd), it prints the bit number. Finally, it prints a newline character to move to the next line.<｜end▁of▁sentence｜>
