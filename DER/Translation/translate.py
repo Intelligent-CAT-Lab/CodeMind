@@ -27,7 +27,7 @@ def main(args):
         test_type = 'misleading_tests'
 
     in_folder = f'translation_dataset/{args.dataset}/{args.source_lang}/code'
-    test_folder = f'translation_dataset/{args.dataset}/{args.source_lang}/{test_type}'
+    test_folder = f'translation_dataset/{args.dataset}/{args.source_lang}/tests'
     out_folder = f'translation_output/{experiment_type}/{args.model}/{args.dataset}/{args.source_lang}/{args.target_lang}'
 
     in_files = os.listdir(in_folder)
