@@ -1,0 +1,21 @@
+import java.util.Scanner;
+
+public class p03456 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String a = sc.next();
+        String b = sc.next();
+        int n = Integer.parseInt(a + b);
+        int sqrtn = (int) Math.sqrt(n);
+        int i = 1;
+        for (i = 1; i <= sqrtn; i++) {
+            if (i * i == n) {
+                System.out.println("Yes");
+                break;
+            }
+        }
+        if (i > sqrtn) {
+            System.out.println("No");
+        }
+    }
+}
