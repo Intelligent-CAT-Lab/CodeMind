@@ -52,6 +52,12 @@ def main(args):
                     
                     with open(f'{translation_dataset}/avatar/{programming_lang}/tests/{problem_id}_out.txt', 'w') as fw:
                         fw.write(file_content)
+                    
+                    with open(f'{main_dir}/{source_lang}/{problem_id}/misleading_output.txt', 'r') as f:
+                        file_content = f.read()
+                    
+                    with open(f'{translation_dataset}/avatar/{programming_lang}/tests/{problem_id}_misleading_out.txt', 'w') as fw:
+                        fw.write(file_content)
 
                 if programming_lang == 'python':
                     with open(f'{main_dir}/{source_lang}/{problem_id}/main.py', 'r') as f:
@@ -70,6 +76,12 @@ def main(args):
                         file_content = f.read()
                     
                     with open(f'{translation_dataset}/avatar/{programming_lang}/tests/{problem_id}_out.txt', 'w') as fw:
+                        fw.write(file_content)
+                    
+                    with open(f'{main_dir}/{source_lang}/{problem_id}/misleading_output.txt', 'r') as f:
+                        file_content = f.read()
+                    
+                    with open(f'{translation_dataset}/avatar/{programming_lang}/tests/{problem_id}_misleading_out.txt', 'w') as fw:
                         fw.write(file_content)
 
     elif args.dataset == 'codenet':
@@ -114,6 +126,12 @@ def main(args):
                     
                     with open(f'{translation_dataset}/codenet/{programming_lang}/tests/{problem_id}_out.txt', 'w') as fw:
                         fw.write(file_content)
+                    
+                    with open(f'{main_dir}/{source_lang}/{problem_id}/misleading_output.txt', 'r') as f:
+                        file_content = f.read()
+                    
+                    with open(f'{translation_dataset}/codenet/{programming_lang}/tests/{problem_id}_misleading_out.txt', 'w') as fw:
+                        fw.write(file_content)
 
                 if programming_lang == 'python':
                     with open(f'{main_dir}/{source_lang}/{problem_id}/main.py', 'r') as f:
@@ -132,6 +150,12 @@ def main(args):
                         file_content = f.read()
                     
                     with open(f'{translation_dataset}/codenet/{programming_lang}/tests/{problem_id}_out.txt', 'w') as fw:
+                        fw.write(file_content)
+                    
+                    with open(f'{main_dir}/{source_lang}/{problem_id}/misleading_output.txt', 'r') as f:
+                        file_content = f.read()
+                    
+                    with open(f'{translation_dataset}/codenet/{programming_lang}/tests/{problem_id}_misleading_out.txt', 'w') as fw:
                         fw.write(file_content)
 
 
