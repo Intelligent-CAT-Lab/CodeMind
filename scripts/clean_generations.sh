@@ -1,5 +1,6 @@
 
 model=$1
+test_type=$2
 
 for dataset in avatar codenet; do
     for src_lang in java python; do
@@ -8,7 +9,7 @@ for dataset in avatar codenet; do
                 continue
             fi
             echo "Cleaning $dataset from $src_lang to $tgt_lang"
-            python3 DER/Translation/clean_generations.py --samples=translation_output/$model/$dataset/${src_lang}/${tgt_lang} \
+            python3 DER/Translation/clean_generations.py --samples=translation_output/${test_type}/$model/$dataset/${src_lang}/${tgt_lang} \
                                                         --source_lang=${src_lang} \
                                                         --target_lang=${tgt_lang} \
                                                         --remove_prompt \
