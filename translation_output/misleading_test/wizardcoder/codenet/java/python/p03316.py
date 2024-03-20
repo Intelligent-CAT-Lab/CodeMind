@@ -1,0 +1,76 @@
+Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+### Instruction:
+Translate the following java code to python and enclose your solution inside ```python```.
+A sample test case is provided below:
+
+Test input:
+12
+
+Expected output:
+[Yes
+
+```
+import java.util.Scanner;
+
+public class p03316 {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		//List<String> list= new ArrayList<String>(Arrays.asList(s.split("")));
+		//List<Integer> list=new ArrayList<Integer>();
+		//Integer[] array = new Integer[m];
+		int n = sc.nextInt();
+		int a =sumDigits(n);
+		if(n%a==0)
+			System.out.println("Yes");
+		else
+			System.out.println("No");
+	}
+
+	private static int sumDigits(int n) {
+		int sum = 0;
+		//èªç¶æ°ã®åæ¡ã®åãè¨ç®
+		while (n!= 0) {
+			//sumDigitsã¯åç¬ã§ã¯loopããªãã®ã§ãwhile loopãä½¿ãã
+			sum += n % 10;
+			//åå³ç«¯ã®æ¡ãå¾ãããã«%10ãå©ç¨ããã
+			n /= 10;
+			//åå³ç«¯ã®æ¡ãåãé¤ãããã«n/=10ãå©ç¨ããã
+		}
+		return sum;//åè¨ãè¿ã
+	}
+}
+```
+
+### Response:
+```python
+import java.util.Scanner;
+
+public class p03316 {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		//List<String> list= new ArrayList<String>(Arrays.asList(s.split("")));
+		//List<Integer> list=new ArrayList<Integer>();
+		//Integer[] array = new Integer[m];
+		int n = sc.nextInt();
+		int a =sumDigits(n);
+		if(n%a==0)
+			System.out.println("Yes");
+		else
+			System.out.println("No");
+	}
+
+	private static int sumDigits(int n) {
+		int sum = 0;
+		//èªç¶æ°ã®åæ¡ã®åãè¨ç®
+		while (n!= 0) {
+			//sumDigitsã¯åç¬ã§ã¯loopããªãã®ã§ãwhile loopãä½¿ãã
+			sum += n % 10;
+			//åå³ç«¯ã®æ¡ãå¾ãããã«%10ãå©ç¨ããã
+			n /= 10;
+			//åå³ç«¯ã®æ¡ãåãé¤ãããã«n/=10ãå©ç¨ããã
+		}
+		return sum;//åè¨ãè¿ã
+	}
+}
+```<|endoftext|>
