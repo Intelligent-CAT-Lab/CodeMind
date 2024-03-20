@@ -8,7 +8,7 @@ import argparse
 
 def main(args):
     print('testing translations')
-    translation_dir = f"translation_output/{args.model}/{args.dataset}/{args.source_lang}/{args.target_lang}-sanitized"
+    translation_dir = f"translation_output/{args.test_type}/{args.model}/{args.dataset}/{args.source_lang}/{args.target_lang}-sanitized"
     test_dir = f"translation_dataset/{args.dataset}/{args.source_lang}/tests"
     os.makedirs(args.report_dir, exist_ok=True)
     files = [f for f in os.listdir(translation_dir) if f != '.DS_Store']
@@ -34,7 +34,11 @@ def main(args):
 
                 with open(test_dir+"/"+ files[i].split(".")[0]+"_in.txt" , 'r') as f:
                     f_in = f.read()
-                f_out = open(test_dir+"/"+ files[i].split(".")[0]+"_out.txt", "r").read()
+                
+                if args.test_type == "misleading_test":
+                    f_out = open(test_dir+"/"+ files[i].split(".")[0]+"_misleading_out.txt", "r").read()
+                else:    
+                    f_out = open(test_dir+"/"+ files[i].split(".")[0]+"_out.txt", "r").read()
 
                 p = Popen(['python3', translation_dir+"/"+ files[i]], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -70,7 +74,11 @@ def main(args):
 
                 with open(test_dir+"/"+ files[i].split(".")[0]+"_in.txt" , 'r') as f:
                     f_in = f.read()
-                f_out = open(test_dir+"/"+ files[i].split(".")[0]+"_out.txt", "r").read()
+                
+                if args.test_type == "misleading_test":
+                    f_out = open(test_dir+"/"+ files[i].split(".")[0]+"_misleading_out.txt", "r").read()
+                else:
+                    f_out = open(test_dir+"/"+ files[i].split(".")[0]+"_out.txt", "r").read()
                 p = Popen(['java', files[i].split(".")[0]], cwd=translation_dir, stdin=PIPE, stdout=PIPE, stderr=PIPE)    
 
                 try:
@@ -109,7 +117,7 @@ def main(args):
     infinite_loop = list(set(infinite_loop))
     test_passed = list(set(test_passed))
 
-    txt_fp = Path(args.report_dir).joinpath(f"{args.model}_{args.dataset}_compileReport_from_"+str(args.source_lang)+"_to_"+str(args.target_lang)+".txt")
+    txt_fp = Path(args.report_dir).joinpath(f"{args.model}_{args.dataset}_compileReport_from_"+str(args.source_lang)+"_to_"+str(args.target_lang)+f"_{args.test_type}.txt")
     with open(txt_fp, "w", encoding="utf-8") as report:
         report.writelines("Total Instances: {}\n\n".format(len(test_passed)+len(compile_failed)+len(runtime_failed)+len(test_failed)+len(infinite_loop)))
         report.writelines("Total Correct: {}\n".format(len(test_passed)))
@@ -157,7 +165,7 @@ def main(args):
         df.loc[index] = list_row
         index+=1
 
-    excel_fp = Path(args.report_dir).joinpath(f"{args.model}_{args.dataset}_compileReport_from_"+str(args.source_lang)+"_to_"+str(args.target_lang)+".xlsx")
+    excel_fp = Path(args.report_dir).joinpath(f"{args.model}_{args.dataset}_compileReport_from_"+str(args.source_lang)+"_to_"+str(args.target_lang)+f"_{args.test_type}.xlsx")
     df.to_excel(excel_fp, sheet_name='Sheet1')
 
 
@@ -169,6 +177,7 @@ if __name__ == "__main__":
     parser.add_argument('--target_lang', help='target language to use for code translation. should be one of [python,java]', required=True, type=str)
     parser.add_argument('--model', help='model to use for code translation.', required=True, type=str)
     parser.add_argument('--report_dir', help='path to directory to store report', required=True, type=str)
+    parser.add_argument('--test_type', help='test_type', required=True, type=str)
     args = parser.parse_args()
 
     main(args)
