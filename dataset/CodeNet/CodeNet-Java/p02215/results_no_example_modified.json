@@ -1,8 +1,0 @@
-{
-    "0": {
-        "prompt": "Consider the following code:\nimport java.util.Arrays;\nimport java.util.Scanner;\n\npublic class Main {\n\tstatic Scanner sc = new Scanner(System.in);\n\tstatic final long MOD = 998244353;\n\n\tpublic static void main(String[] args) {\n\t\tint N = sc.nextInt();\n\t\tint X = sc.nextInt();\n\t\tlong[][][] dp = new long[2][512][X + 1];\n\t\tfor (int i = 0; i <= X; i++) {\n\t\t\tdp[0][i][i] = 1;\n\t\t}\n\t\tint t = 1;\n\t\tfor (int i = 1; i < N; i++, t = 1 - t) {\n\t\t\tfor (int j = 0; j < 512; j++) {\n\t\t\t\tArrays.fill(dp[t][j], 0);\n\t\t\t}\n\t\t\tfor (int j = 0; j < 512; j++) {\n\t\t\t\tlong sum = 0;\n\t\t\t\tfor (int k = 0; k <= X; k++) {\n\t\t\t\t\tsum += dp[1 - t][j][k];\n\t\t\t\t\tdp[t][j ^ k][k] += sum;\n\t\t\t\t\tdp[t][j ^ k][k] %= MOD;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\tlong ans = 0;\n\t\tfor (int i = 0; i <= X; i++) {\n\t\t\tans += dp[1 - t][X][i];\n\t\t}\n\t\tSystem.out.println(ans % MOD);\n\t}\n}\n\n\nWhat would be the output of the code execution given the following input:\n2 3\n \nPrint the answer and end your response with \"END-OF-OUTPUT\":",
-        "status": "NAN",
-        "gorund_truth": "2\n",
-        "predict": "The output of the code execution given the input \"2 3\" would be:\n8\nEND-OF-OUTPUT"
-    }
-}

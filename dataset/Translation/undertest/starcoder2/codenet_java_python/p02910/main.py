@@ -1,0 +1,13 @@
+N = input()
+
+for i in range(len(N)):
+    if i % 2 == 0:
+        if N[i] == 'L':
+            print('No')
+            break
+    else:
+        if N[i] == 'R':
+            print('No')
+            break
+    if i == len(N) - 1:
+        print('Yes')

@@ -1,8 +1,0 @@
-{
-    "0": {
-        "prompt": "Consider the following code:\nimport java.util.Arrays;\nimport java.util.PriorityQueue;\nimport java.util.Scanner;\n\nclass Main{\n    public static void main(String[] args){\n        Scanner scan = new Scanner(System.in);\n        int K = scan.nextInt();\n        int[] dp = new int[K];\n        Arrays.fill(dp,Integer.MAX_VALUE);\n\n        class Node{\n            int to,cost;\n            Node(int to,int cost){\n                this.to=to;\n                this.cost=cost;\n            }\n        }\n\n        PriorityQueue<Node> que = new PriorityQueue<>((a,b) -> a.cost-b.cost);\n        for(int i=1;i<Math.min(10,K);++i){\n            dp[i]=i;\n            que.add(new Node(i,i));\n        }\n        while(!que.isEmpty()){\n            Node node = que.poll();\n            int v = node.to;\n            int c = node.cost;\n            if(c > dp[v])continue;\n            for(int i=0;i<10;++i){\n                int nextv = (v*10+i)%K;\n                int nextc = c+i;\n                if(dp[nextv] > nextc){\n                    dp[nextv]=nextc;\n                    que.add(new Node(nextv,nextc));\n                }\n            }\n        }\n        System.out.println(dp[0]);\n    }\n}\nWhat would be the output of the code execution given the following input:\n6\n \nPrint the answer and end your response with \"END-OF-OUTPUT\":",
-        "status": "NAN",
-        "gorund_truth": "3\n",
-        "predict": "The output of the code execution given the input \"6\" would be:\n3\nEND-OF-OUTPUT"
-    }
-}

@@ -1,7 +1,0 @@
-{
-    "0": {
-        "prompt": "Consider the following code:\nimport java.util.*;\n\nclass Main {\n    static long powerMod(long x, long exponent) {\n\tlong prod = 1;\n\tfor (int i = 63; i >= 0; --i) {\n\t    prod = (prod * prod) % MOD;\n\t    if ((exponent & 1L << i) != 0) {\n\t\tprod = (prod * x) % MOD;\n\t    }\n\t}\n\treturn prod;\n    }\n    static int f(int n, int k) {\n        int t=0;\n        for(int i=n;i>=1;--i){\n            t+=(t+i)/i;\n        }\n        return t;\n    }\n    static final long MOD=1000000007;\n    public static void main(String[] args) {\n        Scanner scan = new Scanner(System.in);\n        int n=scan.nextInt();\n        int k=scan.nextInt();\n        int x=0;\n        int l=f(n,k);\n        long[][]dp=new long[n+1][l+1];\n        for(int i=1;i<=n;++i){\n            long m=powerMod(k+1,i-1);\n            for(int u=0;u<=l;++u){\n                long t=0;\n                for(int j=0;j<=Math.min(i,k);++j)\n                    if(u+(u+j)/i<=l){\n                        t+=dp[i-1][u+(u+j)/i];\n                        t+=((u+j)%i)*m%MOD;\n                        t%=MOD;\n                    }\n                for(int j=Math.min(i,k)+1;j<=k;++j)\n                    t=(t+dp[i-1][u]+(j+u)*m)%MOD;\n                dp[i][u]=t;\n            }\n        }\n        System.out.println(dp[n][0]);\n    }\n}\n\nWhat would be the output of the code execution given the following input:\n2 2\n \nPrint the answer and end your response with \"END-OF-OUTPUT\":",
-        "status": "NAN",
-        "gorund_truth": "10\n"
-    }
-}

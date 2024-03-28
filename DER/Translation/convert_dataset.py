@@ -19,8 +19,10 @@ def main(model, dataset, src, tgt):
             col_idx += 1
         if code_status == "Correct":
             correct_idx.append(code_id)
-    root_write = f"/home/changshu/CodeMind/dataset/Translation/{model}/{dataset}_{src}_{tgt}"
-    root_read = f"/home/changshu/CodeMind/translation_output/{model}/{dataset}/{src}/{tgt}-sanitized"
+        else:
+            correct_idx.append(code_id)
+    root_write = f"/home/changshu/CodeMind/dataset/Translation/undertest/{model}/{dataset}_{src}_{tgt}"
+    root_read = f"/home/changshu/CodeMind/translation_output/w_test/{model}/{dataset}/{src}/{tgt}-sanitized"
     if dataset == "codenet" and src == "java":
         root_input_output = "/home/changshu/CodeMind/dataset/CodeNet/CodeNet-Java"
     elif dataset == "codenet" and src == "python":
@@ -29,12 +31,19 @@ def main(model, dataset, src, tgt):
         root_input_output = "/home/changshu/CodeMind/dataset/Avatar/Avatar-python"
     elif dataset == "avatar" and src == "java":
         root_input_output = "/home/changshu/CodeMind/dataset/Avatar/Avatar-java"   
+    # print(correct_idx)
     for d in correct_idx:
+        if d == "Filename":
+            continue
         code_index = d.split(".")[0]
         folder_wr = os.path.join(root_write,code_index)
+        src_code = os.path.join(root_read, d)
+        if not os.path.exists(src_code):
+            print(src_code)
+            continue
         if not os.path.exists(folder_wr):
             os.makedirs(folder_wr)
-        src_code = os.path.join(root_read, d)
+        
         if tgt == "python":
             tgt_code = os.path.join(folder_wr, "main.py")
         if tgt == "java":
@@ -50,7 +59,11 @@ def main(model, dataset, src, tgt):
         shutil.copy(src_input, tgt_input)
         shutil.copy(src_output, tgt_output)
         
-    
 
 if __name__ == "__main__":
-    main('deepseekcoder', 'avatar', 'java', 'python')
+    model_list = ["codellama", "deepseekcoder", "gpt-3.5", "gpt-4", "magicoder", "mistral", "starcoder", "starcoder2", "wizardcoder"]
+    for m in model_list:
+        main(m, 'avatar', 'java', 'python')
+        main(m, 'avatar', 'python', 'java')
+        main(m, 'codenet', 'java', 'python')
+        main(m, 'codenet', 'python', 'java')

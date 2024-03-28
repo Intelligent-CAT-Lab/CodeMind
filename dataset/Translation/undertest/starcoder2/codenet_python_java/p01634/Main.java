@@ -1,0 +1,27 @@
+import java.util.Scanner;
+
+public class p01634 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String a = sc.nextLine();
+        int m = 0;
+        int n = 0;
+        int l = 0;
+        for (int i = 0; i < a.length(); i++) {
+            if (a.charAt(i) >= 48 && a.charAt(i) <= 57) {
+                m++;
+            }
+            if (a.charAt(i) >= 97 && a.charAt(i) <= 122) {
+                n++;
+            }
+            if (a.charAt(i) >= 65 && a.charAt(i) <= 90) {
+                l++;
+            }
+        }
+        if (a.length() < 6 || m == 0 || n == 0 || l == 0) {
+            System.out.println("INVALID");
+        } else {
+            System.out.println("VALID");
+        }
+    }
+}

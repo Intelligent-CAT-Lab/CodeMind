@@ -1,0 +1,7 @@
+class main:
+    def main():
+        N, M = map(int, input().split())
+        print(abs((N-2) * (M-2)))
+    
+    if __name__ == "__main__":
+        main()

@@ -1,8 +1,0 @@
-{
-    "0": {
-        "prompt": "Consider the following code:\nimport java.util.*;\n\npublic class Main {\n\n    private static final long MOD = 1000000007;\n\n    public static void main(String[] args) {\n        final Scanner sc = new Scanner(System.in);\n\n        final int n = sc.nextInt();\n\n        final int[] ex = new int[1001];\n        for (int i = 2; i <= n; i++) {\n            final List<Map<Integer, Integer>> pfs = primeFactorize(i);\n            for (Map<Integer, Integer> pf : pfs) {\n                for (Map.Entry<Integer, Integer> e : pf.entrySet()) {\n                    ex[e.getKey()] += e.getValue();\n                }\n            }\n        }\n\n        long ans = 1;\n        for (int i = 2; i <= n; i++) {\n            ans *= ex[i] + 1;\n            ans %= MOD;\n        }\n\n        System.out.println(ans);\n    }\n\n    private static List<Map<Integer, Integer>> primeFactorize(int n) {\n        final List<Map<Integer, Integer>> res = new ArrayList<>();\n        for (int a = 2; a*a <= n; a++) {\n            if (n % a != 0) {\n                continue;\n            }\n            int ex = 0;\n            while (n % a == 0) {\n                ex++;\n                n /= a;\n            }\n            res.add(Collections.singletonMap(a, ex));\n        }\n        if (n != 1) {\n            res.add(Collections.singletonMap(n, 1));\n        }\n        return res;\n    }\n}\nGicen the following input:\n3\nPrint only the output of the code, ends with \"END-OF-OUTPUT\":",
-        "status": "NAN",
-        "gorund_truth": "4\n",
-        "predict": "4\nEND-OF-OUTPUT"
-    }
-}

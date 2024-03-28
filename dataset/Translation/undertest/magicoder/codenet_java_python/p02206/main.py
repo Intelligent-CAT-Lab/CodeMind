@@ -1,0 +1,25 @@
+import sys
+
+def solve(n, k):
+    left = 1
+    right = k + 1
+    while right - left > 1:
+        m = (left + right) // 2
+        x = m
+        total = 0
+        for _ in range(n):
+            if x > 0 and total <= k:
+                total += x
+                x //= 2
+        if total <= k:
+            left = m
+        else:
+            right = m
+    return left
+
+def main():
+    n, k = map(int, sys.stdin.readline().split())
+    print(solve(n, k))
+
+if __name__ == "__main__":
+    main()

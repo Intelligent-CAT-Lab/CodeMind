@@ -1,7 +1,0 @@
-{
-    "0": {
-        "prompt": "Consider the following code:\nimport java.util.*;\n\npublic class Main {\n  public static void main(String[] args) {\n    Scanner sc = new Scanner(System.in);\n    long MOD = (long)Math.pow(10, 9) + 7;\n    long N = sc.nextLong();\n    int[] n = new int[61];\n    for(int i = 0; i < 61; i++) {\n      n[i] = (int)(N % 2);\n      N /= 2;\n    }\n    long[][] dp = new long[61][3];\n    if(n[60] == 0) {\n      dp[60][0] = 1;\n    } else {\n      dp[60][0] = 1;\n      dp[60][1] = 1; \n    }\n    for(int i = 59; i >= 0; i--) {\n      dp[i][2] = (3 * dp[i + 1][2]) % MOD;\n      for(int j = 0; j < 3; j++) {\n        int c = 2 + n[i] - j;\n        if(c >= 2) {\n          dp[i][2] = (dp[i][2] + dp[i + 1][1]) % MOD;\n        } else {\n          dp[i][c] = (dp[i][c] + dp[i + 1][1]) % MOD;\n        }\n      }\n      for(int j = 0; j < 3; j++) {\n        int c = n[i] - j;\n        if(c < 0) {\n        } else {\n          dp[i][c] = (dp[i][c] + dp[i + 1][0]) % MOD;\n        }\n      }\n    }\n    long ans = dp[0][0]; \n    ans = (ans + dp[0][1]) % MOD;\n    ans = (ans + dp[0][2]) % MOD;\n    System.out.println(ans);\n  }\n}Gicen the following input:\n3\nPrint only the output of the code, ends with \"END-OF-OUTPUT\":",
-        "status": "NAN",
-        "gorund_truth": "5\n"
-    }
-}

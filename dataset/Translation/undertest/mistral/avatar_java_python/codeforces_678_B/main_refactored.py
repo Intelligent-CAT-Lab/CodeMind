@@ -1,0 +1,23 @@
+class main:
+    import sys
+    
+    def check_leap(y):
+        return y % 400 == 0 or (y % 4 == 0 and y % 100 != 0)
+    
+    y = int(sys.stdin.readline())
+    leap = check_leap(y)
+    sum = 0
+    mod = 0
+    
+    for i in range(y+1, 1000000000):
+        if check_leap(i):
+            sum += 366
+        else:
+            sum += 365
+        
+        if sum % 7 == 0:
+            if ((check_leap(i) and leap) or (!check_leap(i) and not leap)):
+                print(i)
+                sys.exit(0)
+            else:
+                continue

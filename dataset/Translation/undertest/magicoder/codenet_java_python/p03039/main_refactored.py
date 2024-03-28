@@ -1,0 +1,2 @@
+class main:
+    import sys

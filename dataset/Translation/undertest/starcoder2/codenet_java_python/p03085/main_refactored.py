@@ -1,0 +1,13 @@
+class main:
+    import sys
+    
+    helix = sys.stdin.readline().strip()
+    
+    if helix == "A":
+        print("T")
+    elif helix == "T":
+        print("A")
+    elif helix == "C":
+        print("G")
+    elif helix == "G":
+        print("C")

@@ -1,0 +1,10 @@
+class main:
+    n = int(input())
+    print(n, end=":")
+    for i in range(2, int(n**0.5)+1):
+        if n % i == 0:
+            n = n // i
+            print(i, end=" ")
+        else:
+            i += 1
+    print(n)
