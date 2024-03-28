@@ -1,5 +1,5 @@
 <div align='center'>
-<img src="https://github.com/CodeMindICML/CodeMindICML/blob/main/CodeMind-Logo.jpg" width="25%" height="25%" />
+<img src="https://github.com/Intelligent-CAT-Lab/CodeMind/blob/main/CodeMind-Logo.jpg" width="25%" height="25%" />
   <br>
 </div>
 
