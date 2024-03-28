@@ -1,0 +1,63 @@
+<｜begin▁of▁sentence｜>You are an expert Python programmer.Your task is to write a Python function to solve a programming problem.
+
+### Instruction:
+Translate the following python code to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+..
+
+Expected output:
+76
+
+```
+s = input ( )
+result = " "
+i = 0
+while i < len ( s ) :
+    if s [ i ] == " . " :
+        result += '0'
+    else :
+        i += 1
+        if s [ i ] == " . " :
+            result += '1'
+        else :
+            result += '2'
+    i += 1
+print ( result )
+
+
+```
+
+### Response:
+Here is the Java version of the provided Python code:
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String s = scanner.nextLine();
+        StringBuilder result = new StringBuilder();
+        int i = 0;
+        while (i < s.length()) {
+            if (s.charAt(i) == '.') {
+                result.append('0');
+            } else {
+                i++;
+                if (s.charAt(i) == '.') {
+                    result.append('1');
+                } else {
+                    result.append('2');
+                }
+            }
+            i++;
+        }
+        System.out.println(result);
+    }
+}
+```
+
+This Java code does the same thing as the Python code. It reads a string from the input, then iterates over the string character by character. If the character is a dot, it appends a '0' to the result string. If the character is not a dot, it checks the next character. If the next character is a dot, it appends a '1' to the result string, otherwise it appends a '2'. The result string is then printed out.
+<|EOT|>

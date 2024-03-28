@@ -1,0 +1,21 @@
+import sys
+
+def main():
+    n = int(sys.stdin.readline())
+    s = ""
+    
+    while n > 0:
+        x = n % 2
+        n //= 2
+        s += str(x) + " "
+    
+    ans = 0
+    
+    for i in range(len(s)):
+        if s[i] == '1':
+            ans += 1
+    
+    print(ans)
+
+if __name__ == "__main__":
+    main()

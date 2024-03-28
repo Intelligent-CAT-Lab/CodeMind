@@ -1,0 +1,53 @@
+<｜begin▁of▁sentence｜>You are an expert Python programmer.Your task is to write a Python function to solve a programming problem.
+
+### Instruction:
+Translate the following python code to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+2
+
+Expected output:
+14
+
+
+```
+g = [None]*50
+h = [None]*50
+h[1] = 3
+g[1] = 6
+X= int(input())
+for i in range(2, X+1):
+    h[i] = g[i-1] + 1
+    g[i] = 2*h[i]
+print(g[X])
+
+```
+
+### Response:
+Here is the Java version of the provided Python code:
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int X = scanner.nextInt();
+        long[] g = new long[50];
+        long[] h = new long[50];
+        h[1] = 3;
+        g[1] = 6;
+        for (int i = 2; i <= X; i++) {
+            h[i] = g[i - 1] + 1;
+            g[i] = 2 * h[i];
+        }
+        System.out.println(g[X]);
+    }
+}
+```
+
+This Java code does the same thing as the Python code. It reads an integer `X` from the standard input, initializes two arrays `g` and `h`, and then fills them with the values computed by the Python code. Finally, it prints the `X`th value of the `g` array.
+
+Please note that in Java, arrays are zero-indexed, so the range of the for loop is `2` to `X` inclusive. Also, the types of the arrays are `long` instead of `int` to avoid overflow.
+<|EOT|>

@@ -1,0 +1,37 @@
+<s> Translate the following python code to java and enclose your solution inside ```java```:
+```
+a,s,d,f=map(int,input().split())
+x3=d-f+s
+y3=f+d-a
+x4=a-f+s
+y4=s+d-a
+print(x3,y3,x4,y4)
+```
+
+### Input
+
+```
+4 5 6 7
+```
+
+### Output
+
+```
+1 1 1 1
+```
+
+### Explanation
+
+```
+x3=d-f+s
+y3=f+d-a
+x4=a-f+s
+y4=s+d-a
+```
+
+### Hint
+
+```
+int
+```
+</s>

@@ -1,0 +1,19 @@
+import java.util.Scanner;
+
+public class p03631 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int i = n / 100;
+        int j = n % 10;
+        if (i == j) {
+            System.out.println("Yes");
+        } else {
+            System.out.println("No");
+        }
+        sc.close();
+    }
+}
+
+// Usage to test with an input of 575
+// Should output: Yes

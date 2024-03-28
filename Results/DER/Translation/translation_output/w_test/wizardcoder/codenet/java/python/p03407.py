@@ -1,0 +1,86 @@
+Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+### Instruction:
+Translate the following java code to python and enclose your solution inside ```python```.
+A sample test case is provided below:
+
+Test input:
+50 100 120
+
+Expected output:
+Yes
+
+
+```
+import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+/**
+ * Built using CHelper plug-in
+ * Actual solution is at the top
+ *
+ * @author mikit
+ */
+public class p03407 {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        Scanner in = new Scanner(inputStream);
+        PrintWriter out = new PrintWriter(outputStream);
+        ATwoCoins solver = new ATwoCoins();
+        solver.solve(1, in, out);
+        out.close();
+    }
+
+    static class ATwoCoins {
+        public void solve(int testNumber, Scanner in, PrintWriter out) {
+            out.println(in.nextInt() + in.nextInt() >= in.nextInt()? "Yes" : "No");
+        }
+
+    }
+}
+
+
+```
+
+### Response:
+```python
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class p03407 {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+        Scanner in = new Scanner(inputStream);
+        ATwoCoins solver = new ATwoCoins();
+        solver.solve(1, in, new PrintWriter(outputStream));
+        in.close();
+        outputStream.close();
+    }
+
+    static class ATwoCoins {
+        public void solve(int testNumber, Scanner in, PrintWriter out) {
+            int a = in.nextInt();
+            int b = in.nextInt();
+            int c = in.nextInt();
+            out.println(a + b >= c? "Yes" : "No");
+        }
+    }
+}
+```
+
+Explanation:
+
+- We have imported the necessary classes from the java library.
+- We have defined the main method which takes input and output streams as arguments.
+- We have created a Scanner object to read input from the input stream.
+- We have created a PrintWriter object to write output to the output stream.
+- We have created an instance of the ATwoCoins class.
+- We have called the solve method of the ATwoCoins class with testNumber=1, in and out as arguments.
+- We have closed the input and output streams.<|endoftext|>

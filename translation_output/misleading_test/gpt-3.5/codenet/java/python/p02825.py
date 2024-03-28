@@ -1,1 +1,0 @@
-token size exceeded. Error code: 400 - {'error': {'message': "This model's maximum context length is 16385 tokens. However, your messages resulted in 35005 tokens. Please reduce the length of the messages.", 'type': 'invalid_request_error', 'param': 'messages', 'code': 'context_length_exceeded'}}
