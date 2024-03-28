@@ -59,6 +59,25 @@ CodeMind currently supports three inductive code reasoning tasks: (1) Independen
 
 ### Adding New Task
 To add a new task, create a directory in the ```DER/``` directory with the name of the task. Please upload all your scripts and add a README under your directory to explain how to run the scripts.
+Note that please include a script to process your raw output into the data format required by the IER:
+```
++---Task
+    |
+    +--DataSet
+       |
+       +--Problem_1
+       |  |
+       |  +--input.txt
+       |  |
+       |  +--ouptut.txt
+       |  |
+       |  +--main.py/Main.java/etc.
+       |
+       +--Problem_2
+       |
+```
+
+
 
 ### Results of the Grounded-Theory Study
 You can find the raw results of our study under ```Results```. Please use CodeMind and try to reproduce our results!
