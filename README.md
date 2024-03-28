@@ -58,7 +58,7 @@ Please visit the ```/Dataset``` directory for the latest version of benchmarks i
 CodeMind currently supports three inductive code reasoning tasks: (1) Independent Execution Reasoning (IER), Dependent Execution Reasoning (DER), and Specification Reasoning (SR). Detailed instructions about using CodeMind to evaluate LLMs for these tasks are explained under each task's corresponding folder. 
 
 ### Adding New Task
-To add a new task, create a directory in the ```DER/``` directory with the name of the task.
+To add a new task, create a directory in the ```DER/``` directory with the name of the task. Please upload all your scripts and add a README under your directory to explain how to run the scripts.
 
 ### Results of the Grounded-Theory Study
 You can find the raw results of our study under ```Results```. Please use CodeMind and try to reproduce our results!
