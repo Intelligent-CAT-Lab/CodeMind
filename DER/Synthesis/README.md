@@ -27,7 +27,9 @@ bash run.sh {MODEL} {DATADIR} {DATASET} {OUTDIR} {ORGDATASET} {UNDERTESTDIR} {TE
 ```
 Below is an example of running GPT_4 on HumanEval for DER:
 ```
-bash run.sh GPT_4 ../dataset/HumanEval HumanEval ../Results/DER/synthesis ../dataset/HumanEval/HumanEval.jsonl ../Results/DER/undertest ../Results/DER/testresult ../Results/DER/passing mian.py ../Result/DER/undertest
+bash run.sh MagicCoder ../../dataset/humaneval HumanEval ..
+/../tmp/DER/synthesis ../../dataset/humaneval/HumanEval.jsonl ../../tmp/DER/undertest ../../tmp/DER/testr
+esult ../../tmp/DER/passing main.py ../../tmp/DER/undertest
 ```
 
 ```pipeline.py``` Loads ```GPT_4``` model and ```HumanEval``` dataset and writes the synthesized code in a jsonl file under ```../Results/DER/synthesis```
