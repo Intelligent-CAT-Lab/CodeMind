@@ -2,7 +2,7 @@ import argparse
 import sys
 import os
 import json
-from CodeMind.DER.Synthesis.constants import Dataset, Model, PromptType,PromptBuilder
+from constants import Dataset, Model, PromptType,PromptBuilder
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from tqdm import tqdm
 import jsonlines

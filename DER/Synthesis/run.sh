@@ -18,10 +18,9 @@ FILENAME=$9
 REASONINGDIR=$10
 
 
-cd DER
 python pipeline.py --model $MODEL --dataDir $DATADIR --dataset $DATASET --outDir $OUTDIR
 python convert.py --model $MODEL --outDir  $OUTDIR --dataset $DATASET --orgDataDir $ORGDATASET --underTestDir $UNDERTESTDIR
 python evaluate.py --model $MODEL --dataset $DATASET --outDir $OUTDIR --underTestDir $UNDERTESTDIR --testResultDir $TESTRESULTDIR --passTestDir $PASSINGDIR
-cd ../IER
+cd ../../IER
 python predict.py --model $MODEL --fileName $FILENAME --dataDir $PASSINGDIR/$DATASE/$MODEL --writeDir $REASONINGDIR --dataset $DATASET
 python parse_result.py --model $MODEL --resultDir $REASONINGDIR/$DATASE/$MODEL --gtDir $PASSINGDIR/$DATASE/$MODEL
