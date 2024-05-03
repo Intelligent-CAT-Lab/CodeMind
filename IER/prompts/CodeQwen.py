@@ -93,7 +93,7 @@ Follow the following format:
 )
 
 GPT_Python_CodeNet = PromptType(
-    models = [Model.GPT_3, Model.GPT_4],
+    models = [Model.CodeQwen, Model.CodeQwenBase],
     datasets = [Dataset.CodeNetPython, Dataset.AvatarPython],
     prompt_text = """<Instruction>
 I want you to act as a Python code executor. I will give you a piece of Python code and its input. You need to think step by step and then print the output of code execution.
@@ -158,7 +158,7 @@ Follow the following format:
 
 
 GPT_Python_MBPP = PromptType(
-    models = [Model.GPT_3, Model.GPT_4],
+    models = [Model.CodeQwen, Model.CodeQwenBase],
     datasets = [Dataset.MBPP, Dataset.HumanEval],
     prompt_text = """<Instruction>
 I want you to act as a Python code executor. I will give you a piece of Python code and its input. You need to think step by step and then print the output of code execution.

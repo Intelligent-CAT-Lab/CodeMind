@@ -13,6 +13,8 @@ class Model(Enum):
     StarCoder = "StarCoder"
     DeepSeek = "DeepSeek"
     Mistral = "Mistral"
+    CodeQwen="CodeQwen"
+    CodeQwenBase="CodeQwenBase"
     # Add other models as needed
     
     def is_huggingface(self):
@@ -428,7 +430,7 @@ Response:<fim_suffix><fim_middle>""",
 
 
 openai_prompt = PromptType(
-    models=[Model.GPT_3, Model.GPT_4],
+    models=[Model.GPT_3, Model.GPT_4, Model.CodeQwen, Model.CodeQwenBase],
     datasets=[Dataset.MBPP, Dataset.HumanEval],
     prompt_text=
     PromptText(
@@ -456,7 +458,7 @@ Test:
 
 
 openai_prompt_notest_signature = PromptType(
-    models=[Model.GPT_3, Model.GPT_4],
+    models=[Model.GPT_3, Model.GPT_4, Model.CodeQwen, Model.CodeQwenBase],
     datasets=[Dataset.MBPPNoTest],
     prompt_text=
     PromptText(
@@ -474,7 +476,7 @@ Problem:
     )) # An example usage.
 
 openai_prompt_notest_signature_humaneval = PromptType(
-    models=[Model.GPT_3, Model.GPT_4],
+    models=[Model.GPT_3, Model.GPT_4, Model.CodeQwen, Model.CodeQwenBase],
     datasets=[Dataset.HumanEvalNoTest],
     prompt_text=
     PromptText(
