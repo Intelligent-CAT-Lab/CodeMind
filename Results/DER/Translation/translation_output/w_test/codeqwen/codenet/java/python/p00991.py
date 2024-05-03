@@ -1,0 +1,28 @@
+Here is the Python equivalent of the Java code:
+
+```python
+import sys
+import math
+from functools import reduce
+from operator import mul
+
+def main():
+    r, c, a1, a2, b1, b2 = map(int, sys.stdin.readline().split())
+    x = abs(a1 - b1)
+    y = abs(a2 - b2)
+    x = min(x, r - x)
+    y = min(y, c - y)
+    z = 1
+    C = min(x, y)
+    if x == r - x:
+        z *= 2
+    if y == c - y:
+        z *= 2
+    b = reduce(mul, range(x + y - C + 1, x + y + 1))
+    print(b * z % 100000007)
+
+if __name__ == "__main__":
+    main()
+```
+
+This Python code does the same thing as the Java code. It reads the input from the standard input, calculates the minimum distance between the two points, and then calculates the number of ways to get from one point to the other. The result is then printed to the standard output.

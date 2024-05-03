@@ -1,0 +1,33 @@
+Here is the Java version of your Python code:
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int x = scanner.nextInt();
+        int y = scanner.nextInt();
+        int a = scanner.nextInt();
+        int b = scanner.nextInt();
+
+        List<int[]> c = new ArrayList<>();
+        for (int i = a; i <= x; i++) {
+            for (int j = b; j <= y; j++) {
+                if (i > j) {
+                    c.add(new int[]{i, j});
+                }
+            }
+        }
+
+        System.out.println(c.size());
+        for (int[] pair : c) {
+            System.out.println(pair[0] + " " + pair[1]);
+        }
+    }
+}
+```
+
+This Java code does the same thing as your Python code. It reads four integers from the user, creates a list of integer pairs where the first integer is greater than the second, and then prints the size of the list and the pairs themselves.

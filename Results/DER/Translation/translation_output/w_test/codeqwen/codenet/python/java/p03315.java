@@ -1,0 +1,24 @@
+Here is the Java version of your Python code:
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String a = scanner.nextLine();
+        int e = 0;
+        int f = 0;
+        for (int i = 0; i < a.length(); i++) {
+            if (a.charAt(i) == '+') {
+                e++;
+            } else if (a.charAt(i) == '-') {
+                f++;
+            }
+        }
+        System.out.println(e - f);
+    }
+}
+```
+
+This Java code does the same thing as your Python code. It reads a string from the user, counts the number of '+' and '-' characters, and then prints the difference between the two counts.

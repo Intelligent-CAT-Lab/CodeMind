@@ -1,0 +1,40 @@
+Here is the Java version of the provided Python code:
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int h = scanner.nextInt();
+        int w = scanner.nextInt();
+        int d = scanner.nextInt();
+        char[][] res = new char[1000][1000];
+        for (int i = 0; i < 1000; i++) {
+            if (i / d % 2 == 0) {
+                for (int j = 0; j < 1000; j++) {
+                    res[i][j] = (char) ('R' + (j / d + 2) % 4);
+                }
+            } else {
+                for (int j = 0; j < 1000; j++) {
+                    res[i][j] = (char) ('R' + j / d % 4);
+                }
+            }
+        }
+        char[][] ans = new char[h][w];
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                ans[i][j] = res[i + j][h - i - 1 + j];
+            }
+        }
+        for (char[] row : ans) {
+            for (char c : row) {
+                System.out.print(c);
+            }
+            System.out.println();
+        }
+    }
+}
+```
+
+This Java code does the same thing as the Python code. It reads the input, creates a 2D array `res` with the same dimensions as the input, fills it according to the rules, creates a 2D array `ans` with the dimensions of the output, fills it according to the rules, and then prints the contents of `ans`.

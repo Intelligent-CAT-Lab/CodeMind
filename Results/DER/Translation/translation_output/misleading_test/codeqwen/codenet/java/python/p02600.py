@@ -1,0 +1,29 @@
+Here is the Python equivalent of the Java code:
+
+```python
+def main():
+    x = int(input())
+    k = 0
+    if 400 <= x < 600:
+        k = 8
+    elif 600 <= x < 800:
+        k = 7
+    elif 800 <= x < 1000:
+        k = 6
+    elif 1000 <= x < 1200:
+        k = 5
+    elif 1200 <= x < 1400:
+        k = 4
+    elif 1400 <= x < 1600:
+        k = 3
+    elif 1600 <= x < 1800:
+        k = 2
+    elif 1800 <= x <= 1999:
+        k = 1
+    print(k)
+
+if __name__ == "__main__":
+    main()
+```
+
+This Python code does the same thing as the Java code. It reads an integer from the user, assigns a value to `k` based on the range of `x`, and then prints `k`. The `if __name__ == "__main__":` block is used to call the `main()` function when the script is run directly.

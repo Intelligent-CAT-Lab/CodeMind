@@ -1,0 +1,18 @@
+Here is the Python equivalent of the Java code:
+
+```python
+def main():
+    N = int(input())
+    sum = 0
+
+    for i in range(1, N+1):
+        if i % 2 != 0:
+            sum += 1
+
+    print(sum / N)
+
+if __name__ == "__main__":
+    main()
+```
+
+This Python code does the same thing as the Java code. It reads an integer from the user, then iterates over all integers from 1 to N (inclusive). If the current integer is odd, it adds 1 to the sum. Finally, it prints the sum divided by N.

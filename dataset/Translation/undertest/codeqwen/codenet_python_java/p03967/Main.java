@@ -1,0 +1,13 @@
+import java.util.Scanner;
+
+public class p03967 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String s = scanner.nextLine();
+        int ret = 0;
+        for (int i = 0; i < s.length(); i++) {
+            ret += (i % 2) - (s.charAt(i) == 'p' ? 0 : 1);
+        }
+        System.out.println(ret);
+    }
+}

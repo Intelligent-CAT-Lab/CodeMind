@@ -1,0 +1,4 @@
+python /home/changshu/CodeMind/DER/Translation/translate.py --model codeqwen --dataset codenet --source_lang java --target_lang python --gpu_id 0 --cache_dir /home/shared/huggingface --use_misleading_test
+python /home/changshu/CodeMind/DER/Translation/translate.py --model codeqwen --dataset codenet --source_lang python --target_lang java --gpu_id 0 --cache_dir /home/shared/huggingface --use_misleading_test
+python /home/changshu/CodeMind/DER/Translation/translate.py --model codeqwen --dataset avatar --source_lang java --target_lang python --gpu_id 0 --cache_dir /home/shared/huggingface --use_misleading_test
+python /home/changshu/CodeMind/DER/Translation/translate.py --model codeqwen --dataset avatar --source_lang python --target_lang java --gpu_id 0 --cache_dir /home/shared/huggingface --use_misleading_test

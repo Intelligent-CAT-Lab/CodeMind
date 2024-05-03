@@ -1,0 +1,38 @@
+Here is the Java version of the provided Python code:
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+        String[][] ans = new String[2 << (n - 1) - 1][2 << (m - 1) - 1];
+        for (int i = 0; i < ans.length; i++) {
+            for (int j = 0; j < ans[i].length; j++) {
+                ans[i][j] = "1";
+            }
+        }
+        for (int k = 1; k <= 10; k++) {
+            for (int i = 2 << (k - 1) - 1; i < 2 << n - 1; i += 2 << (k - 1)) {
+                for (int j = 2 << (k - 1) - 1; j < 2 << m - 1; j += 2 << (k - 1)) {
+                    if (ans[i - 1][j - 1].equals("1")) {
+                        ans[i - 1][j - 1] = "0";
+                    } else {
+                        ans[i - 1][j - 1] = "1";
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < ans.length; i++) {
+            for (int j = 0; j < ans[i].length; j++) {
+                System.out.print(ans[i][j]);
+            }
+            System.out.println();
+        }
+    }
+}
+```
+
+This Java code does the same thing as the Python code. It reads two integers from the user, creates a 2D array of Strings, and then performs the same operations as the Python code. The result is then printed to the console.

@@ -1,0 +1,19 @@
+Here is the Python equivalent of the Java code:
+
+```python
+def main():
+    w = int(input())
+    h = int(input())
+
+    if w == 1 or h == 1:
+        print(1)
+        return
+
+    c = (w*h)%2 == 0 and (w*h)//2 or (w*h)//2 + 1
+    print(c)
+
+if __name__ == "__main__":
+    main()
+```
+
+This Python code does the same thing as the Java code. It reads two integers from the user, checks if they are 1, and if so, prints 1. If they are not 1, it calculates the number of squares that can fit in the rectangle and prints it.

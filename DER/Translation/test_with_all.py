@@ -2,9 +2,8 @@ import os
 import subprocess
 from subprocess import Popen, PIPE
 from tqdm import tqdm
-def test_java_avatar(code_id, root_code):
+def test_java_avatar(code_id, root_code, root_tests):
     os.chdir(root_code)
-    root_tests  = "/home/changshu/CodeMind/dataset/Avatar/Avatar-python"
     root_input = os.path.join(root_tests, code_id, "all_tests", "input")
     root_output = os.path.join(root_tests, code_id, "all_tests", "output")
 
@@ -110,16 +109,16 @@ def test_all_python(root):
     
 
 
-root = "/home/changshu/CodeMind/dataset/Translation/starcoder2/avatar_python_java"
-# root = "/home/changshu/CodeMind/dataset/Translation/wizardcoder/avatar_python_java"
-test_all_java(root)
+# root = "/home/changshu/CodeMind/dataset/Translation/starcoder2/avatar_python_java"
+# # root = "/home/changshu/CodeMind/dataset/Translation/wizardcoder/avatar_python_java"
+# test_all_java(root)
 
-root = "/home/changshu/CodeMind/dataset/Translation/starcoder2/avatar_java_python"
-test_all_python(root)
-root = "/home/changshu/CodeMind/dataset/Translation/mistral/avatar_java_python"
-test_all_python(root)
-root = "/home/changshu/CodeMind/dataset/Translation/mistral/avatar_python_java"
-test_all_java(root)
+# root = "/home/changshu/CodeMind/dataset/Translation/starcoder2/avatar_java_python"
+# test_all_python(root)
+# root = "/home/changshu/CodeMind/dataset/Translation/mistral/avatar_java_python"
+# test_all_python(root)
+# root = "/home/changshu/CodeMind/dataset/Translation/mistral/avatar_python_java"
+# test_all_java(root)
 # root = "/home/changshu/CodeMind/dataset/Translation/gpt-4/avatar_java_python"
 # test_all_python(root)
 # root = "/home/changshu/CodeMind/dataset/Translation/starcoder/avatar_java_python"
@@ -128,4 +127,6 @@ test_all_java(root)
 # test_all_python(root)
 # root = "/home/changshu/CodeMind/dataset/Translation/magicoder/avatar_java_python"
 # test_all_python(root)
-
+root_code = "/home/changshu/CodeMind/Results/DER/Translation/translation_output/no_test/codeqwen/codenet/python/java-sanitized"
+root_tests = "/home/changshu/CodeMind/dataset/CodeNet/CodeNet-Java"
+test_java_avatar("p00006", root_code, root_tests)

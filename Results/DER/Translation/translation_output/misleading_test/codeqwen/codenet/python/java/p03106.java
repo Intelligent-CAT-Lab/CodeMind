@@ -1,0 +1,28 @@
+Here is the Java version of your Python code:
+
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int a = scanner.nextInt();
+        int b = scanner.nextInt();
+        int k = scanner.nextInt();
+
+        ArrayList<Integer> res = new ArrayList<>();
+        for (int i = 1; i <= 100; i++) {
+            if (a % i == 0 && b % i == 0) {
+                res.add(i);
+            }
+        }
+
+        Collections.sort(res, Collections.reverseOrder());
+        System.out.println(res.get(k - 1));
+    }
+}
+```
+
+This Java code does the same thing as your Python code. It reads three integers from the user, finds all the common divisors of the two numbers, sorts them in descending order, and prints the k-th largest divisor.

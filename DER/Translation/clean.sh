@@ -1,0 +1,1 @@
+python /home/changshu/CodeMind/DER/Translation/clean_generations.py --samples /home/changshu/CodeMind/Results/DER/Translation/translation_output/no_test/codeqwen/avatar/java/python --source_lang java --target_lang python

@@ -91,7 +91,10 @@ def main(args):
                     # This is the default and can be omitted
                     api_key=os.environ['OPENAI_API_KEY'],
                 )
-
+    elif args.model == 'codeqwen':
+        kwargs = {}
+        tokenizer = AutoTokenizer.from_pretrained("Qwen/CodeQwen1.5-7B-Chat", cache_dir=args.cache_dir)
+        model = AutoModelForCausalLM.from_pretrained("Qwen/CodeQwen1.5-7B-Chat", cache_dir=args.cache_dir, device_map='auto', **kwargs)
     # loop over input files
     os.makedirs(out_folder, exist_ok=True)
     for f in tqdm(in_files):
@@ -152,6 +155,7 @@ def main(args):
                 prefix_token = "<fim_prefix>"
                 suffix_token = "<fim_suffix><fim_middle>"
                 prompt = prefix_token + prompt + suffix_token
+            
 
             elif args.model in ['gpt-4', 'gpt-3.5']:
                 if args.use_test or args.use_misleading_test:
@@ -159,6 +163,11 @@ def main(args):
                 else:
                     prompt = "Translate the following code from " + args.source_lang + " to " + args.target_lang + " and enclose your solution inside ```" + args.target_lang.lower() + "```:\n```\n" + "".join(prompt) + "\n```\n"
 
+            elif args.model == "codeqwen":
+                if args.use_test or args.use_misleading_test:
+                    prompt = "Translate the following code from " + args.source_lang + " to " + args.target_lang + " and enclose your solution inside ```" + args.target_lang.lower() + "```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n"
+                else:
+                    prompt = "Translate the following code from " + args.source_lang + " to " + args.target_lang + " and enclose your solution inside ```" + args.target_lang.lower() + "```:\n```\n" + "".join(prompt) + "\n```\n"
             try:
 
                 if args.model in ['starcoder2']:
@@ -203,6 +212,35 @@ def main(args):
                     except openai.BadRequestError as e:
                         generated_output = f'token size exceeded. {e}'
 
+                elif args.model == 'codeqwen':
+                    messages=[
+                                {
+                                    "role": "system",
+                                    "content": "You are an expert " + args.target_lang + " programmer and assistant"
+                                },
+                                {
+                                    "role": "user",
+                                    "content": prompt
+                                }
+                            ]
+                    text = tokenizer.apply_chat_template(
+                        messages,
+                        tokenize=False,
+                        add_generation_prompt=True
+                    )
+        
+                    model_inputs = tokenizer([text], return_tensors="pt").to("cuda:0")
+
+                    generated_ids = model.generate(
+                        model_inputs.input_ids,
+                        max_new_tokens=512,
+                        temperature = 0,
+                        do_sample=False
+                    )
+                    generated_ids = [
+                        output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+                    ]
+                    generated_output = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
                 else:
 
                     inputs = tokenizer.encode(prompt, return_tensors="pt").to(device)

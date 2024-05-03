@@ -62,7 +62,7 @@ if __name__ == "__main__":
         if args.remove_prompt and 'llama2' in solution_path:
             new_code = new_code[new_code.find("###") + len("###"):]
 
-        if 'gpt-4' in solution_path or 'gpt-3.5' in solution_path:
+        if 'gpt-4' in solution_path or 'gpt-3.5' in solution_path or 'codeqwen' in solution_path:
             new_code = new_code[new_code.find(f"```{args.target_lang.lower()}") + len(f"```{args.target_lang.lower()}"):
                                 new_code.find("```", new_code.find(f"```{args.target_lang.lower()}") + len(f"```{args.target_lang.lower()}"))]
 

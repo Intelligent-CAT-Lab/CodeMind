@@ -1,0 +1,65 @@
+Here is the Python version of the Java code:
+
+```python
+import sys
+
+class p01872:
+    def solve(self):
+        s = self.next()
+        if s[-1] == '?':
+            sum = 0
+            for i in range(len(s) - 1):
+                n = 11 - i
+                q = 0
+                p = int(s[i])
+                if n <= 6 and n >= 1:
+                    q = n + 1
+                else:  # if(n >= 7 and n <= 11)
+                    q = n - 5
+                sum += q * p
+            sum %= 11
+            if sum <= 1:
+                sum = 0
+            else:
+                sum = 11 - sum
+            print(sum)
+        else:
+            check = int(s[-1])
+            cnt = 0
+            ans = 0
+            for j in range(10):
+                sum = 0
+                for i in range(len(s) - 1):
+                    n = 11 - i
+                    q = 0
+                    p = 0
+                    if s[i] == '?':
+                        p = j
+                    else:
+                        p = int(s[i])
+                    if n <= 6 and n >= 1:
+                        q = n + 1
+                    else:  # if(n >= 7 and n <= 11)
+                        q = n - 5
+                    sum += q * p
+                sum %= 11
+                if sum <= 1:
+                    sum = 0
+                else:
+                    sum = 11 - sum
+                if check == sum:
+                    cnt += 1
+                    ans = j
+            if cnt == 1:
+                print(ans)
+            else:
+                print("MULTIPLE")
+
+    def main(self):
+        sys.stdout.flush()
+        p01872().solve()
+        sys.stdout.close()
+
+    def next(self):
+        while True:
+            b = sys.

@@ -1,0 +1,14 @@
+Here is the Python equivalent of the Java code:
+
+```python
+A = int(input())
+B = int(input())
+C = int(input())
+
+if A == B:
+    print(C)
+elif B == C:
+    print(A)
+else:
+    print(B)
+```

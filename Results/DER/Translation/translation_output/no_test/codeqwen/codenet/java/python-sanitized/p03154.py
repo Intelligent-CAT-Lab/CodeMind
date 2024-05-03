@@ -1,0 +1,41 @@
+import sys
+
+def solve():
+    # C(X,n)*C(Y,m)*(2C(n+m+1,3)*C(n+m-2,m-1) + ((n+m+1)(n+m+2)/2-1)*C(n+m,m))
+    H, W, K = map(int, input().split())
+    mod = 1000000007
+    fif = enumFIF(20000005, mod)
+    ans = 0
+    x = ((K+1)*(K+2)//2-1)%mod
+    for n in range(H+1):
+        m = K-n
+        if 0 <= m <= W:
+            ans += P(H, n, mod, fif) * P(W, m, mod, fif) % mod \
+                * \
+                ((2*C(K+1, 3, mod, fif) * C(K-2, m-1, mod, fif) +
+                        x * C(K, m, mod, fif))%mod)
+            ans %= mod
+    print(ans)
+
+def C(n, r, mod, fif):
+    if n < 0 or r < 0 or r > n:
+        return 0
+    return (fif[0][n] * fif[1][r] % mod * fif[1][n - r] % mod)
+
+def P(n, r, mod, fif):
+    if n < 0 or r < 0 or r > n:
+        return 0
+    return (fif[0][n] * fif[1][n - r] % mod)
+
+def enumFIF(n, mod):
+    f = [1]*(n + 1)
+    invf = [1]*(n + 1)
+    for i in range(1, n + 1):
+        f[i] = (f[i - 1] * i) % mod
+    a = f[n]
+    b = mod
+    p, q = 1, 0
+    while b > 0:
+        c = a // b
+        d = a
+        a = b

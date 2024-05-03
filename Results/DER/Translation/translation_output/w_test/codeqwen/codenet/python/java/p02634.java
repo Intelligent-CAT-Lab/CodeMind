@@ -1,0 +1,29 @@
+Here is the Java version of the provided Python code:
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int a = scanner.nextInt();
+        int b = scanner.nextInt();
+        int c = scanner.nextInt();
+        int d = scanner.nextInt();
+        int mod = 998244353;
+        int[][] dp = new int[c + 2][d + 2];
+        dp[a][b] = 1;
+        for (int i = a; i <= c; i++) {
+            for (int j = b; j <= d; j++) {
+                dp[i][j] %= mod;
+                dp[i + 1][j] += dp[i][j] * j;
+                dp[i][j + 1] += dp[i][j] * i;
+                dp[i + 1][j + 1] -= dp[i][j] * i * j;
+            }
+        }
+        System.out.println(dp[c][d]);
+    }
+}
+```
+
+This Java code does the same thing as the Python code. It reads four integers from the standard input, creates a 2D array `dp`, and then fills it according to the rules of the problem. Finally, it prints the value at `dp[c][d]`.

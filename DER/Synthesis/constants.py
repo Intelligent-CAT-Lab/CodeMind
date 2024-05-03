@@ -258,7 +258,7 @@ Write a Python solution to the following problem:
 {}
 ```
 
-Enclose your solution in ```python and ```. Only print the function. Don not add any natural langugae explanation to your response.
+Enclose your solution in ```python and ```. Only print the function. Do not add any natural langugae explanation to your response.
 ### Response""",
         format_function=format_with_nl_only
     )

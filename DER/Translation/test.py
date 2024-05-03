@@ -8,8 +8,8 @@ import argparse
 
 def main(args):
     print('testing translations')
-    translation_dir = f"translation_output/{args.test_type}/{args.model}/{args.dataset}/{args.source_lang}/{args.target_lang}-sanitized"
-    test_dir = f"translation_dataset/{args.dataset}/{args.source_lang}/tests"
+    translation_dir = f"/home/changshu/CodeMind/Results/DER/Translation/translation_output/{args.test_type}/{args.model}/{args.dataset}/{args.source_lang}/{args.target_lang}-sanitized"
+    test_dir = f"/home/changshu/CodeMind/Results/DER/Translation/translation_dataset/{args.dataset}/{args.source_lang}/tests"
     os.makedirs(args.report_dir, exist_ok=True)
     files = [f for f in os.listdir(translation_dir) if f != '.DS_Store']
 

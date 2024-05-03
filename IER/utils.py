@@ -22,6 +22,8 @@ class Model(Enum):
     DeepSeek = "DeepSeek"
     Mistral = "Mistral"
     Llama = "Llama"
+    CodeQwen="CodeQwen"
+    CodeQwenBase="CodeQwenBase"
     
     # Add other models as needed
     

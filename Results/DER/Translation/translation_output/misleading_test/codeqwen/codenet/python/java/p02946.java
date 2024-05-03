@@ -1,0 +1,19 @@
+Here is the Java version of your Python code:
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int K = scanner.nextInt();
+        int X = scanner.nextInt();
+        for (int i = Math.max(X - K + 1, -1000000); i <= Math.min(X + K, 1000000); i++) {
+            System.out.print(i + " ");
+        }
+        System.out.println("");
+    }
+}
+```
+
+This Java code does the same thing as your Python code. It reads two integers from the standard input, calculates the range of numbers to print, and prints them out. The `Math.max` and `Math.min` functions are used to ensure that the range does not exceed the valid integer range.

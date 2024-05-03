@@ -1,0 +1,6 @@
+a = int(input())
+b = int(input())
+c = int(input())
+min_val = min(a, b)
+max_val = max(a, b)
+print(min(min_val, c), max(max_val, c))

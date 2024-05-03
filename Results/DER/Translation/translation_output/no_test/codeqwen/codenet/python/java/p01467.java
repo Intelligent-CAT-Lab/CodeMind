@@ -1,0 +1,39 @@
+Here is the Java version of your Python code:
+
+```java
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String[] inputs = scanner.nextLine().split(" ");
+        int[] A = Arrays.stream(inputs[0].split("")).mapToInt(Integer::parseInt).toArray();
+        int[] B = Arrays.stream(inputs[1].split("")).mapToInt(Integer::parseInt).toArray();
+        int K = Integer.parseInt(inputs[2]);
+        int n = A.length;
+        B = Arrays.copyOf(B, Math.max(0, n - B.length));
+        int[] C = new int[n];
+        System.out.println(solve(C, K, n - 1, 0));
+    }
+
+    public static int solve(int[] C, int K, int i, int borrow) {
+        if (i == -1) {
+            return Integer.parseInt(Arrays.stream(C).mapToObj(String::valueOf).reduce("", String::concat));
+        }
+        if (A[i] - borrow >= B[i]) {
+            C[i] = A[i] - borrow - B[i];
+            return solve(C, K, i - 1, 0);
+        } else {
+            C[i] = A[i] - borrow + 10 - B[i];
+            if (K > 0) {
+                return Math.max(solve(C, K - 1, i - 1, 0), solve(C, K, i - 1, 1));
+            } else {
+                return solve(C, K, i - 1, 1);
+            }
+        }
+    }
+}
+```
+
+Please note that this Java code assumes that the input is provided in the same format as the Python code. The input is expected to be three space-separated integers, where the first two integers are the arrays A and B, and the third integer is K
