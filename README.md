@@ -12,7 +12,7 @@ citiation:
 ```
 @article{liu2024codemind,
   title={CodeMind: A Framework to Challenge Large Language Models for Code Reasoning},
-  author={Liu, Changshu and Zhang, Shizhuo Dylan and Jabbarvand, Reyhaneh},
+  author={Liu, Changshu and Zhang, Shizhuo Dylan and Ibrahimzada, Ali Reza and Jabbarvand, Reyhaneh},
   journal={arXiv preprint arXiv:2402.09664},
   year={2024}
 }
