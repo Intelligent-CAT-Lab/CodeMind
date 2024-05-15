@@ -9,7 +9,7 @@ import argparse
 from utils import Dataset, Model
 sys.path.append("./prompts")
 ## import generators
-from generator import chatgpt_generator, huggingface_generator
+from generator import chatgpt_generator, huggingface_generator, huggingface_generator_chat
 ## import prompts
 from GPT import GPT_Java_CodeNet, GPT_Python_CodeNet, GPT_Python_MBPP, GPT_Python_CruxEval
 from MagicCoder import MagicCoder_Java_CodeNet, MagicCoder_Python_CodeNet, MagicCoder_Python_MBPP, MagicCoder_Python_CruxEval
@@ -18,6 +18,7 @@ from CodeLlama import CodeLlama_Java_CodeNet, CodeLlama_Python_CodeNet, CodeLlam
 from StarCoder import StarCoder_Java_CodeNet, StarCoder_Python_CodeNet, StarCoder_Python_MBPP, StarCoder_Python_CruxEval
 from Mistral import Mistral_Java_CodeNet, Mistral_Python_CodeNet, Mistral_Python_MBPP, Mistral_Python_CruxEval
 from DeepSeekCoder import DeepSeek_Java_CodeNet, DeepSeek_Python_CodeNet, DeepSeek_Python_MBPP, DeepSeek_Python_CruxEval
+from CodeQwen import CodeQwen_Java_CodeNet, CodeQwen_Python_CodeNet, CodeQwen_Python_MBPP, CodeQwen_Python_CruxEval
 
 # print(Mistral_Java_CodeNet)
 

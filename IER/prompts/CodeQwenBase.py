@@ -3,10 +3,13 @@ sys.path.append("../")
 
 from utils import Model, Dataset, PromptType
 
-CodeQwen_Java_CodeNet = PromptType(
-    models = [Model.CodeQwen, Model.Granite],
+GPT_Java_CodeNet = PromptType(
+    models = [Model.CodeQwenBase],
     datasets = [Dataset.CodeNetJava, Dataset.AvatarJava],
-    prompt_text = """Below is an example:
+    prompt_text = """<Instruction>
+I want you to act as a Java code executor. I will give you a piece of Java code and its input. You need to think step by step and then print the output of code execution.
+</Instruction>
+Below is an example:
 <Example>
 Consider the following code:
 import java.io.BufferedReader;
@@ -89,10 +92,12 @@ Follow the following format:
 """
 )
 
-CodeQwen_Python_CodeNet = PromptType(
-    models = [Model.CodeQwen, Model.Granite],
+GPT_Python_CodeNet = PromptType(
+    models = [Model.CodeQwenBase],
     datasets = [Dataset.CodeNetPython, Dataset.AvatarPython],
-    prompt_text = """
+    prompt_text = """<Instruction>
+I want you to act as a Python code executor. I will give you a piece of Python code and its input. You need to think step by step and then print the output of code execution.
+</Instruction>
 Below is an example:
 <Example>
 Consider the following code:
@@ -152,8 +157,8 @@ Follow the following format:
 )
 
 
-CodeQwen_Python_MBPP = PromptType(
-    models = [Model.CodeQwen, Model.Granite],
+GPT_Python_MBPP = PromptType(
+    models = [Model.CodeQwenBase],
     datasets = [Dataset.MBPP, Dataset.HumanEval],
     prompt_text = """<Instruction>
 I want you to act as a Python code executor. I will give you a piece of Python code and its input. You need to think step by step and then print the output of code execution.
@@ -216,10 +221,13 @@ Follow the following format:
 )
 
 
-CodeQwen_Python_CruxEval = PromptType(
-    models = [Model.CodeQwen, Model.Granite],
+GPT_Python_CruxEval = PromptType(
+    models = [Model.CodeQwenBase],
     datasets = [Dataset.CruxEval],
-    prompt_text = """Below is an example:
+    prompt_text = """<Instruction>
+I want you to act as a Python code executor. I will give you a piece of Python code and its input. You need to think step by step and then print the output of code execution.
+</Instruction>
+Below is an example:
 <Example>
 Consider the following code:
 def f(N, A, B):

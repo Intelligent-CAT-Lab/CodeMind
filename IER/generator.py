@@ -51,3 +51,28 @@ def huggingface_generator(model, prompt, max_new_tokens):
         generated_ids = hf_model.generate(**model_inputs, max_new_tokens=max_new_tokens, num_beams=1, do_sample=False)
         generated_text = hf_tokenizer.batch_decode(generated_ids)[0]
         return generated_text
+
+def huggingface_generator_chat(model, prompt, max_new_tokens):
+    device = "cuda:0"
+    hf_model, hf_tokenizer = model
+    messages = [
+        {"role": "system", "content": "I want you to act as a code executor. I will give you a piece of code and its input. You need to think step by step and then print the output of code execution."},
+        {"role": "user", "content": prompt}
+    ]
+    text = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True
+    )
+    model_inputs = tokenizer([text], return_tensors="pt").to(device)
+            generated_ids = model.generate(
+            model_inputs.input_ids,
+            max_new_tokens=512,
+            temperature = 0,
+            do_sample=False
+        )
+    generated_ids = [
+            output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+        ]
+    generated_text = hf_tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+    return generated_text

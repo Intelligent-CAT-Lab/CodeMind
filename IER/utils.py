@@ -24,6 +24,7 @@ class Model(Enum):
     Llama = "Llama"
     CodeQwen="CodeQwen"
     CodeQwenBase="CodeQwenBase"
+    Granite = "Granite"
     
     # Add other models as needed
     
