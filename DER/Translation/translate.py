@@ -95,6 +95,10 @@ def main(args):
         kwargs = {}
         tokenizer = AutoTokenizer.from_pretrained("Qwen/CodeQwen1.5-7B-Chat", cache_dir=args.cache_dir)
         model = AutoModelForCausalLM.from_pretrained("Qwen/CodeQwen1.5-7B-Chat", cache_dir=args.cache_dir, device_map='auto', **kwargs)
+    elif args.model == 'granite':
+        kwargs = {}
+        tokenizer = AutoTokenizer.from_pretrained("ibm-granite/granite-8b-code-instruct", cache_dir=args.cache_dir)
+        model = AutoModelForCausalLM.from_pretrained("ibm-granite/granite-8b-code-instruct", cache_dir=args.cache_dir, device_map='auto', **kwargs)
     # loop over input files
     os.makedirs(out_folder, exist_ok=True)
     for f in tqdm(in_files):
@@ -163,7 +167,7 @@ def main(args):
                 else:
                     prompt = "Translate the following code from " + args.source_lang + " to " + args.target_lang + " and enclose your solution inside ```" + args.target_lang.lower() + "```:\n```\n" + "".join(prompt) + "\n```\n"
 
-            elif args.model == "codeqwen":
+            elif args.model in ["codeqwen", "granite"]:
                 if args.use_test or args.use_misleading_test:
                     prompt = "Translate the following code from " + args.source_lang + " to " + args.target_lang + " and enclose your solution inside ```" + args.target_lang.lower() + "```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + "\n```\n"
                 else:
@@ -212,7 +216,7 @@ def main(args):
                     except openai.BadRequestError as e:
                         generated_output = f'token size exceeded. {e}'
 
-                elif args.model == 'codeqwen':
+                elif args.model in ['codeqwen']:
                     messages=[
                                 {
                                     "role": "system",
@@ -241,8 +245,29 @@ def main(args):
                         output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
                     ]
                     generated_output = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
-                else:
+                elif args.model in ['granite']:
+                    messages=[
+                                {
+                                    "role": "system",
+                                    "content": "You are an expert " + args.target_lang + " programmer and assistant"
+                                },
+                                {
+                                    "role": "user",
+                                    "content": prompt
+                                }
+                            ]
+                    text = tokenizer.apply_chat_template(
+                        messages,
+                        tokenize=False,
+                        add_generation_prompt=True
+                    )
+                    input_tokens = tokenizer(text, return_tensors="pt")
+                    for i in input_tokens:
+                        input_tokens[i] = input_tokens[i].to("cuda:0")
 
+                    output = model.generate(**input_tokens, max_new_tokens=2048, num_beams=1, do_sample=False)
+                    generated_output = tokenizer.batch_decode(output)[0]                                                                 
+                else:
                     inputs = tokenizer.encode(prompt, return_tensors="pt").to(device)
                     total_input_tokens = inputs.shape[1]
                     model_max_length = 2048
