@@ -1,0 +1,46 @@
+System:
+You are an expert java programmer and assistant
+
+Question:
+Translate the following code from python to java and enclose your solution inside ```java```:
+```
+s=input()
+for i in range(len(s)-1):
+    if s[i]==s[i+1]:
+        print(i+1,i+2)
+        exit()
+for i in range(len(s)-2):
+    if s[i]==s[i+2]:
+        print(i+1,i+3)
+        exit()
+print(-1,-1)
+```
+
+
+Answer:
+Here's the Java code equivalent to the Python code:
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String s = scanner.nextLine();
+        for (int i = 0; i < s.length() - 1; i++) {
+            if (s.charAt(i) == s.charAt(i + 1)) {
+                System.out.println((i + 1) + " " + (i + 2));
+                System.exit(0);
+            }
+        }
+        for (int i = 0; i < s.length() - 2; i++) {
+            if (s.charAt(i) == s.charAt(i + 2)) {
+                System.out.println((i + 1) + " " + (i + 3));
+                System.exit(0);
+            }
+        }
+        System.out.println("-1 -1");
+    }
+}
+```
+
+This Java code reads a string from the user using the Scanner class, and then iterates through the string to find pairs of adjacent characters or triplets of adjacent characters. If a pair or triplet is found, it prints the indices of the characters and exits the program. If no such pair or triplet is found, it prints -1 -1.<|endoftext|>

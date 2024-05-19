@@ -1,0 +1,53 @@
+System:
+You are an expert java programmer and assistant
+
+Question:
+Translate the following code from python to java and enclose your solution inside ```java```:
+```
+x, y = map ( int, input ( ). split ( ) )
+CielWon = False
+while ( y > 1 and x * 10 + y > 21 ) :
+    t = min ( x, 2 )
+    x -= t
+    y -= ( 2 - t ) * 10 + 2
+    if ( y < 2 or 10 * x + y < 22 ) :
+        CielWon = True
+        break
+    y -= 2
+    t = min ( 2, y // 10 )
+    y -= 10 * t
+    x -= 2 - t
+print ('Ciel'if CielWon else'Hanako')
+
+
+```
+
+
+Answer:
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String[] input = sc.nextLine().split(" ");
+        int x = Integer.parseInt(input[0]);
+        int y = Integer.parseInt(input[1]);
+        boolean CielWon = false;
+        while (y > 1 && x * 10 + y > 21) {
+            int t = Math.min(x, 2);
+            x -= t;
+            y -= (2 - t) * 10 + 2;
+            if (y < 2 || 10 * x + y < 22) {
+                CielWon = true;
+                break;
+            }
+            y -= 2;
+            t = Math.min(2, y / 10);
+            y -= 10 * t;
+            x -= 2 - t;
+        }
+        System.out.println(CielWon? "Ciel" : "Hanako");
+    }
+}
+```<|endoftext|>

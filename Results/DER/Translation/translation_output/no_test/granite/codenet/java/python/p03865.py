@@ -1,0 +1,71 @@
+System:
+You are an expert python programmer and assistant
+
+Question:
+Translate the following code from java to python and enclose your solution inside ```python```:
+```
+import java.util.*;
+
+public class p03865 {
+	public static void main(String[] args) {
+              Scanner sc = new Scanner(System.in);
+                        
+               String s = sc.next();
+               
+               int a = s.length();
+               
+               boolean flag = true;
+               
+               if(s.charAt(0) == s.charAt(a-1)){
+                    if(a%2 == 1){
+                        flag = false;
+                    }else{
+                        flag = true;
+                    }
+               }else{
+                   if(a%2 == 1){
+                       flag = true;
+                   }else{
+                       flag = false;
+                   }                                      
+               }                             
+                                                                                    
+               if(flag){
+                   System.out.println("First");
+               }else{
+                   System.out.println("Second");
+               }           
+                            
+        }       
+}
+
+        
+```
+
+
+Answer:
+```python
+import sys
+
+s = input()
+
+a = len(s)
+
+flag = True
+
+if s[0] == s[a-1]:
+    if a % 2 == 1:
+        flag = False
+    else:
+        flag = True
+else:
+    if a % 2 == 1:
+        flag = True
+    else:
+        flag = False
+
+if flag:
+    print("First")
+else:
+    print("Second")
+```<|endoftext|>

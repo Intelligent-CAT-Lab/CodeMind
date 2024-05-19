@@ -1,0 +1,51 @@
+System:
+You are an expert java programmer and assistant
+
+Question:
+Translate the following code from python to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+615
+
+Expected output:
+1
+
+
+```
+N = int(input())
+q, mod = divmod(N, 100)
+print(1 if mod <= q * 5 else 0)
+```
+
+
+Answer:
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        int q = N / 100;
+        int mod = N % 100;
+        int result = mod <= q * 5? 1 : 0;
+        System.out.println(result);
+    }
+}
+```
+
+You can write the following test case in a separate file named `MainTest.java`:
+
+```java
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class MainTest {
+    @Test
+    public void test1() {
+        Main.main(new String[]{"615"});
+        assertEquals("1", System.out.nextLine());
+    }
+}
+```<|endoftext|>

@@ -1,0 +1,370 @@
+System:
+You are an expert java programmer and assistant
+
+Question:
+Translate the following code from python to java and enclose your solution inside ```java```:
+```
+import bisect
+import sys
+sys.setrecursionlimit(10000)
+a=[]
+def f(a,bin,n):
+    if bin>n:return
+    if bin:a+=[bin]
+    f(a,bin*10+2,n)
+    f(a,bin*10+8,n)
+
+def g(n,p):
+    m=-1<<20
+    x=bisect.bisect_left(a,n)
+    if x!=len(a) and a[x]==n:m=1
+    if a[p]**2>n:return m
+    if n%a[p]==0:m=g(n//a[p],p)+1
+    return max(m,g(n,p+1))
+
+n=int(input())
+if n&1:print(-1);exit()
+f(a,0,n)
+a=sorted(a)
+b=g(n,0)
+if b<0:b=-1
+print(b)
+```
+
+
+Answer:
+```java
+import java.util.*;
+import java.io.*;
+
+public class Main {
+    static int[] a;
+    static int n;
+    static int[] b;
+    static int[] c;
+    static int[] d;
+    static int[] e;
+    static int[] f;
+    static int[] g;
+    static int[] h;
+    static int[] i;
+    static int[] j;
+    static int[] k;
+    static int[] l;
+    static int[] m;
+    static int[] o;
+    static int[] p;
+    static int[] q;
+    static int[] r;
+    static int[] s;
+    static int[] t;
+    static int[] u;
+    static int[] v;
+    static int[] w;
+    static int[] x;
+    static int[] y;
+    static int[] z;
+    static int[] aa;
+    static int[] ab;
+    static int[] ac;
+    static int[] ad;
+    static int[] ae;
+    static int[] af;
+    static int[] ag;
+    static int[] ah;
+    static int[] ai;
+    static int[] aj;
+    static int[] ak;
+    static int[] al;
+    static int[] am;
+    static int[] an;
+    static int[] ao;
+    static int[] ap;
+    static int[] aq;
+    static int[] ar;
+    static int[] as;
+    static int[] at;
+    static int[] au;
+    static int[] av;
+    static int[] aw;
+    static int[] ax;
+    static int[] ay;
+    static int[] az;
+    static int[] ba;
+    static int[] bb;
+    static int[] bc;
+    static int[] bd;
+    static int[] be;
+    static int[] bf;
+    static int[] bg;
+    static int[] bh;
+    static int[] bi;
+    static int[] bj;
+    static int[] bk;
+    static int[] bl;
+    static int[] bm;
+    static int[] bn;
+    static int[] bo;
+    static int[] bp;
+    static int[] bq;
+    static int[] br;
+    static int[] bs;
+    static int[] bt;
+    static int[] bu;
+    static int[] bv;
+    static int[] bw;
+    static int[] bx;
+    static int[] by;
+    static int[] bz;
+    static int[] ca;
+    static int[] cb;
+    static int[] cc;
+    static int[] cd;
+    static int[] ce;
+    static int[] cf;
+    static int[] cg;
+    static int[] ch;
+    static int[] ci;
+    static int[] cj;
+    static int[] ck;
+    static int[] cl;
+    static int[] cm;
+    static int[] cn;
+    static int[] co;
+    static int[] cp;
+    static int[] cq;
+    static int[] cr;
+    static int[] cs;
+    static int[] ct;
+    static int[] cu;
+    static int[] cv;
+    static int[] cw;
+    static int[] cx;
+    static int[] cy;
+    static int[] cz;
+    static int[] da;
+    static int[] db;
+    static int[] dc;
+    static int[] dd;
+    static int[] de;
+    static int[] df;
+    static int[] dg;
+    static int[] dh;
+    static int[] di;
+    static int[] dj;
+    static int[] dk;
+    static int[] dl;
+    static int[] dm;
+    static int[] dn;
+    static int[] do;
+    static int[] dp;
+    static int[] dq;
+    static int[] dr;
+    static int[] ds;
+    static int[] dt;
+    static int[] du;
+    static int[] dv;
+    static int[] dw;
+    static int[] dx;
+    static int[] dy;
+    static int[] dz;
+    static int[] ea;
+    static int[] eb;
+    static int[] ec;
+    static int[] ed;
+    static int[] ee;
+    static int[] ef;
+    static int[] eg;
+    static int[] eh;
+    static int[] ei;
+    static int[] ej;
+    static int[] ek;
+    static int[] el;
+    static int[] em;
+    static int[] en;
+    static int[] eo;
+    static int[] ep;
+    static int[] eq;
+    static int[] er;
+    static int[] es;
+    static int[] et;
+    static int[] eu;
+    static int[] ev;
+    static int[] ew;
+    static int[] ex;
+    static int[] ey;
+    static int[] ez;
+    static int[] fa;
+    static int[] fb;
+    static int[] fc;
+    static int[] fd;
+    static int[] fe;
+    static int[] ff;
+    static int[] fg;
+    static int[] fh;
+    static int[] fi;
+    static int[] fj;
+    static int[] fk;
+    static int[] fl;
+    static int[] fm;
+    static int[] fn;
+    static int[] fo;
+    static int[] fp;
+    static int[] fq;
+    static int[] fr;
+    static int[] fs;
+    static int[] ft;
+    static int[] fu;
+    static int[] fv;
+    static int[] fw;
+    static int[] fx;
+    static int[] fy;
+    static int[] fz;
+    static int[] ga;
+    static int[] gb;
+    static int[] gc;
+    static int[] gd;
+    static int[] ge;
+    static int[] gf;
+    static int[] gg;
+    static int[] gh;
+    static int[] gi;
+    static int[] gj;
+    static int[] gk;
+    static int[] gl;
+    static int[] gm;
+    static int[] gn;
+    static int[] go;
+    static int[] gp;
+    static int[] gq;
+    static int[] gr;
+    static int[] gs;
+    static int[] gt;
+    static int[] gu;
+    static int[] gv;
+    static int[] gw;
+    static int[] gx;
+    static int[] gy;
+    static int[] gz;
+    static int[] ha;
+    static int[] hb;
+    static int[] hc;
+    static int[] hd;
+    static int[] he;
+    static int[] hf;
+    static int[] hg;
+    static int[] hh;
+    static int[] hi;
+    static int[] hj;
+    static int[] hk;
+    static int[] hl;
+    static int[] hm;
+    static int[] hn;
+    static int[] ho;
+    static int[] hp;
+    static int[] hq;
+    static int[] hr;
+    static int[] hs;
+    static int[] ht;
+    static int[] hu;
+    static int[] hv;
+    static int[] hw;
+    static int[] hx;
+    static int[] hy;
+    static int[] hz;
+    static int[] ia;
+    static int[] ib;
+    static int[] ic;
+    static int[] id;
+    static int[] ie;
+    static int[] ig;
+    static int[] ih;
+    static int[] ii;
+    static int[] ij;
+    static int[] ik;
+    static int[] il;
+    static int[] im;
+    static int[] io;
+    static int[] ip;
+    static int[] iq;
+    static int[] ir;
+    static int[] is;
+    static int[] it;
+    static int[] iu;
+    static int[] iv;
+    static int[] iw;
+    static int[] ix;
+    static int[] iy;
+    static int[] iz;
+    static int[] ja;
+    static int[] jb;
+    static int[] jc;
+    static int[] jd;
+    static int[] je;
+    static int[] jf;
+    static int[] jg;
+    static int[] jh;
+    static int[] ji;
+    static int[] jj;
+    static int[] jk;
+    static int[] jl;
+    static int[] jm;
+    static int[] jn;
+    static int[] jo;
+    static int[] jp;
+    static int[] jq;
+    static int[] jr;
+    static int[] js;
+    static int[] jt;
+    static int[] ju;
+    static int[] jv;
+    static int[] jw;
+    static int[] jx;
+    static int[] jy;
+    static int[] jz;
+    static int[] ka;
+    static int[] kb;
+    static int[] kc;
+    static int[] kd;
+    static int[] ke;
+    static int[] kf;
+    static int[] kg;
+    static int[] kh;
+    static int[] ki;
+    static int[] kj;
+    static int[] kk;
+    static int[] kl;
+    static int[] km;
+    static int[] kn;
+    static int[] ko;
+    static int[] kp;
+    static int[] kq;
+    static int[] kr;
+    static int[] ks;
+    static int[] kt;
+    static int[] ku;
+    static int[] kv;
+    static int[] kw;
+    static int[] kx;
+    static int[] ky;
+    static int[] kz;
+    static int[] la;
+    static int[] lb;
+    static int[] lc;
+    static int[] ld;
+    static int[] le;
+    static int[] lf;
+    static int[] lg;
+    static int[] lh;
+    static int[] li;
+    static int[] lj;
+    static int[] lk;
+    static int[] ll;
+    static int[] lm;
+    static int[] ln;
+    static int[] lo;
+    static int[] lp;
+    static int[] lq;
+    static int[] lr;
+    static int[] ls;
+    static int[]

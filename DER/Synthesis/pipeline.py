@@ -72,7 +72,7 @@ class CodeGenerationPipeline:
     def load_model(self):
         '''load the huggingface model if needed. Only load for once'''
         api_type = self.config['generation_config']["type"]
-        if api_type == "huggingface":
+        if api_type in ["huggingface", "huggingface_chat"]:
             model_id = self.config['generation_config']["model_id"]
             cache_dir = self.config['generation_config']['chache_dir']
             use_token = self.config['generation_config']['use_auth_token']
@@ -87,6 +87,8 @@ class CodeGenerationPipeline:
         api_type = self.config['generation_config']["type"]
         if api_type == "huggingface":
             return self._generate_huggingface(prompt, model)
+        elif api_type == "huggingface_chat":
+            return self._generate_huggongface_chat(prompt, model)
         else:
             return self._generate_openai(prompt)
             
@@ -107,6 +109,28 @@ class CodeGenerationPipeline:
         generated_ids = hf_model.generate(**model_inputs, max_new_tokens=self.config['generation_config']["max_new_tokens"])
         generated_code = hf_tokenizer.batch_decode(generated_ids)[0]
         return generated_code
+    
+    def _generate_huggongface_chat(self, prompt, model):
+        device = "cuda:0"
+        hf_model, hf_tokenizer = model
+        messages = [
+            {"role": "user", "content": prompt}
+        ]
+        text = hf_tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True
+        )
+        
+        input_tokens = hf_tokenizer(text, return_tensors="pt")
+        for i in input_tokens:
+            input_tokens[i] = input_tokens[i].to(device)
+
+        output = hf_model.generate(**input_tokens, max_new_tokens=512, num_beams=1, do_sample=False)
+        output = hf_tokenizer.batch_decode(output)[0]
+        return output
+        
+
 
     def _read_problem_files(self, subdir):
         with open(os.path.join(subdir, 'nl.txt'), 'r') as file:

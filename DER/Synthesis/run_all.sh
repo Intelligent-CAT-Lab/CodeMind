@@ -1,0 +1,4 @@
+python pipeline.py --model Granite --dataDir /home/changshu/CodeMind/dataset/humaneval --dataset HumanEvalNoTest --outDir /home/changshu/CodeMind/Results/DER/Synthesis
+python pipeline.py --model Granite --dataDir /home/changshu/CodeMind/dataset/mbpp --dataset MBPPNoTest --outDir /home/changshu/CodeMind/Results/DER/Synthesis
+python pipeline.py --model Granite --dataDir /home/changshu/CodeMind/dataset/mbpp --dataset MBPP --outDir /home/changshu/CodeMind/Results/DER/Synthesis
+python pipeline.py --model Granite --dataDir /home/changshu/CodeMind/dataset/humaneval --dataset HumanEval --outDir /home/changshu/CodeMind/Results/DER/Synthesis

@@ -1,0 +1,121 @@
+System:
+You are an expert java programmer and assistant
+
+Question:
+Translate the following code from python to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+NicoNicoNi
+
+Expected output:
+Love Nico!
+
+
+```
+s = input()
+length = len(s)
+BASE = 100
+MOD1 = 1000000007
+MOD2 = 2147483647
+acc1 = 0
+acc2 = 0
+hlst1 = [0]
+hlst2 = [0]
+for c in s:
+  i = ord(c)
+  acc1 = (acc1 * BASE + i) % MOD1
+  acc2 = (acc2 * BASE + i) % MOD2
+  hlst1.append(acc1)
+  hlst2.append(acc2)
+
+def calc_hash(left, right, xlen):
+  return ((hlst1[right] - hlst1[left] * pow(BASE, xlen, MOD1)) % MOD1,
+          (hlst2[right] - hlst2[left] * pow(BASE, xlen, MOD2)) % MOD2)
+
+for i in range(length // 3, -1, -1):
+  if (length - (i + 1) * 3) % 2:continue
+  alen = i + 1
+  blen = (length - (i + 1) * 3) // 2
+  if blen <= 0:continue
+  ha1 = calc_hash(0, alen, alen)
+  ha2 = calc_hash(alen + blen, blen + alen * 2, alen)
+  if ha1!= ha2:continue
+  ha3 = calc_hash(blen * 2 + alen * 2, blen * 2 + alen * 3, alen)
+  if ha1!= ha3:continue
+  hb1 = calc_hash(alen, alen + blen, blen)
+  hb2 = calc_hash(blen + alen * 2, blen * 2 + alen * 2, blen)
+  if hb1!= hb2:continue
+  print("Love {}!".format(s[:i + 1 + blen]))
+  break
+else:
+  print("mitomerarenaiWA")
+
+
+```
+
+
+Answer:
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.next();
+        int length = s.length();
+        int BASE = 100;
+        int MOD1 = 1000000007;
+        int MOD2 = 2147483647;
+        int acc1 = 0;
+        int acc2 = 0;
+        int[] hlst1 = new int[length + 1];
+        int[] hlst2 = new int[length + 1];
+        for (int i = 0; i < length; i++) {
+            char c = s.charAt(i);
+            int i1 = (int) c;
+            acc1 = (acc1 * BASE + i1) % MOD1;
+            acc2 = (acc2 * BASE + i1) % MOD2;
+            hlst1[i + 1] = acc1;
+            hlst2[i + 1] = acc2;
+        }
+
+        for (int i = length / 3; i >= 0; i--) {
+            if ((length - (i + 1) * 3) % 2!= 0) {
+                continue;
+            }
+            int alen = i + 1;
+            int blen = (length - (i + 1) * 3) / 2;
+            if (blen <= 0) {
+                continue;
+            }
+            int[] ha1 = hash(hlst1, 0, alen, alen);
+            int[] ha2 = hash(hlst1, alen + blen, blen + alen * 2, alen);
+            if (!Arrays.equals(ha1, ha2)) {
+                continue;
+            }
+            int[] ha3 = hash(hlst1, blen * 2 + alen * 2, blen * 2 + alen * 3, alen);
+            if (!Arrays.equals(ha1, ha3)) {
+                continue;
+            }
+            int[] hb1 = hash(hlst1, alen, alen + blen, blen);
+            int[] hb2 = hash(hlst1, blen + alen * 2, blen * 2 + alen * 2, blen);
+            if (!Arrays.equals(hb1, hb2)) {
+                continue;
+            }
+            System.out.println("Love " + s.substring(0, i + 1 + blen) + "!");
+            break;
+        }
+        if (true) {
+            System.out.println("mitomerarenaiWA");
+        }
+    }
+
+    public static int[] hash(int[] hlst, int left, int right, int xlen) {
+        int[] ret = new int[2];
+        ret[0] = (hlst[right] - hlst[left] * (int) Math.pow(BASE, xlen) % MOD1 + MOD1) % MOD1;
+        ret[1] = (hlst[right] - hlst[left] * (int) Math.pow(BASE, xlen) % MOD2 + MOD2) % MOD2;
+        return ret;
+    }
+}
+```<|endoftext|>

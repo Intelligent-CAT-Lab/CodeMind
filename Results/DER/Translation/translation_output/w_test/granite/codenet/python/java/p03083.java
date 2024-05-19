@@ -1,0 +1,206 @@
+System:
+You are an expert java programmer and assistant
+
+Question:
+Translate the following code from python to java and enclose your solution inside ```java```.
+A sample test case is provided below:
+
+Test input:
+2 1
+
+Expected output:
+500000004
+750000006
+750000006
+
+
+```
+B, W = map(int, input().split())
+mod = int(1e9) + 7
+def doubling(n, m):
+  y = 1
+  base = n
+  while m!= 0:
+    if m % 2 == 1:
+      y *= base
+      y %= mod
+    base *= base
+    base %= mod
+    m //= 2
+  return y
+def inved(a):
+  x, y, u, v, k, l = 1, 0, 0, 1, a, mod
+  while l!= 0:
+    x, y, u, v = u, v, x - u * (k // l), y - v * (k // l)
+    k, l = l, k % l
+  return x % mod
+
+fact = [1 for i in range(B+W+1)]
+invf = [1 for i in range(B+W+1)]
+for i in range(B+W):
+  fact[i+1] = (fact[i] * (i+1)) % mod
+invf[-1] = inved(fact[-1])
+for i in range(B+W, 0, -1):
+  invf[i-1] = (invf[i] * i) % mod
+bina = [1 for i in range(B+W+1)]
+invb = [1 for i in range(B+W+1)]
+for i in range(B+W):
+  bina[i+1] = (bina[i] * 2) % mod
+invb[-1] = inved(bina[-1])
+for i in range(B+W, 0, -1):
+  invb[i-1] = (invb[i] * 2) % mod
+if B == W:
+  for i in range(B+W):
+    print(invf[2])
+elif B > W:
+  for i in range(W):
+    print(invf[2])
+  P = invf[2]
+  for i in range(W+1, B+1):
+    F = (fact[i-2] * invf[i-1-W] * invf[W-1]) % mod
+    F *= invb[i]
+    F %= mod
+    F += P
+    F %= mod
+    print(F)
+    P = F
+  for i in range(B+1, B+W+1):
+    F = invf[i-1-B] * invf[B-1]
+    F %= mod
+    F *= fact[i-2]
+    F %= mod
+    F *= mod - 1
+    F += (fact[i-2] * invf[i-1-W] * invf[W-1]) % mod
+    F %= mod
+    F *= invb[i]
+    F %= mod
+    F += P
+    F %= mod
+    print(F)
+    P = F
+elif B < W:
+  for i in range(B):
+    print(invf[2])
+  P = invf[2]
+  for i in range(B+1, W+1):
+    F = (fact[i-2] * invf[i-1-B] * invf[B-1]) % mod
+    F *= mod - 1
+    F %= mod
+    F *= invb[i]
+    F %= mod
+    F += P
+    F %= mod
+    print(F)
+    P = F
+  for i in range(W+1, B+W+1):
+    F = invf[i-1-B] * invf[B-1]
+    F %= mod
+    F *= fact[i-2]
+    F %= mod
+    F *= mod - 1
+    F += (fact[i-2] * invf[i-1-W] * invf[W-1]) % mod
+    F %= mod
+    F *= invb[i]
+    F %= mod
+    F += P
+    F %= mod
+    print(F)
+    P = F
+```
+
+
+Answer:
+Here's the Java code for the given Python code:
+
+```java
+import java.util.*;
+
+public class Main {
+    static int mod = 1000000007;
+    static long[] fact = new long[200001];
+    static long[] invf = new long[200001];
+    static long[] bina = new long[200001];
+    static long[] invb = new long[200001];
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int B = sc.nextInt();
+        int W = sc.nextInt();
+        fact[0] = 1;
+        invf[0] = 1;
+        bina[0] = 1;
+        invb[0] = 1;
+        for (int i = 1; i <= B + W; i++) {
+            fact[i] = (fact[i - 1] * i) % mod;
+            invf[i] = inv(fact[i]);
+            bina[i] = (bina[i - 1] * 2) % mod;
+            invb[i] = inv(bina[i]);
+        }
+        if (B == W) {
+            for (int i = 0; i < B + W; i++) {
+                System.out.println(invf[2]);
+            }
+        } else if (B > W) {
+            for (int i = 0; i < W; i++) {
+                System.out.println(invf[2]);
+            }
+            long P = invf[2];
+            for (int i = W + 1; i <= B; i++) {
+                long F = (fact[i - 2] * invf[i - 1 - W] * invf[W - 1]) % mod;
+                F = (F * invb[i]) % mod;
+                F += P;
+                F %= mod;
+                System.out.println(F);
+                P = F;
+            }
+            for (int i = B + 1; i <= B + W; i++) {
+                long F = (fact[i - 2] * invf[i - 1 - W] * invf[W - 1]) % mod;
+                F = (F * (mod - 1)) % mod;
+                F = (F * invb[i]) % mod;
+                F += P;
+                F %= mod;
+                System.out.println(F);
+                P = F;
+            }
+        } else {
+            for (int i = 0; i < B; i++) {
+                System.out.println(invf[2]);
+            }
+            long P = invf[2];
+            for (int i = B + 1; i <= W; i++) {
+                long F = (fact[i - 2] * invf[i - 1 - B] * invf[B - 1]) % mod;
+                F = (F * (mod - 1)) % mod;
+                F = (F * invb[i]) % mod;
+                F += P;
+                F %= mod;
+                System.out.println(F);
+                P = F;
+            }
+            for (int i = W + 1; i <= B + W; i++) {
+                long F = (fact[i - 2] * invf[i - 1 - B] * invf[B - 1]) % mod;
+                F = (F * invb[i]) % mod;
+                F += P;
+                F %= mod;
+                System.out.println(F);
+                P = F;
+            }
+        }
+    }
+
+    static long inv(long a) {
+        long x = 1, y = 0, u = 0, v = 1, k = a, l = mod;
+        while (l!= 0) {
+            long x_ = x, y_ = y, u_ = u, v_ = v;
+            x = u;
+            y = v;
+            u = x_ - u_ * (k / l);
+            v = y_ - v_ * (k / l);
+            k = l;
+            l = k % l;
+        }
+        return (x + mod) % mod;
+    }
+}
+```
+
+This Java code translates the given Python code to Java. It uses the same logic and algorithms as the Python code to calculate the desired output. The code initializes arrays for factorials, inverse factorials, binomial coefficients, and their inverses. It then checks the conditions for B and W and calculates the output accordingly. The `inv` function is used to calculate the inverse of a number modulo mod.<|endoftext|>

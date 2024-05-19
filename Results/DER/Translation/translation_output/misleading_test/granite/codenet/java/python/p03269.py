@@ -1,0 +1,96 @@
+System:
+You are an expert python programmer and assistant
+
+Question:
+Translate the following code from java to python and enclose your solution inside ```python```.
+A sample test case is provided below:
+
+Test input:
+4
+
+Expected output:
+8 10
+1 2 0
+3 4 0
+1 5 0
+2 6 0
+3 7 0
+4 8 0
+5 6 1
+6 7 1
+7 8 1
+
+```
+import java.util.*;
+import java.io.PrintWriter;
+public class p03269{
+	public static void main(String[] args){
+		Scanner sc=new Scanner(System.in);
+		int l=sc.nextInt();
+		int k=l;
+		int t=1;
+		int count=1;
+		ArrayList<String> ans=new ArrayList<>();
+		while(l>1){
+			if((l & 1)==1){
+				k-=t;
+				ans.add(count+" "+20+" "+k);
+			}
+			ans.add(count+" "+(count+1)+" "+t);
+			count++;
+			l>>=1;
+			t*=2;
+		}
+		System.out.println(20+" "+(ans.size()+19));
+		for(int i=0; i<19; i++){
+			System.out.println((i+1)+" "+(i+2)+" "+0);
+		}
+		for(String s:ans){
+			System.out.println(s);
+		}
+	}
+}
+
+```
+
+
+Answer:
+```python
+import sys
+
+def main():
+    l = int(input())
+    k = l
+    t = 1
+    count = 1
+    ans = []
+    while l > 1:
+        if l & 1 == 1:
+            k -= t
+            ans.append(f"{count} 20 {k}")
+        ans.append(f"{count} {count + 1} {t}")
+        count += 1
+        l >>= 1
+        t *= 2
+    print(f"20 {len(ans) + 19}")
+    for i in range(19):
+        print(f"{i + 1} {i + 2} 0")
+    for s in ans:
+        print(s)
+
+if __name__ == "__main__":
+    main()
+```
+
+You can write the following test cases to ensure it works correctly:
+
+```python
+test_input = "4"
+expected_output = "8 10\n1 2 0\n3 4 0\n1 5 0\n2 6 0\n3 7 0\n4 8 0\n5 6 1\n6 7 1\n7 8 1"
+
+real_output = io.StringIO()
+with redirect_stdout(real_output):
+    main()
+
+assert real_output.getvalue() == expected_output
+```<|endoftext|>
