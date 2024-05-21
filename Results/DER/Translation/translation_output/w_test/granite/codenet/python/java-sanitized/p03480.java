@@ -1,0 +1,21 @@
+import java.util.*;
+import java.io.*;
+
+public class p03480 {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s = br.readLine();
+        int n = s.length();
+        int res = n;
+        for (int i = 0; i < n - 1; i++) {
+            if (s.charAt(i)!= s.charAt(i + 1)) {
+                res = Math.min(res, Math.max(n - i - 1, i + 1));
+            }
+        }
+        if (res == n) {
+            System.out.println(n);
+        } else {
+            System.out.println(res);
+        }
+    }
+}

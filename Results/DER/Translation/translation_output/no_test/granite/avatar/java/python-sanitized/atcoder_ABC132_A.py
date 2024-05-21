@@ -1,0 +1,12 @@
+import sys
+
+def main():
+    s = input()
+    chars = set(s.split())
+    if len(chars) == 2:
+        print("Yes")
+    else:
+        print("No")
+
+if __name__ == "__main__":
+    sys.exit(main())

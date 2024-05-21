@@ -1,0 +1,20 @@
+import java.util.Scanner;
+
+public class p02801 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String C = scanner.nextLine();
+        char[] al = new char[123 - 97];
+        for (int idx = 97; idx < 123; idx++) {
+            al[idx - 97] = (char) idx;
+        }
+        int idx = 0;
+        for (int i = 0; i < al.length; i++) {
+            if (al[i] == C.charAt(0)) {
+                idx = i;
+                break;
+            }
+        }
+        System.out.println(al[idx + 1]);
+    }
+}

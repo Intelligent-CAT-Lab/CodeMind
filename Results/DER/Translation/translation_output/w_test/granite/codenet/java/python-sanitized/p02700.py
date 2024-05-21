@@ -1,0 +1,28 @@
+def main():
+    insn = get_array_int()
+    a = insn[0]
+    b = insn[1]
+    c = insn[2]
+    d = insn[3]
+
+    t = c // b
+    tt = c % b
+    y = a // d
+    u = a % d
+    while a >= 0 or c >= 0:
+        c = c - b
+        if c <= 0:
+            print("Yes")
+            return
+        a = a - d
+        if a <= 0:
+            print("No")
+            return
+
+def get_array_int():
+    string = input().split()
+    array = [int(i) for i in string]
+    return array
+
+if __name__ == "__main__":
+    main()
