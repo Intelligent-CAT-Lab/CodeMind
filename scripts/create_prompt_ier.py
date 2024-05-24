@@ -141,55 +141,77 @@ def create_prompt_magicoder(code, code_input, dataset, pl):
             .replace("$?$", "?")
     return prompt
             
+def create_prompt_gpt_codeqwen(code, code_input, dataset, pl):
+    template =  "<Instruction> " + "$PROMPT_INSTRUCTION$\n" + "</Instruction>\n" + "Below is an example:\n<Example>\nConsider the following code\n" + "$EXAMPLE_CODE$" \
+    + "\n[Question]\n" + "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$" + format_requirement \
+    + "[Answer]\n" + "$EXAMPLE_REASONING$" + "\n</Example>\n" + "Consider the following code\n" + code \
+    +  "\n" + "[Question]\n" + "$QUESTION$" + "```"+code_input + "```$?$\n" + format_requirement + + "\n[Answer]\n"
 
-def create_prompt_gpt_codeqwen(code, code_input, dataset):
-    if dataset == 'codenet_java' or dataset == 'avatar_java':
+    if pl == 'Java':
         prompt_instruction = instruction.format(language='Java')
-        prompt = "<Instruction>" + prompt_instruction + "</Instruction>\n" + "Below is an example:\n<Example>\nConsider the following code\n" + example_java \
-        +"\n[Question]\nWhat would be the output of code execution given the following input:\n```20 2 5```\n" + format_requirement \
-        +"[Answer]\n" + example_reasoning_java + "\n</Example>\n" + "Consider the following code\n" + code + "\n" + "[Question]\nWhat would be the output of code execution given the following input:\n" \
-        + "```"+code_input + "```\n" + format_requirement + "\n[Answer]\n"
-    if dataset in ['codenet_python', 'avatar_python']:
+        if dataset in ['CodeNet', 'Avatar']:
+            prompt = template.replace("$PROMPT_INSTRUCTION$", prompt_instruction) \
+            .replace("$EXAMPLE_CODE$", example_java) \
+            .replace("$QUESTION$", question_print_output) \
+            .replace("$EXAMPLE_INPUT$", example_input) \
+            .replace("$EXAMPLE_REASONING$", example_reasoning_java) \
+            .replace("$?$", '')
+    if pl == 'Python':
         prompt_instruction = instruction.format(language='Python')
-        prompt = "<Instruction>" + prompt_instruction + "</Instruction>\n" + "Below is an example:\n<Example>\nConsider the following code\n" + example_python \
-        +"\n[Question]\nWhat would be the output of code execution given the following input:\n```20 2 5```\n" + format_requirement \
-        +"[Answer]\n" + example_reasoning_python + "\n</Example>\n" + "Consider the following code\n" + code + "\n" + "[Question]\nWhat would be the output of code execution given the following input:\n" \
-        + "```"+code_input + "```\n" + format_requirement + "\n[Answer]\n"
-    if dataset in ["cruxeval", "mbpp", "humaneval"]:
-        prompt_instruction = instruction.format(language='Python')
-        prompt = "<Instruction>" + prompt_instruction + "</Instruction>\n" + "Below is an example:\n<Example>\nConsider the following code\n" + example_python_function \
-        +"\n[Question]\nWhat would be the return value of `sum_of_integer(20, 2, 5)`?\n" + format_requirement \
-        +"[Answer]\n" + example_reasoning_python + "\n</Example>\n" + "Consider the following code\n" + code + "\n" + "[Question]\nWhat would be the return value of" \
-        + "`"+code_input + "`?\n" + format_requirement + "\n[Answer]\n"
+        if dataset in ['CodeNet', 'Avatar']:
+            prompt = template.replace("$PROMPT_INSTRUCTION$", prompt_instruction) \
+            .replace("$EXAMPLE_CODE$", example_python) \
+            .replace("$QUESTION$", question_print_output) \
+            .replace("$EXAMPLE_INPUT$", example_input) \
+            .replace("$EXAMPLE_REASONING$", example_reasoning_python) \
+            .replace("$?$", '')
+        if dataset in ["mbpp", "humaneval", "cruxeval"]:
+            prompt = template.replace("$PROMPT_INSTRUCTION$", prompt_instruction) \
+            .replace("$EXAMPLE_CODE$", example_python_function) \
+            .replace("$QUESTION$", question_return_value) \
+            .replace("$EXAMPLE_INPUT$", example_input_function) \
+            .replace("$EXAMPLE_REASONING$", example_reasoning_python) \
+            .replace("$?$", "?")
     return prompt
 
 
-def create_prompt_codellama(code, code_input, dataset):
-    if dataset == 'codenet_java' or dataset == 'avatar_java':
-        prompt_instruction = instruction.format(language='Java')
-        prompt = "[INST]"+ prompt_instruction + "[/INST]\n" + "[INST]\nConsider the following code:\n<Code>\n" + example_java \
-        + "\n</Code>\n" +  "What would be the output of code execution given the following input:\n```20 2 5```\n" + format_requirement \
-        + "[/INST]" + example_reasoning_java + "Consider the following code:\n" + "<Code>" + code + "\n</Code>\n" +  \
-        + "What would be the output of code execution given the following input:\n" + "```"+code_input + "```\n" + format_requirement
-    if dataset in ['codenet_python', 'avatar_python']:
-        prompt_instruction = instruction.format(language='Python')
-        prompt = "[INST]"+ prompt_instruction + "[/INST]\n" + "[INST]\nConsider the following code:\n<Code>\n" + example_python \
-        + "\n</Code>\n" +  "What would be the output of code execution given the following input:\n```20 2 5```\n" + format_requirement \
-        + "[/INST]" + example_reasoning_python + "Consider the following code:\n" + "<Code>" + code + "\n</Code>\n" +  \
-        + "What would be the output of code execution given the following input:\n" + "```"+code_input + "```\n" + format_requirement
-    if dataset in ["cruxeval", "mbpp", "humaneval"]:
-        prompt_instruction = instruction.format(language='Python')
-        prompt = "[INST]"+ prompt_instruction + "[/INST]\n" + "[INST]\nConsider the following code:\n<Code>\n" + example_python_function \
-        + "\n</Code>\n" +  "What would be the return value of `f(20, 2, 5)`?\n" + format_requirement \
-        + "[/INST]" + example_reasoning_python + "Consider the following code:\n" + "<Code>" + code + "\n</Code>\n" +  \
-        + "What would be the return value of " + "```"+code_input + "```?\n" + format_requirement
-    return prompt
+def create_prompt_gpt_codellama(code, code_input, dataset, pl):
+    template =  "[INST] " + "$PROMPT_INSTRUCTION$\n" + "[/INST]\n" + "[INST]\nConsider the following code\n<Code>\n" + "$EXAMPLE_CODE$" \
+    + "\n</Code>\n" + "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$" + format_requirement + "[/INST]\n" \
+    + "$EXAMPLE_REASONING$"  + "\nConsider the following code\n" + "<Code>"+code \
+    +  "\n</Code>"  + "$QUESTION$" + "```"+code_input + "```$?$\n" + format_requirement
 
+    if pl == 'Java':
+        prompt_instruction = instruction.format(language='Java')
+        if dataset in ['CodeNet', 'Avatar']:
+            prompt = template.replace("$PROMPT_INSTRUCTION$", prompt_instruction) \
+            .replace("$EXAMPLE_CODE$", example_java) \
+            .replace("$QUESTION$", question_print_output) \
+            .replace("$EXAMPLE_INPUT$", example_input) \
+            .replace("$EXAMPLE_REASONING$", example_reasoning_java) \
+            .replace("$?$", '')
+    if pl == 'Python':
+        prompt_instruction = instruction.format(language='Python')
+        if dataset in ['CodeNet', 'Avatar']:
+            prompt = template.replace("$PROMPT_INSTRUCTION$", prompt_instruction) \
+            .replace("$EXAMPLE_CODE$", example_python) \
+            .replace("$QUESTION$", question_print_output) \
+            .replace("$EXAMPLE_INPUT$", example_input) \
+            .replace("$EXAMPLE_REASONING$", example_reasoning_python) \
+            .replace("$?$", '')
+        if dataset in ["mbpp", "humaneval", "cruxeval"]:
+            prompt = template.replace("$PROMPT_INSTRUCTION$", prompt_instruction) \
+            .replace("$EXAMPLE_CODE$", example_python_function) \
+            .replace("$QUESTION$", question_return_value) \
+            .replace("$EXAMPLE_INPUT$", example_input_function) \
+            .replace("$EXAMPLE_REASONING$", example_reasoning_python) \
+            .replace("$?$", "?")
+    return prompt
 
 
 def create_prompt_deepseekcoder(code, code_input, dataset, pl):
     prompt_role = "You are an AI programming assistant, utilizing the Deepseek Coder model, developed by Deepseek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer."
-    template = prompt = prompt_role + "\n" + "### Instruction" + "$PROMPT_INSTRUCTION$\n" + "Below is an example:\n<Example>\nConsider the following code\n" + "$EXAMPLE_CODE$" \
+    template = prompt_role + "\n" + "### Instruction" + "$PROMPT_INSTRUCTION$\n" + "Below is an example:\n<Example>\nConsider the following code\n" + "$EXAMPLE_CODE$" \
         +"[Question]\n" + "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$" + "\n" + format_requirement \
         +"[Answer]\n" + "$EXAMPLE_REASONING$" + "\n</Example>\n" + "Consider the following code\n" + code + "\n" + "[Question]\n" + "$QUESTION$" \
         + "```"+code_input + "```$?$\n" + format_requirement + "\n[Answer]\n### Response"
@@ -220,37 +242,41 @@ def create_prompt_deepseekcoder(code, code_input, dataset, pl):
             .replace("$?$", "?")
     return prompt   
 
-
-
-def create_prompt_starcoder(code, code_input, dataset):
-    if dataset == 'codenet_java' or dataset == 'avatar_java':
-        prompt =  "Consider the following code:\n" + "<Code>\n" + example_java + "\n</Code>\n" + "<<<Question>>>\n" \
-        + "What would be the output of code execution given the following input:\n```20 2 5```\n" \
+def create_prompt_starcoder(ode, code_input, dataset, pl):
+    template =  "Consider the following code:\n" + "<Code>\n" + "$EXAMPLE_CODE$" + "\n</Code>\n" + "<<<Question>>>\n" \
+        +  "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$" \
         + "First analyze step by step about how the code processes the input to generate the output.\nThen print the output of the code based on your analysis.\n" \
-        + example_reasoning_java \
+        + "$EXAMPLE_REASONING$" \
         + "\nConsider the following code:\n" + "<Code>\n" + code + "\n</Code>\n" + "<<<Question>>>\n" \
-        + "What would be the output of code execution given the following input:\n" +  "```"+code_input + "```\n" \
+        + "$QUESTION$" + "```"+code_input + "```$?$\n" \
         + "First analyze step by step about how the code processes the input to generate the output.\nThen print the output of the code based on your analysis.\n" \
         + "<<<Analysis>>>"
-    if dataset == 'codenet_python' or dataset=='avatar_python':
-        prompt =  "Consider the following code:\n" + "<Code>\n" + example_python + "\n</Code>\n" + "<<<Question>>>\n" \
-        + "What would be the output of code execution given the following input:\n```20 2 5```\n" \
-        + "First analyze step by step about how the code processes the input to generate the output.\nThen print the output of the code based on your analysis.\n" \
-        + example_reasoning_python \
-        + "\nConsider the following code:\n" + "<Code>\n" + code + "\n</Code>\n" + "<<<Question>>>\n" \
-        + "What would be the output of code execution given the following input:\n" +  "```"+code_input + "```\n" \
-        + "First analyze step by step about how the code processes the input to generate the output.\nThen print the output of the code based on your analysis.\n" \
-        + "<<<Analysis>>>" 
-    if dataset in ["cruxeval", "mbpp", "humaneval"]:
-        prompt =  "Consider the following code:\n" + "<Code>\n" + example_python_function + "\n</Code>\n" + "<<<Question>>>\n" \
-        + "What would be the return value of `sum_of_integer(20, 2, 5)`?\n" \
-        + "First analyze step by step about how the code processes the input to generate the output.\nThen print the output of the code based on your analysis.\n" \
-        + example_reasoning_python \
-        + "\nConsider the following code:\n" + "<Code>\n" + code + "\n</Code>\n" + "<<<Question>>>\n" \
-        + "What would be the return value of " +  "`"+code_input + "`?\n" \
-        + "First analyze step by step about how the code processes the input to generate the output.\nThen print the output of the code based on your analysis.\n" \
-        + "<<<Analysis>>>"
-    return prompt
+    if pl == 'Java':
+        prompt_instruction = instruction.format(language='Java')
+        if dataset in ['CodeNet', 'Avatar']:
+            prompt = template.replace("$PROMPT_INSTRUCTION$", prompt_instruction) \
+            .replace("$EXAMPLE_CODE$", example_java) \
+            .replace("$QUESTION$", question_print_output) \
+            .replace("$EXAMPLE_INPUT$", example_input) \
+            .replace("$EXAMPLE_REASONING$", example_reasoning_java) \
+            .replace("$?$", '')
+    if pl == 'Python':
+        prompt_instruction = instruction.format(language='Python')
+        if dataset in ['CodeNet', 'Avatar']:
+            prompt = template.replace("$PROMPT_INSTRUCTION$", prompt_instruction) \
+            .replace("$EXAMPLE_CODE$", example_python) \
+            .replace("$QUESTION$", question_print_output) \
+            .replace("$EXAMPLE_INPUT$", example_input) \
+            .replace("$EXAMPLE_REASONING$", example_reasoning_python) \
+            .replace("$?$", '')
+        if dataset in ["mbpp", "humaneval", "cruxeval"]:
+            prompt = template.replace("$PROMPT_INSTRUCTION$", prompt_instruction) \
+            .replace("$EXAMPLE_CODE$", example_python_function) \
+            .replace("$QUESTION$", question_return_value) \
+            .replace("$EXAMPLE_INPUT$", example_input_function) \
+            .replace("$EXAMPLE_REASONING$", example_reasoning_python) \
+            .replace("$?$", "?")
+    return prompt    
 
 def create_prompt_wizardcode(code, code_input, dataset, pl):
     prompt_role = "Below is an instruction that describes a task, paired with an input that provides further context.  Write a response that appropriately completes the request."
@@ -300,61 +326,6 @@ def create_prompt(model_id, code, code_input, dataset, pl):
     if "WizardCoder" in model_id:
         prompt = create_prompt_wizardcoder(code, code_input, dataset, pl)
     return prompt
-
-if __name__ == "__main__":
-    code_java = """import java.io.BufferedReader;
-    import java.io.IOException;
-    import java.io.InputStreamReader;
-
-    public class Main {
-
-        public static void main(String[] args) throws IOException{
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            
-            String str = br.readLine();
-            String ret = "";
-            for (int i = 0; i < str.length(); i++) {
-                char ch = str.charAt(str.length() - i - 1);
-                ret += ch;
-            }
-            System.out.println(ret);
-        }
-    }"""
-
-    code_python = """def dfs(game):
-    a,b = game.count("A"),game.count("B")
-    if  (a == 5 and b < 4 or a < 4 and b == 5 or a == b == 5 or 
-            a == 6 and b == 4 or a == 4 and b == 6):
-        possible.add(game)
-    elif (max(a,b) <= 4 or a == b == 4 or a == 5 and b == 4 or a == 4 and b == 5):
-        possible.add(game)
-        if game+"A" not in possible: dfs(game+"A")
-        if game+"B" not in possible: dfs(game+"B")
-            
-j,y = map(int,raw_input().split())
-possible = set([])
-dfs("")
-ans = []
-for game in possible:
-    if (game.count("A"),game.count("B")) == (j,y): ans.append(game)
-print  "\n".join(sorted(ans))"""
-
-    code_python_method = """def has_close_elements(numbers: List[float], threshold: float) -> bool:
-    for idx, elem in enumerate(numbers):
-        for idx2, elem2 in enumerate(numbers):
-            if idx != idx2:
-                distance = abs(elem - elem2)
-                if distance < threshold:
-                    return True
-
-    return False"""
-    code_input_python_function="has_close_elements([1.0, 2.0, 3.9, 4.0, 5.0, 2.2], 0.3) "
-
-    code_input_java = "w32nimda"
-
-    prompt = create_prompt("ise-uiuc/Magicoder-S-DS-6.7B", code_python, code_input_java, "CodeNet", "Python")
-    print(prompt)
 
 
         

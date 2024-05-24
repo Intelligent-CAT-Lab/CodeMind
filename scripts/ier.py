@@ -10,16 +10,26 @@ import json
 openai.api_key = os.getenv('OPENAI_API_KEY')
 AUTH_TOKEN = os.getenv('AUTH_TOKEN')
 MAX_NEW_TOKEN=1024
-def find_path(dataset, pl):
+def find_path(dataset, pl, der):
     root = "../dataset"
-    if dataset in ["CodeNet", "Avatar"]:
-        data_path = os.path.join(root, dataset, f"{dataset}-{pl}")
+    root_der = "../Experiment_Results/DER/Synthesis/"
+    if not der:
+        if dataset in ["CodeNet", "Avatar"]:
+            data_path = os.path.join(root, dataset, f"{dataset}-{pl}")
+        else:
+            data_path = os.path.join(root, dataset)
+        if not os.path.exists(data_path):
+            print(f'{dataset} does not exist')
+        else:
     else:
-        data_path=os.path.join(root, dataset)
-    if not os.path.exists(data_path):
-        print(f'{dataset} does not exist')
-    else:
-        return data_path
+        if dataset in ["CodeNet", "Avatar"]:
+            data_path = os.path.join(root_der, dataset, f"{dataset}-{pl}")
+        else:
+            data_path = os.path.join(root_der, dataset)
+        if not os.path.exists(data_path):
+            print(f'{dataset} does not exist')
+        else:
+    return data_path
 
 def load_model(model_id, cache_dir):
     ## openai models:
@@ -38,7 +48,7 @@ def main(model_id, dataset, cache_dir, write_dir, task, pl):
     json_path = "./model_config.json"
     model_config = json.load(open(json_path, 'r'))
     api_type = model_config[model_id]["api"]
-    root_dir = find_path(dataset, pl)
+    root_dir = find_path(dataset, pl, der)
     if dataset in ['CodeNet', 'Avatar']:
         write_root = os.path.join(write_dir, task, model_id.split("/")[-1], f"{dataset}-{pl}")
     else:
@@ -64,7 +74,7 @@ def main(model_id, dataset, cache_dir, write_dir, task, pl):
                 response = 'ERR: reaches maximum context length'
         if api_type == "huggingface":
             response = huggingface_generator((model, tokenizer), prompt, MAX_NEW_TOKEN)
-        if api_type == "huggongface_chat":
+        if api_type == "huggingface_chat":
             response = huggingface_generator_chat((model, tokenizer), prompt, MAX_NEW_TOKEN)
         
         
@@ -80,11 +90,12 @@ def main(model_id, dataset, cache_dir, write_dir, task, pl):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, default='none')
-    parser.add_argument("--dataset", type=str, default='none', help="select one from [codenet_java, codenet_python, avatar_java, avatar_python, cruxeval, mbpp, humaneval]")
+    parser.add_argument("--dataset", type=str, default='none', help="select one from [CodeNet, Avatar, cruxeval, mbpp, humaneval]")
     parser.add_argument("--cache", type=str, default="./cache")
     parser.add_argument("--writePath", type=str, default="../Experiment_Results")
     parser.add_argument("--task", type=str, default="IER")
     parser.add_argument("--pl", type=str, default="Python", help="select one from [Python, Java]")
+    parser.add_argument("--der", help='der inference', action='store_true' )
     args = parser.parse_args()
 
     model_id = args.model
@@ -93,5 +104,6 @@ if __name__ == "__main__":
     write_dir = args.writePath
     task = args.task
     pl = args.pl
-    main(model_id, dataset, cache_dir, write_dir, task, pl)
+    der = args.der
+    main(model_id, dataset, cache_dir, write_dir, task, pl, der)
     # find_path(dataset, pl)
