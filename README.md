@@ -1,14 +1,13 @@
-<b><center>[Alert!] CodeMind is a work in progress. We are actively modifying the code to make it easier for end users to reproduce the results or add new models/datasets/reasoning tasks. Please create issues if you observe difficulties in using CodeMind</center></b>
+<b><center>[Alert!] CodeMind is a work in progress. We are actively modifying the code to make it easier for end users to reproduce the results or add new models/datasets/reasoning tasks. Please create issues if you observe difficulties in using CodeMind.</center></b>
 
-<div align='center'>
-<img src="https://github.com/Intelligent-CAT-Lab/CodeMind/blob/main/CodeMind-Logo.jpg" width="20%" height="20%" />
-  <br>
-</div>
+<!--<div align='center'>-->
+<!--</div>-->
 
 <!--Solely relying on test passing to evaluate Large Language Models (LLMs) for code synthesis may result in unfair assessment or promoting models with data leakage. As an alternative, we introduce CodeMind,--> <!--CodeMind is a framework designed to gauge the code reasoning abilities of LLMs. It currently supports three code reasoning tasks: Independent Execution Reasoning (IER), Dependent Execution Reasoning (DER), and Specification Reasoning (SR).--> <!--The first two evaluate models to predict the execution output of an arbitrary code or code the model could correctly synthesize. The third one evaluates the extent to which LLMs implement the specified expected behavior.-->
 
 ## CodeMind Framework
-CodeMind currently supports three inductive code reasoning tasks: (1) Independent Execution Reasoning (IER), Dependent Execution Reasoning (DER), and Specification Reasoning (SR). 
+<img src="https://github.com/Intelligent-CAT-Lab/CodeMind/blob/main/CodeMind-Logo.jpg" width="20%" height="20%" align="right"/> Solely relying on test passing to evaluate Large Language Models (LLMs) for code synthesis may result in unfair assessment or promoting models with data leakage. As an alternative, we introduce CodeMind, a framework designed to gauge the code reasoning abilities of LLMs. CodeMind currently supports three inductive code reasoning tasks: (1) Independent Execution Reasoning (IER), Dependent Execution Reasoning (DER), and Specification Reasoning (SR). Please follow the instructions below to reproduce the results to use existing models, tasks, and datasets. We also support adding new models, tasks, and datasets. 
+
 
 ### Dependencies
 <!--Deployment and use of CodeMind require specific dependencies.--> <!--Please check if all dependencies listed on ```requirements.txt``` are installed in your environment.-->
