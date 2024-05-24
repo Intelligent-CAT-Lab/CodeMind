@@ -5,59 +5,18 @@
 
 Solely relying on test passing to evaluate Large Language Models (LLMs) for code synthesis may result in unfair assessment or promoting models with data leakage. As an alternative, we introduce CodeMind, a framework designed to gauge the code reasoning abilities of LLMs. CodeMind currently supports three code reasoning tasks: Independent Execution Reasoning (IER), Dependent Execution Reasoning (DER), and Specification Reasoning (SR). The first two evaluate models to predict the execution output of an arbitrary code or code the model could correctly synthesize. The third one evaluates the extent to which LLMs implement the specified expected behavior.
 
-### Paper
-Interested to read more about CodeMind, the code reasoning tasks, and a grounded-theory study evaluating LLMs for code reasoning across five benchmarks and two programming languages? Please read the pre-print on Arxiv: https://arxiv.org/pdf/2402.09664.pdf
-
-citiation:
-```
-@article{liu2024codemind,
-  title={CodeMind: A Framework to Challenge Large Language Models for Code Reasoning},
-  author={Liu, Changshu and Zhang, Shizhuo Dylan and Ibrahimzada, Ali Reza and Jabbarvand, Reyhaneh},
-  journal={arXiv preprint arXiv:2402.09664},
-  year={2024}
-}
-```
-
-We also upload our artifact to [Zenodo](https://zenodo.org/records/10699284) and we have a license: 10.5281/zenodo.10699284.
-
-### Contributing to CodeMind
-CodeMind is an open-source project to promote the proper evaluation of LLMs for code-related tasks. If you are interested in building on top of CodeMind and adding more code reasoning tasks, please send an email to {cl144,reyhaneh}@illinois.edu.
-
 ## CodeMind Framework
 
 ### Dependencies
-Deployment and use of CodeMind require specific dependencies. Please check if all dependencies listed on ```requirements.txt``` are installed in your environment. 
+Deployment and use of CodeMind require specific dependencies. <!--Please check if all dependencies listed on ```requirements.txt``` are installed in your environment.-->
 To install all the dependencies, simply run the following command: ```pip install -r requirements.txt```
 
-Need to register an OpenAI Key and write it into a local variable(```OPENAIKEY```)
-
-### Dataset Structure
-Please visit the ```/Dataset``` directory for the latest version of benchmarks integrated with CodeMins.
-
-```
-+---Avatar
-|   |
-|   +---Avatar-java
-|   |
-|   +---Avatar-python
-|
-+---CodeNet
-|   |
-|   +---CodeNet-java
-|   |
-|   +---CodeNet-python
-|
-+---CRUXEval
-|
-+---HumanEval
-|
-+---MBPP
-```
+<!--You must first define the API key as a local variable for API-access models. This avoids accidental exposure of the API key. CodeMind currently support ```OPENAIKEY```.-->
 
 ### Using CodeMind
 CodeMind currently supports three inductive code reasoning tasks: (1) Independent Execution Reasoning (IER), Dependent Execution Reasoning (DER), and Specification Reasoning (SR). Detailed instructions about using CodeMind to evaluate LLMs for these tasks are explained under each task's corresponding folder. 
 
-### How to run
+### How to reproduce the results
 #### IER
 ```
 cd scripts
@@ -102,24 +61,24 @@ bash run_SR.sh deepseek-ai/deepseek-coder-6.7b-instruc CodeNet ${path_to_store_c
 ```
 ```SR_TYPE```: can be 'no_test', 'with_test' or 'misleading_test'
 
+### How to Add New Models
+You have two options to evaluate a new model using CodeMind:
 
-#### How to Add New Models
-Please modify the following files under /scripts:
-1. model_config.json: add the new model required properties such as model id and interface type.
-2. create_prompt_ier.py: add the prompt for the model on IER task.
-3. create_prompt_der.py: add the prompt for the model on DER task.
+Option 1: Open an issue on the repo's issue tracker and label it with "new_model." We will resolve the issue by adding the new model per each "new_model" request. 
 
-### Adding New Task
-To add a new task, create a directory in the ```DER/``` directory with the name of the task. Please upload all your scripts and add a README under your directory to explain how to run the scripts.
+Option 2: You can modify the "model_config.json" by adding properties of the new model, such as model ID and interface type. You should also modify "create_prompt_ier.py" and "reate_prompt_der.py" scripts, as different models may require additional information in the prompt that is currently not supported by our scripts. 
+
+### How to Add New Reasoning Tasks
+To add a new reasoning task to CodeMind, please open an issue on the repo's issue tracker and label it with "new_task." We will provide additional information about how to integrate your new reasoning tasks into CodeMind.  
+
+<!--To add a new task, create a directory in the ```DER/``` directory with the name of the task. Please upload all your scripts and add a README under your directory to explain how to run the scripts.
 Note that please include a script to process your raw output into the data format required by the IER:
 ```
 +---Task
     |
-    +--DataSet
-       |
-       +--Problem_1
-       |  |
-       |  +--input.txt
+    +--Problem_1
+    |  |
+    |  +--input.txt
        |  |
        |  +--ouptut.txt
        |  |
@@ -129,8 +88,47 @@ Note that please include a script to process your raw output into the data forma
        |
 ```
 Create a folder for each "problem" and add the code(main.py, Main.java, etc.), the input (input.txt) and the ground-truth output(output.txt) under the folder.
-Also create a directory in the ```dataset``` with the name of the task and upload the processed dataset under this directory. For example, all the passing translated code generated by LLMs can be found under ```dataset/Translation```
+Also create a directory in the ```dataset``` with the name of the task and upload the processed dataset under this directory. For example, all the passing translated code generated by LLMs can be found under ```dataset/Translation```-->
 
+### How to Add New Dataset
+<!--Please visit the ```/Dataset``` directory for the latest version of benchmarks integrated with CodeMins.-->
+Datasets are stored under the ```/Dataset``` directory. If a dataset contains instances from different programming languages, they should be separated into separate sub-directories (similar to the structure below). 
+```
++---Avatar
+|   |
+|   +---Avatar-java
+|   |
+|   +---Avatar-python
+|
++---CodeNet
+|   |
+|   +---CodeNet-java
+|   |
+|   +---CodeNet-python
+|
++---CRUXEval
+|
++---HumanEval
+|
++---MBPP
+```
+Given that different datasets read test data differently, please open an issue on the repo's issue tracker to add a new dataset to CodeMind. 
 
-### Results of the Grounded-Theory Study
-You can find the raw results of our study under ```Results```. Please use CodeMind and try to reproduce our results!
+## Paper
+Interested to read more about CodeMind, the code reasoning tasks, and a grounded-theory study evaluating LLMs for code reasoning across five benchmarks and two programming languages? Please read the pre-print on Arxiv: https://arxiv.org/pdf/2402.09664.pdf
+
+citiation:
+```
+@article{liu2024codemind,
+  title={CodeMind: A Framework to Challenge Large Language Models for Code Reasoning},
+  author={Liu, Changshu and Zhang, Shizhuo Dylan and Ibrahimzada, Ali Reza and Jabbarvand, Reyhaneh},
+  journal={arXiv preprint arXiv:2402.09664},
+  year={2024}
+}
+```
+
+We also upload our artifact to [Zenodo](https://zenodo.org/records/10699284) and we have a license: 10.5281/zenodo.10699284.
+
+## Contributing to CodeMind
+CodeMind is an open-source project to promote the proper evaluation of LLMs for code-related tasks. If you are interested in building on top of CodeMind and adding more code reasoning tasks, please send an email to {cl144,reyhaneh}@illinois.edu.
+
