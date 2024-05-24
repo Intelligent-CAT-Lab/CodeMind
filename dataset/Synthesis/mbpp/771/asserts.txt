@@ -1,0 +1,3 @@
+assert check_expression("{()}[{}]") == True
+assert check_expression("{()}[{]") == False
+assert check_expression("{()}[{}][]({})") == True

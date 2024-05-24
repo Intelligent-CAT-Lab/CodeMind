@@ -1,0 +1,3 @@
+assert all_Bits_Set_In_The_Given_Range(4,1,2) == True
+assert all_Bits_Set_In_The_Given_Range(17,2,4) == True
+assert all_Bits_Set_In_The_Given_Range(39,4,6) == False

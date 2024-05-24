@@ -1,0 +1,3 @@
+assert find_solution(2, 3, 7) == (2, 1)
+assert find_solution(4, 2, 7) == None
+assert find_solution(1, 13, 17) == (4, 1)

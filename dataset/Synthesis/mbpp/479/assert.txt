@@ -1,0 +1,1 @@
+assert first_Digit(123) == 1

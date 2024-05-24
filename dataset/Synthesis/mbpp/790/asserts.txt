@@ -1,0 +1,3 @@
+assert even_position([3,2,1]) == False
+assert even_position([1,2,3]) == False
+assert even_position([2,1,4]) == True

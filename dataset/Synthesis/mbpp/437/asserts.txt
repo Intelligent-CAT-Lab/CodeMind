@@ -1,0 +1,3 @@
+assert remove_odd("python")==("yhn")
+assert remove_odd("program")==("rga")
+assert remove_odd("language")==("agae")

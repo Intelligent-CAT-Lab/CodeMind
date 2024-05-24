@@ -1,0 +1,3 @@
+assert sum_digits(345)==12
+assert sum_digits(12)==3
+assert sum_digits(97)==16

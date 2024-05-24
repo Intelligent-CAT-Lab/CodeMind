@@ -1,0 +1,3 @@
+assert odd_num_sum(2) == 82
+assert odd_num_sum(3) == 707
+assert odd_num_sum(4) == 3108

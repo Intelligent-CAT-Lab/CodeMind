@@ -1,0 +1,3 @@
+assert rearrange_bigger(12)==21
+assert rearrange_bigger(10)==False
+assert rearrange_bigger(102)==120

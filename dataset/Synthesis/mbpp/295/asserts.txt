@@ -1,0 +1,3 @@
+assert sum_div(8)==7
+assert sum_div(12)==16
+assert sum_div(7)==1

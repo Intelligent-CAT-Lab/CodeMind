@@ -1,0 +1,3 @@
+assert last_Digit_Factorial(4) == 4
+assert last_Digit_Factorial(21) == 0
+assert last_Digit_Factorial(30) == 0

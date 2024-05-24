@@ -1,0 +1,3 @@
+assert find_length("11000010001") == 6
+assert find_length("10111") == 1
+assert find_length("11011101100101") == 2

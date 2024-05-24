@@ -1,0 +1,3 @@
+assert pos_count([1,-2,3,-4]) == 2
+assert pos_count([3,4,5,-1]) == 3
+assert pos_count([1,2,3,4]) == 4

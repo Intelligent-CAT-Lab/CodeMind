@@ -1,0 +1,3 @@
+assert surfacearea_cube(5)==150
+assert surfacearea_cube(3)==54
+assert surfacearea_cube(10)==600

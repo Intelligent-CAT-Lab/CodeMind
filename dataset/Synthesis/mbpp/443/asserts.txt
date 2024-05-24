@@ -1,0 +1,3 @@
+assert largest_neg([1,2,3,-4,-6]) == -6
+assert largest_neg([1,2,3,-8,-9]) == -9
+assert largest_neg([1,2,3,4,-1]) == -1

@@ -1,0 +1,3 @@
+assert prime_num(13)==True
+assert prime_num(7)==True
+assert prime_num(-1010)==False
