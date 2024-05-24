@@ -1,3 +1,5 @@
+<b><center>[Alert!] CodeMind is a work in progress. We are actively modifying the code to make it easier for end users. Please create issues if you observe difficulties in using CodeMind</center></b>
+
 <div align='center'>
 <img src="https://github.com/Intelligent-CAT-Lab/CodeMind/blob/main/CodeMind-Logo.jpg" width="25%" height="25%" />
   <br>
