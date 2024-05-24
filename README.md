@@ -17,7 +17,7 @@ To install all the dependencies, simply run the following command: ```pip instal
 CodeMind currently supports three inductive code reasoning tasks: (1) Independent Execution Reasoning (IER), Dependent Execution Reasoning (DER), and Specification Reasoning (SR). Detailed instructions about using CodeMind to evaluate LLMs for these tasks are explained under each task's corresponding folder. 
 
 ### How to reproduce the results
-#### IER
+#### IER Reasoning Task
 ```
 cd scripts
 bash run_IER.sh {MODEL_ID} {CACHE_DIR} {DATASET}
@@ -32,7 +32,7 @@ bash run_IER.sh ise-uiuc/Magicoder-S-DS-6.7B ${path_to_store_checkpoints} mbpp
 
 ```DATASET```: choose one from the following list [CodeNet, Avatar, cruxeval, mbpp, humaneval]
 
-#### DER
+#### DER Reasoning Task
 
 ```
 cd scripts
@@ -48,7 +48,7 @@ bash run_DER.sh codellama/CodeLlama-13b-Instruct-hf CodeNet ${path_to_store_chec
 ```Task```: can be 'Synthesis'(code synthesis) or 'Translation'(code translation)
 ```SRC_LANG``` and ```TGT_LANG```: optional, required when running code translation. Our framework currently supports Python and Java.
 
-#### SR
+#### SR Reasoning Task
 ```
 cd scripts
 bash run_SR.sh {MODEL_ID} {DATASET} {CACHAE_DIR} {TASK} {SR_TYPE} [SRC_LANG] [TGT_LANG]  
