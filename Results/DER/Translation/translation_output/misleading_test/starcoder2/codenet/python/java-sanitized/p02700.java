@@ -1,2 +1,0 @@
-/README.md
-# 2019-2020-CS101-Lab-Manual

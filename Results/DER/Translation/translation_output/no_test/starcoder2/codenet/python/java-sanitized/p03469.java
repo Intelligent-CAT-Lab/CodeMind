@@ -1,1 +1,0 @@
-System.out.println("2018"+System.console().readLine().substring(4));

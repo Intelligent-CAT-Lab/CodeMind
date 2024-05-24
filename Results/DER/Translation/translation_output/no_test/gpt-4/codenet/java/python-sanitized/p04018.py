@@ -1,1 +1,0 @@
-# No direct equivalent in Python for InputStream and OutputStream.

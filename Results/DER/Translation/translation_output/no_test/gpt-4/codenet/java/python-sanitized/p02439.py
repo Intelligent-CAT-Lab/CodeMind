@@ -1,6 +1,0 @@
-a = int(input())
-b = int(input())
-c = int(input())
-min_value = min(a, b)
-max_value = max(a, b)
-print(f"{min(min_value, c)} {max(max_value, c)}")

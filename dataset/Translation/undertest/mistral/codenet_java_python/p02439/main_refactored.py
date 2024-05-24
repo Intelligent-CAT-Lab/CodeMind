@@ -1,7 +1,0 @@
-class main:
-    a = int(input())
-    b = int(input())
-    c = int(input())
-    min = min(a,b)
-    max = max(a,b)
-    print(min(min,c)+" "+max(max,c))
