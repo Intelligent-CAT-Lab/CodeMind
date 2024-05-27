@@ -8,7 +8,6 @@
 ## CodeMind Framework
 <img src="https://github.com/Intelligent-CAT-Lab/CodeMind/blob/main/CodeMind-Logo.jpg" width="20%" height="20%" align="right"/> Solely relying on test passing to evaluate Large Language Models (LLMs) for code synthesis may result in unfair assessment or promoting models with data leakage. As an alternative, we introduce CodeMind, a framework designed to gauge the code reasoning abilities of LLMs. CodeMind currently supports three inductive code reasoning tasks: (1) Independent Execution Reasoning (IER), Dependent Execution Reasoning (DER), and Specification Reasoning (SR). Please follow the instructions below to reproduce the results to use existing models, tasks, and datasets. We also support adding new models, tasks, and datasets. 
 
-
 ### Dependencies
 <!--Deployment and use of CodeMind require specific dependencies.--> <!--Please check if all dependencies listed on ```requirements.txt``` are installed in your environment.-->
 To install all the dependencies, run the following command: ```pip install -r requirements.txt```
