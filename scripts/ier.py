@@ -10,9 +10,9 @@ import json
 openai.api_key = os.getenv('OPENAI_API_KEY')
 AUTH_TOKEN = os.getenv('AUTH_TOKEN')
 MAX_NEW_TOKEN=1024
-def find_path(dataset, pl, der):
+def find_path(dataset, pl, der, model, task):
     root = "../dataset"
-    root_der = "../Experiment_Results/DER/Synthesis/"
+    
     if not der:
         if dataset in ["CodeNet", "Avatar"]:
             data_path = os.path.join(root, dataset, f"{dataset}-{pl}")
@@ -20,15 +20,14 @@ def find_path(dataset, pl, der):
             data_path = os.path.join(root, dataset)
         if not os.path.exists(data_path):
             print(f'{dataset} does not exist')
-        else:
     else:
+        root_der = f"../Experiment_Results/DER/{task}/"
         if dataset in ["CodeNet", "Avatar"]:
-            data_path = os.path.join(root_der, dataset, f"{dataset}-{pl}")
+            data_path = os.path.join(root_der, model.split("/")[-1], dataset, f"{dataset}-{pl}")
         else:
-            data_path = os.path.join(root_der, dataset)
+            data_path = os.path.join(root_der, model.split("/")[-1], dataset)
         if not os.path.exists(data_path):
             print(f'{dataset} does not exist')
-        else:
     return data_path
 
 def load_model(model_id, cache_dir):
@@ -44,15 +43,21 @@ def load_model(model_id, cache_dir):
 
 
     
-def main(model_id, dataset, cache_dir, write_dir, task, pl):
+def main(model_id, dataset, cache_dir, write_dir, task, pl, der):
     json_path = "./model_config.json"
     model_config = json.load(open(json_path, 'r'))
     api_type = model_config[model_id]["api"]
-    root_dir = find_path(dataset, pl, der)
-    if dataset in ['CodeNet', 'Avatar']:
-        write_root = os.path.join(write_dir, task, model_id.split("/")[-1], f"{dataset}-{pl}")
+    root_dir = find_path(dataset, pl, der, model_id, task)
+    if der:
+        if dataset in ['CodeNet', 'Avatar']:
+            write_root = os.path.join(write_dir, 'DER', task, model_id.split("/")[-1], f"{dataset}-{pl}")
+        else:
+            write_root = os.path.join(write_dir, 'DER', task, model_id.split("/")[-1], dataset)      
     else:
-        write_root = os.path.join(write_dir, task, model_id.split("/")[-1], dataset)
+        if dataset in ['CodeNet', 'Avatar']:
+            write_root = os.path.join(write_dir, task, model_id.split("/")[-1], f"{dataset}-{pl}")
+        else:
+            write_root = os.path.join(write_dir, task, model_id.split("/")[-1], dataset)
     if not os.path.exists(write_root):
         os.makedirs(write_root)
     model, tokenizer = load_model(model_id, cache_dir)
@@ -79,12 +84,12 @@ def main(model_id, dataset, cache_dir, write_dir, task, pl):
         
         
 
-    #     write_folder = os.path.join(write_root, d)
-    #     if not os.path.exists(write_folder):
-    #         os.mkdir(write_folder)
-    #     write_path = os.path.join(write_folder, 'response.txt')
-    #     with open(write_path, 'w') as wr:
-            # wr.write(response)
+        write_folder = os.path.join(write_root, d)
+        if not os.path.exists(write_folder):
+            os.mkdir(write_folder)
+        write_path = os.path.join(write_folder, 'response.txt')
+        with open(write_path, 'w') as wr:
+            wr.write(response)
 
 
 if __name__ == "__main__":

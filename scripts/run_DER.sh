@@ -9,7 +9,7 @@ if [ $task == "Synthesis" ]; then
     python clean_generations_synthesis.py --model $model --dataset $dataset --use_test --der
     python test_synthesis.py --model $model --dataset $dataset --use_test --der
     python convert_dataset.py --model $model --dataset $dataset --task $task
-    python ier.py --model $model --dataset $dataset --task $task 
+    python ier.py --model $model --dataset $dataset --task $task --der
 else
     python translate.py  --model $model --dataset $dataset --source_lang $src --target_lang $tgt --cache_dir $cache
     python clean_generations_translation.py --samples $dataset --source_lang $src --target_lang $tgt

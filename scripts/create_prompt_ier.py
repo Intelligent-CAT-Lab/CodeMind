@@ -175,7 +175,7 @@ def create_prompt_gpt_codeqwen(code, code_input, dataset, pl):
     return prompt
 
 
-def create_prompt_gpt_codellama(code, code_input, dataset, pl):
+def create_prompt_codellama(code, code_input, dataset, pl):
     template =  "[INST] " + "$PROMPT_INSTRUCTION$\n" + "[/INST]\n" + "[INST]\nConsider the following code\n<Code>\n" + "$EXAMPLE_CODE$" \
     + "\n</Code>\n" + "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$" + format_requirement + "[/INST]\n" \
     + "$EXAMPLE_REASONING$"  + "\nConsider the following code\n" + "<Code>"+code \
