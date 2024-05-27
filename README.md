@@ -13,7 +13,8 @@
 <!--Deployment and use of CodeMind require specific dependencies.--> <!--Please check if all dependencies listed on ```requirements.txt``` are installed in your environment.-->
 To install all the dependencies, run the following command: ```pip install -r requirements.txt```
 
-Need to register an OpenAI Key and write it into a local variable(```OPENAIKEY```)
+CodeMind is designed to read API keys required for API-access models from local variables. Please modify and run ```setup.sh {OPANAIKEY}``` to automatically add the variable to your local machines.
+
 
 ### Dataset Structure
 Please visit the ```/Dataset``` directory for the latest version of benchmarks integrated with CodeMins.
