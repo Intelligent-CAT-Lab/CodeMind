@@ -32,17 +32,25 @@ def load_model(model_id, cache_dir):
 
 
     
-def main(model_id, dataset, cache_dir, write_dir, task, pl, use_test, use_misleading_test):
+def main(model_id, dataset, cache_dir, write_dir, task, pl, use_test, use_misleading_test, der_flag):
     json_path = "./model_config.json"
     model_config = json.load(open(json_path, 'r'))
     api_type = model_config[model_id]["api"]
     root_dir = find_path(dataset, pl)
-    if use_test:
-        write_root = os.path.join(write_dir, task, "use_test" , model_id.split("/")[-1], dataset)
-    elif use_misleading_test:
-        write_root = os.path.join(write_dir, task, "misleading_test" , model_id.split("/")[-1], dataset)
+    if der_flag:
+        if use_test:
+            write_root = os.path.join(write_dir, 'DER', task, "use_test" , model_id.split("/")[-1], dataset)
+        elif use_misleading_test:
+            write_root = os.path.join(write_dir, 'DER', task, "misleading_test" , model_id.split("/")[-1], dataset)
+        else:
+            write_root = os.path.join(write_dir, 'DER', task, "no_test" , model_id.split("/")[-1], dataset)
     else:
-        write_root = os.path.join(write_dir, task, "no_test" , model_id.split("/")[-1], dataset)
+        if use_test:
+            write_root = os.path.join(write_dir, 'SR', task, "use_test" , model_id.split("/")[-1], dataset)
+        elif use_misleading_test:
+            write_root = os.path.join(write_dir, 'SR', task, "misleading_test" , model_id.split("/")[-1], dataset)
+        else:
+            write_root = os.path.join(write_dir, 'SR', task, "no_test" , model_id.split("/")[-1], dataset)        
     if not os.path.exists(write_root):
         os.makedirs(write_root)
     model, tokenizer = load_model(model_id, cache_dir)
@@ -93,6 +101,7 @@ if __name__ == "__main__":
     parser.add_argument("--pl", type=str, default="Python", help="select one from [Python, Java]")
     parser.add_argument('--use_test', help='use tests', action='store_true')
     parser.add_argument('--use_misleading_test', help='use misleading tests', action='store_true')
+    parser.add_argument('--der', help='use misleading tests', action='store_true')
     args = parser.parse_args()
 
     model_id = args.model
@@ -103,7 +112,8 @@ if __name__ == "__main__":
     pl = args.pl
     use_test = args.use_test
     use_misleading_test = args.use_misleading_test
+    der_flag = args.der
     # print(use_test)
     # print(use_misleading_test)
-    main(model_id, dataset, cache_dir, write_dir, task, pl, use_test, use_misleading_test)
+    main(model_id, dataset, cache_dir, write_dir, task, pl, use_test, use_misleading_test, der_flag)
     # find_path(dataset, pl)

@@ -1,4 +1,5 @@
 import os
+import argparse
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, default='none')
@@ -7,6 +8,7 @@ if __name__ == "__main__":
     parser.add_argument("--task", type=str, default="Synthesis")
     parser.add_argument('--use_test', help='use test dataset', action='store_true')
     parser.add_argument('--use_misleading_test', help='use test dataset', action='store_true')
+    parser.add_argument('--der', help='use test dataset', action='store_true')
     args = parser.parse_args()
 
     model_id = args.model
@@ -15,14 +17,23 @@ if __name__ == "__main__":
     task = args.task
     use_test = args.use_test
     use_misleading_test = args.use_misleading_test
+    der = args.der
 
-    if use_test:
-        root_dir = os.path.join(write_dir, task, "use_test", model_id.split("/")[-1], dataset)
-    elif use_misleading_test:
-        root_dir = os.path.join(write_dir, task, "misleading_test", model_id.split("/")[-1], dataset)
+    if der:
+        if use_test:
+            root_dir = os.path.join(write_dir, 'DER', task, "use_test", model_id.split("/")[-1], dataset)
+        elif use_misleading_test:
+            root_dir = os.path.join(write_dir, 'DER', task, "misleading_test", model_id.split("/")[-1], dataset)
+        else:
+            root_dir = os.path.join(write_dir, 'DER', task, "no_test", model_id.split("/")[-1], dataset)
     else:
-        root_dir = os.path.join(write_dir, task, "no_test", model_id.split("/")[-1], dataset)
-    
+        if use_test:
+            root_dir = os.path.join(write_dir, 'SR', task, "use_test", model_id.split("/")[-1], dataset)
+        elif use_misleading_test:
+            root_dir = os.path.join(write_dir, 'SR', task, "misleading_test", model_id.split("/")[-1], dataset)
+        else:
+            root_dir = os.path.join(write_dir, 'SR', task, "no_test", model_id.split("/")[-1], dataset)
+    # print(root_dir)
     for d in os.listdir(root_dir):
         response_path = os.path.join(root_dir, d, 'raw_output.txt')
         raw_output = open(response_path, 'r').read()

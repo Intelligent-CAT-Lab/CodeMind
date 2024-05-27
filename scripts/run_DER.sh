@@ -5,9 +5,9 @@ task=$4
 src=$5
 tgt=$6
 if [ $task == "Synthesis" ]; then
-    python synthesis.py --model $model --dataset $datset --cache $cache --use_test
-    python clean_generations_synthesis.py --model $model --dataset $dataset --use_test
-    python test_synthesis.py --model $model --dataset $dataset --use_test
+    python synthesis.py --model $model --dataset $datset --cache $cache --use_test --der
+    python clean_generations_synthesis.py --model $model --dataset $dataset --use_test --der
+    python test_synthesis.py --model $model --dataset $dataset --use_test --der
     python convert_dataset.py --model $model --dataset $dataset --task $task
     python ier.py --model $model --dataset $dataset --task $task 
 else

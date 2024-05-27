@@ -1,5 +1,6 @@
 import os
 import shutil
+import argparse
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -20,22 +21,24 @@ if __name__ == "__main__":
     task = args.task
     use_test = args.use_test
     use_misleading_test = args.use_misleading_test
-    test_one = args.test_one
+    # test_one = args.test_one
     # pl = args.pl
     tgt = args.tgt
 
-    if 'task' == 'Synthesis':
-        root_dir = os.path.join(write_dir, task, "use_test", model_id.split("/")[-1], dataset)
-        log_path = os.path.join(write_dir, task, "use_test", model_id.split("/")[-1], dataset, 'pass_id.txt')
+
+
+    if task == 'Synthesis':
+        root_dir = os.path.join(write_dir, 'DER', task, "use_test", model_id.split("/")[-1], dataset)
+        log_path = os.path.join(write_dir, 'DER', task, "use_test", model_id.split("/")[-1], dataset, 'pass_id.txt')
         dataset_dir = f"../dataset/{task}/{dataset}"
-        new_ds_folder = f"../Experiment_Results/DER/{task}/{model_id.split("/")[-1]}/{dataset}"
+        new_ds_folder = "../Experiment_Results/DER/"+task + "/" + model_id.split("/")[-1] + "/" + dataset
         
 
-    if 'task' == 'Translate':
-        root_dir = os.path.join(write_dir, task, "no_test", model_id.split("/")[-1], dataset, src, tgt)
-        log_path = os.path.join(write_dir, task, "no_test", model_id.split("/")[-1], dataset, src, tgt, 'pass_id.txt')
+    if task == 'Translate':
+        root_dir = os.path.join(write_dir, 'DER', task, "no_test", model_id.split("/")[-1], dataset, src, tgt)
+        log_path = os.path.join(write_dir, 'DER', task, "no_test", model_id.split("/")[-1], dataset, src, tgt, 'pass_id.txt')
         dataset_dir = f"../dataset/{dataset}/{dataset}-{tgt}"
-        new_ds_folder = f"../Experiment_Results/DER/{task}/{model_id.split("/")[-1]}/{dataset}-{tgt}"
+        new_ds_folder = "../Experiment_Results/DER/" + task + "/" + model_id.split("/")[-1] + "/" + dataset + "-" + tgt
 
     with open(log_path, 'r') as f:
         lines = f.readlines()
@@ -45,7 +48,7 @@ if __name__ == "__main__":
             tgt_folder = os.path.join(new_ds_folder, code_id)
             if not os.path.exists(tgt_folder):
                 os.makedirs(tgt_folder)
-            if task == 'Translate:'
+            if task == 'Translate':
                 if tgt == 'Python':
                     tgt_code_path = os.path.join(tgt_folder, 'main.py')
                     src_code_path = os.path.join(root_dir, f"{code_id}.py")
