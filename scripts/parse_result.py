@@ -207,6 +207,8 @@ def parse_StarCoder(folder_result):
         with open(path_pred, 'w') as wr:
             wr.write(predict)
 
+
+
 def parse_llama(root_result):
     folder_result = root_result
     for d in os.listdir(folder_result):
@@ -317,6 +319,8 @@ if __name__ == '__main__':
         parse_mistral(result_dir)
     if "deepseek-coder" in model:
         parse_deepseek(result_dir)
+    if 'CodeQwen' in model:
+        parse_chatgpt(result_dir)
     
     id_correct, id_incorrect = get_result(result_dir, gt_dir)
     

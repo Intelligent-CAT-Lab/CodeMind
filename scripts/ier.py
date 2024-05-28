@@ -9,7 +9,7 @@ import json
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 AUTH_TOKEN = os.getenv('AUTH_TOKEN')
-MAX_NEW_TOKEN=1024
+MAX_NEW_TOKEN=512
 def find_path(dataset, pl, der, model, task):
     root = "../dataset"
     

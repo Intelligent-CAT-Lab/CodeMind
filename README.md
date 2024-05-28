@@ -19,10 +19,10 @@ CodeMind is designed to read API keys required for API-access models from local 
 #### IER Reasoning Task
 ```
 cd scripts
-bash run_IER.sh {MODEL_ID} {CACHE_DIR} {DATASET} [PL]
+bash run_IER.sh {MODEL_ID} {CACHE_DIR} {DATASET} {PL}
 
 ## below is the command to run Magicoder on MBPP:
-bash run_IER.sh ise-uiuc/Magicoder-S-DS-6.7B ${path_to_store_checkpoints} mbpp
+bash run_IER.sh ise-uiuc/Magicoder-S-DS-6.7B ${path_to_store_checkpoints} mbpp Python
 ## elow is the command to run Magicoder on CodeNet Java:
 bash run_IER.sh ise-uiuc/Magicoder-S-DS-6.7B ${path_to_store_checkpoints} CodeNet Java
 ```

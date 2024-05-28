@@ -63,11 +63,12 @@ def huggingface_generator_chat(model, prompt, max_new_tokens):
         add_generation_prompt=True
     )
     model_inputs = hf_tokenizer([text], return_tensors="pt").to(device)
-    generated_ids = model.generate(
+    generated_ids = hf_model.generate(
             model_inputs.input_ids,
             max_new_tokens=max_new_tokens,
             temperature = 0,
-            do_sample=False
+            do_sample=False,
+            num_beams=1
         )
     generated_ids = [
             output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
