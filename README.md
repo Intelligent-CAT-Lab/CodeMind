@@ -78,8 +78,8 @@ Note that please include a script to process your raw output into the data forma
 +---Task
     |
     +--Problem_1
-    |  |
-    |  +--input.txt
+       |
+        +--input.txt
        |  |
        |  +--ouptut.txt
        |  |
