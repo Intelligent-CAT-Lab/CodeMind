@@ -285,7 +285,7 @@ def create_prompt_deepseekcoder(code, code_input, dataset, pl):
             .replace("$?$", "?")  
     return prompt   
 
-def create_prompt_starcoder(ode, code_input, dataset, pl):
+def create_prompt_starcoder(code, code_input, dataset, pl):
     template =  "Consider the following code:\n" + "<Code>\n" + "$EXAMPLE_CODE$" + "\n</Code>\n" + "<<<Question>>>\n" \
         +  "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$" \
         + "First analyze step by step about how the code processes the input to generate the output.\nThen print the output of the code based on your analysis.\n" \

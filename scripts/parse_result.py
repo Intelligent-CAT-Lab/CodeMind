@@ -198,7 +198,7 @@ def parse_StarCoder(folder_result):
         else:
             raw_result = open(path_result, 'r', encoding='utf-8').read()
             try:
-                predict = raw_result.split('Consider the following code:')[2].split('The output of code execution is:')[1].split('END-OF-OUTPUT')[0]
+                predict = raw_result.split('<<<Analysis>>>')[2].split('<<<Output>>>')[1].split('[END-OF-RESPONSE]')[0]
                 # print(predict)
                 # print(raw_result.split('Consider the following code:')[2].split('The output of code execution is:')[1].split('END-OF-OUTPUT')[0])
             except:
