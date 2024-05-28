@@ -44,7 +44,7 @@ def load_model(model_id, cache_dir):
 
     
 def main(model_id, dataset, cache_dir, write_dir, task, pl, der):
-    json_path = "./model_config.json"
+    json_path = "../model_config.json"
     model_config = json.load(open(json_path, 'r'))
     api_type = model_config[model_id]["api"]
     root_dir = find_path(dataset, pl, der, model_id, task)
