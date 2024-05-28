@@ -19,10 +19,12 @@ CodeMind is designed to read API keys required for API-access models from local 
 #### IER Reasoning Task
 ```
 cd scripts
-bash run_IER.sh {MODEL_ID} {CACHE_DIR} {DATASET}
+bash run_IER.sh {MODEL_ID} {CACHE_DIR} {DATASET} [PL]
 
 ## below is the command to run Magicoder on MBPP:
 bash run_IER.sh ise-uiuc/Magicoder-S-DS-6.7B ${path_to_store_checkpoints} mbpp
+## elow is the command to run Magicoder on CodeNet Java:
+bash run_IER.sh ise-uiuc/Magicoder-S-DS-6.7B ${path_to_store_checkpoints} CodeNet Java
 ```
 
 ```MODEL_ID```: Currently our framework supports following OpenAI and huggingface models: ```gpt-3.5-turbo```, ```gpt-4-1106-preview```, ```codellama/CodeLlama-13b-Instruct-hf```, ```codellama/CodeLlama-13b-hf```, ```Qwen/CodeQwen1.5-7B-Chat```, ```Qwen/CodeQwen1.5-7B```, ```deepseek-ai/deepseek-coder-6.7b-instruct```, ```deepseek-ai/deepseek-coder-6.7b-base```, ```meta-llama/Llama-2-13b-hf```, ```ise-uiuc/Magicoder-S-DS-6.7B```, ```mistralai/Mistral-7B-Instruct-v0.1```, ```bigcode/starcoder```, ```bigcode/starcoder2-15b```, ```WizardLM/WizardCoder-15B-V1.0```

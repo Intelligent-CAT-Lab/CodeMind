@@ -160,8 +160,9 @@ def parse_codellama(folder_result):
             
         else:
             raw_result = open(path_result, 'r', encoding='utf-8').read()
-            predict = raw_result.split('<<<Output>>>')[-1].split('[END-OF-RESPONSE]')[0]
+            # predict = raw_result.split('<<<Output>>>')[-1].split('[END-OF-RESPONSE]')[0]
             # print(raw_result.split('<<<Output>>>')[-1].split('[END-OF-RESPONSE]'))
+            predict = raw_result.split("[END-OF-RESPONSE]")[3].split("<<<Output>>>")[1]
         with open(path_pred, 'w') as wr:
             wr.write(predict)
             
@@ -233,7 +234,7 @@ def get_result(folder_result, root_gt):
     for d in os.listdir(folder_result):
         if '.' in d:
             continue
-        path_pred = os.path.join(folder_result, d,  'response.txt')
+        path_pred = os.path.join(folder_result, d,  'predict.txt')
         path_gt = os.path.join(root_gt, d, 'output.txt')
         if not os.path.exists(path_gt):
             continue
@@ -261,7 +262,7 @@ def get_result(folder_result, root_gt):
     num_correct = len(id_correct)
     num_total = (len(id_correct) + len(id_incorrect))
     
-    print(num_correct,num_total,  num_correct/num_total)
+    print("correct:", num_correct, "total:", num_total,  "accuracy:", num_correct/num_total)
     return id_correct, id_incorrect
 
     
@@ -271,31 +272,34 @@ if __name__ == '__main__':
     parser.add_argument("--model", type=str, default='none')
     parser.add_argument("--task", type=str, default='IER')
     parser.add_argument("--dataset", type=str, default='none')
+    parser.add_argument("--der", action='store_true')
+    parser.add_argument("--pl", type=str, default='Python')
     args = parser.parse_args()
     
     model = args.model
-    dataset = arg.model
-    task = arg.task
+    dataset = args.dataset
+    task = args.task
+    der = args.der
+    pl = args.pl
 
-    gt_dir = ""
-    gt_root = "../dataset"
-    if dataset == 'codenet_java':
-        gt_dir = os.path.join(gt_root, 'CodeNet', 'CodeNet-Java')
-    elif dataset == 'codenet_python':
-        gt_dir = os.path.join(gt_root, 'CodeNet', 'CodeNet-Python')
-    elif dataset == 'avatar_java':
-        gt_dir = os.path.join(gt_root, 'Avatar', 'Avatar-java')
-    elif dataset == 'avatar_python':
-        gt_dir = os.path.join(gt_root, 'Avatar', 'Avatar-python')
-    elif dataset == 'cruxeval':
-        gt_dir = os.path.join(gt_root, 'cruxeval')
-    elif dataset == 'humaneval':
-        gt_dir = os.path.join(gt_root, 'humaneval')
-    elif dataset == 'mbpp':
-        gt_dir = os.path.join(gt_root, 'mbpp')
-    
     result_root = "../Experiment_Results"
-    result_dir = os.path.join(result_root, model.split("/")[-1], task, dataset)
+    if not der:
+        if dataset in ['CodeNet', 'Avatar']:
+            result_dir = os.path.join(result_root, 'IER', model.split("/")[-1], f"{dataset}-{pl}")
+        else:
+            result_dir = os.path.join(result_root, 'IER', model.split("/")[-1], dataset)
+    else:
+        if dataset in ['CodeNet', 'Avatar']:
+            result_dir = os.path.join(result_root, 'DER', task, model.split("/")[-1], f"{dataset}-{pl}")
+        else:
+            result_dir = os.path.join(result_root, 'DER', task, model.split("/")[-1], dataset)
+    
+    gt_root = "../dataset"
+    if dataset in ['CodeNet', 'Avatar']:
+        gt_dir = os.path.join(gt_root, dataset, f"{dataset}-{pl}")
+    else:
+        gt_dir = os.path.join(gt_root, dataset)
+    
     
     if "Magicoder" in model:
         parse_magiccoder(result_dir)

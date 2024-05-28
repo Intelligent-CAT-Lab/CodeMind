@@ -55,9 +55,9 @@ def main(model_id, dataset, cache_dir, write_dir, task, pl, der):
             write_root = os.path.join(write_dir, 'DER', task, model_id.split("/")[-1], dataset)      
     else:
         if dataset in ['CodeNet', 'Avatar']:
-            write_root = os.path.join(write_dir, task, model_id.split("/")[-1], f"{dataset}-{pl}")
+            write_root = os.path.join(write_dir, 'IER', model_id.split("/")[-1], f"{dataset}-{pl}")
         else:
-            write_root = os.path.join(write_dir, task, model_id.split("/")[-1], dataset)
+            write_root = os.path.join(write_dir, 'IER', model_id.split("/")[-1], dataset)
     if not os.path.exists(write_root):
         os.makedirs(write_root)
     model, tokenizer = load_model(model_id, cache_dir)
