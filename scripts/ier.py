@@ -7,7 +7,7 @@ from create_prompt_ier import create_prompt
 from prompt import chatgpt_generator, huggingface_generator, huggingface_generator_chat
 import json
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = os.getenv('OPENAIKEY')
 AUTH_TOKEN = os.getenv('AUTH_TOKEN')
 MAX_NEW_TOKEN=512
 def find_path(dataset, pl, der, model, task):

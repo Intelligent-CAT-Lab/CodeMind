@@ -7,7 +7,7 @@ from create_prompt_der import create_prompt
 from prompt import chatgpt_generator, huggingface_generator, huggingface_generator_chat
 import json
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = os.getenv('OPENAIKEY')
 AUTH_TOKEN = os.getenv('AUTH_TOKEN')
 MAX_NEW_TOKEN=1024
 def find_path(dataset, pl):
@@ -33,7 +33,7 @@ def load_model(model_id, cache_dir):
 
     
 def main(model_id, dataset, cache_dir, write_dir, task, pl, use_test, use_misleading_test, der_flag):
-    json_path = "./model_config.json"
+    json_path = "../model_config.json"
     model_config = json.load(open(json_path, 'r'))
     api_type = model_config[model_id]["api"]
     root_dir = find_path(dataset, pl)

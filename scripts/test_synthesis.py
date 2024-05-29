@@ -1,6 +1,7 @@
 import os
 import subprocess
 import argparse
+from tqdm import tqdm
 
 def test_python(py_path):
     test_result_flag = 1 ## pass
@@ -58,8 +59,10 @@ if __name__ == "__main__":
     
     total_samples = []
     pass_samples = []
-    data_root = f"../dataset/Synthesis/{dataset}"
-    for d in os.listdir(root_dir):
+    fail_samples = []
+    data_root = f"../dataset/Intermediate/Synthesis/{dataset}"
+    
+    for d in tqdm(os.listdir(root_dir)):
         total_samples.append(d)
         code_path = os.path.join(root_dir, d, 'main.py')
         if test_one:
@@ -71,8 +74,8 @@ if __name__ == "__main__":
             continue
         code = open(code_path, 'r').read()
         assertion = open(assertion_path, 'r').read()
-
-        code_ut = code + '\n' + assertion
+        import_stmt = "from typing import *"
+        code_ut = import_stmt + '\n' + code + '\n' + assertion
         with open(path_ut, 'w') as wr:
             wr.write(code_ut)
         
@@ -81,9 +84,13 @@ if __name__ == "__main__":
 
         if test_result:
             pass_samples.append(d)
+        else:
+            fail_samples.append(d)
+
     print("pass:"+ str(len(pass_samples)) + '\t' + "total:" + str(len(total_samples)))
 
     log_path = os.path.join(root_dir, 'pass_id.txt')
     with open(log_path, 'w') as wrl:
         for i in pass_samples:
             wrl.write(i + '\n')
+    print(fail_samples)
