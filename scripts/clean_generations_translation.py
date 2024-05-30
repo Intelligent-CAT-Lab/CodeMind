@@ -15,27 +15,37 @@ def load_solutions(samples_dir, ext):
 
 if __name__ == "__main__":
     import argparse
-    import pathlib
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--samples", type=str, required=True)
+    parser.add_argument("--model", type=str, required=True)
+    parser.add_argument("--dataset", type=str, required=True)
     parser.add_argument("--eofs", nargs="+", type=str, default=[])
     parser.add_argument("--remove_prompt", action="store_true")
     parser.add_argument("--source_lang", required=True, type=str, choices=["java", "python"])
     parser.add_argument("--target_lang", required=True, type=str, choices=["java", "python"])
     parser.add_argument("--rm-prefix-lines", nargs="+", type=str, help="Remove lines starting with these string.", default=[])
+    parser.add_argument("--der", action='store_true')
+    parser.add_argument('--use_test', help='use test dataset', action='store_true')
+    parser.add_argument('--use_misleading_test', help='use test dataset', action='store_true')
     args = parser.parse_args()
 
     EXTENSIONS = { "java": ".java", "python": ".py" }
-
+    if args.der:
+        task='DER'
+    else:
+        task='SR'
+    if args.use_test:
+        folder_path=f"../Experiment_Results/intermediate/{task}/Translation/use_test/{args.model.split('/')[-1]}/{args.dataset}/{args.source_lang}/{args.target_lang}"
+    elif args.use_misleading_test:
+        folder_path=f"../Experiment_Results/intermediate/{task}/Translation/misleading/{args.model.split('/')[-1]}/{args.dataset}/{args.source_lang}/{args.target_lang}"
+    else:
+        folder_path=f"../Experiment_Results/intermediate/{task}/Translation/no_test/{args.model.split('/')[-1]}/{args.dataset}/{args.source_lang}/{args.target_lang}"
     # make a new folder with "-sanitized" suffix
-    target_path = pathlib.Path(args.samples)
-    new_name = target_path.name + "-sanitized"
-    target_path = target_path.parent / new_name
+    target_path = folder_path + "-sanitized"
     target_path = str(target_path)
     os.makedirs(target_path, exist_ok=True)
 
-    for solution_path in tqdm(load_solutions(args.samples, EXTENSIONS[args.target_lang])):
+    for solution_path in tqdm(load_solutions(folder_path, EXTENSIONS[args.target_lang])):
 
         filename = os.path.basename(solution_path)
 
@@ -50,7 +60,7 @@ if __name__ == "__main__":
         if args.remove_prompt and ('codellama' in solution_path or 'mistral' in solution_path):
             new_code = new_code[new_code.find("[/INST]") + len("[/INST]"):]
         
-        if args.remove_prompt and 'magicoder' in solution_path:
+        if args.remove_prompt and 'Magicoder' in solution_path:
             new_code = new_code[new_code.find("@@ Response") + len("@@ Response"):]
         
         if args.remove_prompt and ('deepseekcoder' in solution_path or 'wizardcoder' in solution_path):
