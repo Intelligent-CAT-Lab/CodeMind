@@ -247,7 +247,7 @@ def create_prompt_codellama(code, code_input, dataset, pl):
 
 def create_prompt_deepseekcoder(code, code_input, dataset, pl):
     prompt_role = "You are an AI programming assistant, utilizing the Deepseek Coder model, developed by Deepseek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer."
-    template = prompt_role + "\n" + "### Instruction" + "$PROMPT_INSTRUCTION$\n" + "Below is an example:\n<Example>\nConsider the following code\n" + "$EXAMPLE_CODE$" \
+    template = prompt_role + "\n" + "### Instruction\n" + "$PROMPT_INSTRUCTION$\n" + "Below is an example:\n<Example>\nConsider the following code\n" + "$EXAMPLE_CODE$" \
         +"[Question]\n" + "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$" + "\n" + format_requirement \
         +"[Answer]\n" + "$EXAMPLE_REASONING$" + "\n</Example>\n" + "Consider the following code\n" + code + "\n" + "[Question]\n" + "$QUESTION$" \
         + "```"+code_input + "```$?$\n" + format_requirement + "\n[Answer]\n### Response"
@@ -328,7 +328,7 @@ def create_prompt_starcoder(code, code_input, dataset, pl):
             .replace("$?$", "?")  
     return prompt    
 
-def create_prompt_wizardcode(code, code_input, dataset, pl):
+def create_prompt_wizardcoder(code, code_input, dataset, pl):
     prompt_role = "Below is an instruction that describes a task, paired with an input that provides further context.  Write a response that appropriately completes the request."
     template = prompt = prompt_role + "\n" + "### Instruction:\n" + "$PROMPT_INSTRUCTION$\n" + "Below is an example:\n<Example>\nConsider the following code\n" + "$EXAMPLE_CODE$" \
         +"[Question]\n" + "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$" + "\n" + format_requirement \
