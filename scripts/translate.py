@@ -14,7 +14,7 @@ logging.basicConfig(filename=f"logs/translation.log", level=logging.INFO, format
 
 def main(args):
 
-    extensions = {'python': 'py', 'java': 'java'}
+    extensions = {'Python': 'py', 'Java': 'java'}
 
     experiment_type = 'no_test'
     if args.use_misleading_test:

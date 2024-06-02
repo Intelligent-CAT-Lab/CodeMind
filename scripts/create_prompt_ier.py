@@ -205,8 +205,8 @@ def create_prompt_gpt_codeqwen(code, code_input, dataset, pl):
 
 
 def create_prompt_codellama(code, code_input, dataset, pl):
-    template =  "[INST] " + "$PROMPT_INSTRUCTION$\n" + "[/INST]\n" + "[INST]\nConsider the following code\n<Code>\n" + "$EXAMPLE_CODE$" \
-    + "\n</Code>\n" + "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$" + format_requirement + "[/INST]\n" \
+    template =  "[INST] " + "$PROMPT_INSTRUCTION$\n" + "[/INST]\n" + "[INST]\nConsider the following code\n<Code>" + "$EXAMPLE_CODE$" \
+    + "</Code>\n" + "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$" + format_requirement + "[/INST]\n" \
     + "$EXAMPLE_REASONING$"  + "\nConsider the following code\n" + "<Code>"+code \
     +  "\n</Code>\n"  + "$QUESTION$" + "```"+code_input + "```$?$\n" + format_requirement
 
@@ -247,10 +247,10 @@ def create_prompt_codellama(code, code_input, dataset, pl):
 
 def create_prompt_deepseekcoder(code, code_input, dataset, pl):
     prompt_role = "You are an AI programming assistant, utilizing the Deepseek Coder model, developed by Deepseek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer."
-    template = prompt_role + "\n" + "### Instruction\n" + "$PROMPT_INSTRUCTION$\n" + "Below is an example:\n<Example>\nConsider the following code\n" + "$EXAMPLE_CODE$" \
-        +"[Question]\n" + "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$" + "\n" + format_requirement \
-        +"[Answer]\n" + "$EXAMPLE_REASONING$" + "\n</Example>\n" + "Consider the following code\n" + code + "\n" + "[Question]\n" + "$QUESTION$" \
-        + "```"+code_input + "```$?$\n" + format_requirement + "\n[Answer]\n### Response"
+    template = prompt_role + "\n" + "### Instruction\n" + "$PROMPT_INSTRUCTION$\n" + "Below is an example:\n<Example>\nConsider the following code\n<Code>" + "$EXAMPLE_CODE$" +"</Code>\n"\
+        + "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$"  + format_requirement \
+        + "$EXAMPLE_REASONING$" + "</Example>\n" + "Consider the following code\n" +'<Code>\n'+ code + "\n</Code>\n" + "$QUESTION$" \
+        + "```"+code_input + "```$?$\n" + format_requirement + "### Response"
     if pl == 'Java':
         prompt_instruction = instruction.format(language='Java')
         if dataset in ['CodeNet', 'Avatar']:
@@ -286,13 +286,13 @@ def create_prompt_deepseekcoder(code, code_input, dataset, pl):
     return prompt   
 
 def create_prompt_starcoder(code, code_input, dataset, pl):
-    template =  "Consider the following code:\n" + "<Code>\n" + "$EXAMPLE_CODE$" + "\n</Code>\n" + "<<<Question>>>\n" \
+    template =  "Consider the following code:\n" + "<Code>" + "$EXAMPLE_CODE$" + "</Code>\n" + "<<<Question>>>\n" \
         +  "$QUESTION$" + "```"+"$EXAMPLE_INPUT$" + "```$?$" \
-        + "First analyze step by step about how the code processes the input to generate the output.\nThen print the output of the code based on your analysis.\n" \
+        + "First analyze step by step about how the code processes the input to generate the output.\nThen print the output of the code based on your analysis." \
         + "$EXAMPLE_REASONING$" \
         + "\nConsider the following code:\n" + "<Code>\n" + code + "\n</Code>\n" + "<<<Question>>>\n" \
         + "$QUESTION$" + "```"+code_input + "```$?$\n" \
-        + "First analyze step by step about how the code processes the input to generate the output.\nThen print the output of the code based on your analysis.\n" \
+        + "First analyze step by step about how the code processes the input.\nThen print the output of the code based on your analysis.\n" \
         + "<<<Analysis>>>"
     if pl == 'Java':
         prompt_instruction = instruction.format(language='Java')

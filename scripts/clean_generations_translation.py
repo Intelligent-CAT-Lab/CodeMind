@@ -21,15 +21,15 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", type=str, required=True)
     parser.add_argument("--eofs", nargs="+", type=str, default=[])
     parser.add_argument("--remove_prompt", action="store_true")
-    parser.add_argument("--source_lang", required=True, type=str, choices=["java", "python"])
-    parser.add_argument("--target_lang", required=True, type=str, choices=["java", "python"])
+    parser.add_argument("--source_lang", required=True, type=str, choices=["Java", "Python"])
+    parser.add_argument("--target_lang", required=True, type=str, choices=["Java", "Python"])
     parser.add_argument("--rm-prefix-lines", nargs="+", type=str, help="Remove lines starting with these string.", default=[])
     parser.add_argument("--der", action='store_true')
     parser.add_argument('--use_test', help='use test dataset', action='store_true')
     parser.add_argument('--use_misleading_test', help='use test dataset', action='store_true')
     args = parser.parse_args()
 
-    EXTENSIONS = { "java": ".java", "python": ".py" }
+    EXTENSIONS = { "Java": ".java", "Python": ".py" }
     if args.der:
         task='DER'
     else:
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         if args.remove_prompt and 'Magicoder' in solution_path:
             new_code = new_code[new_code.find("@@ Response") + len("@@ Response"):]
         
-        if args.remove_prompt and ('deepseekcoder' in solution_path or 'wizardcoder' in solution_path):
+        if args.remove_prompt and ('deepseek-coder' in solution_path or 'wizardcoder' in solution_path):
             new_code = new_code[new_code.find("### Response:") + len("### Response:"):]
 
         if args.remove_prompt and 'starcoder' in solution_path and 'starcoder2' not in solution_path:
@@ -82,6 +82,8 @@ if __name__ == "__main__":
             new_code = new_code[new_code.find(f"```{args.target_lang.lower()}") + len(f"```{args.target_lang.lower()}"):
                                 new_code.find("```", new_code.find(f"```{args.target_lang.lower()}") + len(f"```{args.target_lang.lower()}"))]
 
+        new_code = new_code[new_code.find(f"```{args.target_lang.lower()}") + len(f"```{args.target_lang.lower()}"):
+                                new_code.find("```", new_code.find(f"```{args.target_lang.lower()}") + len(f"```{args.target_lang.lower()}"))]
         # basic handling of chat output
         new_code = new_code.replace(f"```{args.target_lang.lower()}", "").replace("```", "").strip()
 

@@ -109,11 +109,11 @@ def parse_deepseek(folder_result):
             raw_result = open(path_result, 'r', encoding='utf-8').read()
             if "<<<Output>>>" not in raw_result.split('### Response')[-1]:
                 a += 1
-                print(path_result)
+                # print(path_result)
             predict = raw_result.split('### Response')[-1].split('[END-OF-RESPONSE]')[0].split("<<<Output>>>")[-1]
         with open(path_pred, 'w') as wr:
             wr.write(predict)
-    print(a)
+    # print(a)
 
 def parse_chatgpt(folder_result):
     for d in os.listdir(folder_result):

@@ -23,7 +23,7 @@ def find_path(dataset, pl, der, model, task):
     else:
         root_der = f"../Experiment_Results/DER/{task}/"
         if dataset in ["CodeNet", "Avatar"]:
-            data_path = os.path.join(root_der, model.split("/")[-1], dataset, f"{dataset}-{pl}")
+            data_path = os.path.join(root_der, model.split("/")[-1], f"{dataset}-{pl}")
         else:
             data_path = os.path.join(root_der, model.split("/")[-1], dataset)
         if not os.path.exists(data_path):

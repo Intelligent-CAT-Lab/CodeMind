@@ -24,6 +24,7 @@ if __name__ == "__main__":
     # test_one = args.test_one
     # pl = args.pl
     tgt = args.tgt
+    src = args.src
 
 
 
@@ -35,8 +36,8 @@ if __name__ == "__main__":
         
 
     if task == 'Translate':
-        root_dir = os.path.join(write_dir, 'DER', task, "no_test", model_id.split("/")[-1], dataset, src, tgt)
-        log_path = os.path.join(write_dir, 'DER', task, "no_test", model_id.split("/")[-1], dataset, src, tgt, 'pass_id.txt')
+        root_dir = os.path.join(write_dir, 'DER', 'Translation', "no_test", model_id.split("/")[-1], dataset, src, tgt+'-sanitized')
+        log_path = os.path.join(root_dir, 'pass_id.txt')
         dataset_dir = f"../dataset/{dataset}/{dataset}-{tgt}"
         new_ds_folder = "../Experiment_Results/DER/" + task + "/" + model_id.split("/")[-1] + "/" + dataset + "-" + tgt
 
@@ -44,23 +45,25 @@ if __name__ == "__main__":
         lines = f.readlines()
         for line in lines:
             code_id = line.replace("\n",'')
-
-            tgt_folder = os.path.join(new_ds_folder, code_id)
+            if '.' in code_id:
+                tgt_folder = os.path.join(new_ds_folder, code_id.split('.')[0])
+            else:
+                tgt_folder = os.path.join(new_ds_folder, code_id)
             if not os.path.exists(tgt_folder):
                 os.makedirs(tgt_folder)
             if task == 'Translate':
                 if tgt == 'Python':
                     tgt_code_path = os.path.join(tgt_folder, 'main.py')
-                    src_code_path = os.path.join(root_dir, f"{code_id}.py")
+                    src_code_path = os.path.join(root_dir, code_id)
                 if tgt == 'Java':
                     tgt_code_path = os.path.join(tgt_folder, 'Main.java')
-                    src_code_path = os.path.join(root_dir, f"{code_id}.java")                  
+                    src_code_path = os.path.join(root_dir, code_id)                  
             if task == 'Synthesis':
                 src_code_path = os.path.join(root_dir, code_id, 'main.py')
                 tgt_code_path = os.path.join(tgt_folder, 'main.py')
-            src_input_path = os.path.join(dataset_dir, code_id, 'input.txt')
+            src_input_path = os.path.join(dataset_dir, code_id.split('.')[0], 'input.txt')
             tgt_input_path = os.path.join(tgt_folder, 'input.txt')
-            src_output_path = os.path.join(dataset_dir, code_id, 'output.txt')
+            src_output_path = os.path.join(dataset_dir, code_id.split('.')[0], 'output.txt')
             tgt_output_path = os.path.join(tgt_folder, 'output.txt')
 
             shutil.copy(src_code_path, tgt_code_path)
