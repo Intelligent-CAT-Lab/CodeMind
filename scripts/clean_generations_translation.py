@@ -27,6 +27,7 @@ if __name__ == "__main__":
     parser.add_argument("--der", action='store_true')
     parser.add_argument('--use_test', help='use test dataset', action='store_true')
     parser.add_argument('--use_misleading_test', help='use test dataset', action='store_true')
+    parser.add_argument('--no_test', help='use test dataset', action='store_true')
     args = parser.parse_args()
 
     EXTENSIONS = { "Java": ".java", "Python": ".py" }
