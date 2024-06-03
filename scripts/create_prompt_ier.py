@@ -374,7 +374,7 @@ def create_prompt(model_id, code, code_input, dataset, pl):
         prompt = create_prompt_magicoder(code, code_input, dataset, pl)
     if "gpt" in model_id or 'CodeQwen' in model_id:
         prompt = create_prompt_gpt_codeqwen(code, code_input, dataset, pl)
-    if "CodeLlama" in model_id or "Llama2" in model_id or "Mistral" in model_id:
+    if "CodeLlama" in model_id or "Llama-2" in model_id or "Mistral" in model_id:
         prompt = create_prompt_codellama(code, code_input, dataset, pl)
     if "deepseek-coder" in model_id:
         prompt = create_prompt_deepseekcoder(code, code_input, dataset, pl)

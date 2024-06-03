@@ -114,7 +114,7 @@ def main(args):
                 else:
                     prompt = f"[INST] Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```:\n```\n" + "".join(prompt) + "\n```\n[/INST]\n"
 
-            elif starcoder in args.model:
+            elif 'starcoder' in args.model:
                 if args.use_test or args.use_misleading_test:
                     prompt = f"Translate the following {args.source_lang} code to {args.target_lang} and enclose your solution inside ```{args.target_lang.lower()}```.\nA sample test case is provided below:\n\nTest input:\n" + test_input + "\nExpected output:\n" + test_output + "\n\n```\n" + "".join(prompt) + f"\n```\n\n{args.target_lang} code:"
                 else:
