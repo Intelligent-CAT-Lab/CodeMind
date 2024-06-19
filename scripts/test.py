@@ -1,0 +1,6 @@
+def total_sum(n):   ##[STATE]{n:10}[/STATE]
+    total_sum = 0   ##[STATE]{total_sum:0}[/STATE]
+    for num in range(1, n): ##[STATE]{num:1, n:10}[/STATE][STATE]{num:2, n:10}[/STATE][STATE]{num:3, n:10}[/STATE][STATE]{num:4, n:10}[/STATE][STATE]{num:5, n:10}[/STATE][STATE]{num:6, n:10}[/STATE][STATE]{num:7, n:10}[/STATE][STATE]{num:8, n:10}[/STATE][STATE]{num:9, n:10}[/STATE]
+        if num % 2 == 0:    ##[STATE]{num:1}[/STATE][STATE]{num:2}[/STATE][STATE]{num:3}[/STATE][STATE]{num:4}[/STATE][STATE]{num:5}[/STATE][STATE]{num:6}[/STATE][STATE]{num:7}[/STATE][STATE]{num:8}[/STATE][STATE]{num:9}[/STATE]
+            total_sum += num    ##[STATE]{total_sum:2, num:2}[/STATE][STATE]{total_sum:6, num:4}[/STATE][STATE]{total_sum:12, num:6}[/STATE][STATE]{total_sum:20, num:8}[/STATE]
+    return total_sum    ##[OUTPUT]20[/OUTPUT]
