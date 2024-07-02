@@ -10,7 +10,7 @@ class Main {
  
 		long[] array = new long[] { A, B, C };
 		Arrays.sort(array);
- 
+		
 		if (A % 2 == 0 || B % 2 == 0 || C % 2 == 0) {
 			System.out.println(0);
 		} else {

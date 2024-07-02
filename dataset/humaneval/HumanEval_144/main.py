@@ -1,3 +1,4 @@
+from typing import *
 def simplify(x, n):
     a, b = x.split("/")
     c, d = n.split("/")

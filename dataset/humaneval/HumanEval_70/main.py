@@ -1,3 +1,4 @@
+from typing import *
 def strange_sort_list(lst):
     res, switch = [], True
     while lst:

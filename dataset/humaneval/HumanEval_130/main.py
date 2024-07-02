@@ -1,3 +1,4 @@
+from typing import *
 def tri(n):
     if n == 0:
         return [1]

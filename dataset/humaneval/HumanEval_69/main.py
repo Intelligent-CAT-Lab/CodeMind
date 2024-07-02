@@ -1,3 +1,4 @@
+from typing import *
 def search(lst):
     frq = [0] * (max(lst) + 1)
     for i in lst:

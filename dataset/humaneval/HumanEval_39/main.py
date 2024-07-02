@@ -1,3 +1,4 @@
+from typing import *
 def prime_fib(n: int):
     import math
 

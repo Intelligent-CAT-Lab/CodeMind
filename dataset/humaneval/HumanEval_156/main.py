@@ -1,3 +1,4 @@
+from typing import *
 def int_to_mini_roman(number):
     num = [1, 4, 5, 9, 10, 40, 50, 90,  
            100, 400, 500, 900, 1000] 

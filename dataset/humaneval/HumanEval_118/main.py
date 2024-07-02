@@ -1,3 +1,4 @@
+from typing import *
 def get_closest_vowel(word):
     if len(word) < 3:
         return ""

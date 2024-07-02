@@ -1,3 +1,4 @@
+from typing import *
 def sum_squares(lst):
     import math
     squared = 0

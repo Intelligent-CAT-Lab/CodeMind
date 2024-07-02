@@ -1,3 +1,4 @@
+from typing import *
 def largest_smallest_integers(lst):
     smallest = list(filter(lambda x: x < 0, lst))
     largest = list(filter(lambda x: x > 0, lst))

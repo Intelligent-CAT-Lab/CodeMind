@@ -1,3 +1,4 @@
+from typing import *
 def special_factorial(n):
     fact_i = 1
     special_fact = 1

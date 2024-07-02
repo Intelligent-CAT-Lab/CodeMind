@@ -1,3 +1,4 @@
+from typing import *
 def total_match(lst1, lst2):
     l1 = 0
     for st in lst1:

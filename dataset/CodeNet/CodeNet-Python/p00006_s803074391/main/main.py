@@ -1,2 +1,2 @@
-print((''.join(list(reversed(eval(input()))))))
+print((''.join(list(reversed(input())))))
     

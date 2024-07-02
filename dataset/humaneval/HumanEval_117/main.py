@@ -1,3 +1,4 @@
+from typing import *
 def select_words(s, n):
     result = []
     for word in s.split():

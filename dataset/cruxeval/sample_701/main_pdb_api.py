@@ -1,0 +1,5 @@
+def f(stg, tabs):
+    for tab in tabs:
+        stg = stg.rstrip(tab)
+    return stg
+f('31849 let it!31849 pass!', ('3','1','8',' ','1','9','2','d'))

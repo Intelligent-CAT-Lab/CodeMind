@@ -1,3 +1,4 @@
+from typing import *
 def all_prefixes(string: str) -> List[str]:
     result = []
 

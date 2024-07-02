@@ -1,5 +1,6 @@
 import os
 import subprocess
+from tqdm import tqdm
 
 def cleanup(result_root):
     root_dataset = "../dataset/Intermediate/Repair/HumanEvalFix"
@@ -8,7 +9,19 @@ def cleanup(result_root):
         tests_path = os.path.join(root_dataset, d, 'tests.txt')
         ut_path = os.path.join(result_root, d, 'ut.py')
         response = open(response_path, 'r').read()
-        fixed_code = response.split('```python')[-1].split("```")[0]
+        if 'starcoder' in response_path:
+            fixed_code = response.split('Fixed Code:')[-1].split("```")[0]
+        else:
+            if 'CodeLlama' in response_path or 'Mistral' in response_path:
+                fixed_code = response.split('[/INST]')[-1]
+                try:
+                    fixed_code = fixed_code.split('```python')[1].split("```")[0]
+                except:
+                    print(response_path)
+            else:
+                fixed_code = response.split('```python')[-1].split("```")[0]
+            if 'def check(' in fixed_code:
+                fixed_code = fixed_code.split('def check(')[0]
         test_cases = open(tests_path, 'r').read()
         code_ut = fixed_code +  '\n' + test_cases
         with open(ut_path, 'w', encoding='utf-8') as f:
@@ -33,7 +46,7 @@ def test_python(py_path):
 def test_code(result_root):
     # print('hello')
     pass_count, total_count = 0, 0
-    for d in os.listdir(result_root):
+    for d in tqdm(os.listdir(result_root)):
         total_count += 1
         path_ut = os.path.join(result_root, d, 'ut.py')
         status = test_python(path_ut)
@@ -42,6 +55,6 @@ def test_code(result_root):
     print(pass_count, total_count, pass_count/total_count)
 
 
-# result_root = "../Experiment_Results/APR/deepseek-coder-6.7b-instruct/HumanEvalFix"
-# cleanup(result_root)
-# test_code(result_root)
+result_root = "/home/changshu/CodeMind/Experiment_Results/APR/Mistral-7B-Instruct-v0.1/HumanEvalFix-tests"
+cleanup(result_root)
+test_code(result_root)
