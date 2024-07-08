@@ -34,6 +34,8 @@ def trace_python(file_path, log_path):
             pass
 
 if __name__ == "__main__":
-    path_file = sys.argv[1]
-    path_log = sys.argv[2]
+    # path_file = sys.argv[1]
+    # path_log = sys.argv[2]
+    path_file = "/home/changshu/LLM_REASONING/prompts/humaneval_notest/HumanEval_0/debugger.py"
+    path_log = "/home/changshu/LLM_REASONING/prompts/humaneval_notest/HumanEval_0/log.txt"
     trace_python(path_file, path_log)

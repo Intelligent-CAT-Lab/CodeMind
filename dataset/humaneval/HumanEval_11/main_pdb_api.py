@@ -1,11 +1,11 @@
-from typing import *
-def string_xor(a: str, b: str) -> str:
-    def xor(i, j):
-        if i == j:
-            return '0'
-        else:
-            return '1'
-
-    return ''.join(xor(x, y) for x, y in zip(a, b))
+from typing import *	##line:(1)
+def string_xor(a: str, b: str) -> str:	##line:(2)
+    def xor(i, j):	##line:(3)
+        if i == j:	##line:(4)
+            return '0'	##line:(5)
+        else:	##line:(6)
+            return '1'	##line:(7)
+	##line:(8)
+    return ''.join(xor(x, y) for x, y in zip(a, b))	##line:(9)
 
 string_xor('111000', '101010') 

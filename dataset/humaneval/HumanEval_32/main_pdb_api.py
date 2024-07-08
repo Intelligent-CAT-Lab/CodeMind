@@ -1,20 +1,20 @@
-from typing import *
-import math
-
-def poly(xs: list, x: float):
-    return sum([coeff * math.pow(x, i) for i, coeff in enumerate(xs)])
-
-def find_zero(xs: list):
-    begin, end = -1., 1.
-    while poly(xs, begin) * poly(xs, end) > 0:
-        begin *= 2.0
-        end *= 2.0
-    while end - begin > 1e-10:
-        center = (begin + end) / 2.0
-        if poly(xs, center) * poly(xs, begin) > 0:
-            begin = center
-        else:
-            end = center
-    return begin
+from typing import *	##line:(1)
+import math	##line:(2)
+	##line:(3)
+def poly(xs: list, x: float):	##line:(4)
+    return sum([coeff * math.pow(x, i) for i, coeff in enumerate(xs)])	##line:(5)
+	##line:(6)
+def find_zero(xs: list):	##line:(7)
+    begin, end = -1., 1.	##line:(8)
+    while poly(xs, begin) * poly(xs, end) > 0:	##line:(9)
+        begin *= 2.0	##line:(10)
+        end *= 2.0	##line:(11)
+    while end - begin > 1e-10:	##line:(12)
+        center = (begin + end) / 2.0	##line:(13)
+        if poly(xs, center) * poly(xs, begin) > 0:	##line:(14)
+            begin = center	##line:(15)
+        else:	##line:(16)
+            end = center	##line:(17)
+    return begin	##line:(18)
 
 find_zero([-6, 11, -6, 1])

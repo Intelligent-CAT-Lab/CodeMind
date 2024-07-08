@@ -1,15 +1,15 @@
-from typing import *
-def words_in_sentence(sentence):
-    new_lst = []
-    for word in sentence.split():
-        flg = 0
-        if len(word) == 1:
-            flg = 1
-        for i in range(2, len(word)):
-            if len(word)%i == 0:
-                flg = 1
-        if flg == 0 or len(word) == 2:
-            new_lst.append(word)
-    return " ".join(new_lst)
+from typing import *	##line:(1)
+def words_in_sentence(sentence):	##line:(2)
+    new_lst = []	##line:(3)
+    for word in sentence.split():	##line:(4)
+        flg = 0	##line:(5)
+        if len(word) == 1:	##line:(6)
+            flg = 1	##line:(7)
+        for i in range(2, len(word)):	##line:(8)
+            if len(word)%i == 0:	##line:(9)
+                flg = 1	##line:(10)
+        if flg == 0 or len(word) == 2:	##line:(11)
+            new_lst.append(word)	##line:(12)
+    return " ".join(new_lst)	##line:(13)
 
 words_in_sentence("This is a test") 

@@ -1,16 +1,16 @@
-from typing import *
-def exchange(lst1, lst2):
-    odd = 0
-    even = 0
-    for i in lst1:
-        if i%2 == 1:
-            odd += 1
-    for i in lst2:
-        if i%2 == 0:
-            even += 1
-    if even >= odd:
-        return "YES"
-    return "NO"
-            
+from typing import *	##line:(1)
+def exchange(lst1, lst2):	##line:(2)
+    odd = 0	##line:(3)
+    even = 0	##line:(4)
+    for i in lst1:	##line:(5)
+        if i%2 == 1:	##line:(6)
+            odd += 1	##line:(7)
+    for i in lst2:	##line:(8)
+        if i%2 == 0:	##line:(9)
+            even += 1	##line:(10)
+    if even >= odd:	##line:(11)
+        return "YES"	##line:(12)
+    return "NO"	##line:(13)
+            	##line:(14)
 
 exchange([1, 2, 3, 4], [1, 2, 3, 4]) 

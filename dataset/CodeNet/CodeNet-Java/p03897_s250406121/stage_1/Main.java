@@ -1,0 +1,145 @@
+import java.io.IOException; 
+import java.io.InputStream; 
+import java.io.PrintWriter; 
+import java.util.*; 
+ 
+
+class Main{ 
+
+	static void solve(){ 
+		int n=ni();
+		List<Integer> pos = new ArrayList<>();
+		for(int i=0;i<n;i+=6){
+var newVariable_0 = pos.add(i*n + j);			for(int j=1;j<n;j+=2)newVariable_0;
+		}
+		for(int i=3;i<n;i+=6){
+var newVariable_1 = pos.add(i*n + j);			for(int j=0;j<n;j+=2)newVariable_1;
+		}
+var newVariable_2 = pos.add(i*n);		for(int i=1;i<n;i+=6)newVariable_2;
+var newVariable_3 = pos.add(i*n);		for(int i=5;i<n;i+=6)newVariable_3;
+		if((n-1)%6==2){
+var newVariable_4 = pos.add((n-1)*n + j);			for(int j=1;j<n;j+=2)newVariable_4;
+		}
+		if((n-1)%6==5){
+var newVariable_5 = pos.add((n-1)*n + j);			for(int j=2;j<n;j+=2)newVariable_5;
+		}
+		Set<Integer> used = new HashSet<>();
+
+		out.println(pos.size());
+		for(int t: pos){
+			int i = t/n, j = t%n;
+			out.println(j+" "+i);
+var newVariable_6 = used.add(t);			if(!newVariable_6){
+				out.println("NyaN");return;
+			}
+		}
+	} 
+ 
+ 
+ 
+ 
+	 public static void main(String[] args){ 
+		 solve(); 
+		 out.flush(); 
+	 } 
+	 private static InputStream in = System.in; 
+	 private static PrintWriter out = new PrintWriter(System.out); 
+ 
+	 static boolean inrange(int y, int x, int h, int w){ 
+		 return y>=0 && y<h && x>=0 && x<w; 
+	 } 
+	 @SuppressWarnings("unchecked") 
+	 static<T extends Comparable> int lower_bound(List<T> list, T key){ 
+		 int lower=-1;int upper=list.size(); 
+		 while(upper - lower>1){ 
+		 int center =(upper+lower)/2; 
+var newVariable_7 = list.get(center).compareTo(key);var newVariable_8 = list.get(center);		 if(newVariable_8.compareTo(key)>=0)upper=center; 
+		 else lower=center; 
+		 } 
+		 return upper; 
+	 } 
+	 @SuppressWarnings("unchecked") 
+	 static <T extends Comparable> int upper_bound(List<T> list, T key){ 
+		 int lower=-1;int upper=list.size(); 
+		 while(upper-lower >1){ 
+		 int center=(upper+lower)/2; 
+var newVariable_9 = list.get(center).compareTo(key);var newVariable_10 = list.get(center);		 if(newVariable_10.compareTo(key)>0)upper=center; 
+		 else lower=center; 
+		 } 
+		 return upper; 
+	 } 
+	 @SuppressWarnings("unchecked") 
+	 static <T extends Comparable> boolean next_permutation(List<T> list){ 
+var newVariable_11 = list.size();		 int lastIndex = newVariable_11-2; 
+var newVariable_12 = list.get(lastIndex).compareTo(list.get(lastIndex+1));var newVariable_13 = list.get(lastIndex);var newVariable_14 = list.get(lastIndex+1);		 while(lastIndex>=0 && list.get(lastIndex).compareTo(newVariable_14)>=0)--lastIndex; 
+		 if(lastIndex<0)return false; 
+var newVariable_15 = list.size();		 int swapIndex = newVariable_15-1; 
+var newVariable_16 = list.get(lastIndex).compareTo(list.get(swapIndex));var newVariable_17 = list.get(lastIndex);var newVariable_18 = list.get(swapIndex);		 while(list.get(lastIndex).compareTo(newVariable_18)>=0)swapIndex--; 
+		 T tmp = list.get(lastIndex); 
+var newVariable_19 = list.set(lastIndex++, list.get(swapIndex));var newVariable_20 = list.get(swapIndex);		 list.set(lastIndex++, newVariable_20); 
+var newVariable_21 = list.set(swapIndex, tmp);var newVariable_22 = list.size();		 swapIndex = newVariable_22-1; 
+		 while(lastIndex<swapIndex){ 
+		 tmp = list.get(lastIndex); 
+var newVariable_23 = list.set(lastIndex, list.get(swapIndex));var newVariable_24 = list.get(swapIndex);		 list.set(lastIndex, newVariable_24); 
+var newVariable_25 = list.set(swapIndex, tmp);		 ++lastIndex;--swapIndex; 
+		 } 
+		 return true; 
+	 } 
+	 private static final byte[] buffer = new byte[1<<15]; 
+	 private static int ptr = 0; 
+	 private static int buflen = 0; 
+	 private static boolean hasNextByte(){ 
+		 if(ptr<buflen)return true; 
+		 ptr = 0; 
+		 try{ 
+			 buflen = in.read(buffer); 
+		 } catch (IOException e){ 
+			 e.printStackTrace(); 
+		 } 
+		 return buflen>0; 
+	 } 
+	 private static int readByte(){ if(hasNextByte()) return buffer[ptr++]; else return -1;} 
+	 private static boolean isSpaceChar(int c){ return !(33<=c && c<=126);} 
+	 private static int skip(){int res; while((res=readByte())!=-1 && isSpaceChar(res)); return res;} 
+ 
+	 private static double nd(){ return Double.parseDouble(ns()); } 
+	 private static char nc(){ return (char)skip(); } 
+	 private static String ns(){ 
+		 StringBuilder sb = new StringBuilder(); 
+		 for(int b=skip();!isSpaceChar(b);b=readByte())sb.append((char)b); 
+var newVariable_26 = sb.toString();		 return newVariable_26; 
+	 } 
+	 private static int[] nia(int n){ 
+		 int[] res = new int[n]; 
+		 for(int i=0;i<n;++i)res[i]=ni(); 
+		 return res; 
+	 } 
+	 private static long[] nla(int n){ 
+		 long[] res = new long[n]; 
+		 for(int i=0;i<n;++i)res[i]=nl(); 
+		 return res; 
+	 } 
+	 private static int ni(){ 
+		 int res=0,b; 
+		 boolean minus=false; 
+		 while((b=readByte())!=-1 && !((b>='0'&&b<='9') || b=='-')); 
+		 if(b=='-'){ 
+			 minus=true; 
+			 b=readByte(); 
+		 } 
+		 for(;'0'<=b&&b<='9';b=readByte())res=res*10+(b-'0'); 
+		 return minus ? -res:res; 
+	 } 
+	 private static long nl(){ 
+		 long res=0,b; 
+		 boolean minus=false; 
+		 while((b=readByte())!=-1 && !((b>='0'&&b<='9') || b=='-')); 
+		 if(b=='-'){ 
+			 minus=true; 
+			 b=readByte(); 
+		 } 
+		 for(;'0'<=b&&b<='9';b=readByte())res=res*10+(b-'0'); 
+		 return minus ? -res:res; 
+	} 
+} 
+

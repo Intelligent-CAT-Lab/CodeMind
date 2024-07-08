@@ -1,11 +1,11 @@
-from typing import *
-def can_arrange(arr):
-    ind=-1
-    i=1
-    while i<len(arr):
-      if arr[i]<arr[i-1]:
-        ind=i
-      i+=1
-    return ind
+from typing import *	##line:(1)
+def can_arrange(arr):	##line:(2)
+    ind=-1	##line:(3)
+    i=1	##line:(4)
+    while i<len(arr):	##line:(5)
+      if arr[i]<arr[i-1]:	##line:(6)
+        ind=i	##line:(7)
+      i+=1	##line:(8)
+    return ind	##line:(9)
 
 can_arrange([1,2,4,3,5])

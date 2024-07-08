@@ -48,3 +48,7 @@ def parse_log_python(log_path):
                 return False, state_dict
 
 
+if __name__ == "__main__":
+    path = "/home/changshu/LLM_REASONING/prompts/single_line_all_1_Python/p01772_s174704165/log.txt"
+    _,a = parse_log_python(path)
+    print(a)

@@ -1,13 +1,13 @@
-from typing import *
-def tri(n):
-    if n == 0:
-        return [1]
-    my_tri = [1, 3]
-    for i in range(2, n + 1):
-        if i % 2 == 0:
-            my_tri.append(i / 2 + 1)
-        else:
-            my_tri.append(my_tri[i - 1] + my_tri[i - 2] + (i + 3) / 2)
-    return my_tri
+from typing import *	##line:(1)
+def tri(n):	##line:(2)
+    if n == 0:	##line:(3)
+        return [1]	##line:(4)
+    my_tri = [1, 3]	##line:(5)
+    for i in range(2, n + 1):	##line:(6)
+        if i % 2 == 0:	##line:(7)
+            my_tri.append(i / 2 + 1)	##line:(8)
+        else:	##line:(9)
+            my_tri.append(my_tri[i - 1] + my_tri[i - 2] + (i + 3) / 2)	##line:(10)
+    return my_tri	##line:(11)
 
 tri(3) 

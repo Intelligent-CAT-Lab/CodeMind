@@ -1,10 +1,10 @@
-from typing import *
-def triangle_area(a, b, c):
-    if a + b <= c or a + c <= b or b + c <= a:
-        return -1 
-    s = (a + b + c)/2    
-    area = (s * (s - a) * (s - b) * (s - c)) ** 0.5
-    area = round(area, 2)
-    return area
+from typing import *	##line:(1)
+def triangle_area(a, b, c):	##line:(2)
+    if a + b <= c or a + c <= b or b + c <= a:	##line:(3)
+        return -1 	##line:(4)
+    s = (a + b + c)/2    	##line:(5)
+    area = (s * (s - a) * (s - b) * (s - c)) ** 0.5	##line:(6)
+    area = round(area, 2)	##line:(7)
+    return area	##line:(8)
 
 triangle_area(3, 4, 5) 

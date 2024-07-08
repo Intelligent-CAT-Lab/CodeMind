@@ -1,10 +1,10 @@
-from typing import *
-def strange_sort_list(lst):
-    res, switch = [], True
-    while lst:
-        res.append(min(lst) if switch else max(lst))
-        lst.remove(res[-1])
-        switch = not switch
-    return res
+from typing import *	##line:(1)
+def strange_sort_list(lst):	##line:(2)
+    res, switch = [], True	##line:(3)
+    while lst:	##line:(4)
+        res.append(min(lst) if switch else max(lst))	##line:(5)
+        lst.remove(res[-1])	##line:(6)
+        switch = not switch	##line:(7)
+    return res	##line:(8)
 
-strange_sort_list([1, 2, 3, 4])
+strange_sort_list([1, 2, 3, 4]) 

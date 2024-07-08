@@ -1,16 +1,16 @@
-from typing import *
-def rolling_max(numbers: List[int]) -> List[int]:
-    running_max = None
-    result = []
-
-    for n in numbers:
-        if running_max is None:
-            running_max = n
-        else:
-            running_max = max(running_max, n)
-
-        result.append(running_max)
-
-    return result
+from typing import *	##line:(1)
+def rolling_max(numbers: List[int]) -> List[int]:	##line:(2)
+    running_max = None	##line:(3)
+    result = []	##line:(4)
+	##line:(5)
+    for n in numbers:	##line:(6)
+        if running_max is None:	##line:(7)
+            running_max = n	##line:(8)
+        else:	##line:(9)
+            running_max = max(running_max, n)	##line:(10)
+	##line:(11)
+        result.append(running_max)	##line:(12)
+	##line:(13)
+    return result	##line:(14)
 
 rolling_max([3,2,3,100,3]) 

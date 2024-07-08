@@ -1,26 +1,26 @@
-from typing import *
-def check_dict_case(dict):
-    if len(dict.keys()) == 0:
-        return False
-    else:
-        state = "start"
-        for key in dict.keys():
-
-            if isinstance(key, str) == False:
-                state = "mixed"
-                break
-            if state == "start":
-                if key.isupper():
-                    state = "upper"
-                elif key.islower():
-                    state = "lower"
-                else:
-                    break
-            elif (state == "upper" and not key.isupper()) or (state == "lower" and not key.islower()):
-                    state = "mixed"
-                    break
-            else:
-                break
-        return state == "upper" or state == "lower" 
+from typing import *	##line:(1)
+def check_dict_case(dict):	##line:(2)
+    if len(dict.keys()) == 0:	##line:(3)
+        return False	##line:(4)
+    else:	##line:(5)
+        state = "start"	##line:(6)
+        for key in dict.keys():	##line:(7)
+	##line:(8)
+            if isinstance(key, str) == False:	##line:(9)
+                state = "mixed"	##line:(10)
+                break	##line:(11)
+            if state == "start":	##line:(12)
+                if key.isupper():	##line:(13)
+                    state = "upper"	##line:(14)
+                elif key.islower():	##line:(15)
+                    state = "lower"	##line:(16)
+                else:	##line:(17)
+                    break	##line:(18)
+            elif (state == "upper" and not key.isupper()) or (state == "lower" and not key.islower()):	##line:(19)
+                    state = "mixed"	##line:(20)
+                    break	##line:(21)
+            else:	##line:(22)
+                break	##line:(23)
+        return state == "upper" or state == "lower" 	##line:(24)
 
 check_dict_case({"p":"pineapple", "b":"banana"}) 

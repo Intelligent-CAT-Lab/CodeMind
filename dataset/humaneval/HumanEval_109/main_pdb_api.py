@@ -1,16 +1,16 @@
-from typing import *
-def move_one_ball(arr):
-    if len(arr)==0:
-      return True
-    sorted_array=sorted(arr)
-    my_arr=[]
-    
-    min_value=min(arr)
-    min_index=arr.index(min_value)
-    my_arr=arr[min_index:]+arr[0:min_index]
-    for i in range(len(arr)):
-      if my_arr[i]!=sorted_array[i]:
-        return False
-    return True
+from typing import *	##line:(1)
+def move_one_ball(arr):	##line:(2)
+    if len(arr)==0:	##line:(3)
+      return True	##line:(4)
+    sorted_array=sorted(arr)	##line:(5)
+    my_arr=[]	##line:(6)
+    	##line:(7)
+    min_value=min(arr)	##line:(8)
+    min_index=arr.index(min_value)	##line:(9)
+    my_arr=arr[min_index:]+arr[0:min_index]	##line:(10)
+    for i in range(len(arr)):	##line:(11)
+      if my_arr[i]!=sorted_array[i]:	##line:(12)
+        return False	##line:(13)
+    return True	##line:(14)
 
 move_one_ball([3, 4, 5, 1, 2])

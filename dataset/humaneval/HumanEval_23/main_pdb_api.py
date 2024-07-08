@@ -1,5 +1,5 @@
-from typing import *
-def strlen(string: str) -> int:
-    return len(string)
+from typing import *	##line:(1)
+def strlen(string: str) -> int:	##line:(2)
+    return len(string)	##line:(3)
 
 strlen('asdasnakj') 

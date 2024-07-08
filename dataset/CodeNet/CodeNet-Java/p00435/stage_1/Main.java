@@ -1,0 +1,1 @@
+var newVariable_0 = new java.util.Scanner(System.in).next().toCharArray();var newVariable_1 = new java.util.Scanner(System.in).next();class Main{public static void main(String[]z){String s="";for(char c:newVariable_1.toCharArray())s+=(char)((c-42)%26+65);System.out.println(s);}}

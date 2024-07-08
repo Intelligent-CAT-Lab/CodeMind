@@ -1,11 +1,11 @@
-from typing import *
-def choose_num(x, y):
-    if x > y:
-        return -1
-    if y % 2 == 0:
-        return y
-    if x == y:
-        return -1
-    return y - 1
+from typing import *	##line:(1)
+def choose_num(x, y):	##line:(2)
+    if x > y:	##line:(3)
+        return -1	##line:(4)
+    if y % 2 == 0:	##line:(5)
+        return y	##line:(6)
+    if x == y:	##line:(7)
+        return -1	##line:(8)
+    return y - 1	##line:(9)
 
 choose_num(12, 15) 

@@ -1,18 +1,18 @@
-from typing import *
-def match_parens(lst):
-    def check(s):
-        val = 0
-        for i in s:
-            if i == '(':
-                val = val + 1
-            else:
-                val = val - 1
-            if val < 0:
-                return False
-        return True if val == 0 else False
-
-    S1 = lst[0] + lst[1]
-    S2 = lst[1] + lst[0]
-    return 'Yes' if check(S1) or check(S2) else 'No'
+from typing import *	##line:(1)
+def match_parens(lst):	##line:(2)
+    def check(s):	##line:(3)
+        val = 0	##line:(4)
+        for i in s:	##line:(5)
+            if i == '(':	##line:(6)
+                val = val + 1	##line:(7)
+            else:	##line:(8)
+                val = val - 1	##line:(9)
+            if val < 0:	##line:(10)
+                return False	##line:(11)
+        return True if val == 0 else False	##line:(12)
+	##line:(13)
+    S1 = lst[0] + lst[1]	##line:(14)
+    S2 = lst[1] + lst[0]	##line:(15)
+    return 'Yes' if check(S1) or check(S2) else 'No'	##line:(16)
 
 match_parens(['()(', ')']) 

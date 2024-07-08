@@ -1,24 +1,24 @@
-from typing import *
-def closest_integer(value):
-    from math import floor, ceil
-
-    if value.count('.') == 1:
-        # remove trailing zeros
-        while (value[-1] == '0'):
-            value = value[:-1]
-
-    num = float(value)
-    if value[-2:] == '.5':
-        if num > 0:
-            res = ceil(num)
-        else:
-            res = floor(num)
-    elif len(value) > 0:
-        res = int(round(num))
-    else:
-        res = 0
-
-    return res
-
+from typing import *	##line:(1)
+def closest_integer(value):	##line:(2)
+    from math import floor, ceil	##line:(3)
+	##line:(4)
+    if value.count('.') == 1:	##line:(5)
+        # remove trailing zeros	##line:(6)
+        while (value[-1] == '0'):	##line:(7)
+            value = value[:-1]	##line:(8)
+	##line:(9)
+    num = float(value)	##line:(10)
+    if value[-2:] == '.5':	##line:(11)
+        if num > 0:	##line:(12)
+            res = ceil(num)	##line:(13)
+        else:	##line:(14)
+            res = floor(num)	##line:(15)
+    elif len(value) > 0:	##line:(16)
+        res = int(round(num))	##line:(17)
+    else:	##line:(18)
+        res = 0	##line:(19)
+	##line:(20)
+    return res	##line:(21)
+	##line:(22)
 
 closest_integer("10") 

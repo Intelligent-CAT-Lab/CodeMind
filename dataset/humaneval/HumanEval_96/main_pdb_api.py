@@ -1,15 +1,15 @@
-from typing import *
-def count_up_to(n):
-    primes = []
-    for i in range(2, n):
-        is_prime = True
-        for j in range(2, i):
-            if i % j == 0:
-                is_prime = False
-                break
-        if is_prime:
-            primes.append(i)
-    return primes
-
+from typing import *	##line:(1)
+def count_up_to(n):	##line:(2)
+    primes = []	##line:(3)
+    for i in range(2, n):	##line:(4)
+        is_prime = True	##line:(5)
+        for j in range(2, i):	##line:(6)
+            if i % j == 0:	##line:(7)
+                is_prime = False	##line:(8)
+                break	##line:(9)
+        if is_prime:	##line:(10)
+            primes.append(i)	##line:(11)
+    return primes	##line:(12)
+	##line:(13)
 
 count_up_to(5) 

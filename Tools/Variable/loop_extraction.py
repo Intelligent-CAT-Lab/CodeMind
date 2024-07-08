@@ -4,6 +4,7 @@ import astunparse
 import json
 import javalang
 from read_debugger_log import parse_log_python
+import traceback
 
 class PythonLoopExtractor(ast.NodeVisitor):
     def __init__(self):
@@ -73,8 +74,12 @@ def run_all_py(root):
     dataset_name=root.split('/')[-1]
     write_dir = f"/home/changshu/CodeMind/dataset/Loops/{dataset_name}.json"
     for d in os.listdir(root):
+        # if d!='HumanEval_107':
+        #     continue
         if 'CodeNet' in root:
             code_path = os.path.join(root, d, 'main', 'main.py')
+        elif 'humaneval' in root:
+            code_path = f"/home/changshu/LLM_REASONING/prompts/humaneval_notest/{d}/main.py"
         else:
             code_path = os.path.join(root, d, 'main.py')
         data = loop_extraction_py(code_path)
@@ -83,18 +88,22 @@ def run_all_py(root):
                 'For': [],
                 'While': data['While']
             }
-
+            
             if dataset_name == 'cruxeval':
                 log_path = f"/home/changshu/LLM_REASONING/prompts/cruxeval/{d}/log.txt"
             if dataset_name == 'mbpp':
                 log_path = f"/home/changshu/LLM_REASONING/prompts/mbpp/{d}/log.txt"
+            if dataset_name == 'humaneval':
+                log_path = f"/home/changshu/LLM_REASONING/prompts/humaneval_notest/{d}/log.txt"
+            if dataset_name == 'CodeNet-Python':
+                log_path=f"/home/changshu/LLM_REASONING/prompts/single_line_all_1_Python/{d}/log.txt"
             try:
                 s, states = parse_log_python(log_path)
                 if not s:
                     print(log_path)
                 for i in data['For']:
                     states_all = []
-                    line_no = i['line_no'] + 1
+                    line_no = i['line_no'] - 1
                     for j in i['iterator']:
                         iter_states = [n[j] for n in states[str(line_no)]]
                         states_all.append(iter_states)
@@ -104,7 +113,8 @@ def run_all_py(root):
                         'line_no': i['line_no'],
                         'iterator_gt': states_all
                     })
-            except:
+            except Exception:
+                # traceback.print_exc()
                 print("**"+log_path)
     with open(write_dir, 'w') as f:
         json.dump(results, f, indent=4)
@@ -117,8 +127,8 @@ def loop_extraction_java(file_name):
         if isinstance(node, javalang.tree.ForStatement):
             print(node.control)
 
-# loop_extraction_py('/home/changshu/CodeMind/dataset/CodeNet/CodeNet-Python/p00018_s482800358/main/main.py')
-
-run_all_py('/home/changshu/CodeMind/dataset/cruxeval')
+a = loop_extraction_py('/home/changshu/LLM_REASONING/prompts/single_line_all_1_Python/p02881/main/main.py')
+print(a)
+# run_all_py('/home/changshu/CodeMind/dataset/CodeNet/CodeNet-Python')
 
 # loop_extraction_java('/home/changshu/CodeMind/dataset/CodeNet/CodeNet-Java/p00007/Main.java')

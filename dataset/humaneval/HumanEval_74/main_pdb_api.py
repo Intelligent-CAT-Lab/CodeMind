@@ -1,16 +1,16 @@
-from typing import *
-def total_match(lst1, lst2):
-    l1 = 0
-    for st in lst1:
-        l1 += len(st)
-    
-    l2 = 0
-    for st in lst2:
-        l2 += len(st)
-    
-    if l1 <= l2:
-        return lst1
-    else:
-        return lst2
+from typing import *	##line:(1)
+def total_match(lst1, lst2):	##line:(2)
+    l1 = 0	##line:(3)
+    for st in lst1:	##line:(4)
+        l1 += len(st)	##line:(5)
+    	##line:(6)
+    l2 = 0	##line:(7)
+    for st in lst2:	##line:(8)
+        l2 += len(st)	##line:(9)
+    	##line:(10)
+    if l1 <= l2:	##line:(11)
+        return lst1	##line:(12)
+    else:	##line:(13)
+        return lst2	##line:(14)
 
 total_match(['hi', 'admin'], ['hi', 'hi']) 

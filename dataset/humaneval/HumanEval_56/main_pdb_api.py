@@ -1,13 +1,13 @@
-from typing import *
-def correct_bracketing(brackets: str):
-    depth = 0
-    for b in brackets:
-        if b == "<":
-            depth += 1
-        else:
-            depth -= 1
-        if depth < 0:
-            return False
-    return depth == 0
+from typing import *	##line:(1)
+def correct_bracketing(brackets: str):	##line:(2)
+    depth = 0	##line:(3)
+    for b in brackets:	##line:(4)
+        if b == "<":	##line:(5)
+            depth += 1	##line:(6)
+        else:	##line:(7)
+            depth -= 1	##line:(8)
+        if depth < 0:	##line:(9)
+            return False	##line:(10)
+    return depth == 0	##line:(11)
 
-correct_bracketing("<<><>>")
+correct_bracketing(10) 

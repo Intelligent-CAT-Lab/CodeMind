@@ -1,16 +1,16 @@
-from typing import *
-def even_odd_palindrome(n):
-    def is_palindrome(n):
-        return str(n) == str(n)[::-1]
-
-    even_palindrome_count = 0
-    odd_palindrome_count = 0
-
-    for i in range(1, n+1):
-        if i%2 == 1 and is_palindrome(i):
-                odd_palindrome_count += 1
-        elif i%2 == 0 and is_palindrome(i):
-            even_palindrome_count += 1
-    return (even_palindrome_count, odd_palindrome_count)
+from typing import *	##line:(1)
+def even_odd_palindrome(n):	##line:(2)
+    def is_palindrome(n):	##line:(3)
+        return str(n) == str(n)[::-1]	##line:(4)
+	##line:(5)
+    even_palindrome_count = 0	##line:(6)
+    odd_palindrome_count = 0	##line:(7)
+	##line:(8)
+    for i in range(1, n+1):	##line:(9)
+        if i%2 == 1 and is_palindrome(i):	##line:(10)
+                odd_palindrome_count += 1	##line:(11)
+        elif i%2 == 0 and is_palindrome(i):	##line:(12)
+            even_palindrome_count += 1	##line:(13)
+    return (even_palindrome_count, odd_palindrome_count)	##line:(14)
 
 even_odd_palindrome(123) 

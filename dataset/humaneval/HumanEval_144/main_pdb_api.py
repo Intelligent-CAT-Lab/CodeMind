@@ -1,11 +1,11 @@
-from typing import *
-def simplify(x, n):
-    a, b = x.split("/")
-    c, d = n.split("/")
-    numerator = int(a) * int(c)
-    denom = int(b) * int(d)
-    if (numerator/denom == int(numerator/denom)):
-        return True
-    return False
+from typing import *	##line:(1)
+def simplify(x, n):	##line:(2)
+    a, b = x.split("/")	##line:(3)
+    c, d = n.split("/")	##line:(4)
+    numerator = int(a) * int(c)	##line:(5)
+    denom = int(b) * int(d)	##line:(6)
+    if (numerator/denom == int(numerator/denom)):	##line:(7)
+        return True	##line:(8)
+    return False	##line:(9)
 
 simplify("1/5", "5/1") 

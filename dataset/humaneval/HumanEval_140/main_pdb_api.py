@@ -1,24 +1,24 @@
-from typing import *
-def fix_spaces(text):
-    new_text = ""
-    i = 0
-    start, end = 0, 0
-    while i < len(text):
-        if text[i] == " ":
-            end += 1
-        else:
-            if end - start > 2:
-                new_text += "-"+text[i]
-            elif end - start > 0:
-                new_text += "_"*(end - start)+text[i]
-            else:
-                new_text += text[i]
-            start, end = i+1, i+1
-        i+=1
-    if end - start > 2:
-        new_text += "-"
-    elif end - start > 0:
-        new_text += "_"
-    return new_text
+from typing import *	##line:(1)
+def fix_spaces(text):	##line:(2)
+    new_text = ""	##line:(3)
+    i = 0	##line:(4)
+    start, end = 0, 0	##line:(5)
+    while i < len(text):	##line:(6)
+        if text[i] == " ":	##line:(7)
+            end += 1	##line:(8)
+        else:	##line:(9)
+            if end - start > 2:	##line:(10)
+                new_text += "-"+text[i]	##line:(11)
+            elif end - start > 0:	##line:(12)
+                new_text += "_"*(end - start)+text[i]	##line:(13)
+            else:	##line:(14)
+                new_text += text[i]	##line:(15)
+            start, end = i+1, i+1	##line:(16)
+        i+=1	##line:(17)
+    if end - start > 2:	##line:(18)
+        new_text += "-"	##line:(19)
+    elif end - start > 0:	##line:(20)
+        new_text += "_"	##line:(21)
+    return new_text	##line:(22)
 
 fix_spaces("Example") 

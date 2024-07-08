@@ -1,18 +1,18 @@
-from typing import *
-def file_name_check(file_name):
-    suf = ['txt', 'exe', 'dll']
-    lst = file_name.split(sep='.')
-    if len(lst) != 2:
-        return 'No'
-    if not lst[1] in suf:
-        return 'No'
-    if len(lst[0]) == 0:
-        return 'No'
-    if not lst[0][0].isalpha():
-        return 'No'
-    t = len([x for x in lst[0] if x.isdigit()])
-    if t > 3:
-        return 'No'
-    return 'Yes'
+from typing import *	##line:(1)
+def file_name_check(file_name):	##line:(2)
+    suf = ['txt', 'exe', 'dll']	##line:(3)
+    lst = file_name.split(sep='.')	##line:(4)
+    if len(lst) != 2:	##line:(5)
+        return 'No'	##line:(6)
+    if not lst[1] in suf:	##line:(7)
+        return 'No'	##line:(8)
+    if len(lst[0]) == 0:	##line:(9)
+        return 'No'	##line:(10)
+    if not lst[0][0].isalpha():	##line:(11)
+        return 'No'	##line:(12)
+    t = len([x for x in lst[0] if x.isdigit()])	##line:(13)
+    if t > 3:	##line:(14)
+        return 'No'	##line:(15)
+    return 'Yes'	##line:(16)
 
 file_name_check("example.txt") 

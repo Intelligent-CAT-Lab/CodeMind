@@ -1,11 +1,11 @@
-from typing import *
-def count_nums(arr):
-    def digits_sum(n):
-        neg = 1
-        if n < 0: n, neg = -1 * n, -1 
-        n = [int(i) for i in str(n)]
-        n[0] = n[0] * neg
-        return sum(n)
-    return len(list(filter(lambda x: x > 0, [digits_sum(i) for i in arr])))
+from typing import *	##line:(1)
+def count_nums(arr):	##line:(2)
+    def digits_sum(n):	##line:(3)
+        neg = 1	##line:(4)
+        if n < 0: n, neg = -1 * n, -1 	##line:(5)
+        n = [int(i) for i in str(n)]	##line:(6)
+        n[0] = n[0] * neg	##line:(7)
+        return sum(n)	##line:(8)
+    return len(list(filter(lambda x: x > 0, [digits_sum(i) for i in arr])))	##line:(9)
 
 count_nums([1, 1, 2, -2, 3, 4, 5]) 

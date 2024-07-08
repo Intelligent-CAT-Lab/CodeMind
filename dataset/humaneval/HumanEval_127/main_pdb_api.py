@@ -1,20 +1,20 @@
-from typing import *
-def intersection(interval1, interval2):
-    def is_prime(num):
-        if num == 1 or num == 0:
-            return False
-        if num == 2:
-            return True
-        for i in range(2, num):
-            if num%i == 0:
-                return False
-        return True
-
-    l = max(interval1[0], interval2[0])
-    r = min(interval1[1], interval2[1])
-    length = r - l
-    if length > 0 and is_prime(length):
-        return "YES"
-    return "NO"
+from typing import *	##line:(1)
+def intersection(interval1, interval2):	##line:(2)
+    def is_prime(num):	##line:(3)
+        if num == 1 or num == 0:	##line:(4)
+            return False	##line:(5)
+        if num == 2:	##line:(6)
+            return True	##line:(7)
+        for i in range(2, num):	##line:(8)
+            if num%i == 0:	##line:(9)
+                return False	##line:(10)
+        return True	##line:(11)
+	##line:(12)
+    l = max(interval1[0], interval2[0])	##line:(13)
+    r = min(interval1[1], interval2[1])	##line:(14)
+    length = r - l	##line:(15)
+    if length > 0 and is_prime(length):	##line:(16)
+        return "YES"	##line:(17)
+    return "NO"	##line:(18)
 
 intersection((1, 2), (2, 3)) 

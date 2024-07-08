@@ -1,17 +1,17 @@
-from typing import *
-def factorize(n: int) -> List[int]:
-    import math
-    fact = []
-    i = 2
-    while i <= int(math.sqrt(n) + 1):
-        if n % i == 0:
-            fact.append(i)
-            n //= i
-        else:
-            i += 1
-
-    if n > 1:
-        fact.append(n)
-    return fact
+from typing import *	##line:(1)
+def factorize(n: int) -> List[int]:	##line:(2)
+    import math	##line:(3)
+    fact = []	##line:(4)
+    i = 2	##line:(5)
+    while i <= int(math.sqrt(n) + 1):	##line:(6)
+        if n % i == 0:	##line:(7)
+            fact.append(i)	##line:(8)
+            n //= i	##line:(9)
+        else:	##line:(10)
+            i += 1	##line:(11)
+	##line:(12)
+    if n > 1:	##line:(13)
+        fact.append(n)	##line:(14)
+    return fact	##line:(15)
 
 factorize(2) 

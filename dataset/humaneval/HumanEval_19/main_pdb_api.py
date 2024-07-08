@@ -1,17 +1,17 @@
-from typing import *
-def sort_numbers(numbers: str) -> str:
-    value_map = {
-        'zero': 0,
-        'one': 1,
-        'two': 2,
-        'three': 3,
-        'four': 4,
-        'five': 5,
-        'six': 6,
-        'seven': 7,
-        'eight': 8,
-        'nine': 9
-    }
-    return ' '.join(sorted([x for x in numbers.split(' ') if x], key=lambda x: value_map[x]))
+from typing import *	##line:(1)
+def sort_numbers(numbers: str) -> str:	##line:(2)
+    value_map = {	##line:(3)
+        'zero': 0,	##line:(4)
+        'one': 1,	##line:(5)
+        'two': 2,	##line:(6)
+        'three': 3,	##line:(7)
+        'four': 4,	##line:(8)
+        'five': 5,	##line:(9)
+        'six': 6,	##line:(10)
+        'seven': 7,	##line:(11)
+        'eight': 8,	##line:(12)
+        'nine': 9	##line:(13)
+    }	##line:(14)
+    return ' '.join(sorted([x for x in numbers.split(' ') if x], key=lambda x: value_map[x]))	##line:(15)
 
 sort_numbers('five zero four seven nine eight') 

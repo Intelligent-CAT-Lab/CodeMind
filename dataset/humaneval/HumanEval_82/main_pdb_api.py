@@ -1,11 +1,11 @@
-from typing import *
-def prime_length(string):
-    l = len(string)
-    if l == 0 or l == 1:
-        return False
-    for i in range(2, l):
-        if l % i == 0:
-            return False
-    return True
+from typing import *	##line:(1)
+def prime_length(string):	##line:(2)
+    l = len(string)	##line:(3)
+    if l == 0 or l == 1:	##line:(4)
+        return False	##line:(5)
+    for i in range(2, l):	##line:(6)
+        if l % i == 0:	##line:(7)
+            return False	##line:(8)
+    return True	##line:(9)
 
 prime_length('Hello') 

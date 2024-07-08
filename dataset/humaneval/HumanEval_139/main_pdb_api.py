@@ -1,10 +1,10 @@
-from typing import *
-def special_factorial(n):
-    fact_i = 1
-    special_fact = 1
-    for i in range(1, n+1):
-        fact_i *= i
-        special_fact *= fact_i
-    return special_fact
+from typing import *	##line:(1)
+def special_factorial(n):	##line:(2)
+    fact_i = 1	##line:(3)
+    special_fact = 1	##line:(4)
+    for i in range(1, n+1):	##line:(5)
+        fact_i *= i	##line:(6)
+        special_fact *= fact_i	##line:(7)
+    return special_fact	##line:(8)
 
 special_factorial(4) 

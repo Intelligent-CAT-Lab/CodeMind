@@ -1,10 +1,10 @@
-from typing import *
-def rounded_avg(n, m):
-    if m < n:
-        return -1
-    summation = 0
-    for i in range(n, m+1):
-        summation += i
-    return bin(round(summation/(m - n + 1)))
+from typing import *	##line:(1)
+def rounded_avg(n, m):	##line:(2)
+    if m < n:	##line:(3)
+        return -1	##line:(4)
+    summation = 0	##line:(5)
+    for i in range(n, m+1):	##line:(6)
+        summation += i	##line:(7)
+    return bin(round(summation/(m - n + 1)))	##line:(8)
 
 rounded_avg(1, 5) 

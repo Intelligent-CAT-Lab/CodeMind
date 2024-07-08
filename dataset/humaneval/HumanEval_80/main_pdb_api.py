@@ -1,12 +1,12 @@
-from typing import *
-def is_happy(s):
-    if len(s) < 3:
-      return False
-
-    for i in range(len(s) - 2):
-      
-      if s[i] == s[i+1] or s[i+1] == s[i+2] or s[i] == s[i+2]:
-        return False
-    return True
+from typing import *	##line:(1)
+def is_happy(s):	##line:(2)
+    if len(s) < 3:	##line:(3)
+      return False	##line:(4)
+	##line:(5)
+    for i in range(len(s) - 2):	##line:(6)
+      	##line:(7)
+      if s[i] == s[i+1] or s[i+1] == s[i+2] or s[i] == s[i+2]:	##line:(8)
+        return False	##line:(9)
+    return True	##line:(10)
 
 is_happy("a") 

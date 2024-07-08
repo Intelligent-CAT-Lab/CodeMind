@@ -75,9 +75,9 @@ def extract_methods_java(file_path):
                 parent_node = child.parent
                 identifier = 'None'
                 
-                for u in child.children:
-                    print(u)
-                print('====')
+                # for u in child.children:
+                #     print(u)
+                # print('====')
                 
                 if parent_node.type in ["variable_declarator", "assignment_expression"]:
                     ## find identifier
@@ -99,6 +99,7 @@ def extract_methods_java(file_path):
                 ## check if the api is a method call which is declared inside Java
                 name_flag = True
                 # print(method_names)
+                # print('====')
                 for mn in method_names:
                     if mn+'(' in api:
                         name_flag=False
@@ -139,8 +140,17 @@ def inject_pdb(folder):
     write_path = os.path.join(folder, 'main_pdb_api.py')
     if not os.path.exists(input_path):
         return
-    code = open(read_path, 'r').read()
+    
     code_input = open(input_path, 'r').read()
+    code_lines = open(read_path, 'r').readlines()
+    new_lines = []
+    idx = 1
+    for line in code_lines:
+        new_line = line.strip('\n') + f"\t##line:({idx})\n"
+        new_lines.append(new_line)
+        idx += 1
+
+    code = ''.join(new_lines)
     new_code = code + '\n' + code_input
     with open(write_path, 'w') as f:
         f.write(new_code)
@@ -206,7 +216,7 @@ def search_none(root):
 if __name__ == "__main__":
     # inject_all('/home/changshu/CodeMind/dataset/mbpp')
     # inject_all('/home/changshu/CodeMind/dataset/cruxeval')
-    # inject_all('/home/changshu/CodeMind/dataset/humaneval')
+    inject_all('/home/changshu/CodeMind/dataset/humaneval')
     # rewrite_humaneval()
-    a = extract_methods_java('/home/changshu/CodeMind/dataset/CodeNet/CodeNet-Java/p02004/Main.java')
-    print(a)
+    # a = extract_methods_java('/home/changshu/CodeMind/dataset/CodeNet/CodeNet-Java/p03480_s277020670/stage_1/Main.java')
+    # print(a)

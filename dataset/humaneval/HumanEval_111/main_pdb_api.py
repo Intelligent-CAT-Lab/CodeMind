@@ -1,17 +1,17 @@
-from typing import *
-def histogram(test):
-    dict1={}
-    list1=test.split(" ")
-    t=0
-
-    for i in list1:
-        if(list1.count(i)>t) and i!='':
-            t=list1.count(i)
-    if t>0:
-        for i in list1:
-            if(list1.count(i)==t):
-                
-                dict1[i]=t
-    return dict1
+from typing import *	##line:(1)
+def histogram(test):	##line:(2)
+    dict1={}	##line:(3)
+    list1=test.split(" ")	##line:(4)
+    t=0	##line:(5)
+	##line:(6)
+    for i in list1:	##line:(7)
+        if(list1.count(i)>t) and i!='':	##line:(8)
+            t=list1.count(i)	##line:(9)
+    if t>0:	##line:(10)
+        for i in list1:	##line:(11)
+            if(list1.count(i)==t):	##line:(12)
+                	##line:(13)
+                dict1[i]=t	##line:(14)
+    return dict1	##line:(15)
 
 histogram('a b b a') 

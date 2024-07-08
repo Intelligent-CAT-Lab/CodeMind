@@ -1,20 +1,20 @@
-from typing import *
-def prime_fib(n: int):
-    import math
-
-    def is_prime(p):
-        if p < 2:
-            return False
-        for k in range(2, min(int(math.sqrt(p)) + 1, p - 1)):
-            if p % k == 0:
-                return False
-        return True
-    f = [0, 1]
-    while True:
-        f.append(f[-1] + f[-2])
-        if is_prime(f[-1]):
-            n -= 1
-        if n == 0:
-            return f[-1]
+from typing import *	##line:(1)
+def prime_fib(n: int):	##line:(2)
+    import math	##line:(3)
+	##line:(4)
+    def is_prime(p):	##line:(5)
+        if p < 2:	##line:(6)
+            return False	##line:(7)
+        for k in range(2, min(int(math.sqrt(p)) + 1, p - 1)):	##line:(8)
+            if p % k == 0:	##line:(9)
+                return False	##line:(10)
+        return True	##line:(11)
+    f = [0, 1]	##line:(12)
+    while True:	##line:(13)
+        f.append(f[-1] + f[-2])	##line:(14)
+        if is_prime(f[-1]):	##line:(15)
+            n -= 1	##line:(16)
+        if n == 0:	##line:(17)
+            return f[-1]	##line:(18)
 
 prime_fib(1) 

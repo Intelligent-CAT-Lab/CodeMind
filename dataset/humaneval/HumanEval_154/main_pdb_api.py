@@ -1,11 +1,11 @@
-from typing import *
-def cycpattern_check(a , b):
-    l = len(b)
-    pat = b + b
-    for i in range(len(a) - l + 1):
-        for j in range(l + 1):
-            if a[i:i+l] == pat[j:j+l]:
-                return True
-    return False
+from typing import *	##line:(1)
+def cycpattern_check(a , b):	##line:(2)
+    l = len(b)	##line:(3)
+    pat = b + b	##line:(4)
+    for i in range(len(a) - l + 1):	##line:(5)
+        for j in range(l + 1):	##line:(6)
+            if a[i:i+l] == pat[j:j+l]:	##line:(7)
+                return True	##line:(8)
+    return False	##line:(9)
 
-cycpattern_check("xyzw","xyw") 
+ cycpattern_check("xyzw","xyw") 

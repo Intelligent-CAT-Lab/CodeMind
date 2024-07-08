@@ -1,10 +1,10 @@
-from typing import *
-def is_prime(n):
-    if n < 2:
-        return False
-    for k in range(2, n - 1):
-        if n % k == 0:
-            return False
-    return True
+from typing import *	##line:(1)
+def is_prime(n):	##line:(2)
+    if n < 2:	##line:(3)
+        return False	##line:(4)
+    for k in range(2, n - 1):	##line:(5)
+        if n % k == 0:	##line:(6)
+            return False	##line:(7)
+    return True	##line:(8)
 
 is_prime(6) 

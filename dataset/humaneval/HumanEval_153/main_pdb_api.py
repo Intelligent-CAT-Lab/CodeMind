@@ -1,15 +1,15 @@
-from typing import *
-def Strongest_Extension(class_name, extensions):
-    strong = extensions[0]
-    my_val = len([x for x in extensions[0] if x.isalpha() and x.isupper()]) - len([x for x in extensions[0] if x.isalpha() and x.islower()])
-    for s in extensions:
-        val = len([x for x in s if x.isalpha() and x.isupper()]) - len([x for x in s if x.isalpha() and x.islower()])
-        if val > my_val:
-            strong = s
-            my_val = val
-
-    ans = class_name + "." + strong
-    return ans
-
+from typing import *	##line:(1)
+def Strongest_Extension(class_name, extensions):	##line:(2)
+    strong = extensions[0]	##line:(3)
+    my_val = len([x for x in extensions[0] if x.isalpha() and x.isupper()]) - len([x for x in extensions[0] if x.isalpha() and x.islower()])	##line:(4)
+    for s in extensions:	##line:(5)
+        val = len([x for x in s if x.isalpha() and x.isupper()]) - len([x for x in s if x.isalpha() and x.islower()])	##line:(6)
+        if val > my_val:	##line:(7)
+            strong = s	##line:(8)
+            my_val = val	##line:(9)
+	##line:(10)
+    ans = class_name + "." + strong	##line:(11)
+    return ans	##line:(12)
+	##line:(13)
 
 Strongest_Extension('Watashi', ['tEN', 'niNE', 'eIGHt8OKe']) 

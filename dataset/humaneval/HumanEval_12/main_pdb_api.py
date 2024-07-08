@@ -1,11 +1,11 @@
-from typing import *
-def longest(strings: List[str]) -> Optional[str]:
-    if not strings:
-        return None
-
-    maxlen = max(len(x) for x in strings)
-    for s in strings:
-        if len(s) == maxlen:
-            return s
+from typing import *	##line:(1)
+def longest(strings: List[str]) -> Optional[str]:	##line:(2)
+    if not strings:	##line:(3)
+        return None	##line:(4)
+	##line:(5)
+    maxlen = max(len(x) for x in strings)	##line:(6)
+    for s in strings:	##line:(7)
+        if len(s) == maxlen:	##line:(8)
+            return s	##line:(9)
 
 longest(['x', 'yyy', 'zzzz', 'www', 'kkkk', 'abc']) 

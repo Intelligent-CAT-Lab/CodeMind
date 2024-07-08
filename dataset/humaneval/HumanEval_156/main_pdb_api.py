@@ -1,18 +1,18 @@
-from typing import *
-def int_to_mini_roman(number):
-    num = [1, 4, 5, 9, 10, 40, 50, 90,  
-           100, 400, 500, 900, 1000] 
-    sym = ["I", "IV", "V", "IX", "X", "XL",  
-           "L", "XC", "C", "CD", "D", "CM", "M"] 
-    i = 12
-    res = ''
-    while number: 
-        div = number // num[i] 
-        number %= num[i] 
-        while div: 
-            res += sym[i] 
-            div -= 1
-        i -= 1
-    return res.lower()
+from typing import *	##line:(1)
+def int_to_mini_roman(number):	##line:(2)
+    num = [1, 4, 5, 9, 10, 40, 50, 90,  	##line:(3)
+           100, 400, 500, 900, 1000] 	##line:(4)
+    sym = ["I", "IV", "V", "IX", "X", "XL",  	##line:(5)
+           "L", "XC", "C", "CD", "D", "CM", "M"] 	##line:(6)
+    i = 12	##line:(7)
+    res = ''	##line:(8)
+    while number: 	##line:(9)
+        div = number // num[i] 	##line:(10)
+        number %= num[i] 	##line:(11)
+        while div: 	##line:(12)
+            res += sym[i] 	##line:(13)
+            div -= 1	##line:(14)
+        i -= 1	##line:(15)
+    return res.lower()	##line:(16)
 
 int_to_mini_roman(19) 

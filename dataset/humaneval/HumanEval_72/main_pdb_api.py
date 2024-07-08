@@ -1,14 +1,14 @@
-from typing import *
-def will_it_fly(q,w):
-    if sum(q) > w:
-        return False
-
-    i, j = 0, len(q)-1
-    while i<j:
-        if q[i] != q[j]:
-            return False
-        i+=1
-        j-=1
-    return True
+from typing import *	##line:(1)
+def will_it_fly(q,w):	##line:(2)
+    if sum(q) > w:	##line:(3)
+        return False	##line:(4)
+	##line:(5)
+    i, j = 0, len(q)-1	##line:(6)
+    while i<j:	##line:(7)
+        if q[i] != q[j]:	##line:(8)
+            return False	##line:(9)
+        i+=1	##line:(10)
+        j-=1	##line:(11)
+    return True	##line:(12)
 
 will_it_fly([3, 2, 3], 9)

@@ -1,17 +1,17 @@
-from typing import *
-def parse_nested_parens(paren_string: str) -> List[int]:
-    def parse_paren_group(s):
-        depth = 0
-        max_depth = 0
-        for c in s:
-            if c == '(':
-                depth += 1
-                max_depth = max(depth, max_depth)
-            else:
-                depth -= 1
-
-        return max_depth
-
-    return [parse_paren_group(x) for x in paren_string.split(' ') if x]
+from typing import *	##line:(1)
+def parse_nested_parens(paren_string: str) -> List[int]:	##line:(2)
+    def parse_paren_group(s):	##line:(3)
+        depth = 0	##line:(4)
+        max_depth = 0	##line:(5)
+        for c in s:	##line:(6)
+            if c == '(':	##line:(7)
+                depth += 1	##line:(8)
+                max_depth = max(depth, max_depth)	##line:(9)
+            else:	##line:(10)
+                depth -= 1	##line:(11)
+	##line:(12)
+        return max_depth	##line:(13)
+	##line:(14)
+    return [parse_paren_group(x) for x in paren_string.split(' ') if x]	##line:(15)
 
 parse_nested_parens('(()()) ((())) () ((())()())') 

@@ -1,13 +1,13 @@
-from typing import *
-def sum_squares(lst):
-    result =[]
-    for i in range(len(lst)):
-        if i %3 == 0:
-            result.append(lst[i]**2)
-        elif i % 4 == 0 and i%3 != 0:
-            result.append(lst[i]**3)
-        else:
-            result.append(lst[i])
-    return sum(result)
+from typing import *	##line:(1)
+def sum_squares(lst):	##line:(2)
+    result =[]	##line:(3)
+    for i in range(len(lst)):	##line:(4)
+        if i %3 == 0:	##line:(5)
+            result.append(lst[i]**2)	##line:(6)
+        elif i % 4 == 0 and i%3 != 0:	##line:(7)
+            result.append(lst[i]**3)	##line:(8)
+        else:	##line:(9)
+            result.append(lst[i])	##line:(10)
+    return sum(result)	##line:(11)
 
 sum_squares([1,2,3]) 

@@ -1,12 +1,12 @@
-from typing import *
-def has_close_elements(numbers: List[float], threshold: float) -> bool:
-    for idx, elem in enumerate(numbers):
-        for idx2, elem2 in enumerate(numbers):
-            if idx != idx2:
-                distance = abs(elem - elem2)
-                if distance < threshold:
-                    return True
-
-    return False
+from typing import *	##line:(1)
+def has_close_elements(numbers: List[float], threshold: float) -> bool:	##line:(2)
+    for idx, elem in enumerate(numbers):	##line:(3)
+        for idx2, elem2 in enumerate(numbers):	##line:(4)
+            if idx != idx2:	##line:(5)
+                distance = abs(elem - elem2)	##line:(6)
+                if distance < threshold:	##line:(7)
+                    return True	##line:(8)
+	##line:(9)
+    return False	##line:(10)
 
 has_close_elements([1.0, 2.0, 3.9, 4.0, 5.0, 2.2], 0.3) 

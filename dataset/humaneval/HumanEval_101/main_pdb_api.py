@@ -1,17 +1,17 @@
-from typing import *
-def words_string(s):
-    if not s:
-        return []
-
-    s_list = []
-
-    for letter in s:
-        if letter == ',':
-            s_list.append(' ')
-        else:
-            s_list.append(letter)
-
-    s_list = "".join(s_list)
-    return s_list.split()
+from typing import *	##line:(1)
+def words_string(s):	##line:(2)
+    if not s:	##line:(3)
+        return []	##line:(4)
+	##line:(5)
+    s_list = []	##line:(6)
+	##line:(7)
+    for letter in s:	##line:(8)
+        if letter == ',':	##line:(9)
+            s_list.append(' ')	##line:(10)
+        else:	##line:(11)
+            s_list.append(letter)	##line:(12)
+	##line:(13)
+    s_list = "".join(s_list)	##line:(14)
+    return s_list.split()	##line:(15)
 
 words_string("Hi, my name is John") 

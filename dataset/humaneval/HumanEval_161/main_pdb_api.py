@@ -1,18 +1,18 @@
-from typing import *
-def solve(s):
-    flg = 0
-    idx = 0
-    new_str = list(s)
-    for i in s:
-        if i.isalpha():
-            new_str[idx] = i.swapcase()
-            flg = 1
-        idx += 1
-    s = ""
-    for i in new_str:
-        s += i
-    if flg == 0:
-        return s[len(s)::-1]
-    return s
+from typing import *	##line:(1)
+def solve(s):	##line:(2)
+    flg = 0	##line:(3)
+    idx = 0	##line:(4)
+    new_str = list(s)	##line:(5)
+    for i in s:	##line:(6)
+        if i.isalpha():	##line:(7)
+            new_str[idx] = i.swapcase()	##line:(8)
+            flg = 1	##line:(9)
+        idx += 1	##line:(10)
+    s = ""	##line:(11)
+    for i in new_str:	##line:(12)
+        s += i	##line:(13)
+    if flg == 0:	##line:(14)
+        return s[len(s)::-1]	##line:(15)
+    return s	##line:(16)
 
 solve("AsDf") 

@@ -9,13 +9,16 @@ from tqdm import tqdm
 
 openai.api_key = os.getenv('OPENAIKEY')
 AUTH_TOKEN = os.getenv('AUTH_TOKEN')
-MAX_NEW_TOKEN=512
+MAX_NEW_TOKEN=256
 
 def find_path(dataset, pl):
     root = "../dataset"
     if dataset in ['CodeNet', 'Avatar']:
-        data_path = os.path.join(root, dataset, f"{dataset}_{pl}")
-        loop_path = os.path.join(root, 'Loops', f"{dataset}_{pl}.json")
+        data_path = os.path.join(root, dataset, f"{dataset}-{pl}")
+        loop_path = os.path.join(root, 'Loops', f"{dataset}-{pl}.json")
+    elif dataset in ['humaneval']:
+        data_path = "/home/changshu/LLM_REASONING/prompts/humaneval_notest"
+        loop_path = os.path.join(root, 'Loops', f"{dataset}.json")
     else:
         data_path = os.path.join(root, dataset)
         loop_path = os.path.join(root, 'Loops', f"{dataset}.json")
@@ -26,13 +29,20 @@ def find_path(dataset, pl):
     return data_path, loop_path
 
 
-def annotate_code(code_path, loop_info):
+def annotate_code(code_path, loop_info, scratch_pad):
     comments = {}
     annotated_lines = []
     for k in loop_info:
-        new_text = ' ## '
-        for var in loop_info[k]:
-            new_text += f'[STATE]{var}=??[/STATE]'
+        if scratch_pad:
+            vars = []
+            for var in loop_info[k]:
+                vars.append(f'{var}=??')
+            new_text = ','.join(vars)
+            new_text = " ## [STATE]{" + new_text + "}[/STATE]"
+        else:
+            new_text = ' ## '
+            for var in loop_info[k]:
+                new_text += f'[STATE]{var}=??[/STATE]'
         comments[k] = new_text
     with open(code_path, 'r') as file:
         for current_line, line in enumerate(file, start=1):
@@ -55,7 +65,7 @@ def load_model(model_id, cache_dir):
         return model, tokenizer
 
 
-def main(model_id, dataset, cache_dir, write_dir, task, pl):
+def main(model_id, dataset, cache_dir, write_dir, task, pl, scratch_pad):
     json_path = "../model_config.json"
     data_path, loop_path = find_path(dataset, pl)
     loop_data = json.load(open(loop_path, 'r'))
@@ -64,18 +74,32 @@ def main(model_id, dataset, cache_dir, write_dir, task, pl):
     model, tokenizer = load_model(model_id, cache_dir)
     api_type = model_config[model_id]["api"]
     code_ids = []
-
-    if dataset in ['CodeNet', 'Avatar']:
-        write_root = os.path.join(write_dir, task, model_id.split("/")[-1], f"{dataset}-{pl}")
+    if scratch_pad:
+        if dataset in ['CodeNet', 'Avatar']:
+            write_root = os.path.join(write_dir, task, 'scratch_pad',  model_id.split("/")[-1], f"{dataset}-{pl}")
+        else:
+            write_root = os.path.join(write_dir, task, 'scratch_pad', model_id.split("/")[-1], dataset)
     else:
-        write_root = os.path.join(write_dir, task, model_id.split("/")[-1], dataset)
+        if dataset in ['CodeNet', 'Avatar']:
+            write_root = os.path.join(write_dir, task, model_id.split("/")[-1], f"{dataset}-{pl}")
+        else:
+            write_root = os.path.join(write_dir, task, model_id.split("/")[-1], dataset)
     if not os.path.exists(write_root):
-        os.makedirs(write_root)
+            os.makedirs(write_root)
 
     for k in loop_data.keys():
         if len(loop_data[k]['For']) > 0:
             code_ids.append(k)
     for k in tqdm(code_ids):
+
+        write_folder = os.path.join(write_root, k)
+        if not os.path.exists(write_folder):
+            os.mkdir(write_folder)
+        write_path = os.path.join(write_folder, 'response.txt')
+
+        if os.path.exists(write_path):
+            continue
+
         meta_data = {}
         for item in loop_data[k]['For']:
             lineno = item['line_no']
@@ -84,8 +108,8 @@ def main(model_id, dataset, cache_dir, write_dir, task, pl):
         code_path = os.path.join(data_path, k, 'main.py')
         input_path = os.path.join(data_path, k, 'input.txt')
         code_input = open(input_path, 'r').read().strip('\n')
-        new_code = annotate_code(code_path, meta_data)
-        prompt = create_prompt(model_id, new_code, code_input, dataset, pl)
+        new_code = annotate_code(code_path, meta_data, scratch_pad)
+        prompt = create_prompt(model_id, new_code, code_input, dataset, pl, scratch_pad)
 
         if api_type=="openai":
             err_flg, response = chatgpt_generator(model_id, prompt)
@@ -96,17 +120,10 @@ def main(model_id, dataset, cache_dir, write_dir, task, pl):
         if api_type == "huggingface_chat":
             response = huggingface_generator_chat((model, tokenizer), prompt, MAX_NEW_TOKEN)
         
-        write_folder = os.path.join(write_root, k)
-        if not os.path.exists(write_folder):
-            os.mkdir(write_folder)
-        write_path = os.path.join(write_folder, 'response.txt')
+
         with open(write_path, 'w') as wr:
             wr.write(response)
-        
 
-            
-            
-    # print(loop_data)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -116,6 +133,7 @@ if __name__ == "__main__":
     parser.add_argument("--writePath", type=str, default="../Experiment_Results")
     parser.add_argument("--task", type=str, default="LIP")
     parser.add_argument("--pl", type=str, default="Python", help="select one from [Python, Java]")
+    parser.add_argument("--scratch_pad", action="store_true")
     args = parser.parse_args()
 
     model_id = args.model
@@ -124,4 +142,5 @@ if __name__ == "__main__":
     write_dir = args.writePath
     task = args.task
     pl = args.pl
-    main(model_id, dataset, cache_dir, write_dir, task, pl)
+    scratch_pad = args.scratch_pad
+    main(model_id, dataset, cache_dir, write_dir, task, pl, scratch_pad)

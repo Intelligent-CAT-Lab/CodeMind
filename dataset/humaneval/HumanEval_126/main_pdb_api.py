@@ -1,15 +1,15 @@
-from typing import *
-def is_sorted(lst):
-    count_digit = dict([(i, 0) for i in lst])
-    for i in lst:
-        count_digit[i]+=1 
-    if any(count_digit[i] > 2 for i in lst):
-        return False
-    if all(lst[i-1] <= lst[i] for i in range(1, len(lst))):
-        return True
-    else:
-        return False
-    
-    
+from typing import *	##line:(1)
+def is_sorted(lst):	##line:(2)
+    count_digit = dict([(i, 0) for i in lst])	##line:(3)
+    for i in lst:	##line:(4)
+        count_digit[i]+=1 	##line:(5)
+    if any(count_digit[i] > 2 for i in lst):	##line:(6)
+        return False	##line:(7)
+    if all(lst[i-1] <= lst[i] for i in range(1, len(lst))):	##line:(8)
+        return True	##line:(9)
+    else:	##line:(10)
+        return False	##line:(11)
+    	##line:(12)
+    	##line:(13)
 
 is_sorted([5]) 

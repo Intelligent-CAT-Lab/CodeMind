@@ -1,13 +1,13 @@
-from typing import *
-def get_closest_vowel(word):
-    if len(word) < 3:
-        return ""
-
-    vowels = {"a", "e", "i", "o", "u", "A", "E", 'O', 'U', 'I'}
-    for i in range(len(word)-2, 0, -1):
-        if word[i] in vowels:
-            if (word[i+1] not in vowels) and (word[i-1] not in vowels):
-                return word[i]
-    return ""
+from typing import *	##line:(1)
+def get_closest_vowel(word):	##line:(2)
+    if len(word) < 3:	##line:(3)
+        return ""	##line:(4)
+	##line:(5)
+    vowels = {"a", "e", "i", "o", "u", "A", "E", 'O', 'U', 'I'}	##line:(6)
+    for i in range(len(word)-2, 0, -1):	##line:(7)
+        if word[i] in vowels:	##line:(8)
+            if (word[i+1] not in vowels) and (word[i-1] not in vowels):	##line:(9)
+                return word[i]	##line:(10)
+    return ""	##line:(11)
 
 get_closest_vowel("yogurt") 

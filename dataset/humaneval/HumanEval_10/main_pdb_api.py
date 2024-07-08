@@ -1,13 +1,13 @@
-from typing import *
-def is_palindrome(string: str) -> bool:
-    if not string:
-        return ''
-
-    beginning_of_suffix = 0
-
-    while not is_palindrome(string[beginning_of_suffix:]):
-        beginning_of_suffix += 1
-
-    return string + string[:beginning_of_suffix][::-1]
+from typing import *	##line:(1)
+def is_palindrome(string: str) -> bool:	##line:(2)
+    if not string:	##line:(3)
+        return ''	##line:(4)
+	##line:(5)
+    beginning_of_suffix = 0	##line:(6)
+	##line:(7)
+    while not is_palindrome(string[beginning_of_suffix:]):	##line:(8)
+        beginning_of_suffix += 1	##line:(9)
+	##line:(10)
+    return string + string[:beginning_of_suffix][::-1]	##line:(11)
 
 is_palindrome('jerry') 

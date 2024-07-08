@@ -1,15 +1,15 @@
-from typing import *
-def f(n):
-    ret = []
-    for i in range(1,n+1):
-        if i%2 == 0:
-            x = 1
-            for j in range(1,i+1): x *= j
-            ret += [x]
-        else:
-            x = 0
-            for j in range(1,i+1): x += j
-            ret += [x]
-    return ret
+from typing import *	##line:(1)
+def f(n):	##line:(2)
+    ret = []	##line:(3)
+    for i in range(1,n+1):	##line:(4)
+        if i%2 == 0:	##line:(5)
+            x = 1	##line:(6)
+            for j in range(1,i+1): x *= j	##line:(7)
+            ret += [x]	##line:(8)
+        else:	##line:(9)
+            x = 0	##line:(10)
+            for j in range(1,i+1): x += j	##line:(11)
+            ret += [x]	##line:(12)
+    return ret	##line:(13)
 
 f(5) 

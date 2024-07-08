@@ -1,13 +1,13 @@
-from typing import *
-def fib4(n: int):
-    results = [0, 0, 2, 0]
-    if n < 4:
-        return results[n]
-
-    for _ in range(4, n + 1):
-        results.append(results[-1] + results[-2] + results[-3] + results[-4])
-        results.pop(0)
-
-    return results[-1]
+from typing import *	##line:(1)
+def fib4(n: int):	##line:(2)
+    results = [0, 0, 2, 0]	##line:(3)
+    if n < 4:	##line:(4)
+        return results[n]	##line:(5)
+	##line:(6)
+    for _ in range(4, n + 1):	##line:(7)
+        results.append(results[-1] + results[-2] + results[-3] + results[-4])	##line:(8)
+        results.pop(0)	##line:(9)
+	##line:(10)
+    return results[-1]	##line:(11)
 
 fib4(5) 

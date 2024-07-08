@@ -1,23 +1,23 @@
-from typing import *
-def by_length(arr):
-    dic = {
-        1: "One",
-        2: "Two",
-        3: "Three",
-        4: "Four",
-        5: "Five",
-        6: "Six",
-        7: "Seven",
-        8: "Eight",
-        9: "Nine",
-    }
-    sorted_arr = sorted(arr, reverse=True)
-    new_arr = []
-    for var in sorted_arr:
-        try:
-            new_arr.append(dic[var])
-        except:
-            pass
-    return new_arr
+from typing import *	##line:(1)
+def by_length(arr):	##line:(2)
+    dic = {	##line:(3)
+        1: "One",	##line:(4)
+        2: "Two",	##line:(5)
+        3: "Three",	##line:(6)
+        4: "Four",	##line:(7)
+        5: "Five",	##line:(8)
+        6: "Six",	##line:(9)
+        7: "Seven",	##line:(10)
+        8: "Eight",	##line:(11)
+        9: "Nine",	##line:(12)
+    }	##line:(13)
+    sorted_arr = sorted(arr, reverse=True)	##line:(14)
+    new_arr = []	##line:(15)
+    for var in sorted_arr:	##line:(16)
+        try:	##line:(17)
+            new_arr.append(dic[var])	##line:(18)
+        except:	##line:(19)
+            pass	##line:(20)
+    return new_arr	##line:(21)
 
 by_length([2, 1, 1, 4, 5, 8, 2, 3]) 

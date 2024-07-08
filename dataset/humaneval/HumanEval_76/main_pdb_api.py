@@ -1,10 +1,10 @@
-from typing import *
-def is_simple_power(x, n):
-    if (n == 1): 
-        return (x == 1) 
-    power = 1
-    while (power < x): 
-        power = power * n 
-    return (power == x) 
+from typing import *	##line:(1)
+def is_simple_power(x, n):	##line:(2)
+    if (n == 1): 	##line:(3)
+        return (x == 1) 	##line:(4)
+    power = 1	##line:(5)
+    while (power < x): 	##line:(6)
+        power = power * n 	##line:(7)
+    return (power == x) 	##line:(8)
 
 is_simple_power(16, 2)

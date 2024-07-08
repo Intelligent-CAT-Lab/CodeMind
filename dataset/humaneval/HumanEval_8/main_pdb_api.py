@@ -1,11 +1,11 @@
-from typing import *
-def sum_product(numbers: List[int]) -> Tuple[int, int]:
-    sum_value = 0
-    prod_value = 1
-
-    for n in numbers:
-        sum_value += n
-        prod_value *= n
-    return sum_value, prod_value
+from typing import *	##line:(1)
+def sum_product(numbers: List[int]) -> Tuple[int, int]:	##line:(2)
+    sum_value = 0	##line:(3)
+    prod_value = 1	##line:(4)
+	##line:(5)
+    for n in numbers:	##line:(6)
+        sum_value += n	##line:(7)
+        prod_value *= n	##line:(8)
+    return sum_value, prod_value	##line:(9)
 
 sum_product([1,1,1]) 

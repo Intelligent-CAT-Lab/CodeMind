@@ -1,20 +1,20 @@
-from typing import *
-def valid_date(date):
-    try:
-        date = date.strip()
-        month, day, year = date.split('-')
-        month, day, year = int(month), int(day), int(year)
-        if month < 1 or month > 12:
-            return False
-        if month in [1,3,5,7,8,10,12] and day < 1 or day > 31:
-            return False
-        if month in [4,6,9,11] and day < 1 or day > 30:
-            return False
-        if month == 2 and day < 1 or day > 29:
-            return False
-    except:
-        return False
-
-    return True
+from typing import *	##line:(1)
+def valid_date(date):	##line:(2)
+    try:	##line:(3)
+        date = date.strip()	##line:(4)
+        month, day, year = date.split('-')	##line:(5)
+        month, day, year = int(month), int(day), int(year)	##line:(6)
+        if month < 1 or month > 12:	##line:(7)
+            return False	##line:(8)
+        if month in [1,3,5,7,8,10,12] and day < 1 or day > 31:	##line:(9)
+            return False	##line:(10)
+        if month in [4,6,9,11] and day < 1 or day > 30:	##line:(11)
+            return False	##line:(12)
+        if month == 2 and day < 1 or day > 29:	##line:(13)
+            return False	##line:(14)
+    except:	##line:(15)
+        return False	##line:(16)
+	##line:(17)
+    return True	##line:(18)
 
 valid_date('03-11-2000') 
