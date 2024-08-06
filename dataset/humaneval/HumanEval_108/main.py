@@ -1,4 +1,3 @@
-from typing import *
 def count_nums(arr):
     def digits_sum(n):
         neg = 1

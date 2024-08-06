@@ -1,2 +1,0 @@
-class Main{public static void main(String[]z){String s="";for(char c:new java.util.Scanner(System.in).next().toCharArray())s+=(char)((c-42)%26+65);System.out.println(s);}}System.out.println("[INST]0;None;new java.util.Scanner(System.in).next().toCharArray();"+new java.util.Scanner(System.in).next().toCharArray());
-System.out.println("[INST]0;None;new java.util.Scanner(System.in).next();"+new java.util.Scanner(System.in).next());

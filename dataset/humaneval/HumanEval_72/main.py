@@ -1,4 +1,3 @@
-from typing import *
 def will_it_fly(q,w):
     if sum(q) > w:
         return False

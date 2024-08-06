@@ -1,4 +1,3 @@
-from typing import *
 def factorize(n: int) -> List[int]:
     import math
     fact = []

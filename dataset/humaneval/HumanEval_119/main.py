@@ -1,4 +1,3 @@
-from typing import *
 def match_parens(lst):
     def check(s):
         val = 0

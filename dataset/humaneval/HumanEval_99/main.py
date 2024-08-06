@@ -1,4 +1,3 @@
-from typing import *
 def closest_integer(value):
     from math import floor, ceil
 

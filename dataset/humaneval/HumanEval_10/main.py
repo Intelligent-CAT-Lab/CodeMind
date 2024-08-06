@@ -1,4 +1,3 @@
-from typing import *
 def is_palindrome(string: str) -> bool:
     if not string:
         return ''

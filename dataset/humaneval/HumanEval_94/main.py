@@ -1,4 +1,3 @@
-from typing import *
 def skjkasdkd(lst):
     def isPrime(n):
         for i in range(2,int(n**0.5)+1):

@@ -1,4 +1,3 @@
-from typing import *
 def check_dict_case(dict):
     if len(dict.keys()) == 0:
         return False

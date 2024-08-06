@@ -1,4 +1,3 @@
-from typing import *
 def words_in_sentence(sentence):
     new_lst = []
     for word in sentence.split():

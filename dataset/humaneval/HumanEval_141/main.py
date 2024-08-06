@@ -1,4 +1,3 @@
-from typing import *
 def file_name_check(file_name):
     suf = ['txt', 'exe', 'dll']
     lst = file_name.split(sep='.')

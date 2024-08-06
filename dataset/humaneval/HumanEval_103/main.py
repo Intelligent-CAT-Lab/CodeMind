@@ -1,4 +1,3 @@
-from typing import *
 def rounded_avg(n, m):
     if m < n:
         return -1

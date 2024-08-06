@@ -1,4 +1,3 @@
-from typing import *
 def can_arrange(arr):
     ind=-1
     i=1

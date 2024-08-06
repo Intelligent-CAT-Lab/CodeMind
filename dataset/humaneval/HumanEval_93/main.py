@@ -1,4 +1,3 @@
-from typing import *
 def encode(message):
     vowels = "aeiouAEIOU"
     vowels_replace = dict([(i, chr(ord(i) + 2)) for i in vowels])

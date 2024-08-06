@@ -96,7 +96,7 @@ def extract_variable_from_log(path:str):
 # extract_variable_from_log(log_path)
 
 def collect_variable_information(id: str):
-    root_read = "/home/changshu/LLM_REASONING/prompts/humaneval_notest"
+    root_read = "/home/changshu/LLM_REASONING/prompts/humaneval_notestl"
     code_path =  f"/home/changshu/LLM_REASONING/prompts/humaneval_notest/{id}/main.py"
     log_path = f"/home/changshu/LLM_REASONING/prompts/humaneval_notest/{id}/log.txt"
     wr_path = f"/home/changshu/CodeMind/dataset/humaneval/{id}/variables.json"

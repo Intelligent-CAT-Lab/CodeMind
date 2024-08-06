@@ -9,11 +9,11 @@ if W%w:
     m = -((w-1)*n + 1)
     row = [m if i%w==w-1 else n for i in range(W)]
     for i in range(H):
-        print(*row)
+        print((*row))
 else:
     m = -((h-1)*n + 1)
     for i in range(H):
         if i%h == h-1:
-            print(*([m] * W))
+            print((*([m] * W)))
         else:
-            print(*([n] * W))
+            print((*([n] * W)))

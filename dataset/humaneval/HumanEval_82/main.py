@@ -1,4 +1,3 @@
-from typing import *
 def prime_length(string):
     l = len(string)
     if l == 0 or l == 1:

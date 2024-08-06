@@ -3,7 +3,7 @@ import openai
 import time
 import os
 
-# openai.api_key = os.getenv("OPENAIKEY")
+openai.api_key = os.getenv("OPENAIKEY")
 
 def chatgpt_generator(model,message, temp=0.0, max_len=1024):
     err_flag = False

@@ -1,4 +1,3 @@
-from typing import *
 def common(l1: list, l2: list):
     ret = set()
     for e1 in l1:

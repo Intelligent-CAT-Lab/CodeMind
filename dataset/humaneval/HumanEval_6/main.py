@@ -1,4 +1,3 @@
-from typing import *
 def parse_nested_parens(paren_string: str) -> List[int]:
     def parse_paren_group(s):
         depth = 0

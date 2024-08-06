@@ -1,4 +1,3 @@
-from typing import *
 def fix_spaces(text):
     new_text = ""
     i = 0

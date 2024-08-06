@@ -1,1 +1,0 @@
-var newVariable_0 = new Scanner(System.in).nextLine().split("[ .,]");var newVariable_1 = new Scanner(System.in).nextLine();var newVariable_2 = x.matches(".{3,6}");import java.util.*;class Main{public static void main(String[]z){String s="";for(String x:new Scanner(System.in).nextLine().split("[ .,]"))if(newVariable_2)s+=x+" ";System.out.println(s.replaceAll(" $",""));}}

@@ -1,4 +1,3 @@
-from typing import *
 def by_length(arr):
     dic = {
         1: "One",

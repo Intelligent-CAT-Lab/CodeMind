@@ -1,4 +1,3 @@
-from typing import *
 def solve(s):
     flg = 0
     idx = 0

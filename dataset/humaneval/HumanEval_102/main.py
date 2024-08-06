@@ -1,4 +1,3 @@
-from typing import *
 def choose_num(x, y):
     if x > y:
         return -1

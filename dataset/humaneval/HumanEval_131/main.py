@@ -1,4 +1,3 @@
-from typing import *
 def digits(n):
     product = 1
     odd_count = 0

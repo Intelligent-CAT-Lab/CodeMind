@@ -1,4 +1,3 @@
-from typing import *
 def change_base(x: int, base: int):
     ret = ""
     while x > 0:

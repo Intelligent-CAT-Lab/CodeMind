@@ -11,6 +11,3 @@ for var in code:
 			
 for var in list:
 	print var,
-
-
-

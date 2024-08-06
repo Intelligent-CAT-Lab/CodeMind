@@ -37,7 +37,6 @@ def main(model_id, dataset, cache_dir, write_dir, task, pl, use_test, use_mislea
     model_config = json.load(open(json_path, 'r'))
     api_type = model_config[model_id]["api"]
     root_dir = find_path(dataset, pl)
-
     if der_flag:
         if use_test:
             write_root = os.path.join(write_dir, 'DER', task, "use_test" , model_id.split("/")[-1], dataset)
@@ -54,16 +53,8 @@ def main(model_id, dataset, cache_dir, write_dir, task, pl, use_test, use_mislea
             write_root = os.path.join(write_dir, 'SR', task, "no_test" , model_id.split("/")[-1], dataset)        
     if not os.path.exists(write_root):
         os.makedirs(write_root)
-
-
     model, tokenizer = load_model(model_id, cache_dir)
     for d in tqdm(os.listdir(root_dir)):
-        write_folder = os.path.join(write_root, d)
-        if not os.path.exists(write_folder):
-            os.mkdir(write_folder)
-        write_path = os.path.join(write_folder, 'raw_output.txt')
-        if os.path.exists(write_path):
-            continue
         nl_path = os.path.join(root_dir, d, 'nl.txt')
         if not os.path.exists(nl_path):
             continue
@@ -92,7 +83,10 @@ def main(model_id, dataset, cache_dir, write_dir, task, pl, use_test, use_mislea
         
         
 
-
+        write_folder = os.path.join(write_root, d)
+        if not os.path.exists(write_folder):
+            os.mkdir(write_folder)
+        write_path = os.path.join(write_folder, 'raw_output.txt')
         with open(write_path, 'w') as wr:
             wr.write(response)
 

@@ -1,4 +1,3 @@
-from typing import *
 def is_sorted(lst):
     count_digit = dict([(i, 0) for i in lst])
     for i in lst:

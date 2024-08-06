@@ -1,4 +1,3 @@
-from typing import *
 def is_multiply_prime(a):
     def is_prime(n):
         for j in range(2,n):

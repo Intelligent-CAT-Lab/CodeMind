@@ -93,4 +93,4 @@ if __name__ == "__main__":
     with open(log_path, 'w') as wrl:
         for i in pass_samples:
             wrl.write(i + '\n')
-    # print(fail_samples)
+    print(fail_samples)

@@ -1,4 +1,3 @@
-from typing import *
 def string_xor(a: str, b: str) -> str:
     def xor(i, j):
         if i == j:

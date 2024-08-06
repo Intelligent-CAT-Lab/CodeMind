@@ -1,4 +1,3 @@
-from typing import *
 def encrypt(s):
     d = 'abcdefghijklmnopqrstuvwxyz'
     out = ''
