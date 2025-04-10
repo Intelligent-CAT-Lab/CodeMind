@@ -1,0 +1,30 @@
+class ThermostatTestSimulateOperation(unittest.TestCase):
+    def test_simulate_operation_1(self):
+        t = Thermostat(20, 25, 'heat')
+        self.assertEqual(t.simulate_operation(), 5)
+        self.assertEqual(t.get_mode(), 'heat')
+        self.assertEqual(t.current_temperature, 25)
+
+    def test_simulate_operation_2(self):
+        t = Thermostat(25.7, 20, 'cool')
+        self.assertEqual(t.simulate_operation(), 6)
+        self.assertEqual(t.get_mode(), 'cool')
+        self.assertEqual(t.current_temperature, 19.7)
+
+    def test_simulate_operation_3(self):
+        t = Thermostat(25, 25, 'heat')
+        self.assertEqual(t.simulate_operation(), 0)
+        self.assertEqual(t.get_mode(), 'cool')
+        self.assertEqual(t.current_temperature, 25)
+
+    def test_simulate_operation_4(self):
+        t = Thermostat(25, 25, 'cool')
+        self.assertEqual(t.simulate_operation(), 0)
+        self.assertEqual(t.get_mode(), 'cool')
+        self.assertEqual(t.current_temperature, 25)
+
+    def test_simulate_operation_5(self):
+        t = Thermostat(25, 25, 'test')
+        self.assertEqual(t.simulate_operation(), 0)
+        self.assertEqual(t.get_mode(), 'cool')
+        self.assertEqual(t.current_temperature, 25)

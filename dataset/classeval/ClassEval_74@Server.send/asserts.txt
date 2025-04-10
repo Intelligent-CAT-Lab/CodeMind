@@ -1,0 +1,25 @@
+class ServerTestSend(unittest.TestCase):
+    def test_send_1(self):
+        server = Server()
+        server.send({"addr": 88, "content": "abc"})
+        self.assertEqual(server.send_struct, {"addr": 88, "content": "abc"})
+
+    def test_send_2(self):
+        server = Server()
+        flag = server.send({"addr": 88})
+        self.assertEqual(flag, "info structure is not correct")
+
+    def test_send_3(self):
+        server = Server()
+        flag = server.send({"content": "abc"})
+        self.assertEqual(flag, "info structure is not correct")
+
+    def test_send_4(self):
+        server = Server()
+        flag = server.send([])
+        self.assertEqual(flag, "info structure is not correct")
+
+    def test_send_5(self):
+        server = Server()
+        server.send({"addr": 66, "content": "abc"})
+        self.assertEqual(server.send_struct, {"addr": 66, "content": "abc"})

@@ -1,0 +1,35 @@
+class AccessGatewayFilterTestGetJwtUser(unittest.TestCase):
+    def test_get_jwt_user_1(self):
+        agf = AccessGatewayFilter()
+        request = {
+            'headers': {'Authorization': {'user': {'name': 'user1'}, 'jwt': 'user1' + str(datetime.date.today())}}}
+        res = agf.get_jwt_user(request)
+        self.assertIsNotNone(res)
+
+    def test_get_jwt_user_2(self):
+        agf = AccessGatewayFilter()
+        request = {
+            'headers': {'Authorization': {'user': {'name': 'user2'}, 'jwt': 'user2' + str(datetime.date.today())}}}
+        res = agf.get_jwt_user(request)
+        self.assertIsNotNone(res)
+
+    def test_get_jwt_user_3(self):
+        agf = AccessGatewayFilter()
+        request = {
+            'headers': {'Authorization': {'user': {'name': 'user3'}, 'jwt': 'user3' + str(datetime.date.today())}}}
+        res = agf.get_jwt_user(request)
+        self.assertIsNotNone(res)
+
+    def test_get_jwt_user_4(self):
+        agf = AccessGatewayFilter()
+        request = {
+            'headers': {'Authorization': {'user': {'name': 'user4'}, 'jwt': 'user4' + str(datetime.date.today())}}}
+        res = agf.get_jwt_user(request)
+        self.assertIsNotNone(res)
+
+    def test_get_jwt_user_5(self):
+        agf = AccessGatewayFilter()
+        request = {'headers': {'Authorization': {'user': {'name': 'user1'}, 'jwt': 'user1' + str(
+            datetime.date.today() - datetime.timedelta(days=5))}}}
+        res = agf.get_jwt_user(request)
+        self.assertIsNone(res)

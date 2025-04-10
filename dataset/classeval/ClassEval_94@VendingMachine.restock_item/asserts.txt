@@ -1,0 +1,30 @@
+class VendingMachineTestRestockItem(unittest.TestCase):
+    def test_restock_item(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}
+        self.assertEqual(vendingMachine.restock_item('Coke', 10), True)
+        self.assertEqual(vendingMachine.inventory, {'Coke': {'price': 1.25, 'quantity': 20}})
+
+    def test_restock_item_2(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}
+        self.assertEqual(vendingMachine.restock_item('Pizza', 10), False)
+        self.assertEqual(vendingMachine.inventory, {'Coke': {'price': 1.25, 'quantity': 10}})
+
+    def test_restock_item_3(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 0}}
+        self.assertEqual(vendingMachine.restock_item('Coke', 10), True)
+        self.assertEqual(vendingMachine.inventory, {'Coke': {'price': 1.25, 'quantity': 10}})
+
+    def test_restock_item_4(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}, 'Pizza': {'price': 1.25, 'quantity': 10}}
+        self.assertEqual(vendingMachine.restock_item('Pizza', 10), True)
+        self.assertEqual(vendingMachine.inventory, {'Coke': {'price': 1.25, 'quantity': 10}, 'Pizza': {'price': 1.25, 'quantity': 20}})
+
+    def test_restock_item_5(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}, 'Pizza': {'price': 1.25, 'quantity': 10}}
+        self.assertEqual(vendingMachine.restock_item('Pizza', 0), True)
+        self.assertEqual(vendingMachine.inventory, {'Coke': {'price': 1.25, 'quantity': 10}, 'Pizza': {'price': 1.25, 'quantity': 10}})

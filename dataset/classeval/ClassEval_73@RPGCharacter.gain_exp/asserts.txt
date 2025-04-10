@@ -1,0 +1,33 @@
+class RPGCharacterTestGainExp(unittest.TestCase):
+
+    # exp not overflow
+    def test_gain_exp_1(self):
+        character = RPGCharacter("John", 100, 20, 10)
+        character.gain_exp(100)
+        self.assertEqual(character.level, 2)
+        self.assertEqual(character.exp, 0)
+
+    # exp overflow
+    def test_gain_exp_2(self):
+        character = RPGCharacter("John", 100, 20, 10)
+        character.gain_exp(1100)
+        self.assertEqual(character.level, 5)
+        self.assertEqual(character.exp, 100)
+
+    def test_gain_exp_3(self):
+        character = RPGCharacter("John", 100, 20, 10)
+        character.gain_exp(200)
+        self.assertEqual(character.level, 2)
+        self.assertEqual(character.exp, 100)
+
+    def test_gain_exp_4(self):
+        character = RPGCharacter("John", 100, 20, 10)
+        character.gain_exp(300)
+        self.assertEqual(character.level, 3)
+        self.assertEqual(character.exp, 0)
+
+    def test_gain_exp_5(self):
+        character = RPGCharacter("John", 100, 20, 10)
+        character.gain_exp(400)
+        self.assertEqual(character.level, 3)
+        self.assertEqual(character.exp, 100)

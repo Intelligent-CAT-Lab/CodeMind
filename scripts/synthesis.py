@@ -3,7 +3,7 @@ import os
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import openai
 from tqdm import tqdm
-from create_prompt_der import create_prompt
+from create_prompt_sr import create_prompt
 from prompt import chatgpt_generator, huggingface_generator, huggingface_generator_chat
 import json
 

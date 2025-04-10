@@ -1,0 +1,31 @@
+class ArgumentParserTestGetArgument(unittest.TestCase):
+
+    def setUp(self):
+        self.parser = ArgumentParser()
+
+    # key exists
+    def test_get_argument_1(self):
+        self.parser.arguments = {"name": "John"}
+        result = self.parser.get_argument("name")
+        self.assertEqual(result, "John")
+
+    # key not exists
+    def test_get_argument_2(self):
+        self.parser.arguments = {"name": "John", "age": 25}
+        result = self.parser.get_argument("age")
+        self.assertEqual(result, 25)
+
+    def test_get_argument_3(self):
+        self.parser.arguments = {"name": "John", "age": "25", "verbose": True}
+        result = self.parser.get_argument("verbose")
+        self.assertEqual(result, True)
+
+    def test_get_argument_4(self):
+        self.parser.arguments = {"name": "Amy", "age": 25, "verbose": True, "d": True}
+        result = self.parser.get_argument("d")
+        self.assertEqual(result, True)
+
+    def test_get_argument_5(self):
+        self.parser.arguments = {"name": "John", "age": 25, "verbose": True, "d": True, "option": "value"}
+        result = self.parser.get_argument("option")
+        self.assertEqual(result, "value")

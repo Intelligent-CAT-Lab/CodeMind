@@ -1,0 +1,49 @@
+class AssessmentSystemTestGetTopStudent(unittest.TestCase):
+    def test_get_top_student(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students = {'Alice': {'name': 'Alice', 'grade': 3, 'major': 'Mathematics',
+                                                'courses': {'Mathematics': 90}},
+                                      'Bob': {'name': 'Bob', 'grade': 4, 'major': 'Physics',
+                                              'courses': {'Physics': 85}}
+                                      }
+        self.assertEqual(assessment_system.get_top_student(), "Alice")
+
+    def test_get_top_student_2(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students = {'Alice': {'name': 'Alice', 'grade': 3, 'major': 'Mathematics',
+                                                'courses': { }},
+                                      'Bob': {'name': 'Bob', 'grade': 4, 'major': 'Physics',
+                                              'courses': {'Physics': 85}},
+                                      'Charlie': {'name': 'Charlie', 'grade': 2, 'major': 'Chemistry',
+                                                  'courses': {'Chemistry': 70, 'Physics': 80}}
+                                      }
+        self.assertEqual(assessment_system.get_top_student(), "Bob")
+
+    def test_get_top_student_3(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students = {}
+        self.assertEqual(assessment_system.get_top_student(), None)
+
+    def test_get_top_student_4(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students = {'Alice': {'name': 'Alice', 'grade': 3, 'major': 'Mathematics',
+                                                'courses': {'Mathematics': 90, 'Science': 60}},
+                                      'Bob': {'name': 'Bob', 'grade': 4, 'major': 'Physics',
+                                              'courses': {'Physics': 85}},
+                                      'Charlie': {'name': 'Charlie', 'grade': 2, 'major': 'Chemistry',
+                                                  'courses': {'Chemistry': 70, 'Physics': 80}}
+                                      }
+        self.assertEqual(assessment_system.get_top_student(), "Bob")
+
+    def test_get_top_student_5(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students = {'Alice': {'name': 'Alice', 'grade': 3, 'major': 'Mathematics',
+                                                'courses': {'Mathematics': 90, 'Science': 60}},
+                                      'Bob': {'name': 'Bob', 'grade': 4, 'major': 'Physics',
+                                              'courses': {'Physics': 85}},
+                                      'Charlie': {'name': 'Charlie', 'grade': 2, 'major': 'Chemistry',
+                                                  'courses': {'Chemistry': 70, 'Physics': 80}},
+                                      'David': {'name': 'David', 'grade': 2, 'major': 'Chemistry',
+                                                  'courses': {'Chemistry': 70, 'Physics': 80}}
+                                      }
+        self.assertEqual(assessment_system.get_top_student(), "Bob")

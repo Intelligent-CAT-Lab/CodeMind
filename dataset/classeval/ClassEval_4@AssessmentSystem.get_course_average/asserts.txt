@@ -1,0 +1,47 @@
+class AssessmentSystemTestGetCourseAverage(unittest.TestCase):
+
+    def test_get_course_average_1(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students = {'Alice': {'name': 'Alice', 'grade': 3, 'major': 'Mathematics', 'courses': {'Mathematics': 90, 'Science': 80}},
+                                'Bob': {'name': 'Bob', 'grade': 4, 'major': 'Physics', 'courses': {'Physics': 90}},
+                                'Charlie': {'name': 'Charlie', 'grade': 2, 'major': 'Chemistry', 'courses': {'Chemistry': 70,'Physics': 80}}
+                                           }
+        self.assertEqual(assessment_system.get_course_average("Physics"), 85.0)
+
+    def test_get_course_average_2(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students = {'Alice': {'name': 'Alice', 'grade': 3, 'major': 'Mathematics',
+                                                'courses': {'Mathematics': 90, 'Science': 80}},
+                                      'Bob': {'name': 'Bob', 'grade': 4, 'major': 'Physics',
+                                              'courses': {'Physics': 85}},
+                                      'Charlie': {'name': 'Charlie', 'grade': 2, 'major': 'Chemistry',
+                                                  'courses': {'Chemistry': 70,'Physics': None }}
+                                      }
+        self.assertEqual(assessment_system.get_course_average('Physics'), 85)
+
+    def test_get_course_average_3(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students = {'Alice': {'name': 'Alice', 'grade': 3, 'major': 'Mathematics',
+                                                'courses': {'Mathematics': 90, 'Science': 80}},
+                                      'Bob': {'name': 'Bob', 'grade': 4, 'major': 'Physics',
+                                              'courses': {'Physics': 85}},
+                                      'Charlie': {'name': 'Charlie', 'grade': 2, 'major': 'Chemistry',
+                                                  'courses': {'Chemistry': 70, 'Physics': 80}}
+                                      }
+        self.assertEqual(assessment_system.get_course_average('Computer'), None)
+
+    def test_get_course_average_4(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students = {}
+        self.assertEqual(assessment_system.get_course_average('Computer'), None)
+
+    def test_get_course_average_5(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students = {'Alice': {'name': 'Alice', 'grade': 3, 'major': 'Mathematics',
+                                                'courses': {'Mathematics': 90, 'Science': 80}},
+                                      'Bob': {'name': 'Bob', 'grade': 4, 'major': 'Physics',
+                                              'courses': {'Physics': 85}},
+                                      'Charlie': {'name': 'Charlie', 'grade': 2, 'major': 'Chemistry',
+                                                  'courses': {'Chemistry': 70, 'Physics': 80}}
+                                      }
+        self.assertEqual(assessment_system.get_course_average('Mathematics'), 90)

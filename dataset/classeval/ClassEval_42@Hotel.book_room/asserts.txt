@@ -1,0 +1,41 @@
+class HotelTestBookRoom(unittest.TestCase):
+    def setUp(self):
+        self.hotel = Hotel('peace hotel', {'single': 3, 'double': 2})
+
+    def test_book_room_1(self):
+        result = self.hotel.book_room('single', 2, 'guest 1')
+        self.assertEqual(result, 'Success!')
+        self.assertEqual(self.hotel.booked_rooms, {'single': {'guest 1': 2}})
+        self.assertEqual(self.hotel.available_rooms, {'single': 1, 'double': 2})
+
+    def test_book_room_2(self):
+        result = self.hotel.book_room('triple', 2, 'guest 1')
+        self.assertFalse(result)
+        self.assertEqual(self.hotel.booked_rooms, {})
+        self.assertEqual(self.hotel.available_rooms, {'single': 3, 'double': 2})
+
+    def test_book_room_3(self):
+        self.hotel.book_room('single', 2, 'guest 1')
+        result = self.hotel.book_room('single', 2, 'guest 2')
+        self.assertEqual(result, 1)
+        self.assertEqual(self.hotel.booked_rooms, {'single': {'guest 1': 2}})
+        self.assertEqual(self.hotel.available_rooms, {'single': 1, 'double': 2})
+
+    def test_book_room_4(self):
+        self.hotel.book_room('single', 2, 'guest 1')
+        result = self.hotel.book_room('single', 1, 'guest 2')
+        self.assertEqual(result, 'Success!')
+        self.assertEqual(self.hotel.booked_rooms, {'single': {'guest 1': 2, 'guest 2': 1}})
+        self.assertEqual(self.hotel.available_rooms, {'double': 2, 'single': 0})
+
+    def test_book_room_5(self):
+        self.hotel.book_room('single', 2, 'guest 1')
+        result = self.hotel.book_room('single', 3, 'guest 2')
+        self.assertEqual(result, 1)
+        self.assertEqual(self.hotel.booked_rooms, {'single': {'guest 1': 2}})
+        self.assertEqual(self.hotel.available_rooms, {'single': 1, 'double': 2})
+
+    def test_book_room_6(self):
+        self.hotel.book_room('single', 3, 'guest 1')
+        result = self.hotel.book_room('single', 100, 'guest 1')
+        self.assertFalse(result)

@@ -1,0 +1,24 @@
+class VendingMachineTestDisplayItems(unittest.TestCase):
+    def test_display_items(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}
+        self.assertEqual(vendingMachine.display_items(), 'Coke - $1.25 [10]')
+
+    def test_display_items_2(self):
+        vendingMachine = VendingMachine()
+        self.assertEqual(vendingMachine.display_items(), False)
+
+    def test_display_items_3(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}, 'Pizza': {'price': 1.25, 'quantity': 10}}
+        self.assertEqual(vendingMachine.display_items(),"Coke - $1.25 [10]\nPizza - $1.25 [10]")
+
+    def test_display_items_4(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 0}}
+        self.assertEqual(vendingMachine.display_items(), 'Coke - $1.25 [0]')
+
+    def test_display_items_5(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 0}, 'Pizza': {'price': 1.25, 'quantity': 10}}
+        self.assertEqual(vendingMachine.display_items(), 'Coke - $1.25 [0]\nPizza - $1.25 [10]')

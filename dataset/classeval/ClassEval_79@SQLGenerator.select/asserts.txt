@@ -1,0 +1,30 @@
+class SQLGeneratorTestSelect(unittest.TestCase):
+    def test_select_1(self):
+        sql = SQLGenerator('table1')
+        result = sql.select(['field1'], "field2 = value1")
+        self.assertEqual(result, "SELECT field1 FROM table1 WHERE field2 = value1;")
+
+    def test_select_2(self):
+        sql = SQLGenerator('table1')
+        result = sql.select(['field1', 'field2'], "field3 = value1")
+        self.assertEqual(result, "SELECT field1, field2 FROM table1 WHERE field3 = value1;")
+
+    def test_select_3(self):
+        sql = SQLGenerator('table1')
+        result = sql.select(['field1, field2'], "field3 = value1")
+        self.assertEqual(result, "SELECT field1, field2 FROM table1 WHERE field3 = value1;")
+
+    def test_select_4(self):
+        sql = SQLGenerator('table1')
+        result = sql.select(['field1, field2'], "field3 = value1, field4 = value2")
+        self.assertEqual(result, "SELECT field1, field2 FROM table1 WHERE field3 = value1, field4 = value2;")
+
+    def test_select_5(self):
+        sql = SQLGenerator('table1')
+        result = sql.select(['field1'], "field2 = value1, field3 = value2")
+        self.assertEqual(result, "SELECT field1 FROM table1 WHERE field2 = value1, field3 = value2;")
+
+    def test_select_6(self):
+        sql = SQLGenerator('table1')
+        result = sql.select(['field1'])
+        self.assertEqual(result, "SELECT field1 FROM table1;")

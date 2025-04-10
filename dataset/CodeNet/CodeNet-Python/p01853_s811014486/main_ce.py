@@ -1,1 +1,0 @@
-n,m=map(int,"3 100".split());p=n//2+1;print(*[0]*p+[m]*(n-p))

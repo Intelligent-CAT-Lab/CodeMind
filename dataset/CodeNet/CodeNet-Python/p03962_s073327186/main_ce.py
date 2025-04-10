@@ -1,1 +1,0 @@
-print(len(set("3 1 4".split())))

@@ -1,0 +1,30 @@
+class BankAccountTestDeposit(unittest.TestCase):
+
+    def test_deposit(self):
+        account1 = BankAccount()
+        ret = account1.deposit(1000)
+        self.assertEqual(ret, 1000)
+
+    def test_deposit_2(self):
+        account1 = BankAccount()
+        account1.deposit(1000)
+        ret = account1.deposit(2000)
+        self.assertEqual(ret, 3000)
+
+
+    def test_deposit_3(self):
+        account1 = BankAccount()
+        with self.assertRaises(ValueError) as context:
+            account1.deposit(-1000)
+        self.assertEqual(str(context.exception), "Invalid amount")
+
+    def test_deposit_4(self):
+        account1 = BankAccount()
+        ret = account1.deposit(0)
+        self.assertEqual(ret, 0)
+
+    def test_deposit_5(self):
+        account1 = BankAccount()
+        account1.deposit(1000)
+        ret = account1.deposit(1000)
+        self.assertEqual(ret, 2000)

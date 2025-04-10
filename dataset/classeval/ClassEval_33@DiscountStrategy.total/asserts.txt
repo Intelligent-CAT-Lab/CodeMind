@@ -1,0 +1,44 @@
+class DiscountStrategyTestTotal(unittest.TestCase):
+    def test_total_1(self):
+        customer = {'name': 'John Doe', 'fidelity': 1200}
+        cart = [{'product': 'product1', 'quantity': 10, 'price': 20.0},
+                {'product': 'product2', 'quantity': 5, 'price': 10.0}]
+        order = DiscountStrategy(customer, cart)
+        expected_total = 250.0
+        actual_total = order.total()
+        self.assertEqual(actual_total, expected_total)
+
+    def test_total_2(self):
+        customer = {'name': 'John Doe', 'fidelity': 1200}
+        cart = [{'product': 'product1', 'quantity': 10, 'price': 10.0},
+                {'product': 'product2', 'quantity': 5, 'price': 10.0}]
+        order = DiscountStrategy(customer, cart)
+        expected_total = 150.0
+        actual_total = order.total()
+        self.assertEqual(actual_total, expected_total)
+
+    def test_total_3(self):
+        customer = {'name': 'John Doe', 'fidelity': 1200}
+        cart = [{'product': 'product1', 'quantity': 10, 'price': 200.0},
+                {'product': 'product2', 'quantity': 5, 'price': 10.0}]
+        order = DiscountStrategy(customer, cart)
+        expected_total = 2050.0
+        actual_total = order.total()
+        self.assertEqual(actual_total, expected_total)
+
+    def test_total_4(self):
+        customer = {'name': 'John Doe', 'fidelity': 1200}
+        cart = [{'product': 'product1', 'quantity': 1, 'price': 20.0},
+                {'product': 'product2', 'quantity': 5, 'price': 10.0}]
+        order = DiscountStrategy(customer, cart)
+        expected_total = 70.0
+        actual_total = order.total()
+        self.assertEqual(actual_total, expected_total)
+
+    def test_total_5(self):
+        customer = {'name': 'John Doe', 'fidelity': 1200}
+        cart = []
+        order = DiscountStrategy(customer, cart)
+        expected_total = 0
+        actual_total = order.total()
+        self.assertEqual(actual_total, expected_total)

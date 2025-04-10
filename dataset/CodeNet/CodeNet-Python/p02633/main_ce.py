@@ -1,5 +1,0 @@
-x = int("90")
-for i in range(1, 10**5):
-    if 360 * i % x == 0:
-        print(360 * i // x)
-        break

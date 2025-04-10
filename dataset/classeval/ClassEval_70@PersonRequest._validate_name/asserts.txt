@@ -1,0 +1,21 @@
+class PersonRequestTestValidateName(unittest.TestCase):
+    def test_validate_name_1(self):
+        pr = PersonRequest("", "Man", "12345678901")
+        self.assertIsNone(pr.name)
+
+    def test_validate_name_2(self):
+        pr = PersonRequest("This is a very long name that exceeds the character limit", "Man",
+                           "12345678901")
+        self.assertIsNone(pr.name)
+
+    def test_validate_name_3(self):
+        pr = PersonRequest("aaa", "Man", "12345678901")
+        self.assertEqual(pr.name, 'aaa')
+
+    def test_validate_name_4(self):
+        pr = PersonRequest("bbb", "Man", "12345678901")
+        self.assertEqual(pr.name, 'bbb')
+
+    def test_validate_name_5(self):
+        pr = PersonRequest("ccc", "Man", "12345678901")
+        self.assertEqual(pr.name, 'ccc')

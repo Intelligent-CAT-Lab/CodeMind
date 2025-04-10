@@ -1,0 +1,32 @@
+class BankAccountTestWithdraw(unittest.TestCase):
+
+    def test_withdraw(self):
+        account1 = BankAccount()
+        account1.balance = 1000
+        ret = account1.withdraw(200)
+        self.assertEqual(ret, 800)
+
+    def test_withdraw_2(self):
+        account1 = BankAccount()
+        account1.balance = 500
+        with self.assertRaises(ValueError) as context:
+            account1.withdraw(1000)
+        self.assertEqual(str(context.exception), "Insufficient balance.")
+
+    def test_withdraw_3(self):
+        account1 = BankAccount()
+        with self.assertRaises(ValueError) as context:
+            account1.withdraw(-1000)
+        self.assertEqual(str(context.exception), "Invalid amount")
+
+    def test_withdraw_4(self):
+        account1 = BankAccount()
+        account1.balance = 1000
+        ret = account1.withdraw(500)
+        self.assertEqual(ret, 500)
+
+    def test_withdraw_5(self):
+        account1 = BankAccount()
+        account1.balance = 1000
+        ret = account1.withdraw(1000)
+        self.assertEqual(ret, 0)

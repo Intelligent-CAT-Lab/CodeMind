@@ -1,0 +1,17 @@
+class ClassRegistrationSystemTestRegisterClass(unittest.TestCase):
+
+    def setUp(self):
+        self.registration_system = ClassRegistrationSystem()
+
+    def test_register_class(self):
+        self.assertEqual(self.registration_system.register_class(student_name="John", class_name="CS101"), ["CS101"])
+
+    def test_register_class2(self):
+        self.registration_system.register_class(student_name="John", class_name="CS101")
+        self.registration_system.register_class(student_name="John", class_name="CS102")
+        self.assertEqual(self.registration_system.register_class(student_name="John", class_name="CS103"), ["CS101", "CS102", "CS103"])
+
+    def test_register_class3(self):
+        self.registration_system.register_class(student_name="John", class_name="CS101")
+        self.registration_system.register_class(student_name="Tom", class_name="CS102")
+        self.assertEqual(self.registration_system.register_class(student_name="John", class_name="CS103"), ["CS101", "CS103"])

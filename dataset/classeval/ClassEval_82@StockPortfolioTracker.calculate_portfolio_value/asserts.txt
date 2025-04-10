@@ -1,0 +1,25 @@
+class StockPortfolioTrackerTestCalculatePortfolioValue(unittest.TestCase):
+    def test_calculate_portfolio_value(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+        self.assertEqual(tracker.calculate_portfolio_value(), 11500.0)
+
+    def test_calculate_portfolio_value_2(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10},
+                             {'name': 'MSFT', 'price': 150.0, 'quantity': 10}]
+        self.assertEqual(tracker.calculate_portfolio_value(), 13000.0)
+
+    def test_calculate_portfolio_value_3(self):
+        tracker = StockPortfolioTracker(10000.0)
+        self.assertEqual(tracker.calculate_portfolio_value(), 10000.0)
+
+    def test_calculate_portfolio_value_4(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 0}]
+        self.assertEqual(tracker.calculate_portfolio_value(), 10000.0)
+
+    def test_calculate_portfolio_value_5(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 0.0, 'quantity': 10}]
+        self.assertEqual(tracker.calculate_portfolio_value(), 10000.0)

@@ -1,0 +1,25 @@
+ --- modulename: execution_path, funcname: <module>
+<string>(1):  --- modulename: execution_path, funcname: test
+execution_path.py(41):             with open('test.xml', 'w') as f:
+execution_path.py(42):                 f.write('<root>\n    <item>apple</item>\n    <item>banana</item>\n</root>')
+execution_path.py(41):             with open('test.xml', 'w') as f:
+execution_path.py(43):             self.xml_file = 'test.xml'
+execution_path.py(44):             self.processor = XMLProcessor(self.xml_file)
+ --- modulename: execution_path, funcname: __init__
+execution_path.py(11):         self.file_name = file_name
+execution_path.py(12):         self.root = None
+execution_path.py(45):             tree = ET.parse(self.processor.file_name)
+execution_path.py(46):             self.processor.root = tree.getroot()
+execution_path.py(47):             element_name = 'item'
+execution_path.py(48):             root = self.processor.read_xml()
+ --- modulename: execution_path, funcname: read_xml
+execution_path.py(15):         try:
+execution_path.py(16):             tree = ET.parse(self.file_name)
+execution_path.py(17):             self.root = tree.getroot()
+execution_path.py(18):             return self.root
+execution_path.py(49):             elements = self.processor.find_element(element_name)
+ --- modulename: execution_path, funcname: find_element
+execution_path.py(37):         elements = self.root.findall(element_name)
+execution_path.py(38):         return elements
+execution_path.py(50):             os.remove('test.xml')
+execution_path.py(51):             return len(elements),elements[0].text,elements[1].text

@@ -1,0 +1,75 @@
+class DatabaseProcessorTestSearchDatabase(unittest.TestCase):
+    def setUp(self):
+        self.database_name = "test.db"
+        self.processor = DatabaseProcessor(self.database_name)
+
+    def tearDown(self):
+        conn = sqlite3.connect(self.database_name)
+        cursor = conn.cursor()
+        cursor.execute("DROP TABLE IF EXISTS test_table")
+        conn.commit()
+        conn.close()
+
+    def test_search_database_1(self):
+        table_name = "test_table"
+        data = [
+            {'name': 'John', 'age': 25},
+            {'name': 'Alice', 'age': 30}
+        ]
+        self.processor.create_table(table_name, 'name', 'age')
+        self.processor.insert_into_database(table_name, data)
+
+        result = self.processor.search_database(table_name, 'John')
+        self.assertIsNotNone(result)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0][1], 'John')
+
+    def test_search_database_2(self):
+        table_name = "test_table"
+        data = [
+            {'name': 'John', 'age': 25},
+            {'name': 'Alice', 'age': 30}
+        ]
+        self.processor.create_table(table_name, 'name', 'age')
+        self.processor.insert_into_database(table_name, data)
+
+        result = self.processor.search_database(table_name, 'Alice')
+        self.assertIsNotNone(result)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0][1], 'Alice')
+
+    def test_search_database_3(self):
+        table_name = "test_table"
+        data = [
+            {'name': 'John', 'age': 25},
+            {'name': 'Alice', 'age': 30}
+        ]
+        self.processor.create_table(table_name, 'name', 'age')
+        self.processor.insert_into_database(table_name, data)
+
+        result = self.processor.search_database(table_name, 'Bob')
+        self.assertIsNone(result)
+
+    def test_search_database_4(self):
+        table_name = "test_table"
+        data = [
+            {'name': 'John', 'age': 25},
+            {'name': 'Alice', 'age': 30}
+        ]
+        self.processor.create_table(table_name, 'name', 'age')
+        self.processor.insert_into_database(table_name, data)
+
+        result = self.processor.search_database(table_name, 'aaa')
+        self.assertIsNone(result)
+
+    def test_search_database_5(self):
+        table_name = "test_table"
+        data = [
+            {'name': 'John', 'age': 25},
+            {'name': 'Alice', 'age': 30}
+        ]
+        self.processor.create_table(table_name, 'name', 'age')
+        self.processor.insert_into_database(table_name, data)
+
+        result = self.processor.search_database(table_name, 'bbb')
+        self.assertIsNone(result)

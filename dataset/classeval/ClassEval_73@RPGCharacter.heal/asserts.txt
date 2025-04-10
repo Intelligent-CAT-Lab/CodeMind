@@ -1,0 +1,28 @@
+class RPGCharacterTestHeal(unittest.TestCase):
+    def test_heal_1(self):
+        character = RPGCharacter("John", 90, 20, 10)
+        character.heal()
+        self.assertEqual(character.hp, 100)
+
+    # overflow healing 
+    def test_heal_2(self):
+        character = RPGCharacter("John", 97, 20, 10)
+        character.heal()
+        self.assertEqual(character.hp, 100)
+
+    def test_heal_3(self):
+        character = RPGCharacter("John", 100, 20, 10)
+        character.heal()
+        self.assertEqual(character.hp, 100)
+
+    def test_heal_4(self):
+        character = RPGCharacter("John", 100, 20, 10)
+        character.hp = 50
+        character.heal()
+        self.assertEqual(character.hp, 60)
+
+    def test_heal_5(self):
+        character = RPGCharacter("John", 100, 20, 10)
+        character.hp = 10
+        character.heal()
+        self.assertEqual(character.hp, 20)

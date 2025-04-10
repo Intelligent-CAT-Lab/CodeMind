@@ -1,0 +1,34 @@
+class EmailClientTestSendTo(unittest.TestCase):
+    def test_send_to(self):
+        sender = EmailClient('sender@example.com', 100)
+        receiver = EmailClient('receiver@example.com', 50)
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.assertTrue(sender.send_to(receiver, 'Hello', 10))
+        self.assertEqual(receiver.inbox[0], {"sender": 'sender@example.com','receiver': 'receiver@example.com','content': 'Hello','size': 10,'time': timestamp,'state': 'unread'})
+
+    def test_send_to_2(self):
+        sender = EmailClient('sender@example.com', 100)
+        receiver = EmailClient('receiver@example.com', 0)
+        self.assertFalse(sender.send_to(receiver, 'Hello', 10))
+
+    def test_send_to_3(self):
+        sender = EmailClient('sender@example.com', 100)
+        receiver = EmailClient('receiver@example.com', 50)
+        receiver.inbox = [{'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 50, 'time': '2021-01-01 00:00:00', 'state': 'unread'}]
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.assertFalse(sender.send_to(receiver, 'Hello', 10))
+        self.assertEqual(receiver.inbox, [{'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 50, 'time': '2021-01-01 00:00:00', 'state': 'unread'}])
+
+    def test_send_to_4(self):
+        sender = EmailClient('sender@example.com', 100)
+        receiver = EmailClient('receiver@example.com', 30)
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.assertTrue(sender.send_to(receiver, 'Hello', 20))
+        self.assertEqual(receiver.inbox, [{'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 20, 'time': timestamp, 'state': 'unread'}])
+
+    def test_send_to_5(self):
+        sender = EmailClient('sender@example.com', 100)
+        receiver = EmailClient('receiver@example.com', 30)
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.assertTrue(sender.send_to(receiver, 'bye', 20))
+        self.assertEqual(receiver.inbox, [{'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'bye', 'size': 20, 'time': timestamp, 'state': 'unread'}])

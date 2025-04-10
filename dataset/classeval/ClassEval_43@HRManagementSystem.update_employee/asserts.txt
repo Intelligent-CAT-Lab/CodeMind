@@ -1,0 +1,38 @@
+class HRManagementSystemTestUpdateEmployee(unittest.TestCase):
+    def test_update_employee(self):
+        hr_system = HRManagementSystem()
+        hr_system.employees = {1: {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}}
+        self.assertEqual(hr_system.update_employee(1, {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 20000}), True)
+        self.assertEqual(hr_system.employees[1], {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 20000})
+
+    def test_update_employee_2(self):
+        hr_system = HRManagementSystem()
+        hr_system.employees = {}
+        self.assertEqual(hr_system.update_employee(1, {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 20000}), False)
+        self.assertEqual(hr_system.employees, {})
+
+    def test_update_employee_3(self):
+        hr_system = HRManagementSystem()
+        hr_system.employees = {1: {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}}
+        self.assertEqual(hr_system.update_employee(2, {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 20000}), False)
+        self.assertEqual(hr_system.employees, {1: {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}})
+
+    def test_update_employee_4(self):
+        hr_system = HRManagementSystem()
+        hr_system.employees = {1: {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}}
+        self.assertEqual(hr_system.update_employee(1, {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 20000}), True)
+        self.assertEqual(hr_system.update_employee(1, {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 20000}), True)
+        self.assertEqual(hr_system.employees[1], {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 20000})
+
+    def test_update_employee_5(self):
+        hr_system = HRManagementSystem()
+        hr_system.employees = {1: {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}}
+        self.assertEqual(hr_system.update_employee(1, {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 20000}), True)
+        self.assertEqual(hr_system.update_employee(1, {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 20000}), True)
+        self.assertEqual(hr_system.update_employee(1, {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}), True)
+        self.assertEqual(hr_system.employees[1], {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000})
+
+    def test_update_employee_6(self):
+        hr_system = HRManagementSystem()
+        hr_system.employees = {1: {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}}
+        self.assertEqual(hr_system.update_employee(1, {'Name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 20000}), False)

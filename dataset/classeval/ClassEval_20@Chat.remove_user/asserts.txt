@@ -1,0 +1,29 @@
+class ChatTestRemoveUser(unittest.TestCase):
+    def test_remove_user(self):
+        chat = Chat()
+        chat.users = {'John': []}
+        self.assertEqual(chat.remove_user('John'), True)
+        self.assertEqual(chat.users, {})
+    def test_remove_user_2(self):
+        chat = Chat()
+        self.assertEqual(chat.remove_user('John'), False)
+        self.assertEqual(chat.users, {})
+
+    def test_remove_user_3(self):
+        chat = Chat()
+        chat.users = {'John': [], 'Mary': []}
+        self.assertEqual(chat.remove_user('John'), True)
+        self.assertEqual(chat.users, {'Mary': []})
+
+    def test_remove_user_4(self):
+        chat = Chat()
+        chat.users = {'John': [], 'Mary': []}
+        self.assertEqual(chat.remove_user('Mary'), True)
+        self.assertEqual(chat.remove_user('John'), True)
+        self.assertEqual(chat.users, {})
+
+    def test_remove_user_5(self):
+        chat = Chat()
+        chat.users = {'John': [], 'Mary': []}
+        self.assertEqual(chat.remove_user('Amy'), False)
+        self.assertEqual(chat.users, {'John': [], 'Mary': []})

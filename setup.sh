@@ -1,1 +1,2 @@
-export OPENAIKEY=$1;
+export OPENAI_API_KEY=$1;
+export GEMINI_API_KEY=$2

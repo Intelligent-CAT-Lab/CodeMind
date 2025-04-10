@@ -1,0 +1,39 @@
+class BlackjackGameTestCheckWinner(unittest.TestCase):
+    def setUp(self):
+        self.blackjackGame = BlackjackGame()
+
+    # player > 21 but dealer not, dealer wins.
+    def test_check_winner_1(self):
+        player_hand = ['2S', 'JS', 'QS']
+        dealer_hand = ['7S', '9S']
+        self.assertEqual(self.blackjackGame.check_winner(player_hand, dealer_hand), 'Dealer wins')
+
+    # dealer > 21 but player not, player wins.
+    def test_check_winner_2(self):
+        player_hand = ['2S', '4S', '5S']
+        dealer_hand = ['2S', 'JS', 'QS']
+        self.assertEqual(self.blackjackGame.check_winner(player_hand, dealer_hand), 'Player wins')
+
+    # both > 21 but dealer smaller, dealer wins.
+    def test_check_winner_3(self):
+        player_hand = ['3S', 'JS', 'QS']
+        dealer_hand = ['2S', 'JS', 'QS']
+        self.assertEqual(self.blackjackGame.check_winner(player_hand, dealer_hand), 'Dealer wins')
+
+    # both > 21 but player smaller, player wins.
+    def test_check_winner_4(self):
+        player_hand = ['2S', 'JS', 'QS']
+        dealer_hand = ['3S', 'JS', 'QS']
+        self.assertEqual(self.blackjackGame.check_winner(player_hand, dealer_hand), 'Player wins')
+
+    # both < 21 but dealer is bigger, dealer wins.
+    def test_check_winner_5(self):
+        player_hand = ['2S', '3S', '5S']
+        dealer_hand = ['AS', 'JS']
+        self.assertEqual(self.blackjackGame.check_winner(player_hand, dealer_hand), 'Dealer wins')
+
+    # both < 21 but player is bigger, player wins.
+    def test_check_winner_6(self):
+        player_hand = ['AS', 'JS']
+        dealer_hand = ['2S', '3S', '5S']
+        self.assertEqual(self.blackjackGame.check_winner(player_hand, dealer_hand), 'Player wins')

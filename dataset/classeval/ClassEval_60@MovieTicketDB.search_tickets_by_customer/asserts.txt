@@ -1,0 +1,53 @@
+class MovieTicketDBTestDeleteTicket(unittest.TestCase):
+    def setUp(self):
+        self.db_name = 'test_database.db'
+        self.db = MovieTicketDB(self.db_name)
+
+    def tearDown(self):
+        self.db.connection.close()
+        os.remove(self.db_name)
+
+    def test_delete_ticket_1(self):
+        self.db.insert_ticket('Avengers: Endgame', 'Cinema 1', 'A1', 'John Doe')
+        tickets = self.db.search_tickets_by_customer('John Doe')
+        self.assertEqual(len(tickets), 1)
+        ticket_id = tickets[0][0]
+        self.db.delete_ticket(ticket_id)
+        tickets = self.db.search_tickets_by_customer('John Doe')
+        self.assertEqual(len(tickets), 0)
+
+    def test_delete_ticket_2(self):
+        self.db.insert_ticket('Avengers: Endgame', 'Cinema 1', 'A1', 'aaa')
+        tickets = self.db.search_tickets_by_customer('aaa')
+        self.assertEqual(len(tickets), 1)
+        ticket_id = tickets[0][0]
+        self.db.delete_ticket(ticket_id)
+        tickets = self.db.search_tickets_by_customer('aaa')
+        self.assertEqual(len(tickets), 0)
+
+    def test_delete_ticket_3(self):
+        self.db.insert_ticket('Avengers: Endgame', 'Cinema 1', 'A1', 'bbb')
+        tickets = self.db.search_tickets_by_customer('bbb')
+        self.assertEqual(len(tickets), 1)
+        ticket_id = tickets[0][0]
+        self.db.delete_ticket(ticket_id)
+        tickets = self.db.search_tickets_by_customer('bbb')
+        self.assertEqual(len(tickets), 0)
+
+    def test_delete_ticket_4(self):
+        self.db.insert_ticket('Avengers: Endgame', 'Cinema 1', 'A1', 'ccc')
+        tickets = self.db.search_tickets_by_customer('ccc')
+        self.assertEqual(len(tickets), 1)
+        ticket_id = tickets[0][0]
+        self.db.delete_ticket(ticket_id)
+        tickets = self.db.search_tickets_by_customer('ccc')
+        self.assertEqual(len(tickets), 0)
+
+    def test_delete_ticket_5(self):
+        self.db.insert_ticket('Avengers: Endgame', 'Cinema 1', 'A1', 'ddd')
+        tickets = self.db.search_tickets_by_customer('ddd')
+        self.assertEqual(len(tickets), 1)
+        ticket_id = tickets[0][0]
+        self.db.delete_ticket(ticket_id)
+        tickets = self.db.search_tickets_by_customer('ddd')
+        self.assertEqual(len(tickets), 0)

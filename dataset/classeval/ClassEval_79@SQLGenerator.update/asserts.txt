@@ -1,0 +1,35 @@
+class SQLGeneratorTestUpdate(unittest.TestCase):
+    def test_update(self):
+        sql = SQLGenerator('table1')
+        result = sql.update({'field1': 'new_value1', 'field2': 'new_value2'}, "field3 = value1")
+        self.assertEqual(result,
+                         "UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2' WHERE field3 = value1;")
+
+    def test_update_2(self):
+        sql = SQLGenerator('table1')
+        result = sql.update({'field1': 'new_value1', 'field2': 'new_value2', 'field3': 'new_value3'},
+                            "field4 = value1")
+        self.assertEqual(result,
+                         "UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2', field3 = 'new_value3' WHERE field4 = value1;")
+
+    def test_update_3(self):
+        sql = SQLGenerator('table1')
+        result = sql.update({'field1': 'new_value1', 'field2': 'new_value2', 'field3': 'new_value3',
+                             'field4': 'new_value4'}, "field5 = value1")
+        self.assertEqual(result,
+                         "UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2', field3 = 'new_value3', field4 = 'new_value4' WHERE field5 = value1;")
+
+    def test_update_4(self):
+        sql = SQLGenerator('table1')
+        result = sql.update({'field1': 'new_value1', 'field2': 'new_value2', 'field3': 'new_value3',
+                             'field4': 'new_value4', 'field5': 'new_value5'}, "field6 = value1")
+        self.assertEqual(result,
+                         "UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2', field3 = 'new_value3', field4 = 'new_value4', field5 = 'new_value5' WHERE field6 = value1;")
+
+    def test_update_5(self):
+        sql = SQLGenerator('table1')
+        result = sql.update({'field1': 'new_value1', 'field2': 'new_value2', 'field3': 'new_value3',
+                             'field4': 'new_value4', 'field5': 'new_value5', 'field6': 'new_value6'},
+                            "field7 = value1")
+        self.assertEqual(result,
+                         "UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2', field3 = 'new_value3', field4 = 'new_value4', field5 = 'new_value5', field6 = 'new_value6' WHERE field7 = value1;")

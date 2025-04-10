@@ -1,0 +1,34 @@
+ --- modulename: execution_path, funcname: <module>
+<string>(1):  --- modulename: execution_path, funcname: test
+execution_path.py(69):             self.processor = StudentDatabaseProcessor("test_database.db")
+ --- modulename: execution_path, funcname: __init__
+execution_path.py(12):         self.database_name = database_name
+execution_path.py(70):             self.processor.create_student_table()
+ --- modulename: execution_path, funcname: create_student_table
+execution_path.py(15):         conn = sqlite3.connect(self.database_name)
+execution_path.py(16):         cursor = conn.cursor()
+execution_path.py(18):         create_table_query = """
+execution_path.py(27):         cursor.execute(create_table_query)
+execution_path.py(29):         conn.commit()
+execution_path.py(30):         conn.close()
+execution_path.py(72):                 'name': 'bbb',
+execution_path.py(73):                 'age': 20,
+execution_path.py(74):                 'gender': 'female',
+execution_path.py(75):                 'grade': 90
+execution_path.py(71):             student_data = {
+execution_path.py(77):             self.processor.insert_student(student_data)
+ --- modulename: execution_path, funcname: insert_student
+execution_path.py(33):         conn = sqlite3.connect(self.database_name)
+execution_path.py(34):         cursor = conn.cursor()
+execution_path.py(36):         insert_query = """
+execution_path.py(40):         cursor.execute(insert_query,
+execution_path.py(41):                        (student_data['name'], student_data['age'], student_data['gender'], student_data['grade']))
+execution_path.py(40):         cursor.execute(insert_query,
+execution_path.py(43):         conn.commit()
+execution_path.py(44):         conn.close()
+execution_path.py(78):             conn = sqlite3.connect("test_database.db")
+execution_path.py(79):             cursor = conn.cursor()
+execution_path.py(80):             cursor.execute("SELECT * FROM students WHERE name=?", ('bbb',))
+execution_path.py(81):             result = cursor.fetchall()
+execution_path.py(82):             conn.close()
+execution_path.py(83):             return len(result),result[0][1]

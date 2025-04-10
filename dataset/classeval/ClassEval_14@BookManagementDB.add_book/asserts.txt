@@ -1,0 +1,25 @@
+class BookManagementDBTestAddBook(unittest.TestCase):
+    def setUp(self):
+        self.db_name = "test.db"
+        self.db = BookManagementDB(self.db_name)
+        self.connection = sqlite3.connect(self.db_name)
+        self.cursor = self.connection.cursor()
+
+    def test_add_book(self):
+        title = "Introduction to Python"
+        author = "John Smith"
+        self.db.add_book(title, author)
+
+        # Check if the book was added correctly
+        self.cursor.execute("SELECT title, author, available FROM books WHERE id=1")
+        result = self.cursor.fetchone()
+        self.assertIsNotNone(result)
+        self.assertEqual(result[0], title)
+        self.assertEqual(result[1], author)
+        self.assertEqual(result[2], 1)
+
+    def tearDown(self):
+        self.db.connection.close()
+        self.connection.close()
+        # remove the test database file
+        os.remove(self.db_name)

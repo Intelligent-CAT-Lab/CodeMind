@@ -1,0 +1,88 @@
+class XMLProcessorTestReadXml(unittest.TestCase):
+    def test_read_xml_1(self):
+        with open('test.xml', 'w') as f:
+            f.write('<root>\n    <item>apple</item>\n    <item>banana</item>\n    <item>orange</item>\n</root>')
+        self.xml_file = 'test.xml'
+        self.processor = XMLProcessor(self.xml_file)
+        tree = ET.parse(self.processor.file_name)
+        self.processor.root = tree.getroot()
+
+        root = self.processor.read_xml()
+        self.assertIsNotNone(root)
+        lst = root.findall('item')
+        self.assertEqual(lst[0].text, 'apple')
+        self.assertEqual(lst[1].text, 'banana')
+        self.assertEqual(lst[2].text, 'orange')
+
+        os.remove('test.xml')
+
+    def test_read_xml_2(self):
+        with open('test.xml', 'w') as f:
+            f.write('<root>\n    <item>aaa</item>\n    <item>bbb</item>\n    <item>ccc</item>\n</root>')
+        self.xml_file = 'test.xml'
+        self.processor = XMLProcessor(self.xml_file)
+        tree = ET.parse(self.processor.file_name)
+        self.processor.root = tree.getroot()
+
+        root = self.processor.read_xml()
+        self.assertIsNotNone(root)
+        lst = root.findall('item')
+        self.assertEqual(lst[0].text, 'aaa')
+        self.assertEqual(lst[1].text, 'bbb')
+        self.assertEqual(lst[2].text, 'ccc')
+
+        os.remove('test.xml')
+
+    def test_read_xml_3(self):
+        with open('test.xml', 'w') as f:
+            f.write('<root>\n    <item>apple</item>\n</root>')
+        self.xml_file = 'test.xml'
+        self.processor = XMLProcessor(self.xml_file)
+        tree = ET.parse(self.processor.file_name)
+        self.processor.root = tree.getroot()
+
+        root = self.processor.read_xml()
+        self.assertIsNotNone(root)
+        lst = root.findall('item')
+        self.assertEqual(lst[0].text, 'apple')
+
+        os.remove('test.xml')
+
+    def test_read_xml_4(self):
+        with open('test.xml', 'w') as f:
+            f.write('<root>\n    <item>apple</item>\n    <item>banana</item>\n</root>')
+        self.xml_file = 'test.xml'
+        self.processor = XMLProcessor(self.xml_file)
+        tree = ET.parse(self.processor.file_name)
+        self.processor.root = tree.getroot()
+
+        root = self.processor.read_xml()
+        self.assertIsNotNone(root)
+        lst = root.findall('item')
+        self.assertEqual(lst[0].text, 'apple')
+        self.assertEqual(lst[1].text, 'banana')
+
+        os.remove('test.xml')
+
+    def test_read_xml_5(self):
+        with open('test.xml', 'w') as f:
+            f.write('<root>\n    <item>apple</item>\n    <item>orange</item>\n</root>')
+        self.xml_file = 'test.xml'
+        self.processor = XMLProcessor(self.xml_file)
+        tree = ET.parse(self.processor.file_name)
+        self.processor.root = tree.getroot()
+
+        root = self.processor.read_xml()
+        self.assertIsNotNone(root)
+        lst = root.findall('item')
+        self.assertEqual(lst[0].text, 'apple')
+        self.assertEqual(lst[1].text, 'orange')
+
+        os.remove('test.xml')
+
+    def test_read_xml_6(self):
+        self.xml_file = ''
+        self.processor = XMLProcessor(self.xml_file)
+
+        root = self.processor.read_xml()
+        self.assertIsNone(root)

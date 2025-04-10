@@ -1,0 +1,10 @@
+def test(self):
+        self.processor = ImageProcessor()
+        self.image_path = os.path.join(os.path.dirname(__file__), "test.png")
+        image = Image.new("RGB", (100, 100), (255, 255, 255))
+        image.save(self.image_path)
+        self.processor.load_image(self.image_path)
+        enhancer = ImageEnhance.Brightness(Image.open(self.image_path))
+        expected_image = enhancer.enhance(0.5)
+        self.processor.adjust_brightness(0.5)
+        return (ImageChops.difference(expected_image, self.processor.image).getbbox() is None)

@@ -1,0 +1,35 @@
+class MinesweeperGameTestSweep(unittest.TestCase):
+    def test_sweep(self):
+        minesweeper_game = MinesweeperGame(3, 1)
+        minesweeper_game.minesweeper_map = [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
+        minesweeper_game.player_map = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
+        self.assertEqual(minesweeper_game.sweep(1,1), [['-', '-', '-'], ['-', 1, '-'], ['-', '-', '-']])
+        self.assertEqual(minesweeper_game.score, 1)
+
+    def test_sweep_2(self):
+        minesweeper_game = MinesweeperGame(3, 1)
+        minesweeper_game.minesweeper_map = [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
+        minesweeper_game.player_map = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
+        self.assertEqual(minesweeper_game.sweep(0,0), False)
+        self.assertEqual(minesweeper_game.score, 0)
+
+    def test_sweep_3(self):
+        minesweeper_game = MinesweeperGame(3, 1)
+        minesweeper_game.minesweeper_map = [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
+        minesweeper_game.player_map = [['-', '-', '0'], ['1', '1', '0'], ['0', '0', '0']]
+        self.assertEqual(minesweeper_game.sweep(0,1), True)
+        self.assertEqual(minesweeper_game.score, 1)
+
+    def test_sweep_4(self):
+        minesweeper_game = MinesweeperGame(3, 1)
+        minesweeper_game.minesweeper_map = [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
+        minesweeper_game.player_map = [['-', '-', '-'], ['-', '-', '0'], ['0', '0', '0']]
+        self.assertEqual(minesweeper_game.sweep(0,2), [['-', '-', 0], ['-', '-', '0'], ['0', '0', '0']])
+        self.assertEqual(minesweeper_game.score, 1)
+
+    def test_sweep_5(self):
+        minesweeper_game = MinesweeperGame(3, 1)
+        minesweeper_game.minesweeper_map = [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
+        minesweeper_game.player_map = [['-', '-', '0'], ['-', '1', '0'], ['0', '0', '0']]
+        self.assertEqual(minesweeper_game.sweep(1,0), [['-', '-', '0'], [1, '1', '0'], ['0', '0', '0']])
+        self.assertEqual(minesweeper_game.score, 1)

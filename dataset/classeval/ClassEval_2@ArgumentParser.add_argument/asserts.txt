@@ -1,0 +1,49 @@
+class ArgumentParserTestAddArgument(unittest.TestCase):
+
+    def setUp(self):
+        self.parser = ArgumentParser()
+
+    def test_add_argument(self):
+        self.parser.add_argument("name")
+        self.parser.add_argument("age", required=True, arg_type=int)
+
+        self.assertEqual(self.parser.required, {"age"})
+        self.assertEqual(self.parser.types, {"name": str, "age": int})
+
+    def test_add_argument_2(self):
+        self.parser.add_argument("name")
+        self.parser.add_argument("age", required=False, arg_type=int)
+        self.parser.add_argument("verbose", arg_type=bool)
+
+        self.assertEqual(self.parser.required, set())
+        self.assertEqual(self.parser.types, {"name": str, "age": int, "verbose": bool})
+
+    def test_add_argument_3(self):
+        self.parser.add_argument("name")
+        self.parser.add_argument("age", required=False, arg_type=int)
+        self.parser.add_argument("verbose", arg_type=bool)
+        self.parser.add_argument("d")
+
+        self.assertEqual(self.parser.required, set())
+        self.assertEqual(self.parser.types, {"name": str, "age": int, "verbose": bool, "d": str})
+
+    def test_add_argument_4(self):
+        self.parser.add_argument("name")
+        self.parser.add_argument("age", required=False, arg_type=int)
+        self.parser.add_argument("verbose", arg_type=bool)
+        self.parser.add_argument("d")
+        self.parser.add_argument("option")
+
+        self.assertEqual(self.parser.required, set())
+        self.assertEqual(self.parser.types, {"name": str, "age": int, "verbose": bool, "d": str, "option": str})
+
+    def test_add_argument_5(self):
+        self.parser.add_argument("name")
+        self.parser.add_argument("age", required=False, arg_type=int)
+        self.parser.add_argument("verbose", arg_type=bool)
+        self.parser.add_argument("d")
+        self.parser.add_argument("option")
+        self.parser.add_argument("option2", arg_type=bool)
+
+        self.assertEqual(self.parser.required, set())
+        self.assertEqual(self.parser.types, {"name": str, "age": int, "verbose": bool, "d": str, "option": str, "option2": bool})

@@ -1,0 +1,35 @@
+class StockPortfolioTrackerTestAddStock(unittest.TestCase):
+    def test_add_stock(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.add_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
+        self.assertEqual(tracker.portfolio, [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}])
+
+    def test_add_stock_2(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+        tracker.add_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
+        self.assertEqual(tracker.portfolio, [{'name': 'AAPL', 'price': 150.0, 'quantity': 20}])
+
+    def test_add_stock_3(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+        tracker.add_stock({"name": "MSFT", "price": 150.0, "quantity": 10})
+        self.assertEqual(tracker.portfolio, [{'name': 'AAPL', 'price': 150.0, 'quantity': 10},
+                                             {'name': 'MSFT', 'price': 150.0, 'quantity': 10}])
+
+    def test_add_stock_4(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+        tracker.add_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
+        tracker.add_stock({"name": "MSFT", "price": 150.0, "quantity": 10})
+        self.assertEqual(tracker.portfolio, [{'name': 'AAPL', 'price': 150.0, 'quantity': 20},
+                                             {'name': 'MSFT', 'price': 150.0, 'quantity': 10}])
+
+    def test_add_stock_5(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+        tracker.add_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
+        tracker.add_stock({"name": "MSFT", "price": 150.0, "quantity": 10})
+        tracker.add_stock({"name": "MSFT", "price": 150.0, "quantity": 10})
+        self.assertEqual(tracker.portfolio, [{'name': 'AAPL', 'price': 150.0, 'quantity': 20},
+                                             {'name': 'MSFT', 'price': 150.0, 'quantity': 20}])

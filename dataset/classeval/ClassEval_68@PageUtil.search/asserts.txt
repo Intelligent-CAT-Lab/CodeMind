@@ -1,0 +1,60 @@
+class PageUtilTestSearch(unittest.TestCase):
+    def setUp(self):
+        self.data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        self.page_size = 3
+        self.page_util = PageUtil(self.data, self.page_size)
+
+    def test_search_1(self):
+        keyword = "1"
+        expected_results = {
+            "keyword": "1",
+            "total_results": 2,
+            "total_pages": 1,
+            "results": [1, 10]
+        }
+        actual_results = self.page_util.search(keyword)
+        self.assertEqual(actual_results, expected_results)
+
+    def test_search_2(self):
+        keyword = "2"
+        expected_results = {
+            "keyword": "2",
+            "total_results": 1,
+            "total_pages": 1,
+            "results": [2]
+        }
+        actual_results = self.page_util.search(keyword)
+        self.assertEqual(actual_results, expected_results)
+
+    def test_search_3(self):
+        keyword = "3"
+        expected_results = {
+            "keyword": "3",
+            "total_results": 1,
+            "total_pages": 1,
+            "results": [3]
+        }
+        actual_results = self.page_util.search(keyword)
+        self.assertEqual(actual_results, expected_results)
+
+    def test_search_4(self):
+        keyword = "4"
+        expected_results = {
+            "keyword": "4",
+            "total_results": 1,
+            "total_pages": 1,
+            "results": [4]
+        }
+        actual_results = self.page_util.search(keyword)
+        self.assertEqual(actual_results, expected_results)
+
+    def test_search_5(self):
+        keyword = "11"
+        expected_results = {
+            "keyword": "11",
+            "total_results": 0,
+            "total_pages": 0,
+            "results": []
+        }
+        actual_results = self.page_util.search(keyword)
+        self.assertEqual(actual_results, expected_results)

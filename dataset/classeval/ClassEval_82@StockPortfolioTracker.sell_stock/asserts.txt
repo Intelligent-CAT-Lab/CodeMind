@@ -1,0 +1,35 @@
+class StockPortfolioTrackerTestSellStock(unittest.TestCase):
+    def test_sell_stock(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+        self.assertEqual(tracker.sell_stock({"name": "AAPL", "price": 150.0, "quantity": 9}), True)
+        self.assertEqual(tracker.portfolio, [{"name": "AAPL", "price": 150.0, "quantity": 1}])
+        self.assertEqual(tracker.cash_balance, 11350.0)
+
+    def test_sell_stock_2(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+        self.assertEqual(tracker.sell_stock({"name": "AAPL", "price": 150.0, "quantity": 20}), False)
+        self.assertEqual(tracker.portfolio, [{"name": "AAPL", "price": 150.0, "quantity": 10}])
+        self.assertEqual(tracker.cash_balance, 10000.0)
+
+    def test_sell_stock_3(self):
+        tracker = StockPortfolioTracker(10000.0)
+        self.assertEqual(tracker.sell_stock({"name": "AAPL", "price": 150.0, "quantity": 10}), False)
+        self.assertEqual(tracker.portfolio, [])
+        self.assertEqual(tracker.cash_balance, 10000.0)
+
+    def test_sell_stock_4(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 20}]
+        self.assertEqual(tracker.sell_stock({"name": "AAPL", "price": 150.0, "quantity": 20}), True)
+        self.assertEqual(tracker.portfolio, [])
+        self.assertEqual(tracker.cash_balance, 13000.0)
+
+    def test_sell_stock_5(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 20},
+                             {'name': 'MSFT', 'price': 150.0, 'quantity': 10}]
+        self.assertEqual(tracker.sell_stock({"name": "AAPL", "price": 150.0, "quantity": 20}), True)
+        self.assertEqual(tracker.portfolio, [{'name': 'MSFT', 'price': 150.0, 'quantity': 10}])
+        self.assertEqual(tracker.cash_balance, 13000.0)

@@ -1,2 +1,0 @@
-s = "AIZU"
-print((s[0]=='A')+sum(s[i] >= s[i+1] for i in range(len(s)-1)))

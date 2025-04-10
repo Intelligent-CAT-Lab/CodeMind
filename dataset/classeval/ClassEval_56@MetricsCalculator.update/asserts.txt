@@ -1,0 +1,30 @@
+class MetricsCalculatorTestUpdate(unittest.TestCase):
+    def test_update_1(self):
+        mc = MetricsCalculator()
+        self.assertEqual((mc.true_positives, mc.false_positives, mc.false_negatives, mc.true_negatives), (0, 0, 0, 0))
+        mc.update([1, 1, 0, 0], [1, 0, 0, 1])
+        self.assertEqual((mc.true_positives, mc.false_positives, mc.false_negatives, mc.true_negatives), (1, 1, 1, 1))
+
+    def test_update_2(self):
+        mc = MetricsCalculator()
+        self.assertEqual((mc.true_positives, mc.false_positives, mc.false_negatives, mc.true_negatives), (0, 0, 0, 0))
+        mc.update([1, 1, 1, 0], [1, 0, 0, 1])
+        self.assertEqual((mc.true_positives, mc.false_positives, mc.false_negatives, mc.true_negatives), (1, 2, 1, 0))
+
+    def test_update_3(self):
+        mc = MetricsCalculator()
+        self.assertEqual((mc.true_positives, mc.false_positives, mc.false_negatives, mc.true_negatives), (0, 0, 0, 0))
+        mc.update([1, 1, 0, 1], [1, 0, 0, 1])
+        self.assertEqual((mc.true_positives, mc.false_positives, mc.false_negatives, mc.true_negatives), (2, 1, 0, 1))
+
+    def test_update_4(self):
+        mc = MetricsCalculator()
+        self.assertEqual((mc.true_positives, mc.false_positives, mc.false_negatives, mc.true_negatives), (0, 0, 0, 0))
+        mc.update([1, 1, 0, 0], [1, 1, 0, 1])
+        self.assertEqual((mc.true_positives, mc.false_positives, mc.false_negatives, mc.true_negatives), (2, 0, 1, 1))
+
+    def test_update_5(self):
+        mc = MetricsCalculator()
+        self.assertEqual((mc.true_positives, mc.false_positives, mc.false_negatives, mc.true_negatives), (0, 0, 0, 0))
+        mc.update([1, 1, 0, 0], [1, 0, 1, 1])
+        self.assertEqual((mc.true_positives, mc.false_positives, mc.false_negatives, mc.true_negatives), (1, 1, 2, 0))

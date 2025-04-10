@@ -1,0 +1,32 @@
+class GomokuGameTestCheckWinner(unittest.TestCase):
+    def test_check_winner_1(self):
+        gomokuGame = GomokuGame(10)
+        self.assertEqual(None, gomokuGame.check_winner())
+
+    def test_check_winner_2(self):
+        gomokuGame = GomokuGame(10)
+        moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]
+        for move in moves:
+            gomokuGame.make_move(move[0], move[1])
+        self.assertEqual('X', gomokuGame.check_winner())
+
+    def test_check_winner_3(self):
+        gomokuGame = GomokuGame(10)
+        moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 0), (0, 4)]
+        for move in moves:
+            gomokuGame.make_move(move[0], move[1])
+        self.assertEqual('O', gomokuGame.check_winner())
+
+    def test_check_winner_4(self):
+        gomokuGame = GomokuGame(10)
+        moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1), (0, 4)]
+        for move in moves:
+            gomokuGame.make_move(move[0], move[1])
+        self.assertEqual(gomokuGame.check_winner(), 'O')
+
+    def test_check_winner_5(self):
+        gomokuGame = GomokuGame(10)
+        moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1), (0, 4), (5, 0)]
+        for move in moves:
+            gomokuGame.make_move(move[0], move[1])
+        self.assertEqual('O', gomokuGame.check_winner())

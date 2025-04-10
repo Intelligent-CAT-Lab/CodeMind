@@ -1,0 +1,23 @@
+class ThermostatTestAutoCheckConflict(unittest.TestCase):
+    def test_auto_check_conflict_1(self):
+        t = Thermostat(30, 25, 'cool')
+        self.assertTrue(t.auto_check_conflict())
+
+    def test_auto_check_conflict_2(self):
+        t = Thermostat(30, 25, 'heat')
+        self.assertFalse(t.auto_check_conflict())
+        self.assertEqual(t.mode, 'cool')
+
+    def test_auto_check_conflict_3(self):
+        t = Thermostat(25, 30, 'heat')
+        self.assertTrue(t.auto_check_conflict())
+
+    def test_auto_check_conflict_4(self):
+        t = Thermostat(25, 30, 'cool')
+        self.assertFalse(t.auto_check_conflict())
+        self.assertEqual(t.mode, 'heat')
+
+    def test_auto_check_conflict_5(self):
+        t = Thermostat(25, 25, 'cool')
+        self.assertFalse(t.auto_check_conflict())
+        self.assertEqual(t.mode, 'cool')

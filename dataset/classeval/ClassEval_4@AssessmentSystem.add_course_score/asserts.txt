@@ -1,0 +1,37 @@
+class AssessmentSystemTestAddCourseScore(unittest.TestCase):
+    def test_add_course_score(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students = {"Alice": {'name': 'Alice', 'grade': 3, 'major': 'Mathematics', 'courses': {}}}
+        assessment_system.add_course_score("Alice", "Math", 90)
+        self.assertEqual(assessment_system.students["Alice"]["courses"]["Math"], 90)
+
+    def test_add_course_score_2(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students["Alice"] = {'name': 'Alice', 'grade': 3, 'major': 'Mathematics', 'courses': {}}
+        assessment_system.add_course_score("Alice", "Math", 90)
+        self.assertEqual(assessment_system.students["Alice"]["courses"]["Math"], 90)
+
+    def test_add_course_score_3(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students["Alice"] = {'name': 'Alice', 'grade': 3, 'major': 'Mathematics', 'courses': {}}
+        assessment_system.add_course_score("Alice", "Math", 90)
+        assessment_system.add_course_score("Alice", "Science", 80)
+        assessment_system.add_course_score("Alice", "Math", 95)
+        self.assertEqual(assessment_system.students["Alice"]["courses"]["Math"], 95)
+        self.assertEqual(assessment_system.students["Alice"]["courses"]["Science"], 80)
+
+    def test_add_course_score_4(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students["Alice"] = {'name': 'Alice', 'grade': 3, 'major': 'Mathematics', 'courses': {}}
+        assessment_system.add_course_score("Alice", "Math", 90)
+        assessment_system.add_course_score("Alice", "Science", 80)
+        assessment_system.add_course_score("Alice", "Math", 95)
+        assessment_system.add_course_score("Alice", "Science", 85)
+        self.assertEqual(assessment_system.students["Alice"]["courses"]["Math"], 95)
+        self.assertEqual(assessment_system.students["Alice"]["courses"]["Science"], 85)
+
+    def test_add_course_score_5(self):
+        assessment_system = AssessmentSystem()
+        assessment_system.students["Alice"] = {'name': 'Alice', 'grade': 3, 'major': 'Mathematics', 'courses': {}}
+        assessment_system.add_course_score("Bob", "Math", 90)
+        self.assertEqual(assessment_system.students["Alice"]["courses"], {})

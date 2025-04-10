@@ -1,0 +1,25 @@
+class BalancedBracketsTestClearExpr(unittest.TestCase):
+    def test_clear_expr(self):
+        b = BalancedBrackets("a(b)c")
+        b.clear_expr()
+        self.assertEqual(b.expr, "()")
+
+    def test_clear_expr_2(self):
+        b = BalancedBrackets("a(b){c}")
+        b.clear_expr()
+        self.assertEqual(b.expr, "(){}")
+
+    def test_clear_expr_3(self):
+        b = BalancedBrackets("[a](b){c}")
+        b.clear_expr()
+        self.assertEqual(b.expr, "[](){}")
+
+    def test_clear_expr_4(self):
+        b = BalancedBrackets("[a(b){c}")
+        b.clear_expr()
+        self.assertEqual(b.expr, "[(){}")
+
+    def test_clear_expr_5(self):
+        b = BalancedBrackets("a(b){c}]")
+        b.clear_expr()
+        self.assertEqual(b.expr, "(){}]")

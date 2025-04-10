@@ -1,0 +1,32 @@
+class JobMarketplaceTestWithdrawResume(unittest.TestCase):
+    def test_withdraw_resume(self):
+        jobMarketplace = JobMarketplace()
+        jobMarketplace.resumes = [{"name": "Tom", "skills": ['skill1', 'skill2'], "experience": "experience"}]
+        jobMarketplace.withdraw_resume(jobMarketplace.resumes[0])
+        self.assertEqual(jobMarketplace.resumes, [])
+
+    def test_withdraw_resume_2(self):
+        jobMarketplace = JobMarketplace()
+        jobMarketplace.resumes = [{"name": "Tom", "skills": ['skill1', 'skill2'], "experience": "experience"}, {"name": "John", "skills": ['skill3', 'skill4'], "experience": "experience"}]
+        jobMarketplace.withdraw_resume(jobMarketplace.resumes[0])
+        self.assertEqual(jobMarketplace.resumes, [{'name': 'John', 'skills': ['skill3', 'skill4'], 'experience': 'experience'}])
+
+    def test_withdraw_resume_3(self):
+        jobMarketplace = JobMarketplace()
+        jobMarketplace.resumes = [{"name": "Tom", "skills": ['skill1', 'skill2'], "experience": "experience"}, {"name": "John", "skills": ['skill3', 'skill4'], "experience": "experience"}]
+        jobMarketplace.withdraw_resume(jobMarketplace.resumes[0])
+        jobMarketplace.withdraw_resume(jobMarketplace.resumes[0])
+        self.assertEqual(jobMarketplace.resumes, [])
+    
+    def test_withdraw_resume_4(self):
+        jobMarketplace = JobMarketplace()
+        jobMarketplace.resumes = [{"name": "Amy", "skills": ['skill3', 'skill2'], "experience": "experience"}, {"name": "John", "skills": ['skill3', 'skill4'], "experience": "experience"}]
+        jobMarketplace.withdraw_resume(jobMarketplace.resumes[0])
+        jobMarketplace.withdraw_resume(jobMarketplace.resumes[0])
+        self.assertEqual(jobMarketplace.resumes, [])
+
+    def test_withdraw_resume_5(self):
+        jobMarketplace = JobMarketplace()
+        jobMarketplace.resumes = [{"name": "Amy", "skills": ['skill1', 'skill2'], "experience": "experience"}, {"name": "John", "skills": ['skill3', 'skill4'], "experience": "experience"}]
+        jobMarketplace.withdraw_resume(jobMarketplace.resumes[0])
+        self.assertEqual(jobMarketplace.resumes, [{'experience': 'experience', 'name': 'John', 'skills': ['skill3', 'skill4']}])

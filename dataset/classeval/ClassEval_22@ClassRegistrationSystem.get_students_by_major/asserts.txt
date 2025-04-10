@@ -1,0 +1,45 @@
+class ClassRegistrationSystemTestGetStudent(unittest.TestCase):
+
+    def setUp(self):
+        self.registration_system = ClassRegistrationSystem()
+
+    def test_get_students_by_major(self):
+        self.registration_system.students = [{"name": "John", "major": "Computer Science"},
+                                             {"name": "Bob", "major": "Computer Science"}]
+
+        cs_students = self.registration_system.get_students_by_major("Computer Science")
+
+        self.assertEqual(cs_students, ["John", "Bob"])
+
+    def test_get_students_by_major2(self):
+        self.registration_system.students = [{"name": "John", "major": "Computer Science"},
+                                             {"name": "Bob", "major": "Computer Science"}]
+
+        cs_students = self.registration_system.get_students_by_major("Computer Science")
+        math_students = self.registration_system.get_students_by_major("Mathematics")
+
+        self.assertEqual(cs_students, ["John", "Bob"])
+        self.assertEqual(math_students, [])
+
+    def test_get_students_by_major3(self):
+        self.registration_system.students = [{"name": "John", "major": "Computer Science"},
+                                             {"name": "Bob", "major": "Computer Science"},
+                                                {"name": "Alice", "major": "Mathematics"}]
+
+        cs_students = self.registration_system.get_students_by_major("Computer Science")
+        math_students = self.registration_system.get_students_by_major("Mathematics")
+
+        self.assertEqual(cs_students, ["John", "Bob"])
+        self.assertEqual(math_students, ["Alice"])
+
+    def test_get_students_by_major4(self):
+        self.registration_system.students = [{"name": "John", "major": "Computer Science"},
+                                             {"name": "Bob", "major": "Computer Science"},
+                                             {"name": "Alice", "major": "Mathematics"},
+                                             {"name": "Tom", "major": "Mathematics"},
+                                             {"name": "Jerry", "major": "Mathematics"}]
+
+        cs_students = self.registration_system.get_students_by_major("Computer Science")
+        math_students = self.registration_system.get_students_by_major("Mathematics")
+        self.assertEqual(cs_students, ["John", "Bob"])
+        self.assertEqual(math_students, ["Alice", "Tom", "Jerry"])

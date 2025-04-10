@@ -1,0 +1,25 @@
+class JobMarketplaceTestSearchJobs(unittest.TestCase):
+    def test_search_jobs(self):
+        jobMarketplace = JobMarketplace()
+        jobMarketplace.job_listings = [{"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill1', 'skill2']}]
+        self.assertEqual(jobMarketplace.search_jobs("skill1"), [{'job_title': 'Software Engineer', 'company': 'ABC Company', 'requirements': ['skill1', 'skill2']}])
+
+    def test_search_jobs_2(self):
+        jobMarketplace = JobMarketplace()
+        jobMarketplace.job_listings = [{"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill1', 'skill2']}, {"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill3', 'skill4']}]
+        self.assertEqual(jobMarketplace.search_jobs("skill1"), [{'job_title': 'Software Engineer', 'company': 'ABC Company', 'requirements': ['skill1', 'skill2']}])
+
+    def test_search_jobs_3(self):
+        jobMarketplace = JobMarketplace()
+        jobMarketplace.job_listings = [{"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill1', 'skill2']}, {"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill3', 'skill4']}]
+        self.assertEqual(jobMarketplace.search_jobs("skill3"), [{'job_title': 'Software Engineer', 'company': 'ABC Company', 'requirements': ['skill3', 'skill4']}])
+
+    def test_search_jobs_4(self):
+        jobMarketplace = JobMarketplace()
+        jobMarketplace.job_listings = [{"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill1', 'skill2']}, {"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill3', 'skill4']}]
+        self.assertEqual(jobMarketplace.search_jobs("skill5"), [])
+
+    def test_search_jobs_5(self):
+        jobMarketplace = JobMarketplace()
+        jobMarketplace.job_listings = [{"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill1', 'skill2']}, {"job_title": "Software Engineer", "company": "ABC Company", "requirements": ['skill3', 'skill4']}]
+        self.assertEqual(jobMarketplace.search_jobs("skill6"), [])

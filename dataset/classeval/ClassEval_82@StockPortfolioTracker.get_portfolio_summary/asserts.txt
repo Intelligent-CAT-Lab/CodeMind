@@ -1,0 +1,26 @@
+class StockPortfolioTrackerTestGetPortfolioSummary(unittest.TestCase):
+    def test_get_portfolio_summary(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+        self.assertEqual(tracker.get_portfolio_summary(), (11500.0, [{'name': 'AAPL', 'value': 1500.0}]))
+
+    def test_get_portfolio_summary_2(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10},
+                             {'name': 'MSFT', 'price': 150.0, 'quantity': 10}]
+        self.assertEqual(tracker.get_portfolio_summary(),
+                         (13000.0, [{'name': 'AAPL', 'value': 1500.0}, {'name': 'MSFT', 'value': 1500.0}]))
+
+    def test_get_portfolio_summary_3(self):
+        tracker = StockPortfolioTracker(10000.0)
+        self.assertEqual(tracker.get_portfolio_summary(), (10000.0, []))
+
+    def test_get_portfolio_summary_4(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 0}]
+        self.assertEqual(tracker.get_portfolio_summary(), (10000.0, [{'name': 'AAPL', 'value': 0.0}]))
+
+    def test_get_portfolio_summary_5(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 0.0, 'quantity': 10}]
+        self.assertEqual(tracker.get_portfolio_summary(), (10000.0, [{'name': 'AAPL', 'value': 0.0}]))

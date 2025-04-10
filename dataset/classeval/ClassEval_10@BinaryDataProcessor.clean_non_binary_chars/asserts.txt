@@ -1,0 +1,20 @@
+class BinaryDataProcessorTestCleanNonBinaryChars(unittest.TestCase):
+    def test_clean_non_binary_chars(self):
+        bdp = BinaryDataProcessor("01101000daf3e4r01100101011011000110110001101111")
+        self.assertEqual(bdp.binary_string, "0110100001100101011011000110110001101111")
+
+    def test_clean_non_binary_chars_2(self):
+        bdp = BinaryDataProcessor("01101000daf3e4r01100101011011addf0110001d1111")
+        self.assertEqual(bdp.binary_string, "011010000110010101101101100011111")
+
+    def test_clean_non_binary_chars_3(self):
+        bdp = BinaryDataProcessor("0sd1000daf3e4r01100101011011addf0110001d1111")
+        self.assertEqual(bdp.binary_string, "010000110010101101101100011111")
+
+    def test_clean_non_binary_chars_4(self):
+        bdp = BinaryDataProcessor("sdsdf")
+        self.assertEqual(bdp.binary_string, "")
+
+    def test_clean_non_binary_chars_5(self):
+        bdp = BinaryDataProcessor("0")
+        self.assertEqual(bdp.binary_string, "0")

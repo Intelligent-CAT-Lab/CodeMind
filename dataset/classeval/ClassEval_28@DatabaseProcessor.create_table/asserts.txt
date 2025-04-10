@@ -1,0 +1,76 @@
+class DatabaseProcessorTestCreateTable(unittest.TestCase):
+    def setUp(self):
+        self.database_name = "test.db"
+        self.processor = DatabaseProcessor(self.database_name)
+
+    def tearDown(self):
+        conn = sqlite3.connect(self.database_name)
+        cursor = conn.cursor()
+        cursor.execute("DROP TABLE IF EXISTS test_table")
+        conn.commit()
+        conn.close()
+
+    def test_create_table_1(self):
+        table_name = "test_table"
+        self.processor.create_table(table_name, 'name', 'age')
+
+        conn = sqlite3.connect(self.database_name)
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+        result = cursor.fetchone()
+        conn.close()
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result[0], table_name)
+
+    def test_create_table_2(self):
+        table_name = "test_table2"
+        self.processor.create_table(table_name, 'name', 'age')
+
+        conn = sqlite3.connect(self.database_name)
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+        result = cursor.fetchone()
+        conn.close()
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result[0], table_name)
+
+    def test_create_table_3(self):
+        table_name = "test_table3"
+        self.processor.create_table(table_name, 'name', 'age')
+
+        conn = sqlite3.connect(self.database_name)
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+        result = cursor.fetchone()
+        conn.close()
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result[0], table_name)
+
+    def test_create_table_4(self):
+        table_name = "test_table4"
+        self.processor.create_table(table_name, 'name', 'age')
+
+        conn = sqlite3.connect(self.database_name)
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+        result = cursor.fetchone()
+        conn.close()
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result[0], table_name)
+
+    def test_create_table_5(self):
+        table_name = "test_table5"
+        self.processor.create_table(table_name, 'name', 'age')
+
+        conn = sqlite3.connect(self.database_name)
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+        result = cursor.fetchone()
+        conn.close()
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result[0], table_name)

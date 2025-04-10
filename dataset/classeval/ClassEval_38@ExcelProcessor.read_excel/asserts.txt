@@ -1,0 +1,117 @@
+class ExcelProcessorTestReadExcel(unittest.TestCase):
+    def test_read_excel_1(self):
+        self.test_file_name = 'test_data.xlsx'
+        data = [['Name', 'Age', 'Country'],
+                ['John', 25, 'USA'],
+                ['Alice', 30, 'Canada'],
+                ['Bob', 35, 'Australia']]
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+        for row in data:
+            sheet.append(row)
+        workbook.save(self.test_file_name)
+        workbook.close()
+
+        processor = ExcelProcessor()
+        data = processor.read_excel(self.test_file_name)
+        expected_data = [
+            ('Name', 'Age', 'Country'),
+            ('John', 25, 'USA'),
+            ('Alice', 30, 'Canada'),
+            ('Bob', 35, 'Australia')
+        ]
+        self.assertEqual(data, expected_data)
+
+    def test_read_excel_2(self):
+        self.test_file_name = 'test_data.xlsx'
+        data = [['Name', 'Age'],
+                ['John', 25],
+                ['Alice', 30],
+                ['Bob', 35]]
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+        for row in data:
+            sheet.append(row)
+        workbook.save(self.test_file_name)
+        workbook.close()
+
+        processor = ExcelProcessor()
+        data = processor.read_excel(self.test_file_name)
+        expected_data = [
+            ('Name', 'Age'),
+            ('John', 25),
+            ('Alice', 30),
+            ('Bob', 35)
+        ]
+        self.assertEqual(data, expected_data)
+
+    def test_read_excel_3(self):
+        self.test_file_name = 'test_data.xlsx'
+        data = [['Name'],
+                ['John'],
+                ['Alice'],
+                ['Bob']]
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+        for row in data:
+            sheet.append(row)
+        workbook.save(self.test_file_name)
+        workbook.close()
+
+        processor = ExcelProcessor()
+        data = processor.read_excel(self.test_file_name)
+        expected_data = [
+            ('Name',),
+            ('John',),
+            ('Alice',),
+            ('Bob',)
+        ]
+        self.assertEqual(data, expected_data)
+
+    def test_read_excel_4(self):
+        self.test_file_name = 'test_data.xlsx'
+        data = [['Name', 'Country'],
+                ['John', 'USA'],
+                ['Alice', 'Canada'],
+                ['Bob', 'Australia']]
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+        for row in data:
+            sheet.append(row)
+        workbook.save(self.test_file_name)
+        workbook.close()
+
+        processor = ExcelProcessor()
+        data = processor.read_excel(self.test_file_name)
+        expected_data = [
+            ('Name', 'Country'),
+            ('John', 'USA'),
+            ('Alice', 'Canada'),
+            ('Bob', 'Australia')
+        ]
+        self.assertEqual(data, expected_data)
+
+    def test_read_excel_5(self):
+        self.test_file_name = 'test_data.xlsx'
+        data = [['Name', 'Country'],
+                ['John', 'USA']]
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+        for row in data:
+            sheet.append(row)
+        workbook.save(self.test_file_name)
+        workbook.close()
+
+        processor = ExcelProcessor()
+        data = processor.read_excel(self.test_file_name)
+        expected_data = [
+            ('Name', 'Country'),
+            ('John', 'USA')
+        ]
+        self.assertEqual(data, expected_data)
+
+    def test_read_excel_6(self):
+        self.test_file_name = ''
+        processor = ExcelProcessor()
+        res = processor.read_excel(self.test_file_name)
+        self.assertEqual(res, None)

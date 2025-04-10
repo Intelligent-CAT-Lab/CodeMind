@@ -1,0 +1,31 @@
+class ImageProcessorTestLoadImage(unittest.TestCase):
+    def setUp(self):
+        self.processor = ImageProcessor()
+        self.image_path = os.path.join(os.path.dirname(__file__), "test.png")
+        image = Image.new("RGB", (100, 100), (255, 255, 255))
+        image.save(self.image_path)
+
+    def tearDown(self):
+        self.processor.image.close()
+        # if os.path.exists(self.image_path):
+        #     os.remove(self.image_path)
+
+    def test_load_image(self):
+        self.processor.load_image(self.image_path)
+        self.assertIsNotNone(self.processor.image)
+
+    def test_load_image_2(self):
+        self.processor.load_image(self.image_path)
+        self.assertEqual(self.processor.image.size, (100, 100))
+
+    def test_load_image_3(self):
+        self.processor.load_image(self.image_path)
+        self.assertEqual(self.processor.image.mode, "RGB")
+
+    def test_load_image_4(self):
+        self.processor.load_image(self.image_path)
+        self.assertEqual(self.processor.image.format, "PNG")
+
+    def test_load_image_5(self):
+        self.processor.load_image(self.image_path)
+        self.assertEqual(self.processor.image.filename, self.image_path)

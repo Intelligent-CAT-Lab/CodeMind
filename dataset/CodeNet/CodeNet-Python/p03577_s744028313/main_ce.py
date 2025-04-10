@@ -1,1 +1,0 @@
-print("CODEFESTIVAL"[:-8])

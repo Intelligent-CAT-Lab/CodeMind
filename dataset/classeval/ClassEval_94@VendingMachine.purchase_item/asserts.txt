@@ -1,0 +1,35 @@
+class VendingMachineTestPurchaseItem(unittest.TestCase):
+    def test_purchase_item(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}
+        vendingMachine.balance = 1.25
+        self.assertEqual(vendingMachine.purchase_item('Coke'), 0.0)
+        self.assertEqual(vendingMachine.inventory, {'Coke': {'price': 1.25, 'quantity': 9}})
+
+    def test_purchase_item_2(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}
+        vendingMachine.balance = 1.25
+        self.assertEqual(vendingMachine.purchase_item('Pizza'), False)
+        self.assertEqual(vendingMachine.inventory, {'Coke': {'price': 1.25, 'quantity': 10}})
+
+    def test_purchase_item_3(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}}
+        vendingMachine.balance = 0
+        self.assertEqual(vendingMachine.purchase_item('Coke'), False)
+        self.assertEqual(vendingMachine.inventory, {'Coke': {'price': 1.25, 'quantity': 10}})
+
+    def test_purchase_item_4(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 0}}
+        vendingMachine.balance = 1.25
+        self.assertEqual(vendingMachine.purchase_item('Coke'), False)
+        self.assertEqual(vendingMachine.inventory, {'Coke': {'price': 1.25, 'quantity': 0}})
+
+    def test_purchase_item_5(self):
+        vendingMachine = VendingMachine()
+        vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10}, 'Pizza': {'price': 1.25, 'quantity': 10}}
+        vendingMachine.balance = 1.25
+        self.assertEqual(vendingMachine.purchase_item('Pizza'), 0.0)
+        self.assertEqual(vendingMachine.inventory, {'Coke': {'price': 1.25, 'quantity': 10}, 'Pizza': {'price': 1.25, 'quantity': 9}})

@@ -1,0 +1,25 @@
+class RegexUtilsTestExtractEmail(unittest.TestCase):
+    def test_extract_email_1(self):
+        ru = RegexUtils()
+        res = ru.extract_email("abcdefg@163.com ygusyfysy@126.com wljduyuv@qq.com")
+        self.assertEqual(res, ['abcdefg@163.com', 'ygusyfysy@126.com', 'wljduyuv@qq.com'])
+
+    def test_extract_email_2(self):
+        ru = RegexUtils()
+        res = ru.extract_email("abcdefg@.com ygusyfysy@126.com wljduyuv@qq.com")
+        self.assertEqual(res, ['ygusyfysy@126.com', 'wljduyuv@qq.com'])
+
+    def test_extract_email_3(self):
+        ru = RegexUtils()
+        res = ru.extract_email("abcdefgiscom ygusyfysy@126.com wljduyuv@qq.com")
+        self.assertEqual(res, ['ygusyfysy@126.com', 'wljduyuv@qq.com'])
+
+    def test_extract_email_4(self):
+        ru = RegexUtils()
+        res = ru.extract_email("abcdefgiscom ygusyfysy126.com wljduyuv@qq.com")
+        self.assertEqual(res, ['wljduyuv@qq.com'])
+
+    def test_extract_email_5(self):
+        ru = RegexUtils()
+        res = ru.extract_email("abcdefgiscom ygusyfysy@.com wljduyuv@qq.com")
+        self.assertEqual(res, ['wljduyuv@qq.com'])

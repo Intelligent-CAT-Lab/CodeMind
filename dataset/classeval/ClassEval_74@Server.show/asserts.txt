@@ -1,0 +1,35 @@
+class ServerTestShow(unittest.TestCase):
+    def test_show_1(self):
+        server = Server()
+        server.add_white_list(66)
+        server.send({"addr": 88, "content": "abc"})
+        server.recv({"addr": 66, "content": "ABC"})
+        self.assertEqual(server.show("send"), {"addr": 88, "content": "abc"})
+
+    def test_show_2(self):
+        server = Server()
+        server.add_white_list(66)
+        server.send({"addr": 88, "content": "abc"})
+        server.recv({"addr": 66, "content": "ABC"})
+        self.assertEqual(server.show("receive"), {"addr": 66, "content": "ABC"})
+
+    def test_show_3(self):
+        server = Server()
+        server.add_white_list(66)
+        server.send({"addr": 88, "content": "abc"})
+        server.recv({"addr": 66, "content": "ABC"})
+        self.assertEqual(server.show("abcdefg"), False)
+
+    def test_show_4(self):
+        server = Server()
+        server.add_white_list(66)
+        server.send({"addr": 11, "content": "abc"})
+        server.recv({"addr": 66, "content": "ABC"})
+        self.assertEqual(server.show("send"), {"addr": 11, "content": "abc"})
+
+    def test_show_5(self):
+        server = Server()
+        server.add_white_list(66)
+        server.send({"addr": 22, "content": "abc"})
+        server.recv({"addr": 66, "content": "ABC"})
+        self.assertEqual(server.show("send"), {"addr": 22, "content": "abc"})

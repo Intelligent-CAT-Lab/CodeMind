@@ -1,0 +1,25 @@
+class MovieBookingSystemTestAvailableMovies(unittest.TestCase):
+    def setUp(self):
+        self.system = MovieBookingSystem()
+        self.system.add_movie('Batman', 49.9, '17:05', '19:25', 3)
+        self.system.add_movie('Spiderman', 59.9, '20:00', '22:30', 4)
+
+    def test_available_movies_1(self):
+        result = self.system.available_movies('16:00', '23:00')
+        self.assertEqual(result, ['Batman', 'Spiderman'])
+
+    def test_available_movies_2(self):
+        result = self.system.available_movies('23:00', '23:59')
+        self.assertEqual(result, [])
+
+    def test_available_movies_3(self):
+        result = self.system.available_movies('17:00', '20:00')
+        self.assertEqual(result, ['Batman'])
+
+    def test_available_movies_4(self):
+        result = self.system.available_movies('10:00', '23:00')
+        self.assertEqual(result, ['Batman', 'Spiderman'])
+
+    def test_available_movies_5(self):
+        result = self.system.available_movies('20:00', '23:00')
+        self.assertEqual(result, ['Spiderman'])

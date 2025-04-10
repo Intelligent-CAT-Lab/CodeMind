@@ -1,0 +1,37 @@
+class StockPortfolioTrackerTestBuyStock(unittest.TestCase):
+    def test_buy_stock(self):
+        tracker = StockPortfolioTracker(10000.0)
+        self.assertEqual(tracker.buy_stock({"name": "AAPL", "price": 150.0, "quantity": 10}), True)
+        self.assertEqual(tracker.portfolio, [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}])
+        self.assertEqual(tracker.cash_balance, 8500.0)
+
+    def test_buy_stock_2(self):
+        tracker = StockPortfolioTracker(1000.0)
+        self.assertEqual(tracker.buy_stock({"name": "AAPL", "price": 150.0, "quantity": 10}), False)
+        self.assertEqual(tracker.portfolio, [])
+        self.assertEqual(tracker.cash_balance, 1000.0)
+
+    def test_buy_stock_3(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+        self.assertEqual(tracker.buy_stock({"name": "AAPL", "price": 150.0, "quantity": 10}), True)
+        self.assertEqual(tracker.portfolio, [{'name': 'AAPL', 'price': 150.0, 'quantity': 20}])
+        self.assertEqual(tracker.cash_balance, 8500.0)
+
+    def test_buy_stock_4(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+        self.assertEqual(tracker.buy_stock({"name": "MSFT", "price": 150.0, "quantity": 10}), True)
+        self.assertEqual(tracker.buy_stock({"name": "MSFT", "price": 150.0, "quantity": 10}), True)
+        self.assertEqual(tracker.portfolio, [{'name': 'AAPL', 'price': 150.0, 'quantity': 10},
+                                             {'name': 'MSFT', 'price': 150.0, 'quantity': 20}])
+        self.assertEqual(tracker.cash_balance, 7000.0)
+
+    def test_buy_stock_5(self):
+        tracker = StockPortfolioTracker(10000.0)
+        tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+        self.assertEqual(tracker.buy_stock({"name": "AAPL", "price": 150.0, "quantity": 10}), True)
+        self.assertEqual(tracker.buy_stock({"name": "MSFT", "price": 150.0, "quantity": 10}), True)
+        self.assertEqual(tracker.portfolio, [{'name': 'AAPL', 'price': 150.0, 'quantity': 20},
+                                             {'name': 'MSFT', 'price': 150.0, 'quantity': 10}])
+        self.assertEqual(tracker.cash_balance, 7000.0)

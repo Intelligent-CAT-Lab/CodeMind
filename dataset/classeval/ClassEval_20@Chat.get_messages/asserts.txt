@@ -1,0 +1,28 @@
+class ChatTestGetMessages(unittest.TestCase):
+    def test_get_messages(self):
+        chat = Chat()
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        chat.users = {'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': timestamp}]}
+        self.assertEqual(chat.get_messages('John'), [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': timestamp}])
+
+    def test_get_messages_2(self):
+        chat = Chat()
+        chat.users = {'John': [], 'Mary': []}
+        self.assertEqual(chat.get_messages('John'), [])
+
+    def test_get_messages_3(self):
+        chat = Chat()
+        chat.users = {'John': [], 'Mary': []}
+        self.assertEqual(chat.get_messages('Amy'), [])
+
+    def test_get_messages_4(self):
+        chat = Chat()
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        chat.users = {'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': timestamp}]}
+        self.assertEqual(chat.get_messages('Mary'), [])
+
+    def test_get_messages_5(self):
+        chat = Chat()
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        chat.users = {'John': [{'sender': 'John', 'receiver': 'Mary', 'message': 'Hello', 'timestamp': timestamp}]}
+        self.assertEqual(chat.get_messages('Amy'), [])

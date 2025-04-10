@@ -1,2 +1,0 @@
-print ( input ( ) . replace ( " , " , " ▁ " ) )
-

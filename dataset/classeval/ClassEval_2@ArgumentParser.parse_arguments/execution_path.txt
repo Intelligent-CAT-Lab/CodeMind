@@ -1,0 +1,33 @@
+ --- modulename: execution_path, funcname: <module>
+<string>(1):  --- modulename: execution_path, funcname: test
+execution_path.py(49):             self.parser = ArgumentParser()
+ --- modulename: execution_path, funcname: __init__
+execution_path.py(8):         self.arguments = {}
+execution_path.py(9):         self.required = set()
+execution_path.py(10):         self.types = {}
+execution_path.py(50):             command_str = "script --name=John"
+execution_path.py(51):             self.parser.add_argument("name")
+ --- modulename: execution_path, funcname: add_argument
+execution_path.py(38):         if required:
+execution_path.py(40):         self.types[arg] = arg_type
+execution_path.py(52):             self.parser.add_argument("age", required=False, arg_type=int)
+ --- modulename: execution_path, funcname: add_argument
+execution_path.py(38):         if required:
+execution_path.py(40):         self.types[arg] = arg_type
+execution_path.py(53):             result, missing_args = self.parser.parse_arguments(command_str)
+ --- modulename: execution_path, funcname: parse_arguments
+execution_path.py(13):         args = command_string.split()[1:]
+execution_path.py(14):         for i in range(len(args)):
+execution_path.py(15):             arg = args[i]
+execution_path.py(16):             if arg.startswith('--'):
+execution_path.py(17):                 key_value = arg[2:].split('=')
+execution_path.py(18):                 if len(key_value) == 2:
+execution_path.py(19):                     self.arguments[key_value[0]] = self._convert_type(key_value[0], key_value[1])
+ --- modulename: execution_path, funcname: _convert_type
+execution_path.py(43):         try:
+execution_path.py(44):             return self.types[arg](value)
+execution_path.py(14):         for i in range(len(args)):
+execution_path.py(28):         missing_args = self.required - set(self.arguments.keys())
+execution_path.py(29):         if missing_args:
+execution_path.py(32):         return True, None
+execution_path.py(54):             return result,missing_args

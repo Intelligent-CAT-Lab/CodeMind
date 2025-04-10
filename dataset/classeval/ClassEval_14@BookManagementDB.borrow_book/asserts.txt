@@ -1,0 +1,22 @@
+class BookManagementDBTestBorrowBook(unittest.TestCase):
+    def setUp(self):
+        self.db_name = "test.db"
+        self.db = BookManagementDB(self.db_name)
+        self.connection = sqlite3.connect(self.db_name)
+        self.cursor = self.connection.cursor()
+        # Add a book for testing borrowing
+        self.db.add_book("Book to Borrow", "Jane Smith")
+
+    def test_borrow_book(self):
+        self.db.borrow_book(1)
+
+        # Check if the book was marked as unavailable
+        self.cursor.execute("SELECT available FROM books WHERE id=1")
+        result = self.cursor.fetchone()
+        self.assertEqual(result[0], 0)
+
+    def tearDown(self):
+        self.db.connection.close()
+        self.connection.close()
+        # remove the test database file
+        os.remove(self.db_name)

@@ -1,0 +1,70 @@
+class TextFileProcessorTestProcessFile(unittest.TestCase):
+    def test_process_file_1(self):
+        self.file = 'test.txt'
+        self.content = 'Hello, 123 World!'
+        self.expected_result = 'HelloWorld'
+
+        textFileProcessor = TextFileProcessor(self.file)
+        textFileProcessor.read_file = MagicMock(return_value=self.content)
+        textFileProcessor.write_file = MagicMock()
+
+        result = textFileProcessor.process_file()
+        self.assertEqual(result, self.expected_result)
+        textFileProcessor.read_file.assert_called_once()
+        textFileProcessor.write_file.assert_called_once_with(self.expected_result)
+
+    def test_process_file_2(self):
+        self.file = 'test.txt'
+        self.content = 'Hello, abc World!'
+        self.expected_result = 'HelloabcWorld'
+
+        textFileProcessor = TextFileProcessor(self.file)
+        textFileProcessor.read_file = MagicMock(return_value=self.content)
+        textFileProcessor.write_file = MagicMock()
+
+        result = textFileProcessor.process_file()
+        self.assertEqual(result, self.expected_result)
+        textFileProcessor.read_file.assert_called_once()
+        textFileProcessor.write_file.assert_called_once_with(self.expected_result)
+
+    def test_process_file_3(self):
+        self.file = 'test.txt'
+        self.content = ', 123 !'
+        self.expected_result = ''
+
+        textFileProcessor = TextFileProcessor(self.file)
+        textFileProcessor.read_file = MagicMock(return_value=self.content)
+        textFileProcessor.write_file = MagicMock()
+
+        result = textFileProcessor.process_file()
+        self.assertEqual(result, self.expected_result)
+        textFileProcessor.read_file.assert_called_once()
+        textFileProcessor.write_file.assert_called_once_with(self.expected_result)
+
+    def test_process_file_4(self):
+        self.file = 'test.txt'
+        self.content = 'Hello, World!'
+        self.expected_result = 'HelloWorld'
+
+        textFileProcessor = TextFileProcessor(self.file)
+        textFileProcessor.read_file = MagicMock(return_value=self.content)
+        textFileProcessor.write_file = MagicMock()
+
+        result = textFileProcessor.process_file()
+        self.assertEqual(result, self.expected_result)
+        textFileProcessor.read_file.assert_called_once()
+        textFileProcessor.write_file.assert_called_once_with(self.expected_result)
+
+    def test_process_file_5(self):
+        self.file = 'test.txt'
+        self.content = 'Hello, 123a World!'
+        self.expected_result = 'HelloaWorld'
+
+        textFileProcessor = TextFileProcessor(self.file)
+        textFileProcessor.read_file = MagicMock(return_value=self.content)
+        textFileProcessor.write_file = MagicMock()
+
+        result = textFileProcessor.process_file()
+        self.assertEqual(result, self.expected_result)
+        textFileProcessor.read_file.assert_called_once()
+        textFileProcessor.write_file.assert_called_once_with(self.expected_result)

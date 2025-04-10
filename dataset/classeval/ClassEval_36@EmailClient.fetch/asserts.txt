@@ -1,0 +1,48 @@
+class EmailClientTestFetch(unittest.TestCase):
+    def test_fetch(self):
+        sender = EmailClient('sender@example.com', 100)
+        receiver = EmailClient('receiver@example.com', 50)
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        receiver.inbox = [
+            {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10,
+             'time': timestamp, 'state': 'unread'}]
+        self.assertEqual(receiver.fetch(), {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10, 'time':timestamp, 'state': 'read'})
+
+    def test_fetch_2(self):
+        sender = EmailClient('sender@example.com', 100)
+        receiver = EmailClient('receiver@example.com', 50)
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.assertEqual(receiver.fetch(),None)
+
+    def test_fetch_3(self):
+        sender = EmailClient('sender@example.com', 100)
+        receiver = EmailClient('receiver@example.com', 50)
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        receiver.inbox = [
+            {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10,
+             'time': timestamp, 'state': 'read'}]
+        self.assertEqual(receiver.fetch(), None)
+
+    def test_fetch_4(self):
+        sender = EmailClient('sender@example.com', 100)
+        receiver = EmailClient('receiver@example.com', 50)
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        receiver.inbox = [
+            {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10,
+             'time':  '2021-01-01 00:00:00', 'state': 'unread'},
+            {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10,
+             'time': timestamp, 'state': 'unread'}]
+        self.assertEqual(receiver.fetch(), {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10,
+             'time':  '2021-01-01 00:00:00', 'state': 'read'})
+
+    def test_fetch_5(self):
+        sender = EmailClient('sender@example.com', 100)
+        receiver = EmailClient('receiver@example.com', 50)
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        receiver.inbox = [
+            {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10,
+             'time': '2021-01-01 00:00:00', 'state': 'read'},
+            {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10,
+             'time': timestamp, 'state': 'unread'}]
+        self.assertEqual(receiver.fetch(), {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10,
+             'time': timestamp, 'state': 'read'})

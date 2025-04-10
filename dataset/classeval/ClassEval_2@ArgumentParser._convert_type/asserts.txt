@@ -1,0 +1,30 @@
+class ArgumentParserTestConvertType(unittest.TestCase):
+
+    def setUp(self):
+        self.parser = ArgumentParser()
+
+    def test_convert_type_1(self):
+        self.parser.types = {"age": int}
+        result = self.parser._convert_type("age", "25")
+        self.assertEqual(result, 25)
+
+    # fail
+    def test_convert_type_2(self):
+        self.parser.types = {"age": int}
+        result = self.parser._convert_type("age", "twenty-five")
+        self.assertEqual(result, "twenty-five")
+
+    def test_convert_type_3(self):
+        self.parser.types = {"age": int}
+        result = self.parser._convert_type("age", "25")
+        self.assertEqual(result, 25)
+
+    def test_convert_type_4(self):
+        self.parser.types = {"age": int, "verbose": bool}
+        result = self.parser._convert_type("verbose", "True")
+        self.assertEqual(result, True)
+    
+    def test_convert_type_5(self):
+        self.parser.types = {"age": int, "verbose": bool}
+        result = self.parser._convert_type("verbose", "False")
+        self.assertEqual(result, True)

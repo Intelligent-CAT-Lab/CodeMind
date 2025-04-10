@@ -1,0 +1,31 @@
+class ServerTestRecv(unittest.TestCase):
+    def test_recv_1(self):
+        server = Server()
+        server.add_white_list(88)
+        server.recv({"addr": 88, "content": "abc"})
+        self.assertEqual(server.receive_struct, {"addr": 88, "content": "abc"})
+
+    def test_recv_2(self):
+        server = Server()
+        server.add_white_list(88)
+        flag = server.recv({"addr": 66, "content": "abc"})
+        self.assertEqual(server.receive_struct, {})
+        self.assertEqual(flag, False)
+
+    def test_recv_3(self):
+        server = Server()
+        flag = server.recv([88])
+        self.assertEqual(server.receive_struct, {})
+        self.assertEqual(flag, -1)
+
+    def test_recv_4(self):
+        server = Server()
+        flag = server.recv({"addr": 88})
+        self.assertEqual(server.receive_struct, {})
+        self.assertEqual(flag, -1)
+
+    def test_recv_5(self):
+        server = Server()
+        flag = server.recv({"content": "abc"})
+        self.assertEqual(server.receive_struct, {})
+        self.assertEqual(flag, -1)
