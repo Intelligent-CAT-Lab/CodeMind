@@ -1,4 +1,4 @@
-<b><center>[Alert!] CodeMind is a work in progress. We are actively modifying the code to make it easier for end users to reproduce the results or add new models/datasets/reasoning tasks. Please create issues if you observe difficulties in using CodeMind.</center></b>
+<!-- <b><center>[Alert!] CodeMind is a work in progress. We are actively modifying the code to make it easier for end users to reproduce the results or add new models/datasets/reasoning tasks. Please create issues if you observe difficulties in using CodeMind.</center></b> -->
 
 <!--<div align='center'>-->
 <!--</div>-->
