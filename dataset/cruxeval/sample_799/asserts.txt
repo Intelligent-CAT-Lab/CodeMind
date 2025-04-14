@@ -1,0 +1,1 @@
+assert f('eqe-;ew22') ==  'neqe-;ew22'

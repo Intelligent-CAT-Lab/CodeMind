@@ -1,0 +1,1 @@
+assert f('hypernimovichyp', 2, 2) ==  'hy'

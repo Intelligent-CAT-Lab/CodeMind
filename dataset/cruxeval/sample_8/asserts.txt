@@ -1,0 +1,1 @@
+assert f('UppEr', 0) ==  'UppEr'

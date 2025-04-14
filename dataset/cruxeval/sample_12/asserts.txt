@@ -1,0 +1,1 @@
+assert f('If you want to live a happy life! Daniel', 'Daniel') ==  'If you want to live a happy life! Daniel'

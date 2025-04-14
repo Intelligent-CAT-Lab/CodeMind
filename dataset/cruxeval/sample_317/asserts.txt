@@ -1,0 +1,1 @@
+assert f(' vup a zwwo oihee amuwuuw! ', 'a', 'u') ==  ' vap a zwwo oihee amawaaw! '

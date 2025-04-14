@@ -1,0 +1,1 @@
+assert f('za1fd1as8f7afasdfam97adfa', '7') ==  2

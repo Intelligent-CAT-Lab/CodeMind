@@ -1,0 +1,1 @@
+assert f('dog,cat') ==  -6

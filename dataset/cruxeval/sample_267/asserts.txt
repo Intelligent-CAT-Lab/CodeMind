@@ -1,0 +1,1 @@
+assert f('sowpf', -7) ==  'sowpf'

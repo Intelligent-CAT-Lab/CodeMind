@@ -1,0 +1,1 @@
+assert f(['George', 'Michael', 'George', 'Costanza']) ==  'Costanza'

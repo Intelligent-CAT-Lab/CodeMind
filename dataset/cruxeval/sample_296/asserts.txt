@@ -1,0 +1,1 @@
+assert f("https://www.www.ekapusta.com/image/url") ==  'https://www.www.ekapusta.com/image/url'

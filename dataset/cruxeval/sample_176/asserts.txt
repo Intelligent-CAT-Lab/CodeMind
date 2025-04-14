@@ -1,0 +1,1 @@
+assert f('some text', 'some') ==  'some text'

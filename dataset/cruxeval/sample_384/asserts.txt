@@ -1,0 +1,1 @@
+assert f('asfdellos', 'Ta') ==  'sfdellos'

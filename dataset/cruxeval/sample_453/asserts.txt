@@ -1,0 +1,1 @@
+assert f('wrsch)xjmb8', 'c') ==  False

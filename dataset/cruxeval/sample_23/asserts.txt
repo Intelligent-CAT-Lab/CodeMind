@@ -1,0 +1,1 @@
+assert f('new-medium-performing-application - XQuery 2.2', '0123456789-') ==  'new-medium-performing-application - XQuery 2.'

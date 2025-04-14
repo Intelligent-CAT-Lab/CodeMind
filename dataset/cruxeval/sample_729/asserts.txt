@@ -1,0 +1,1 @@
+assert f('abcdefghabc', 'abc') ==  [10, 2]

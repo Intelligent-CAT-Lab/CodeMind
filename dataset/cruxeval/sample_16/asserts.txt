@@ -1,0 +1,1 @@
+assert f('zejrohaj', 'owc') ==  'zejrohaj'

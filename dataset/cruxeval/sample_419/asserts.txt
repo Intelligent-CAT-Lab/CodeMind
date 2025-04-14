@@ -1,0 +1,1 @@
+assert f('mmfbifen', 'i') ==  'mmfb'

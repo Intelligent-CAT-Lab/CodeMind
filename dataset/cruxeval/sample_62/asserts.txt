@@ -1,0 +1,1 @@
+assert f({"eating" : "ja", "books" : "nee", "piano" : "coke", "excitement" : "zoo"}) ==  ('ja', 'nee', 'coke', 'zoo')

@@ -1,0 +1,1 @@
+assert f('Fred Smith') ==  'Fred*Smith'

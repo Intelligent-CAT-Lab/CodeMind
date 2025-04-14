@@ -1,0 +1,1 @@
+assert f('E wrestled evil until upperfeat', 'e') ==  'E wrestled evil until upperfeat'

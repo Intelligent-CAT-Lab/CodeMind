@@ -1,0 +1,1 @@
+assert f('happy', 0, 3) ==  1

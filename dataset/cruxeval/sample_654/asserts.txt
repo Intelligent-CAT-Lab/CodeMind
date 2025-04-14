@@ -1,0 +1,1 @@
+assert f('aphid', 'i', '?') ==  'aph?d'

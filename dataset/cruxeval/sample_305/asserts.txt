@@ -1,0 +1,1 @@
+assert f('o horseto', 'r') ==  'o hoseto'

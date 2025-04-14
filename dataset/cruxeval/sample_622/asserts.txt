@@ -1,0 +1,1 @@
+assert f('galgu') ==  ', g, a, l, g, u, '

@@ -1,0 +1,1 @@
+assert f("not it", "") ==  ('', '', 'not it')

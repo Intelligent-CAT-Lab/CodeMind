@@ -1,0 +1,1 @@
+assert f('Hello World', 'W') ==  False

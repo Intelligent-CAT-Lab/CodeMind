@@ -1,0 +1,1 @@
+assert f('omeunhwpvr.dq', 'omeunh') ==  'dq'

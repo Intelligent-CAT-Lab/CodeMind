@@ -1,0 +1,1 @@
+assert f(-5, 'G5ogb6f,c7e.EMm') ==  False

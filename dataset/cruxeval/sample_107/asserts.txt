@@ -1,0 +1,1 @@
+assert f("ua6hajq") ==  'UA6HAJQ'

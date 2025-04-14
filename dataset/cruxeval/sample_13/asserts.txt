@@ -1,0 +1,1 @@
+assert f(['sharron', 'Savannah', 'Mike Cherokee']) ==  2

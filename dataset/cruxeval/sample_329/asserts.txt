@@ -1,0 +1,1 @@
+assert f('jh54kkk6') ==  True

@@ -1,0 +1,1 @@
+assert f(23, 'Cornareti') ==  'quiz leader = Cornareti, count = 23'

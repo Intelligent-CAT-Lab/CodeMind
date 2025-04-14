@@ -1,0 +1,1 @@
+assert f('abcdefghijklmnopqrstuvwxyz', "uppercased # % ^ @ ! vz.") ==  []

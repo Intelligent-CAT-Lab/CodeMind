@@ -1,0 +1,1 @@
+assert f('no asw', 'j', 1) ==  'w'

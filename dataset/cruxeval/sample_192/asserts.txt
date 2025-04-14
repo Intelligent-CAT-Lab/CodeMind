@@ -1,0 +1,1 @@
+assert f('!klcd!ma:ri', '!') ==  '!klcd!ma:ri'

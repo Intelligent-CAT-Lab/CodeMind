@@ -1,0 +1,1 @@
+assert f('jao mt', 'house') ==  'tm oajhouse'

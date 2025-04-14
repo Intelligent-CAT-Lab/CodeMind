@@ -1,0 +1,1 @@
+assert f("first-second-third") ==  'f.irst_second_third'

@@ -1,0 +1,1 @@
+assert f('   ') ==  '&nbsp;&nbsp;&nbsp;'

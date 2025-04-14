@@ -1,0 +1,1 @@
+assert f('csharp') ==  'ccccc sssss hhhhh AAAAA rrrrr ppppp'

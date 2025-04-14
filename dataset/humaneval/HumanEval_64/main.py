@@ -1,3 +1,4 @@
+from typing import *
 def vowels_count(s):
     vowels = "aeiouAEIOU"
     n_vowels = sum(c in vowels for c in s)

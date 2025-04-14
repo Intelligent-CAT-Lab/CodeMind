@@ -1,0 +1,1 @@
+assert f('###', "ph>t#A#BiEcDefW#ON#iiNCU", '.') ==  'ph>t#A#BiEcDefW#ON#iiNCU'

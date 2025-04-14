@@ -1,0 +1,1 @@
+assert f('papeluchis') ==  2

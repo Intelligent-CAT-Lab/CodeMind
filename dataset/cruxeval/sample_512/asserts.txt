@@ -1,0 +1,1 @@
+assert f('102') ==  False

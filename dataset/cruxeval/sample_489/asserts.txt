@@ -1,0 +1,1 @@
+assert f('coscifysu', 'cos') ==  'cifysu'

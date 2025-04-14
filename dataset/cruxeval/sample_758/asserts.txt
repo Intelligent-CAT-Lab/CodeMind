@@ -1,0 +1,1 @@
+assert f([0, 3, 6, 2]) ==  False

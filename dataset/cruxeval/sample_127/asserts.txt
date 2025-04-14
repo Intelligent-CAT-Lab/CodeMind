@@ -1,0 +1,1 @@
+assert f("145\n\n12fjkjg") ==  3

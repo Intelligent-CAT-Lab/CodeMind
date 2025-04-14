@@ -1,0 +1,1 @@
+assert f('wlace A') ==  'wlace Alc l  '

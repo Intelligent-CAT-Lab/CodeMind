@@ -1,0 +1,1 @@
+assert f("aboba 212 has 0 digits") ==  1

@@ -1,0 +1,1 @@
+assert f("jcle oq wsnibktxpiozyxmopqkfnrfjds") ==  (2, 34)

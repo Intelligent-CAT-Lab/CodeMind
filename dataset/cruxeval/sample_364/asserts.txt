@@ -1,0 +1,1 @@
+assert f([0, 3, 0, 1], lambda x: x < 2) ==  [[3, False], [1, True]]

@@ -1,3 +1,4 @@
+from typing import *
 def specialFilter(nums):
     
     count = 0

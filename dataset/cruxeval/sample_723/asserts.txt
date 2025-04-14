@@ -1,0 +1,1 @@
+assert f('dga nqdk\rull qcha kl', 1) ==  ['d g a   n q d k', 'u l l   q c h a   k l']

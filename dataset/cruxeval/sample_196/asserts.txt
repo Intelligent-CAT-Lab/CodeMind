@@ -1,0 +1,1 @@
+assert f("398 Is A Poor Year To Sow") ==  'correct'

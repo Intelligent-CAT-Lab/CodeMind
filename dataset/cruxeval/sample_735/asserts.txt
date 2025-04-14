@@ -1,0 +1,1 @@
+assert f('(A (b B))') ==  'Abb'

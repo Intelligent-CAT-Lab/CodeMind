@@ -1,0 +1,1 @@
+assert f('spain', 'b', 4) ==  'spaib'

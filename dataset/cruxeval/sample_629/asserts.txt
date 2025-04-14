@@ -1,0 +1,1 @@
+assert f('catNG', 'NG') ==  'cat'

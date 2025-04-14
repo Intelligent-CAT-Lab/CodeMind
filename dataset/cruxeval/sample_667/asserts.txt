@@ -1,0 +1,1 @@
+assert f('C7') ==  ['< C7 level=0 >']

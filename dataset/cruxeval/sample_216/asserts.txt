@@ -1,0 +1,1 @@
+assert f("dp ef1 gh2") ==  2

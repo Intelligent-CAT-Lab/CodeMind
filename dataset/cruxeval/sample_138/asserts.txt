@@ -1,0 +1,1 @@
+assert f('tflb omn rtt', 'm') ==  'tflb omn rtt'

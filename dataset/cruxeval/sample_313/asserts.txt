@@ -1,0 +1,1 @@
+assert f('urecord', 8) ==  'urecord'

@@ -1,0 +1,1 @@
+assert f('qwbnjrxs', ['jr', 'b', 'r', 'qw']) ==  False

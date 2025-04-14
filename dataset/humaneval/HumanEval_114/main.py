@@ -1,3 +1,4 @@
+from typing import *
 def minSubArraySum(nums):
     max_sum = 0
     s = 0

@@ -1,0 +1,1 @@
+assert f('i am your father') ==  '| i am your father |'

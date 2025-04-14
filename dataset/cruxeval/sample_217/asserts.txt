@@ -1,0 +1,1 @@
+assert f('Str zahrnuje anglo-ameriæske vasi piscina and kuca!') ==  'more than ASCII'

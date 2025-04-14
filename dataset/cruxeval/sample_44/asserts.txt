@@ -1,0 +1,1 @@
+assert f('nzoh') ==  '*+++n+z+o+h'

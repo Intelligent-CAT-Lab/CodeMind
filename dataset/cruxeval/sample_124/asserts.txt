@@ -1,0 +1,1 @@
+assert f('i like you', ' ', -1) ==  'i like you'

@@ -1,0 +1,1 @@
+assert f('=xtanp|sugv?z', 3, 6) ==  True

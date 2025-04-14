@@ -1,0 +1,1 @@
+assert f(['apple', 'apple', 'pear', 'banana', 'pear', 'orange', 'orange']) ==  ['pear', 'banana', 'pear']

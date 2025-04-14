@@ -1,0 +1,1 @@
+assert f(['wise king', 'young king'], '') ==  {'wise king': 'north', 'young king': 'north'}

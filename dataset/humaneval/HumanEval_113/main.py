@@ -1,3 +1,4 @@
+from typing import *
 def odd_count(lst):
     res = []
     for arr in lst:

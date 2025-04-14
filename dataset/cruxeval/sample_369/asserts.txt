@@ -1,0 +1,1 @@
+assert f(" 99 777") ==  'tuple'

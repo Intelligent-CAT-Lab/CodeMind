@@ -1,0 +1,1 @@
+assert f("zn kgd jw lnt", "h", "u") ==  'ZN KGD JW LNT'

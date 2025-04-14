@@ -1,0 +1,1 @@
+assert f("3eeeeeeoopppppppw14film3oee3") ==  18

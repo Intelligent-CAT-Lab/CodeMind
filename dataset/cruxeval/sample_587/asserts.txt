@@ -1,0 +1,1 @@
+assert f([0, 1, 1, 2], 'abcca') ==  {0: 'abcca', 1: 'abcca', 2: 'abcca'}

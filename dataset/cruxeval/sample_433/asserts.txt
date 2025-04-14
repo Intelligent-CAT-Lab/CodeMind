@@ -1,0 +1,1 @@
+assert f("Dmreh,Sspp,T,G ,.tB,Vxk,Cct") ==  'T,T,Sspp,G ,.tB,Vxk,Cct'

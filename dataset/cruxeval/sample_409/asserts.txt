@@ -1,0 +1,1 @@
+assert f('querist', 'u') ==  'querisT'

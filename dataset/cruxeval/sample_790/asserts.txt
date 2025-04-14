@@ -1,0 +1,1 @@
+assert f({'i': 1, 'love': 'parakeets'}) ==  (False, True)

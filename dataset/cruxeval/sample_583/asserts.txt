@@ -1,0 +1,1 @@
+assert f("t\nza\na", "t") ==  't\nZA\nA'

@@ -1,0 +1,1 @@
+assert f('mTYWLMwbLRVOqNEf.oLsYkZORKE[Ko[{n') ==  'mty'

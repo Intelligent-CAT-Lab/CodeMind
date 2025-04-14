@@ -1,0 +1,1 @@
+assert f('l\nl', 2) ==  'l \nl '

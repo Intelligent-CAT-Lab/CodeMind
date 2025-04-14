@@ -1,0 +1,1 @@
+assert f('bwmm7h') ==  'mhbwm'

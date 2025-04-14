@@ -1,0 +1,1 @@
+assert f('a_A_b_B3 ') ==  'a_A_b_B3 '

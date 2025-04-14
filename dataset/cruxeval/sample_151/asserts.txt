@@ -1,0 +1,1 @@
+assert f('697 this is the ultimate 7 address to attack') ==  '697 this is the ultimate 7 address to attack'

@@ -1,0 +1,1 @@
+assert f('"Makers of a Statement"') ==  'akers of a Statement'

@@ -1,0 +1,1 @@
+assert f("123E-10") ==  False

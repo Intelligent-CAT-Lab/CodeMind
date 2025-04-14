@@ -1,0 +1,1 @@
+assert f('[CHARRUNNERS]Do you know who the other was? [NEGMENDS]', '[CHARRUNNERS]') ==  'Do you know who the other was? [NEGMENDS]'

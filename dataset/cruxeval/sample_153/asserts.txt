@@ -1,0 +1,1 @@
+assert f('friends and love', 'and', 3) ==  False

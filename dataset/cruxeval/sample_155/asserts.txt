@@ -1,0 +1,1 @@
+assert f("dskjs hjcdjnxhjicnn", 4) ==  'dskj\ns hj\ncdjn\nxhji\ncnn'

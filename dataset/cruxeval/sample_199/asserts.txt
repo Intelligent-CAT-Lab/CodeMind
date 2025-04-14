@@ -1,0 +1,1 @@
+assert f('mnmnj krupa...##!@#!@#$$@##', '@') ==  'mnmnj krupa...##!@#!@#$$@##'

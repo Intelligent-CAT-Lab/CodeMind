@@ -1,0 +1,1 @@
+assert f('ekwies', 's', 'rpg', 1) ==  'rpg'

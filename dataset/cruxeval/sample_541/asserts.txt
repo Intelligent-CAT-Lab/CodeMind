@@ -1,0 +1,1 @@
+assert f(' \t  \u3000') ==  True

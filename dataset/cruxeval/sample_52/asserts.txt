@@ -1,0 +1,1 @@
+assert f("seiq7229 d27") ==  'seiq d'

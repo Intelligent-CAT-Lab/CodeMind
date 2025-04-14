@@ -1,0 +1,1 @@
+assert f("towaru", "UTF-8") ==  'towaru'

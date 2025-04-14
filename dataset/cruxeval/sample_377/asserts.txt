@@ -1,0 +1,1 @@
+assert f("BYE\nNO\nWAY") ==  'BYE, NO, WAY'

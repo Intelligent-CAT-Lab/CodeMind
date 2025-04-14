@@ -1,0 +1,1 @@
+assert f('qpfi jzm', 'j') ==  'jqjfj zm'

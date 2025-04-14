@@ -1,0 +1,1 @@
+assert f('CJU', 'BFS', 'WBYDZPVES', 'Y') ==  'BFS'

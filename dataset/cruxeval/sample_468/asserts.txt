@@ -1,0 +1,1 @@
+assert f('unrndqafi', 'c', 2) ==  'unrndqafi'

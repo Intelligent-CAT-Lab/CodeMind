@@ -1,0 +1,1 @@
+assert f([6, 4, 2, 8, 15], (lambda x: x.reverse())) ==  [6, 4, 2, 8, 15]

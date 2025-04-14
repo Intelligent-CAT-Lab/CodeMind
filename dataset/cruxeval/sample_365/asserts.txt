@@ -1,0 +1,1 @@
+assert f('xqc', 'mRcwVqXsRDRb') ==  'mRcwVqXsRDRb'

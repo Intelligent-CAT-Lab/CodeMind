@@ -1,0 +1,1 @@
+assert f('ED20 CW') ==  'CW'

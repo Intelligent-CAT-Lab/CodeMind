@@ -1,0 +1,1 @@
+assert f('eeuseeeoehasa') ==  8

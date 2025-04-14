@@ -1,0 +1,1 @@
+assert f("2nm_28in", "nm") ==  '2nm_28in'

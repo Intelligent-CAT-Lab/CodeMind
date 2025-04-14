@@ -1,0 +1,1 @@
+assert f('-stew---corn-and-beans-in soup-.-') ==  'stew---corn-and-beans-in soup-.'

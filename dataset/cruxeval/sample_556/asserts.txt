@@ -1,0 +1,1 @@
+assert f('\n\n\t\tz\td\ng\n\t\t\te') ==  '\n\n        z   d\ng\n            e'

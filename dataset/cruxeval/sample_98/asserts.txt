@@ -1,0 +1,1 @@
+assert f('SOME OF THIS Is uknowN!') ==  1

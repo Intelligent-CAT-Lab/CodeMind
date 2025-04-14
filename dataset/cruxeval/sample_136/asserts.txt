@@ -1,0 +1,1 @@
+assert f("a\nbc\n\nd\nef", 5) ==  '  a  \n  bc \n     \n  d  \n  ef '

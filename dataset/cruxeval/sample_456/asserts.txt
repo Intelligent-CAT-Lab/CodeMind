@@ -1,0 +1,1 @@
+assert f("Join us in Hungary", 4) ==  'Join us in Hungary'

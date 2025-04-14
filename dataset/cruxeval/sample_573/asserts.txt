@@ -1,0 +1,1 @@
+assert f("Vipra", "via") ==  'Vipra'

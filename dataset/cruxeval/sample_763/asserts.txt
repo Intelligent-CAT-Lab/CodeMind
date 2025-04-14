@@ -1,0 +1,1 @@
+assert f('2Pn', 'yCxpg2C2Pny2', '') ==  'yCxpg2C2Pny'

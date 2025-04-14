@@ -1,0 +1,1 @@
+assert f([5, 8]) ==  True

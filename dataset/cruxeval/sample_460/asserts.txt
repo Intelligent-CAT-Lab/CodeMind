@@ -1,0 +1,1 @@
+assert f('GENERAL NAGOOR', 5) ==  'GENERAL NAGOOR'

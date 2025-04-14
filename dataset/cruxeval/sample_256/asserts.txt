@@ -1,0 +1,1 @@
+assert f('dorfunctions', '2') ==  0

@@ -1,0 +1,1 @@
+assert f("bwiajegrwjd??djoda,?") ==  4

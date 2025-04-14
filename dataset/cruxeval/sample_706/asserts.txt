@@ -1,0 +1,1 @@
+assert f("ab", "xy") ==  ['xy', 'ab']

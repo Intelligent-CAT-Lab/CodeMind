@@ -1,0 +1,1 @@
+assert f("qy. dg. rnvprt rse.. irtwv tx..", "wtwdoacb") ==  'error'

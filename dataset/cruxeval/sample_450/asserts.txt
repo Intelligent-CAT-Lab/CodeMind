@@ -1,0 +1,1 @@
+assert f('K zBK') ==  'K KBz'

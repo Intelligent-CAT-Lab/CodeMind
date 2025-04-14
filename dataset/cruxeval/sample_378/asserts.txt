@@ -1,0 +1,1 @@
+assert f(dict(did=0), 'u') ==  'No such key!'

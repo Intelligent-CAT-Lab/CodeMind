@@ -1,0 +1,1 @@
+assert f('Because it intrigues them') ==  'Because it intrigues them'

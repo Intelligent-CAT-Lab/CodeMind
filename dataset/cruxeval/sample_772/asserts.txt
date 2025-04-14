@@ -1,0 +1,1 @@
+assert f('serjgpoDFdbcA.') ==  'DFA.'

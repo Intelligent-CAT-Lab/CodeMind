@@ -1,0 +1,1 @@
+assert f('1oE-err bzz-bmm') ==  '1Oe-ErrBzz-Bmm'

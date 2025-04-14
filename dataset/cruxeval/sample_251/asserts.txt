@@ -1,0 +1,1 @@
+assert f([['Marie','Nelson','Oscar']]) ==  'Marie;Nelson;Oscar;+;3;5;3'

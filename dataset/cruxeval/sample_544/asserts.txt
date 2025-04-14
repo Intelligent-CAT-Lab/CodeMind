@@ -1,0 +1,1 @@
+assert f("\t\t\ttab tab tabulates") ==  '            tab tab tabulates'

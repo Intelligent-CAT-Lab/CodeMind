@@ -1,0 +1,1 @@
+assert f('123x John z', 'z') ==  '23x John z'

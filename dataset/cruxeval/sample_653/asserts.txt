@@ -1,0 +1,1 @@
+assert f("c, c, c ,c, c", "c") ==  1

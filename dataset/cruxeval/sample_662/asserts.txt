@@ -1,0 +1,1 @@
+assert f(['Dan', 'Joe', 'Dusty']) ==  ['Angela', 'Dan', 'Dusty', 'Joe', 'Linda', 'Pete']

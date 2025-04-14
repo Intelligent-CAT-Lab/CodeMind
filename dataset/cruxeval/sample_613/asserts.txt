@@ -1,0 +1,1 @@
+assert f('eat!') ==  'e!t!'

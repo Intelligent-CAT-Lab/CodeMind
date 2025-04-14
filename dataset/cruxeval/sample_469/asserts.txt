@@ -1,0 +1,1 @@
+assert f('sduyai', 1, 'y') ==  'syduyi'

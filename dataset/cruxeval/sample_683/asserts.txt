@@ -1,0 +1,1 @@
+assert f({'disface': 9, 'cam': 7}, {'mforce': 5}) ==  {'disface': 9, 'cam': 7, 'mforce': 5}

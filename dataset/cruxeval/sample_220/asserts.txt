@@ -1,0 +1,1 @@
+assert f("abcdefgabc", 1, 2) ==  'bagfedcacbagfedc'

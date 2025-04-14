@@ -1,0 +1,1 @@
+assert f("\tf9\n\tldf9\n\tadf9!\n\tf9?", 1) ==  ' f9\n ldf9\n adf9!\n f9?'

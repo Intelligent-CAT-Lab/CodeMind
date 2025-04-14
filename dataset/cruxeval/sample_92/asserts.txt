@@ -1,0 +1,1 @@
+assert f('wW의IV]HDJjhgK[dGIUlVO@Ess$coZkBqu[Ct') ==  False

@@ -1,0 +1,1 @@
+assert f({}, {'foo': 'bar'}) ==  {'foo': ['bar']}

@@ -1,0 +1,1 @@
+assert f('zjegiymjc', 'j', 2) ==  -1

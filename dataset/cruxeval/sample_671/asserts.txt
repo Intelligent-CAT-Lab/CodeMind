@@ -1,0 +1,1 @@
+assert f("ewriyat emf rwto segya", "tey", "dgo") ==  'gwrioad gmf rwdo sggoa'

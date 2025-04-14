@@ -1,0 +1,1 @@
+assert f('dst vavf n dmv dfvm gamcu dgcvb.') ==  'DST VAVF N DMV DFVM GAMCU DGCVB.'

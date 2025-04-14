@@ -1,0 +1,1 @@
+assert f('Rjug nzufE') ==  'R:j:u:g: :z:u:f:E:rjug nzufe'

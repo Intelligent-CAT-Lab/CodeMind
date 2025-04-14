@@ -1,3 +1,4 @@
+from typing import *
 def exchange(lst1, lst2):
     odd = 0
     even = 0

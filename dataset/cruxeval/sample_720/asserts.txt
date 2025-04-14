@@ -1,0 +1,1 @@
+assert f('bfreratrrbdbzagbretaredtroefcoiqrrneaosf'.split('-'), 'n') ==  2

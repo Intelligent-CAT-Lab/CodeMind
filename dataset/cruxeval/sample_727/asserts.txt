@@ -1,0 +1,1 @@
+assert f(['ix', 'dxh', 'snegi', 'wiubvu'], '') ==  ['dxh', 'ix', 'snegi', 'wiubvu']

@@ -1,0 +1,1 @@
+assert f("54882") ==  False

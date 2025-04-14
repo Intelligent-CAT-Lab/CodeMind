@@ -1,0 +1,1 @@
+assert f('I am hungry! eat food.') ==  'I, am, hungry!, eat, food.'

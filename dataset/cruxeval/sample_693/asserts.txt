@@ -1,0 +1,1 @@
+assert f("sa832d83r xd 8g 26a81xdf") ==  'x0x0'

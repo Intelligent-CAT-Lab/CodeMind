@@ -1,3 +1,4 @@
+from typing import *
 def intersection(interval1, interval2):
     def is_prime(num):
         if num == 1 or num == 0:

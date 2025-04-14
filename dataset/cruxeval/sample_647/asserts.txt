@@ -1,0 +1,1 @@
+assert f('/alcm@ an)t//eprw)/e!/d\nujv', 0) ==  ['/alcm@ an)t//eprw)/e!/d', 'ujv']

@@ -1,0 +1,1 @@
+assert f('akA?riu') ==  'AKa?RIU'

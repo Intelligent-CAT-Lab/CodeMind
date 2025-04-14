@@ -1,0 +1,1 @@
+assert f({'882afmfp': 56}, '6f53p') ==  'Name unknown'

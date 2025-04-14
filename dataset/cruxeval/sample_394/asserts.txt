@@ -1,0 +1,1 @@
+assert f("2 m2 \n\nbike") ==  1

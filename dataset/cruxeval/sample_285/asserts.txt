@@ -1,0 +1,1 @@
+assert f("This be Pirate's Speak for 'help'!", ' ') ==  5

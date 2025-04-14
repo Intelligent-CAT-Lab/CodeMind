@@ -1,0 +1,1 @@
+assert f({'Iron Man': 4, 'Captain America': 3, 'Black Panther': 0,'Thor': 1, 'Ant-Man': 6}, 'Iron Man') ==  'Iron Man'

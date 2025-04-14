@@ -1,0 +1,1 @@
+assert f('upper case', 'lower case') ==  'lwwer case'

@@ -1,0 +1,1 @@
+assert f('String matching is a big part of RexEx library.') ==  'RES'

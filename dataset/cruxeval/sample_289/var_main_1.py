@@ -1,2 +1,0 @@
-def f(code):
-    return "{}: {}".format(code, code.encode())	## code = CLRJ

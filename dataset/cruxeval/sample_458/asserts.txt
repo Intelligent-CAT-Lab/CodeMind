@@ -1,0 +1,1 @@
+assert f('mmm34mIm', 'mm3', ',po') ==  'pppo4pIp'

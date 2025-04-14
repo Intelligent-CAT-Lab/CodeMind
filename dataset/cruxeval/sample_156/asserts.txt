@@ -1,0 +1,1 @@
+assert f('tqzym', 5, 'c') ==  'tqzym'

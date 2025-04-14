@@ -1,0 +1,1 @@
+assert f('1z1z1') ==  True

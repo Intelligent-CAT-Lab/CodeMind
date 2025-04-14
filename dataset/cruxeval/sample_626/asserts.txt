@@ -1,0 +1,1 @@
+assert f('abab', [('a', 'b'), ('b', 'a')]) ==  'baba'

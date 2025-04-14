@@ -1,0 +1,1 @@
+assert f('[ Hello ]+ Hello, World!!_ Hi') ==  ''

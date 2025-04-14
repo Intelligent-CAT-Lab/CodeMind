@@ -1,0 +1,1 @@
+assert f(['yR?TAJhIW?n', 'o11BgEFDfoe', 'KnHdn2vdEd', 'wvwruuqfhXbGis']) ==  4

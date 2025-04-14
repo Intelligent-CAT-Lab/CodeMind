@@ -1,0 +1,1 @@
+assert f('   Rock   Paper   SCISSORS  ') ==  '   rock   paper   scissors  '

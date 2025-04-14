@@ -1,0 +1,1 @@
+assert f({'inf': ['a', 'b'], 'a': ["inf", "c"], 'd': ["inf"]}) ==  ['a', 'b', 'c', 'inf']

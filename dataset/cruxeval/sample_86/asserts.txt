@@ -1,0 +1,1 @@
+assert f(['sdfs', 'drcr', '2e'], ['sdfs', 'dr2c', 'QWERTY'], 0) ==  ['sdfs', 'drcr', '2e']

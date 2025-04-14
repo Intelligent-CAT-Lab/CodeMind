@@ -1,0 +1,1 @@
+assert f({15: "Qltuf", 12: "Rwrepny"}) ==  "(12, 'Rwrepny') (15, 'Qltuf')"

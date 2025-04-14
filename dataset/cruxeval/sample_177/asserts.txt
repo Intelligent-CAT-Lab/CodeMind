@@ -1,0 +1,1 @@
+assert f('Hey DUdE THis $nd^ &*&this@#') ==  'HEy Dude tHIs $Nd^ &*&tHiS@#'

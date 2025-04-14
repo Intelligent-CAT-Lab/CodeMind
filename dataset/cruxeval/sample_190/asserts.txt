@@ -1,0 +1,1 @@
+assert f('980jio80jic kld094398IIl ') ==  'jiojickldl'

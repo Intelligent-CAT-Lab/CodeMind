@@ -1,0 +1,1 @@
+assert f('python ruby c javascript') ==  '${first}y, ${second}x, ${third}r, ${fourth}p'

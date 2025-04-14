@@ -1,0 +1,1 @@
+assert f({}, {'desciduous': 2}) ==  {'desciduous': 2}

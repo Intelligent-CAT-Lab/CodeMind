@@ -1,0 +1,1 @@
+assert f("qwfasgahh329kn12a23") ==  ['3291223', 7]

@@ -1,0 +1,1 @@
+assert f(['dZwbSR', 'wijHeq', 'qluVok', 'dxjxbF']) ==  ['dZwbSR', 'wijHeq', 'qluVok', 'dxjxbF']

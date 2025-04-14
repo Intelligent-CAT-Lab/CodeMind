@@ -1,0 +1,1 @@
+assert f(["gloss", "banana", "barn", "lawn"], []) ==  ['gloss', 'banana', 'barn', 'lawn']

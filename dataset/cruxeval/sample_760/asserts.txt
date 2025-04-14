@@ -1,0 +1,1 @@
+assert f(dict(f = 1, h = 2, j = 3, k = 4)) ==  ['k', 'j', 'h', 'f']

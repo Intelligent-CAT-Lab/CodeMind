@@ -1,3 +1,4 @@
+from typing import *
 def compare_one(a, b):
     temp_a, temp_b = a, b
     if isinstance(temp_a, str): temp_a = temp_a.replace(',','.')

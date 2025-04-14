@@ -1,0 +1,1 @@
+assert f('ertubwi', 'p', 5) ==  'ertubwi'

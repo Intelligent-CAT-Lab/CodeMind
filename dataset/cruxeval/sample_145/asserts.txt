@@ -1,0 +1,1 @@
+assert f(8.50, 'grapes') ==  8.5

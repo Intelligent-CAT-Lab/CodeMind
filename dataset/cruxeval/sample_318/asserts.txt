@@ -1,0 +1,1 @@
+assert f('234rtccde', 'e') ==  1

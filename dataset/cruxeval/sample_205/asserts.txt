@@ -1,0 +1,1 @@
+assert f("##fiu##nk#he###wumun##") ==  'fiu##nk#he###wumun'

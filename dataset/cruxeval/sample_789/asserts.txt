@@ -1,0 +1,1 @@
+assert f('bR', -1) ==  'bR'

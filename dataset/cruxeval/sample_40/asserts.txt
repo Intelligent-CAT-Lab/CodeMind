@@ -1,0 +1,1 @@
+assert f("the cow goes moo") ==  'the cow goes moo#'

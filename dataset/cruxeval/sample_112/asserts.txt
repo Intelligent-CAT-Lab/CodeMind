@@ -1,0 +1,1 @@
+assert f('XYZ LittleRedRidingHood LiTTleBIGGeXEiT fault') ==  'XYZLtRRdnHodLTTBIGGeXET fult'

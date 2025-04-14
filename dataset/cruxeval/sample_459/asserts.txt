@@ -1,0 +1,1 @@
+assert f(['b', 'vzjmc', 'f', 'ae', '0'], dict()) ==  {'vzjmc': 'b', 'ae': 'f'}

@@ -1,0 +1,1 @@
+assert f("n wez szize lnson tilebi it 504n.\n") ==  33

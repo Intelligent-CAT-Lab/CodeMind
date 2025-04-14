@@ -1,0 +1,1 @@
+assert f('ncdsdfdaaa0a1cdscsk*XFd') ==  1

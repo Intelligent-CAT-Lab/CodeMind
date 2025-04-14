@@ -1,0 +1,1 @@
+assert f('dsj osq wi w', ' ') ==  'd'

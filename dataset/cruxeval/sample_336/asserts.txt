@@ -1,0 +1,1 @@
+assert f('234dsfssdfs333324314', 's') ==  '234dsfssdfs333324314'

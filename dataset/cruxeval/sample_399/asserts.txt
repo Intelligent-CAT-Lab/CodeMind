@@ -1,0 +1,1 @@
+assert f('avacado', 'va', '-') ==  'a--cado'

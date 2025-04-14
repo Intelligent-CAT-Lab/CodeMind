@@ -1,0 +1,1 @@
+assert f("nwv mef ofme bdryl") ==  'nwvday mefday ofmeday bdrylday'

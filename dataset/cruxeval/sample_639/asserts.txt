@@ -1,0 +1,1 @@
+assert f("xabxfiwoexahxaxbxs", "xbabcabccb") ==  'yes '

@@ -1,0 +1,1 @@
+assert f("timetable, 2mil") ==  't'

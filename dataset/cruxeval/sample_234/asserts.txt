@@ -1,0 +1,1 @@
+assert f('wduhzxlfk', 'w') ==  0

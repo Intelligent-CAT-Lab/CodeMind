@@ -1,0 +1,1 @@
+assert f('I got 1 and 0.', 5) ==  'I'

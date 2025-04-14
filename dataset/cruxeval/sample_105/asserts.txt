@@ -1,0 +1,1 @@
+assert f("PermissioN is GRANTed") ==  'Permission Is Granted'

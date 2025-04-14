@@ -1,0 +1,1 @@
+assert f('Hello Is It MyClass') ==  'Hello Is It MyClass'

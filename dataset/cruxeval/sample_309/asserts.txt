@@ -1,0 +1,1 @@
+assert f('faqo osax f', 'f') ==  'faqo osax '

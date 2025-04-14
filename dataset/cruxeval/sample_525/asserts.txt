@@ -1,0 +1,1 @@
+assert f({'TEXT': 7, 'CODE': 3}, 7, 3) ==  ('TEXT', 'CODE')

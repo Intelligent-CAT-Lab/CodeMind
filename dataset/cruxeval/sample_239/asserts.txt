@@ -1,0 +1,1 @@
+assert f('0 t 1cos ', 'st ' + '0\t\n  ') ==  '1co'

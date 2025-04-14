@@ -1,0 +1,1 @@
+assert f('ONBPICJOHRHDJOSNCPNJ9ONTHBQCJ', 'J') ==  [28, 19, 12, 6]

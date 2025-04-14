@@ -1,0 +1,1 @@
+assert f({"lorem ipsum" : 12, "dolor" : 23}, ["lorem ipsum", "dolor"]) ==  {'lorem ipsum': 12, 'dolor': 23}

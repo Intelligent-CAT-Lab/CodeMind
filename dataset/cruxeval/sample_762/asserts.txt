@@ -1,0 +1,1 @@
+assert f('this And cPanel') ==  'this and cpanel'

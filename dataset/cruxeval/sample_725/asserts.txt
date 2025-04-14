@@ -1,0 +1,1 @@
+assert f("mrq7y") ==  5

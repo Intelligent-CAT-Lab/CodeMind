@@ -1,0 +1,1 @@
+assert f(['a', 'b'], ['car', 'dog']) ==  {'a': ['car', 'dog'], 'b': ['car', 'dog']}

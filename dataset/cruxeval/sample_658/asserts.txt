@@ -1,0 +1,1 @@
+assert f({3: "swims like a bull"}, [3, 2, 'c', True, 5]) ==  ['swims like a bull', None, None, None, None]

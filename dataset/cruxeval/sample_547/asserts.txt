@@ -1,0 +1,1 @@
+assert f("h,e,l,l,o,wo,r,ld,") ==  'h,e,l,l,o,wo,r,ld'

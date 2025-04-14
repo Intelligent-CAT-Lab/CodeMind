@@ -1,0 +1,1 @@
+assert f("987yhNSHAshd 93275yrgSgbgSshfbsfB") ==  '987YhnShAShD 93275yRgsgBgssHfBsFB'

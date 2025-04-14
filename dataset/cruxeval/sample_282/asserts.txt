@@ -1,0 +1,1 @@
+assert f('xinyyexyxx', 'xx') ==  2

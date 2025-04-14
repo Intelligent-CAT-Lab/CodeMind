@@ -1,0 +1,1 @@
+assert f('439m2670hlsw', 3) ==  'wslh0762m934'

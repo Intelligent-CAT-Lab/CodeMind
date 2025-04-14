@@ -1,0 +1,1 @@
+assert f("echo hello!!! nice!") ==  ['echo']

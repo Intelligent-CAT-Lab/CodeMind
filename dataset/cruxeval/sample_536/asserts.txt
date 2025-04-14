@@ -1,0 +1,1 @@
+assert f('C24Bxxx982ab') ==  5

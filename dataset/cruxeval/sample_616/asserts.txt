@@ -1,0 +1,1 @@
+assert f('\n\ny\n') ==  '[\n][\n][y]\n'

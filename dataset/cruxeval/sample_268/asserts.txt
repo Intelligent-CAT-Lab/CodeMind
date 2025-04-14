@@ -1,0 +1,1 @@
+assert f('h grateful k', ' ') ==  'h / g r a t e f u l   k'

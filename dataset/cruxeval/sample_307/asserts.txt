@@ -1,0 +1,1 @@
+assert f('pxcznyf') ==  'px|||||cznyf'

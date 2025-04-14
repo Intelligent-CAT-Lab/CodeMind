@@ -1,0 +1,1 @@
+assert f('difkj rinpx', 'k') ==  'j rinpxdif'

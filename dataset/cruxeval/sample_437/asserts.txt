@@ -1,0 +1,1 @@
+assert f(['john', 'doe', 'the', 'john', 'doe']) ==  {'d': None, 'o': None, 'e': None}

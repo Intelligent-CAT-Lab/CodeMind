@@ -1,0 +1,1 @@
+assert f('uMeGndkGh', 'kG') ==  False

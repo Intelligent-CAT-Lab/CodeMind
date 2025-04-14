@@ -1,0 +1,1 @@
+assert f("345gerghjehg", "345") ==  -1

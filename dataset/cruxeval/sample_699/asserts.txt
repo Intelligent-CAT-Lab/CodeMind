@@ -1,0 +1,1 @@
+assert f("some", "1") ==  ['1', 'some']

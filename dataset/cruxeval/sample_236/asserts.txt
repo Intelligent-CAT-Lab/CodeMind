@@ -1,0 +1,1 @@
+assert f(['ac8', 'qk6', '9wg']) ==  'ac8qk6qk6'

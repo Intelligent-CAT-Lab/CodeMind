@@ -1,0 +1,1 @@
+assert f("breakfast", "e") ==  2

@@ -1,0 +1,1 @@
+assert f('tezmgvn 651h', '6') ==  '5ezmgvn 651h'

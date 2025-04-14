@@ -1,0 +1,1 @@
+assert f('DSUWeqExTQdCMGpqur', 'a', 'x') ==  (0, 'xxxxxxxxxxxxxxxxxx')

@@ -1,0 +1,1 @@
+assert f("Where is the bot in this world?") ==  30

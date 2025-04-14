@@ -1,0 +1,1 @@
+assert f('shivajimonto6', '6') ==  ''

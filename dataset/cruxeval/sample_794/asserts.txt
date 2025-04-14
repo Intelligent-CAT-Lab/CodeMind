@@ -1,0 +1,1 @@
+assert f("\"\\%$ normal chars $%~ qwet42'") ==  'normalcharsqwet42'

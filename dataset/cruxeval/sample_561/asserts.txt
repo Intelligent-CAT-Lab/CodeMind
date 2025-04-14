@@ -1,0 +1,1 @@
+assert f('7Ljnw4Lj', '7') ==  7

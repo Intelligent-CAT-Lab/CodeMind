@@ -1,0 +1,1 @@
+assert f('elrts,SS ee', 6) ==  'elrts,SSee'

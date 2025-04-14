@@ -1,0 +1,1 @@
+assert f('vzzv2sg', 'z') ==  'zzv2sg'

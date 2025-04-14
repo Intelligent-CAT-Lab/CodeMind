@@ -1,0 +1,1 @@
+assert f('s a a b s d s a a s a a') ==  ''

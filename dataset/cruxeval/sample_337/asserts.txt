@@ -1,0 +1,1 @@
+assert f("5ll6") ==  'LL'

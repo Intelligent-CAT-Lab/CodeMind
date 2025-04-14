@@ -1,3 +1,4 @@
+from typing import *
 def fib4(n: int):
     results = [0, 0, 2, 0]
     if n < 4:

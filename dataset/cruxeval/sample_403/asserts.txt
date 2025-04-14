@@ -1,0 +1,1 @@
+assert f('hrsiajiajieihruejfhbrisvlmmy', 'hr') ==  2

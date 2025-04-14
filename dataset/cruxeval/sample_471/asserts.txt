@@ -1,0 +1,1 @@
+assert f('o', 'fnmart') ==  -1

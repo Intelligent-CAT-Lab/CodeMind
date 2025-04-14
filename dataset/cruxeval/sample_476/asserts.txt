@@ -1,0 +1,1 @@
+assert f("booty boot-boot bootclass", 'k') ==  False

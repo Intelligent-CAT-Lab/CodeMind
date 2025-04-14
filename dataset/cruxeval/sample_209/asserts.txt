@@ -1,0 +1,1 @@
+assert f('hymi', 'hymifulhxhzpnyihyf') ==  'hymi'

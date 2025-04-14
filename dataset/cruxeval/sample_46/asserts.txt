@@ -1,0 +1,1 @@
+assert f(['many', 'letters', 'asvsz', 'hello', 'man'], '') ==  'manylettersasvszhelloman'

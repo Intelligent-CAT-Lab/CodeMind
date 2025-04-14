@@ -1,0 +1,1 @@
+assert f("if (x) {y = 1;} else {z = 1;}") ==  'i f (x) {y = 1;} else {z = 1;}'

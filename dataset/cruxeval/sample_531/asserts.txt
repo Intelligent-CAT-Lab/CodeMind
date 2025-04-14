@@ -1,0 +1,1 @@
+assert f("Ibaskdjgblw asdl ", "djgblw") ==  'djgblw asdl '

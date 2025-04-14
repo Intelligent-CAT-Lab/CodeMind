@@ -1,0 +1,1 @@
+assert f('Chris requires a ride to the airport on Friday.', 'a') ==  'Chris requires  ride to the irport on Fridy.'

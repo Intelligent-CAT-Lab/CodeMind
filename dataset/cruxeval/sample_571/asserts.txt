@@ -1,0 +1,1 @@
+assert f(r'a\tb', 4) ==  'a\\tb'

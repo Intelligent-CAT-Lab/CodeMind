@@ -1,0 +1,1 @@
+assert f('2imo 12 tfiqr.', 'm') ==  '2io 12 tfiqr.-'

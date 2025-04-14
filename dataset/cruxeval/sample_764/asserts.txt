@@ -1,0 +1,1 @@
+assert f("some test string", "some", "any") ==  'any test string'

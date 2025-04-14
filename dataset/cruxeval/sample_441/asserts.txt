@@ -1,0 +1,1 @@
+assert f({37: 'forty-five'}, '23', 'what?') ==  {37: 'forty-five', '23': 'what?'}

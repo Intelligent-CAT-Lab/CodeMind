@@ -1,0 +1,1 @@
+assert f("carrot, banana, and strawberry") ==  'Carrot,  Banana,  and Strawberry'

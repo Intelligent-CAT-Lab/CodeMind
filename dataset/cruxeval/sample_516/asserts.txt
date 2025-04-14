@@ -1,0 +1,1 @@
+assert f(['condor', 'eyes', 'gay', 'isa' ], 'd') ==  []

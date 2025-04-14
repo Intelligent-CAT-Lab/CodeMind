@@ -1,0 +1,13 @@
+from typing import *
+def compare_one(a, b):
+    temp_a, temp_b = a, b
+    if isinstance(temp_a, str): temp_a = temp_a.replace(',','.')
+    if isinstance(temp_b, str): temp_b = temp_b.replace(',','.')
+    if float(temp_a) == float(temp_b): return None
+    return a if float(temp_a) > float(temp_b) else b 
+
+output = compare_one(5, 6)
+file = open("/home/changshu/CODEMIND/dataset/humaneval/HumanEval_137__0/output.txt", 'w')
+file.write(str(output))
+file.close()
+    

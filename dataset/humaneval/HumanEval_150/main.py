@@ -1,3 +1,4 @@
+from typing import *
 def x_or_y(n, x, y):
     if n == 1:
         return y
@@ -5,5 +6,5 @@ def x_or_y(n, x, y):
         if n % i == 0:
             return y
             break
-    else:
-        return x
+        else:
+            return x

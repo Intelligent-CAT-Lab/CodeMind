@@ -1,0 +1,1 @@
+assert f('ellod!p.nkyp.exa.bi.y.hain', '.n.in.ha.y') ==  'ellod!p.nkyp.exa.bi.y.hain'

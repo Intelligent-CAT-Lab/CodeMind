@@ -1,0 +1,1 @@
+assert f('not numbers') ==  'not oscillating'

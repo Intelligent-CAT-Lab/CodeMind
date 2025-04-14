@@ -1,0 +1,1 @@
+assert f('Fu,ux zfujijabji pfu.') ==  'Fu,Ux Zfujijabji Pfu.'

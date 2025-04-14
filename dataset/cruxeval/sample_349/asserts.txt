@@ -1,0 +1,1 @@
+assert f({'noeohqhk': 623}) ==  {'noeohqhk': 623, 1049: 55}

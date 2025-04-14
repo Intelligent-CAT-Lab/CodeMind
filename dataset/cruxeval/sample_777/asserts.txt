@@ -1,0 +1,1 @@
+assert f(["avc  a .d e"], "") ==  ['avc  a .d e']

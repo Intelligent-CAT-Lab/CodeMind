@@ -1,0 +1,1 @@
+assert f('123', '123eenhas0') ==  True

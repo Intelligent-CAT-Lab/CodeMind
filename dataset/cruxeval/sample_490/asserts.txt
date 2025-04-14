@@ -1,0 +1,1 @@
+assert f( '\ngiyixjkvu\n\r\r \frgjuo') ==  '\n\n\r\r \x0c'

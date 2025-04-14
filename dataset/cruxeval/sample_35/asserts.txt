@@ -1,0 +1,1 @@
+assert f(" B ", [" bBb ", " BaB ", " bB", " bBbB ", " bbb"]) ==  []

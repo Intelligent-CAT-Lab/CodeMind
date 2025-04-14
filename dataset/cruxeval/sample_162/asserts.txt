@@ -1,0 +1,1 @@
+assert f('с bishop.Swift') ==  'СBISHOPSWIFT'

@@ -1,0 +1,1 @@
+assert f('only one line', ' ') ==  True

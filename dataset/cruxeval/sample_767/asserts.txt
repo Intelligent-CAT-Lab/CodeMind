@@ -1,0 +1,1 @@
+assert f("d khqw whi fwi bbn 41") ==  '-'

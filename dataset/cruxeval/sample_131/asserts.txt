@@ -1,0 +1,1 @@
+assert f("a\nkgf\nasd\n") ==  1

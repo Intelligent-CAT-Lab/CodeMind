@@ -1,0 +1,1 @@
+assert f('gsd avdropj') ==  'avdropj gsd  '

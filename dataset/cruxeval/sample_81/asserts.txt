@@ -1,0 +1,1 @@
+assert f({"Bulls": 23, "White Sox": 45}, "Bulls") ==  [('Bulls', 'bulls'), ('White Sox', 45)]

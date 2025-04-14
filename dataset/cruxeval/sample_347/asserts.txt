@@ -1,0 +1,1 @@
+assert f('hzcw') ==  'hhhhhzcw'

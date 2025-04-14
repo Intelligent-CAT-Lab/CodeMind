@@ -1,0 +1,1 @@
+assert f('E jIkx HtDpV G') ==  '   DEGHIVjkptx'

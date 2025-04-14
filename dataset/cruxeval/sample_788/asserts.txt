@@ -1,0 +1,1 @@
+assert f('hello.txt', '/') ==  'hello.txt'

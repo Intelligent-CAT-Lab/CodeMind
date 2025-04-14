@@ -1,0 +1,1 @@
+assert f('LlTHH sAfLAPkPhtsWP', '#') ==  'llthh#saflapkphtswp'

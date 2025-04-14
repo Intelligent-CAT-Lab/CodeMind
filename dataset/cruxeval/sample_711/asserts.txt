@@ -1,0 +1,1 @@
+assert f('apples\n\t\npears\n\t\nbananas') ==  'apples\t\t\tpears\t\t\tbananas'

@@ -1,3 +1,4 @@
+from typing import *
 def split_words(txt):
     if " " in txt:
         return txt.split()

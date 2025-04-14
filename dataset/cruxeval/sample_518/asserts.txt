@@ -1,0 +1,1 @@
+assert f('the speed is -36 miles per hour') ==  True

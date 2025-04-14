@@ -1,0 +1,1 @@
+assert f([{"brown": 2}, {"blue": 5}, {"bright": 4}]) ==  {'brown': 2, 'blue': 5, 'bright': 4}

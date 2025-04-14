@@ -1,0 +1,1 @@
+assert f('bpxa24fc5.', '.') ==  '.bpxa24fc5'

@@ -1,0 +1,1 @@
+assert f('A(hiccup)A') ==  [['A']]

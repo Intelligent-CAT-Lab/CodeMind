@@ -1,0 +1,1 @@
+assert f('19kefp7', '9') ==  'kefp719'
